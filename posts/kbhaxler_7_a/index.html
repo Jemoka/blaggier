@@ -1,0 +1,109 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Axler 7.A</title>
+<meta name=description content="This is not actually like a proper review of a chapter, instead, it is an opinionated review of what I think Jana thinks Axler thinks is important about 7.A.
+Note that all of the &ldquo;proofy things&rdquo; in this section are poofy because problems with putting trips prior to the end of the year.
+Here&rsquo;s an outline:
+
+We defined the adjoint
+
+We learned some properties of the adjoint; importantly, that \((A+B)^{*} = A^{*} + B^{*}\), \((AB)^{*} = B^{*} A^{*}\), \((\lambda T)^{*} = \bar{\lambda}T^{*}\); a correlary is that \(M^{*}M\) is self-adjoint
+
+
+We defined normal, self-adjoint, and unitary
+With those definitions, we showed that eigenvalues of self-adjoint matricies are real
+Then, we created two mildly interesting intermediate results
+
+Over \(\mathbb{C}\), \(Tv\) is orthogonal to all \(v\) IFF \(T\) is the zero matrix
+Over \(\mathbb{R}\), \(Tv\) is orthogonal to all \(v\) and \(T\) is self-adjoint, then \(T\) is the zero matrix
+
+
+The latter of which shows that Eigenvectors of \(T\) corresponding to distinct eigenvalues are orthogonal if \(T \in \mathcal{L}(V)\) is normal
+This, all, builds up to the result of the Complex Spectral Theorem, which you should know
+
+adjoint
+Suppose \(T \in \mathcal{L}(V,W)\), we define the adjoint as a \(T^{*} \in \mathcal{L}(W,V)\) that:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Axler 7.A</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>This is not actually like a proper review of a chapter, instead, it is an <strong>opinionated review</strong> of what I think Jana thinks Axler thinks is important about 7.A.</p><p>Note that all of the &ldquo;proofy things&rdquo; in this section are poofy because problems with putting trips prior to the end of the year.</p><p>Here&rsquo;s an outline:</p><ul><li>We defined the <a href=#adjoint>adjoint</a><ul><li>We learned some <a href=#properties-of-the-adjoint>properties of the adjoint</a>; importantly, that \((A+B)^{*} = A^{*} + B^{*}\), \((AB)^{*} = B^{*} A^{*}\), \((\lambda T)^{*} = \bar{\lambda}T^{*}\); a correlary is that \(M^{*}M\) is <a href=#self-adjoint>self-adjoint</a></li></ul></li><li>We defined <a href=#buncha-matrix-adjectives>normal, self-adjoint, and unitary</a></li><li>With those definitions, we showed that <a href=#eigenvalues-of-self-adjoint--orgd599eb4--matricies-are-real>eigenvalues of self-adjoint matricies are real</a></li><li>Then, we created two mildly interesting intermediate results<ul><li>Over \(\mathbb{C}\), \(Tv\) is orthogonal to all \(v\) IFF \(T\) is the zero matrix</li><li>Over \(\mathbb{R}\), \(Tv\) is orthogonal to all \(v\) <strong>and \(T\) is self-adjoint</strong>, then \(T\) is the zero matrix</li></ul></li><li>The latter of which shows that <a href=#eigenvectors-of-t-corresponding-to-distinct-eigenvalues-are-orthogonal-if-t-in-mathcal-l--v--is-normal>Eigenvectors of \(T\) corresponding to distinct eigenvalues are orthogonal if \(T \in \mathcal{L}(V)\) is normal</a></li><li>This, all, builds up to the result of the <strong><a href=#complex-spectral-theorem>Complex Spectral Theorem</a></strong>, which you should know</li></ul><h2 id=adjoint>adjoint</h2><p>Suppose \(T \in \mathcal{L}(V,W)\), we define the <strong>adjoint</strong> as a \(T^{*} \in \mathcal{L}(W,V)\) that:</p><p>\begin{equation}
+\langle Tv,w \rangle = \langle v, T^{*}w \rangle
+\end{equation}</p><p>the usual verifications could be made (setting \(w = w_1+w_2\), then applying <a href=/posts/kbhinner_product/>inner product</a> additivity, etc.) to show that \(T^{*}\) is a linear map.</p><h3 id=properties-of-the-adjoint>properties of the adjoint</h3><ul><li>\((S+T)^{*} = S^{*} + T^{*}\)</li><li>\((\lambda T)^{*} = \bar{\lambda}T^{*}\)</li><li>\((T^{*})^{*} = T\)</li><li>\(I^{*} = I\) &ldquo;identity is self adjoint&rdquo;</li><li>and, importantly, \((ST)^{*} = T^{*} S^{*}\)</li></ul><p>All of these results are findable by chonking through the expressions for inner product properties.</p><h3 id=adjoint-is-the-conjugate-transpose>adjoint is the conjugate transpose</h3><p>For complex-valued <a href=/posts/kbhmatricies/>matricies</a>, and the <a href=/posts/kbhinner_product/#euclidean-inner-product>Euclidean Inner Product</a>, the adjoint is the conjugate transpose of the matrix.</p><p>To show this ham-fistedly, first convince yourself that the property of \((ST)^{*} = T^{*} S^{*}\) holds for the act of conjugate transpose of matricies as well. Now, we will show how we can get to the adjoint definition from that result:</p><p>Consider:</p><p>\begin{equation}
+\langle v,w \rangle
+\end{equation}</p><p>we can represent this as the product of two &ldquo;matricies&rdquo;: an \(n \times 1\) &ldquo;matrix&rdquo; named \(v\), and a \(n \times 1\) &ldquo;matrix&rdquo; named \(w\); specifically:</p><p>\begin{equation}
+\langle v,w \rangle = v^{*} w
+\end{equation}</p><p>where \(v^{*}\) is the conjugate-transpose of \(v\) (the dagger is nonstandard notation, to distinguish from \(*\) the adjoint defined above which we haven&rsquo;t shown yet). This is by definition of how matricies multiply and how the <a href=/posts/kbhinner_product/#euclidean-inner-product>Euclidean Inner Product</a> works.</p><p>So then consider the same for the above:</p><p>\begin{equation}
+\langle Tv,w \rangle = (Tv)^{*}w = v^{*} T^{*}w = \langle v, T^{*}w \rangle
+\end{equation}</p><hr><p>Axler gives an arguably better proof involving representing the matricies w.r.t. the orthonomal bases, and then showing that the inner products just swapped slots:</p><figure><img src=/ox-hugo/2023-05-10_20-53-51_screenshot.png></figure><h2 id=buncha-matrix-adjectives>Buncha matrix adjectives</h2><p>And given we now know what the <a href=#adjoint>adjoint</a> is, we can make some definitions:</p><h3 id=self-adjoint>self-adjoint</h3><p>\begin{equation}
+A = A^{*}
+\end{equation}</p><p>wow.</p><p>Namely:</p><p>\begin{equation}
+\langle Tv, w \rangle = \langle v, T^{*}w \rangle = \langle v, Tw \rangle
+\end{equation}</p><h3 id=normal>normal</h3><p>\begin{equation}
+A A^{*} = A^{*} A
+\end{equation}</p><p>As in, if the operator commutes with its own adjoint.</p><h3 id=unitary>unitary</h3><p>\begin{equation}
+A^{*} = A^{-1}
+\end{equation}</p><p>or, that \(A\) has orthonormal columns: <a href=/posts/kbhnus_math530_matrix_adjectives/#an-unitary-operator-is-invertible-and-the-inverse-of-its-matrix-representation-is-its-transpose>an unitary operator is invertible, and the inverse of its atrix representation is its transpose</a></p><h2 id=eigenvalues-of-self-adjoint--orgd599eb4--matricies-are-real>Eigenvalues of <a href=#self-adjoint>self-adjoint</a> matricies are real</h2><p>So, if we have:</p><p>\begin{equation}
+Tv = \lambda v
+\end{equation}</p><p>we want to show that \(\lambda\) is real. To do this, we can show that \(\lambda = \bar{\lambda}\) which would mean the \(b\) component is \(0\).</p><p>Now, recall that <a href=#self-adjoint>self-adjoint</a> means \(\langle Tv,w \rangle = \langle v, Tw \rangle\).</p><p>Construct now: \(\lambda \|v\|^{2}\) &mdash;</p><p>\begin{equation}
+\lambda \|v\|^{2} = \lambda \langle v,v \rangle = \langle \lambda v,v \rangle = \langle Tv, v \rangle = \langle v, Tv \rangle = \langle v, \lambda v \rangle = \bar{\lambda} \langle v,v \rangle = \bar{\lambda} \|v\|^{2}
+\end{equation}</p><p>So we have \(\lambda \|v\|^{2} = \bar{\lambda} \|v\|^{2}\), which means \(\lambda = \bar{\lambda}\), as desired.</p><h2 id=two-less-important-intermediate-results>Two less important intermediate results</h2><p>&mldr;that we just trust Axler&rsquo;s word + our intuition for:</p><ul><li>7.14: Over \(\mathbb{C}\), \(Tv\) is orthogonal to all \(v\) IFF \(T\) is the zero matrix</li><li>7.16: Over \(\mathbb{R}\), \(Tv\) is orthogonal to all \(v\) <strong>and \(T\) is self-adjoint</strong>, then \(T\) is the zero matrix</li></ul><p>Why is it different? <strong><strong>ASK JANA IDK</strong></strong></p><h2 id=eigenvectors-of-t-corresponding-to-distinct-eigenvalues-are-orthogonal-if-t-in-mathcal-l--v--is-normal>Eigenvectors of \(T\) corresponding to distinct eigenvalues are orthogonal if \(T \in \mathcal{L}(V)\) is normal</h2><p>Prove depended on the minor results from before</p><p>and then voodo whitchcraft.</p><h2 id=complex-spectral-theorem>Complex Spectral Theorem</h2><p>On \(\mathbb{C}\), and with \(T \in \mathcal{L}(V)\), the following statements are equivalent:</p><ol><li>\(T\) is normal</li><li>\(T\) has an orthonormal basis of eigenvectors</li><li>and so \(T\) is diagonalizable w.r.t. that orthonormal <strong>basis of eigenvectors</strong></li></ol><p>This proof depends on <a href=/posts/kbhgram_schmidt/#schur-s-theorem>Schur&rsquo;s Theorem</a>.</p><p>The real number version requires that \(T\) is <a href=#self-adjoint>self-adjoint</a>.</p><h2 id=things-to-ask-jana>Things to ask jana</h2><ul><li>why is 7.14 and 7.16 different</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

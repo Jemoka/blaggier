@@ -1,0 +1,90 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>circuit</title>
+<meta name=description content="A circuit is a new model of computation, like turing machines. circuit are defined in terms of boolean logic, with components \(\text{AND}, \text{OR}, \text{NOT}\).
+Most important quirk
+constituents
+
+sequence of \(n\) true/false inputs \(x_1, &mldr;, x_{n}\)
+a graph with nodes belled AND/OR/NOT combining these things pairwise boolean gates
+a single output true/false
+
+complexity measures of circuits
+size (circuits)
+number of gates&mdash;corresponds roughly to &ldquo;time complexity&rdquo;
+depth (circuits)
+length of the longest part from the output gate to inputs&mdash;roughly &ldquo;parallel time complexity&rdquo;"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>circuit</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhcircuits/>circuit</a> is a new model of computation, like <a href=/posts/kbhturing_machinea/>turing machine</a>s. <a href=/posts/kbhcircuits/>circuit</a> are defined in terms of boolean logic, with components \(\text{AND}, \text{OR}, \text{NOT}\).</p><p>Most important quirk</p><h2 id=constituents>constituents</h2><ul><li>sequence of \(n\) true/false inputs \(x_1, &mldr;, x_{n}\)</li><li>a graph with nodes belled AND/OR/NOT combining these things pairwise boolean gates</li><li>a single output true/false</li></ul><h2 id=complexity-measures-of-circuits>complexity measures of circuits</h2><h3 id=size--circuits>size (circuits)</h3><p>number of gates&mdash;corresponds roughly to &ldquo;time complexity&rdquo;</p><h3 id=depth--circuits>depth (circuits)</h3><p>length of the longest part from the output gate to inputs&mdash;roughly &ldquo;parallel time complexity&rdquo;</p><h2 id=additional-info>additional info</h2><h3 id=contrasts-with-tms>contrasts with TMs</h3><p>in contrast with <a href=/posts/kbhturing_machinea/>turing machine</a>s&mldr;</p><p>circuits have fixed input length \(n\), so to decide a <a href=/posts/kbhalphabet/>language</a>, we need a <a href=#circuit-family>circuit family</a>.</p><h3 id=circuit-family>circuit family</h3><p>A <a href=#circuit-family>circuit family</a> \(\qty {C_{n}}_{n \in \mathbb{N}}\) where \(C_{n}\) has \(n\) inputs&mdash;every <a href=#circuit-family>circuit family</a> decides a language \(L \subseteq \qty {0,1}^{*}\). &ldquo;time complexity&rdquo; is more formally then the rate at which a <a href=#circuit-family>circuit family</a> grows in <a href=#size--circuits>size</a> based on length of \(n\).</p><h3 id=uniform--complexity-theory>uniform (complexity theory)</h3><p>A Turing Machine is a <a href=#uniform--complexity-theory>uniform</a> type of computation&mdash;we have a single algorithm for all \(n\); circuits are a non-<a href=#uniform--complexity-theory>uniform</a> model since a <a href=#circuit-family>circuit family</a> can contain different algorithms for different size.</p><h4 id=issue>issue!</h4><p>The <a href=#size-complexity>size complexity</a> does <strong>not</strong> take into account the time taken to generate the circuit! Just because the circuit is small does <strong>not</strong> mean we have taken into account the complexity of generating the circuit.</p><p>So&mldr;</p><ul><li><p>p-uniform</p><p>a circuit family is <a href=#p-uniform>p-uniform</a> if there exists a polytime algorithm for generating the \(n\) th circuit.</p><p>this notion corresponds to the &ldquo;one-time pre-procesing cost&rdquo; for all inputs of the same length.</p><ul><li><p><a href=#p-uniform>p-uniform</a> <a href=#p-poly>P/poly</a> is exactly <a href=/posts/kbhtime_complexity/#polynomial-time>P</a></p><p>\(\subseteq\) given \(x\), get the length of your input \(n = |x|\), create nth circuit \(C_{n}\) in poly-time and then run it in poly-time.</p><p>\(\supseteq\) given <a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a>, <a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a> givens a circuit such that \(x \in L \Leftrightarrow \exists y \text{ s.t. } C\qty(x,y) = 1\) in poly time. Now, for \(x \in L \in P\), then, \(y\) doesn&rsquo;t matter so we just have a poly-time circuit.</p></li></ul></li></ul><h3 id=size-complexity>size complexity</h3><p><a href=#size-complexity>size complexity</a> is the analogue of <a href=/posts/kbhtime_complexity/>Time Complexity</a> for <a href=/posts/kbhcircuits/>circuit</a></p><p>\begin{equation}
+s \qty(n) : \mathbb{N} \to \mathbb{N}, \text{Size}\qty(C_{n}) \leq S\qty(n), \forall n \in \mathbb{N}
+\end{equation}</p><p>This gives us:</p><p>\begin{equation}
+\text{SIZE} \qty(s \qty(n)) = \qty {L :L\text{ has a family of size O(S(n))}}
+\end{equation}</p><h3 id=p-poly>P/poly</h3><p>\begin{equation}
+P/poly = \text{SIZE}\qty(\text{poly}\qty(n))
+\end{equation}</p><figure><img src=/ox-hugo/2025-02-19_15-11-46_screenshot.png></figure><h4 id=for-all-languages-it-is-in-size--2-on>for all languages, it is in SIZE(2^O(n))</h4><p>Because we can just build a circuit for a truth table for \(n\):</p><p>\begin{equation}
+C_{n}\qty(x) = \bigvee_{y \in L} \bigwedge_{i=1}^{n} x_{i} = y_{i}
+\end{equation}</p><h4 id=p-poly-contains-undecidable--kbhturing-machinea-dot-md--languages>p/poly contains <a href=/posts/kbhturing_machinea/#decidable>undecidable</a> languages</h4><p>every unary language \(L \subseteq \qty {0,1}^{*}\) such that \(L \subseteq \qty {1^{n} : n \in \mathbb{N}}\) is in P/poly. Yet, we can just create a circuit that ANDs the \(n\) inputs for those that we accept and \(0\) for those that we don&rsquo;t.</p><p>and there are unary decidable languages&mdash;such as \(1^{\langle M,n \rangle}\) such that \(\langle M,n \rangle \in \text{HALT}\).</p><h4 id=expanding-p-towards-p-poly>expanding P towards P/poly</h4><p>an <a href=#expanding-p-towards-p-poly>advice-taking TM</a> is, given an input \(x\), we get a read-only tape with an advice string of length \(poly\qty(|x|)\) which depends <strong>solely on \(|x|\) and not \(x\) itself</strong></p><p>an alternative definition of p/poly:</p><p>\begin{equation}
+L \in p poly \implies x \in L \Leftrightarrow M(x, y_{|x|})\text{ accepts}
+\end{equation}</p><p>notably, this is different from <a href=/posts/kbhnon_polynomial_time/>NP</a> since our machine is not obligated to reject all \(M\qty(x, y), \forall y, x \not \in L\) as does NP. We just want this to work for some particular choices of \(y\).</p><hr><p>all that&rsquo;s left is to prove that the definition above is equaivalent to the original one for p/poly</p><p>\(\Rightarrow\) for every size \(n\), we just dump the circuit&rsquo;s code into the &ldquo;advice&rdquo;.</p><p>\(\Leftarrow\) we do the <a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a> thing from <a href=#p-uniform--org4f2c0f5--p-poly--orgffe6a74--is-exactly-p--kbhtime-complexity-dot-md>p-uniform P/poly is exactly P</a>, and hard code the advice into a unique circut for each of the code and then reduce to a poly circuit.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

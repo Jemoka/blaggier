@@ -1,0 +1,92 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Euler-Bernoulli Theory</title>
+<meta name=description content="The Euler-Bernoulli Theory is a theory in dynamics which describes how much a beam deflect given an applied load.
+Assumptions
+For Euler-Bernoulli Theory to apply in its basic form, we make assumptions.
+
+The &ldquo;beam&rdquo; you are bending is modeled as a 1d object; it is only long and is not wide
+For this page, \(+x\) is &ldquo;right&rdquo;, \(+y\) is &ldquo;in&rdquo;, and \(+z\) is &ldquo;up&rdquo;
+Probably more, but we only have this so far.
+the general form of the Euler-Bernoulli Theory assumes a freestanding beam
+
+Basic Statement
+The most basic for the Euler-Bernoulli Equation looks like this:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Euler-Bernoulli Theory</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>The <a href=/posts/kbheuler_bernoulli_theory/>Euler-Bernoulli Theory</a> is a theory in dynamics which describes how much a beam deflect given an applied load.</p><h2 id=assumptions>Assumptions</h2><p>For <a href=/posts/kbheuler_bernoulli_theory/>Euler-Bernoulli Theory</a> to apply in its basic form, we make assumptions.</p><ul><li>The &ldquo;beam&rdquo; you are bending is modeled as a 1d object; it is only long and is not wide</li><li>For this page, \(+x\) is &ldquo;right&rdquo;, \(+y\) is &ldquo;in&rdquo;, and \(+z\) is &ldquo;up&rdquo;</li><li>Probably more, but we only have this so far.</li><li>the general form of the <a href=/posts/kbheuler_bernoulli_theory/>Euler-Bernoulli Theory</a> assumes a freestanding beam</li></ul><h2 id=basic-statement>Basic Statement</h2><p>The most basic for the <a href=/posts/kbheuler_bernoulli_theory/>Euler-Bernoulli Equation</a> looks like this:</p><p>\begin{equation}
+\dv[2]x \qty(EI\dv[2]{w}{x}) =q(x)
+\end{equation}</p><p>where, \(w(x)\) is the deflection of the beam at some direction \(z\) at position \(x\). \(q\) is the load distribution (force per unit length, similar to pressure which is force per unit area, at each point \(x\)). \(E\) is the <a href=/posts/kbhelastic_modulus/>Elastic Modulus</a> of the beam, and \(I\) the <a href=/posts/kbhsecond_moment_of_area/>second moment of area</a> of the beam&rsquo;s cross section.</p><p>Note that \(I\) must be calculated with respect to the axis perpendicular to the load. So, for a beam placed longside by the \(x\) axis, and pressed down on the \(z\) axis, \(I\) should be calculated as: \(\iint z^{2}\dd{y}\dd{z}\).</p><p>Pretty much all the time, the <a href=/posts/kbhelastic_modulus/>Elastic Modulus</a> \(E\) (how rigid your thing is) and <a href=/posts/kbhsecond_moment_of_area/>second moment of area</a> \(I\) (how distributed are the cross-section&rsquo;s mass) are constant; therefore, we factor them out, making:</p><p>\begin{align}
+&\dv[2]x \qty(EI\dv[2]{w}{x}) =q(x) \\
+\Rightarrow\ & EI \qty(\dv[2]x \dv[2]{w}{x} )=q(x) \\
+\Rightarrow\ & EI \dv[4]{w}{x} = q(x)
+\end{align}</p><p>This is also apparently used everywhere in engineering to figure out how bendy something will be given some \(q\) put along the beam.</p><p>Ok, let&rsquo;s take the original form of this equation and take some integrals to see the edges of this thing:</p><p>\begin{equation}
+\dv[2]{x} \qty(EI \dv[2]{w}{x}) = q(x)
+\end{equation}</p><p>First things first, let&rsquo;s take a single integral:</p><p>\begin{equation}
+\dv{x} \qty(EI \dv[2]{w}{x}) = -Q
+\end{equation}</p><p>This is the total shear force on the material (the sum of all forces applied to all points \(\int q(x)\).) We have a sign difference</p><hr><p>old notes</p><p>Let&rsquo;s take some <a href=/posts/kbhtransverse_loaod/>transverse load</a> \(q(x,t)\), applied at time \(t\) at location \(x\). To model the load/bending/vibration of the rod, we first have to know a few more things.</p><p>First, figure the <a href=/posts/kbhyoung_s_modulus/>Young&rsquo;s Modulus</a> \(E\) of the thing that you are bending.</p><p>Of course, we also want to know what shape our thing is; more specifically, we want to know how the point masses in our thing is distributed. So we will also need the <a href=/posts/kbhsecond_moment_of_area/>second moment of area</a> \(I\).</p><p>Finally, we should have \(m\) mass per unit length of the rod we are bending.</p><p>The <a href=/posts/kbheuler_bernoulli_theory/>Euler-Bernoulli Theory</a> tells us that the deflection (distance from the neutral-axis) each point \(x\) in the material should get is:</p><p>\begin{equation}
+EI \pdv[4]{w}{x} + m \pdv[2]{w}{t} = q(x,t)
+\end{equation}</p><p>Solving this lovely <a href=/posts/kbhdiffeq_intro/>Differential Equation</a> would tell you how far away each point diverges from the neutral point.</p><p>Tracing this out over \((x,t)\), we can get some trace of how the thing vibrates by measuring the behavior of \(\omega\).</p><h2 id=free-vibrations-in-euler-bernoulli-theory--kbheuler-bernoulli-theory-dot-md>free vibrations in <a href=/posts/kbheuler_bernoulli_theory/>Euler-Bernoulli Theory</a></h2><p>If no time-varying \(q\) exists, we then have:</p><p>\begin{equation}
+EI \pdv[4]{w}{x} + m \pdv[2]{w}{t} = 0
+\end{equation}</p><p>And then some magical <a href=/posts/kbhdiffeq_intro/>Differential Equations</a> happen. I hope to learn them soon.</p><figure><img src=/ox-hugo/2022-09-05_23-15-31_screenshot.png></figure><figure><img src=/ox-hugo/2022-09-05_23-16-41_screenshot.png></figure><p>The result here is significant: if we can figure the actual rate of vibrations which we expect.</p><p>However, this doesn&rsquo;t really decay&mdash;but <a href=/posts/kbhtuning_forks/>funing tork</a>s do. How?</p><p>Apparently because air resistance&mdash;Zachary Sayyah. So Sasha time.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

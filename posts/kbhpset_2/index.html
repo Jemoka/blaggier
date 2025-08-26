@@ -1,0 +1,182 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>PSet 2</title>
+<meta name=description content="Chapter 3
+Problem 3.10
+Part a
+
+
+
+Notably, the slope field is symmetric across the \(y\) axis, and repeats with every \(m\pi\) interval about the line \(\frac{\pi}{4}\).
+Part b
+We have a stationary value at \(y = \frac{\pi}{4}\). Beyond that, as initial \(x>0, y<\frac{\pi}{4}\), solutions will all trend towards \(y=\frac{\pi}{4}\) as \(t \to \infty\), because the derivative is positive for that entire region. For \(x>0, \frac{\pi}{2}>y> \frac{\pi}{4}\), the function will also trend towards \(\frac{\pi}{4}\), as the slope is negative for that entire region. This pattern repeats for all \(y_0+m\pi\). That is, for instance, for \(y\) between \(m\pi+\frac{\pi}{4} < y < m\pi + \frac{\pi}{2}\), \(y\) will trend towards \(m\pi + \frac{\pi}{4}\). For initial \(t<0, y < \frac{\pi}{4}\), most solutions will trend towards \(-\infty\) as the region has negative slope. Yet, as \(t_0 \approx 0\), the function will never hit the singularity point of \(y = -\frac{\pi}{2}\) before traveling to the \(t>0\) side, resulting in it trending towards \(+\infty\). Finally, for initial \(y>\frac{\pi}{4}, t<0\), the function will reach \(+\infty\) because it will hit the positive singularity at \(\frac{\pi}{2}\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>PSet 2</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=chapter-3>Chapter 3</h2><h3 id=problem-3-dot-10>Problem 3.10</h3><h4 id=part-a>Part a</h4><figure><img src=/ox-hugo/2024-01-18_22-30-37_screenshot.png></figure><p>Notably, the slope field is symmetric across the \(y\) axis, and repeats with every \(m\pi\) interval about the line \(\frac{\pi}{4}\).</p><h4 id=part-b>Part b</h4><p>We have a stationary value at \(y = \frac{\pi}{4}\). Beyond that, as initial \(x>0, y&lt;\frac{\pi}{4}\), solutions will all trend towards \(y=\frac{\pi}{4}\) as \(t \to \infty\), because the derivative is positive for that entire region. For \(x>0, \frac{\pi}{2}>y> \frac{\pi}{4}\), the function will also trend towards \(\frac{\pi}{4}\), as the slope is negative for that entire region. This pattern repeats for all \(y_0+m\pi\). That is, for instance, for \(y\) between \(m\pi+\frac{\pi}{4} &lt; y &lt; m\pi + \frac{\pi}{2}\), \(y\) will trend towards \(m\pi + \frac{\pi}{4}\). For initial \(t&lt;0, y &lt; \frac{\pi}{4}\), most solutions will trend towards \(-\infty\) as the region has negative slope. Yet, as \(t_0 \approx 0\), the function will never hit the singularity point of \(y = -\frac{\pi}{2}\) before traveling to the \(t>0\) side, resulting in it trending towards \(+\infty\). Finally, for initial \(y>\frac{\pi}{4}, t&lt;0\), the function will reach \(+\infty\) because it will hit the positive singularity at \(\frac{\pi}{2}\).</p><h2 id=chapter-4>Chapter 4</h2><h3 id=problem-4-dot-1-part-a>Problem 4.1, part a</h3><figure><img src=/ox-hugo/2024-01-18_22-31-16_screenshot.png></figure><h3 id=problem-4-dot-2>Problem 4.2</h3><h4 id=part-a>Part a</h4><figure><img src=/ox-hugo/2024-01-18_22-31-46_screenshot.png></figure><h4 id=part-b>Part b</h4><figure><img src=/ox-hugo/2024-01-18_22-32-01_screenshot.png></figure><h3 id=problem-4-dot-3>Problem 4.3</h3><h4 id=part-a>Part a</h4><figure><img src=/ox-hugo/2024-01-18_22-32-11_screenshot.png></figure><h4 id=part-b>Part b</h4><figure><img src=/ox-hugo/2024-01-18_22-34-13_screenshot.png></figure><h3 id=problem-4-dot-7>Problem 4.7</h3><h4 id=part-a>Part a</h4><p>We have:</p><p>\begin{equation}
+\dv{V}{t} = rV \ln \qty(\frac{K}{V})
+\end{equation}</p><p>We see that when \(V=K\), we have \(\ln(1) = 0\) on the right hand side, meaning \(K\) is a stationary value.</p><p>Now, we desire that this value is unique in the positive half-line; so, for \(V > 0\), we have \(0 = rV \ln (\frac{K}{V})\), and we desire \(V=K\) exactly. Note that \(V=0\) would not work, because \(V>0\). Therefore, we now have:</p><p>\begin{equation}
+\ln (\frac{K}{V}) = 0
+\end{equation}</p><p>meaning \(\frac{K}{V} = 1\). Finally, we have \(V=K\), as desired.</p><p>Importantly, note now that:</p><p>\begin{align}
+\dv V rV\ln (\frac{K}{V}) &= r(\ln \qty(\frac{K}{V}) + V \qty(\frac{V}{K}\cdot\qty(K(-1)V^{2})) \\
+&= r \qty(\ln\qty(\frac{K}{V}) - V\qty(\frac{1}{V})) \\
+&= r\qty(\ln \qty(\frac{K}{V}) -1)
+\end{align}</p><p>Now, we see at \(V=K\), this expression yields \(r(0-1)\), meaning \(-r\). As we have \(r>0\) given in the problem, we see that the stationary value is stable.</p><h4 id=part-b>Part b</h4><p>We again have:</p><p>\begin{equation}
+\dv{V}{t} = rV\ln \qty(\frac{K}{V})
+\end{equation}</p><p>that is:</p><p>\begin{equation}
+\dv{V}{t} = -r V \ln \qty( \frac{V}{K})
+\end{equation}</p><p>Taking an integral on both sides using the division method:</p><p>\begin{equation}
+\int \frac{1}{V\ln \qty(\frac{V}{K})} \dd{V} = -\int r \dd{t}
+\end{equation}</p><p>Now, let us treat:</p><p>\begin{equation}
+u = \ln \qty(\frac{V}{K})
+\end{equation}</p><p>we note that \(\dd{u} = \frac{1}{V} \dd{V}\).</p><p>Hence:</p><p>\begin{equation}
+\int \frac{1}{u} \dd{u} = -rt +C
+\end{equation}</p><p>therefore:</p><p>\begin{equation}
+\ln (u) = -rt+C = \ln \qty(\ln \qty(\frac{V}{K}))
+\end{equation}</p><p>Now, this means that:</p><p>\begin{equation}
+\ln \qty(\frac{V}{K}) = Ce^{-rt}
+\end{equation}</p><p>Plugging in our initial conditions at \(t=0\), we have:</p><p>\begin{equation}
+\ln \qty(\frac{V_0}{K}) = C
+\end{equation}</p><p>Substituting that in, we have:</p><p>\begin{align}
+\ln \qty(\frac{V}{K}) &= \ln \qty(\frac{V_0}{K})e^{-rt} \\
+&= \ln \qty(\qty(\frac{V_0}{K})^{e^{-rt}})
+\end{align}</p><p>Finally, then, we see that:</p><p>\begin{equation}
+\frac{V}{K} = \qty(\frac{V_0}{K})^{e^{-rt}}
+\end{equation}</p><p>which means:</p><p>\begin{equation}
+V = K\qty(\frac{V_0}{K})^{e^{-rt}}
+\end{equation}</p><p>as desired.</p><h4 id=part-c>Part c</h4><p>We want to perform the inverse operation of the previous question.</p><p>\begin{equation}
+V(t) = K\qty(\frac{V_0}{K})e^{-rt}
+\end{equation}</p><p>Now, that means that:</p><p>\begin{align}
+V&rsquo;(t) & = K \qty( \frac{V_0}{K})^{e^{-rt}} \ln \qty(\frac{V_0}{K}) \qty(e^{-rt}(-r)) \\
+&= -rk \qty(\frac{V_0}{K})^{e^{-rt}} \ln \qty(\frac{V_0}{K}) e^{-rt} \\
+&= -r v(t) \ln \qty(\qty(\frac{V_0}{K})^{e^{-rt}}) \\
+&= -r v(t) \qty(\frac{V}{K}) = r V(\frac{K}{V})
+\end{align}</p><p>as desired</p><h4 id=part-d>Part d</h4><figure><img src=/ox-hugo/2024-01-18_22-34-36_screenshot.png></figure><h3 id=problem-4-dot-10>Problem 4.10</h3><h4 id=part-a>Part a</h4><p>When the right side of the ODE &ldquo;vanishes&rdquo;, we have:-</p><p>\begin{equation}
+ax \qty(1- \frac{x}{b}) - \frac{x^{2}}{1+x^{2}} = 0
+\end{equation}</p><p>which means:</p><p>\begin{equation}
+x\qty(a \qty(1- \frac{x}{b}) - \frac{x}{1+x^{2}}) = 0
+\end{equation}</p><p>Now, we have that \(x = c > 0\), meaning \(x\neq 0\). Hence, for the top to hold, we have:</p><p>\begin{equation}
+a \qty(1- \frac{x}{b}) - \frac{x}{1+x^{2}} = 0
+\end{equation}</p><p>Meaning:</p><p>\begin{equation}
+a \qty(1- \frac{x}{b}) = \frac{x}{1+x^{2}}
+\end{equation}</p><p>that is, the graphs of \(a \qty(1- \frac{x}{b})\) and \(\frac{x}{1+x^{2}}\) intersect, as desired.</p><h4 id=part-b>Part b</h4><p>We know that solutions to the expression given in part a), that</p><p>\begin{equation}
+a \qty(1- \frac{x}{b}) = \frac{x}{1+x^{2}}
+\end{equation}</p><p>are the only locations where positive stationary values exists. Visually, if \(a(1-\frac{x}{b})\) is below the location at \(x = \sqrt{3}\), and the function increases as \(x\) decreases, we know that the function is bound to intersect at one point only with the curve of \(\frac{x}{1+x^{2}}\) given which is concave down at values \(x&lt;\sqrt{3}\). We know this intersection point is positive because at \(x=0\), which is where the visualized graph of \(\frac{x}{(1+x^{2}}\) changes signs, we have \(a(1-\frac{x}{b}) = a\), and we have \(a > 0\).</p><h4 id=part-c>Part c</h4><p>If the functions cross, the left term will start out before crossing being large than the right term (because its cross &ldquo;from above&rdquo;, visually). This means that prior to the stationary point, the ODE&rsquo;s right hand side is positive. After crossing, the situation in b) gives that the RHS of the ODE is negative now as the second term is given to be larger than the first term.</p><p>This means that the stationary point is an attractor (positive slope coming from below, negative slope coming from above), so it is stationary.</p><h2 id=chapter-5>Chapter 5</h2><h3 id=problem-5-dot-2-part-b>Problem 5.2, Part b</h3><p>LHS:</p><p>\begin{equation}
+(2+3i)(4-i) = 8 - 2i + 12i +3 = 11 + 10i
+\end{equation}</p><p>\begin{equation}
+(11+10i)(1-i) = 11 -11i+10i + 10 = 21 - i
+\end{equation}</p><p>RHS:</p><p>\begin{equation}
+(4-i)(1-i) = 4 -5i -1 = 3 - 5i
+\end{equation}</p><p>\begin{equation}
+(2+3i)(3-5i) = 6 - 10i + 9i +15 = 21 -i
+\end{equation}</p><p>and finally:</p><p>\begin{equation}
+21-i = 21-i
+\end{equation}</p><h3 id=problem-5-dot-3-part-c>Problem 5.3, Part c</h3><p>\begin{align}
+\frac{1-11i}{1-i} &= \frac{1-11i}{1-i}\frac{1+i}{1+i} \\
+&= \frac{1+i-11i+11}{1+1} \\
+&= \frac{12 -10i}{2} \\
+&= 6 - 5i
+\end{align}</p><h3 id=problem-5-dot-5-part-c>Problem 5.5, Part c</h3><p>\begin{align}
+\qty | \frac{8-i}{4+7i}| &= |8-i|/|4+7i| \\
+&= \sqrt{\frac{64+1}{16+49}} \\
+&= \sqrt{ \frac{65}{65}} \\
+&= 1
+\end{align}</p><h3 id=problem-5-dot-6>Problem 5.6</h3><h4 id=part-c>Part c</h4><p>We have:</p><p>\begin{equation}
+(3+i)(2+i) = (5 + 5i)
+\end{equation}</p><p>Writing it in polar form gives:</p><p>\begin{equation}
+\sqrt{50}e^{i \arctan (1)} = \sqrt{50}e^{i \frac{\pi}{4}}
+\end{equation}</p><p>Now, we have:</p><p>\begin{equation}
+(50)^{\frac{1}{4}} e^{i \frac{\pi}{8}}
+\end{equation}</p><p>Finally, writing this out in rectangular gives:</p><p>\begin{equation}
+(50)^{\frac{1}{4}} \qty(\cos \qty(\frac{\pi}{8}) + i\sin \qty(\frac{\pi}{8}))
+\end{equation}</p><p>Recall now that:</p><p>\begin{equation}
+\sin \frac{x}{2} = \sqrt{\frac{1- \cos x}{2}}
+\end{equation}</p><p>and</p><p>\begin{equation}
+\cos \frac{x}{2} = \sqrt{\frac{1+ \cos x}{2}}
+\end{equation}</p><p>Finally, that:</p><p>\begin{equation}
+\sin \frac{\pi}{4} = \cos \frac{\pi}{4} = \frac{\sqrt{2}}{2}
+\end{equation}</p><p>Now, notice that:</p><p>\begin{equation}
+(50)^{\frac{1}{4}} \qty(\cos \qty(\frac{\pi}{2 \cdot 4}) + i\sin \qty(\frac{\pi}{2 \cdot 4}))
+\end{equation}</p><p>which is equal to, based on the identities above:</p><p>\begin{equation}
+(50)^{\frac{1}{4}} \qty(\sqrt{\frac{2+\sqrt{2}}{4}} + i\sqrt{\frac{2-\sqrt{2}}{4}})
+\end{equation}</p><h4 id=part-d>Part d</h4><p>We have:</p><p>\begin{equation}
+\frac{2+2i}{i}
+\end{equation}</p><p>Writing the top and bottom separately in polar, we have:</p><p>\begin{equation}
+\sqrt{8} e^{i \arctan (1)} = \sqrt{8} e^{i \frac{\pi}{4}}
+\end{equation}</p><p>\begin{equation}
+e^{i \frac{\pi}{2}}
+\end{equation}</p><p>Dividing the two expressions gives:</p><p>\begin{equation}
+\sqrt{8} e^{i -\frac{\pi}{4}}
+\end{equation}</p><p>Taking the square root gives</p><p>\begin{equation}
+(8)^{\frac{1}{4}}e^{i \frac{-\pi}{8}}
+\end{equation}</p><p>Finally, converting the expression back to polar is almost the same as in part C). Recall that:</p><p>Recall now that:</p><p>\begin{equation}
+\sin \frac{x}{2} = \sqrt{\frac{1- \cos x}{2}}
+\end{equation}</p><p>and</p><p>\begin{equation}
+\cos \frac{x}{2} = \sqrt{\frac{1+ \cos x}{2}}
+\end{equation}</p><p>Finally, that:</p><p>\begin{equation}
+\sin \frac{\pi}{4} = \cos \frac{\pi}{4} = \frac{\sqrt{2}}{2}
+\end{equation}</p><p>Now, notice that:</p><p>\begin{equation}
+(8)^{\frac{1}{4}} \qty(\cos \qty(-\frac{\pi}{2 \cdot 4}) + i\sin \qty(-\frac{\pi}{2 \cdot 4}))
+\end{equation}</p><p>note that \(\sin (-x) = -\sin (x)\), while \(\cos (-x) = \cos (x)\). This results in:</p><p>\begin{equation}
+(8)^{\frac{1}{4}} \qty(\sqrt{\frac{2+\sqrt{2}}{4}} - i\sqrt{\frac{2-\sqrt{2}}{4}})
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

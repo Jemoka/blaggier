@@ -1,0 +1,92 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-ENGR76 MAY232024</title>
+<meta name=description content="Convolutional Code
+A Convolutional Code, at each time \(j\), takes bit \(b_{j}\) and output two bits \(p_{2j-1}\), \(p_{2j}\), by using \(b_{j}\) and the previous two its \(b_{j-1}\) and \(b_{j-2}\).
+Working Example
+Consider that if you have \(k\) bits to communicate to the receiver:
+\begin{equation}
+b_1, b_2, \dots, b_{k}
+\end{equation}
+Codewords/Output sequence:
+\begin{equation}
+p_1,  p_{2}, \dots
+\end{equation}
+Let we have some sequence of \(k\) input bits
+\begin{equation}
+j = 1, \dots, k
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-ENGR76 MAY232024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=convolutional-code>Convolutional Code</h2><p>A <a href=#convolutional-code>Convolutional Code</a>, at each time \(j\), takes bit \(b_{j}\) and output two bits \(p_{2j-1}\), \(p_{2j}\), by using \(b_{j}\) and the previous two its \(b_{j-1}\) and \(b_{j-2}\).</p><h3 id=working-example>Working Example</h3><p>Consider that if you have \(k\) bits to communicate to the receiver:</p><p>\begin{equation}
+b_1, b_2, \dots, b_{k}
+\end{equation}</p><p>Codewords/Output sequence:</p><p>\begin{equation}
+p_1, p_{2}, \dots
+\end{equation}</p><p>Let we have some sequence of \(k\) input bits</p><p>\begin{equation}
+j = 1, \dots, k
+\end{equation}</p><p>then, for every input bit, we generate two output bits:</p><p>\begin{equation}
+p_{2j-1} = b_{j} \oplus b_{j-1} \oplus b_{j-2}
+\end{equation}</p><p>\begin{equation}
+p_{2j} = b_{j} \oplus b_{j-2}
+\end{equation}</p><p>if we are at \(j=1\), then we assume that \(b_{j-1} = b_{j-2} = 0\).</p><h3 id=shift-register>Shift Register</h3><p>So you can encode this in a streaming fashion, and shift them off as you go</p><h3 id=fst>FST</h3><p>The <a href=#convolutional-code>Convolutional Code</a>, then, is essentially a <strong>finite state machine</strong>: whereby the last two bits are essentially the &ldquo;state&rdquo; of the machine used for the output. \((b_{j-1}, b_{j-2})\). The input would be \(b_{j}\), and the output is \(p_{2j-1}, p_{2j}\).</p><p>During each action \(b_{j}\), we essentially perform the &ldquo;shift&rdquo; operation.</p><p>Therefore, you can draw it in terms of a finite state diagram.</p><figure><img src=/ox-hugo/2024-05-23_14-20-55_screenshot.png></figure><h3 id=trellis>Trellis</h3><p>Now, consider rolling out finite state machine over time: make a grid of \(j\) on the x axis, and state on y axis. Then, you can trace possible lines connecting everything.</p><p>We can encode any encoding process as a <strong>PATH</strong> is the rollout trellis.</p><p>This could also help us perform decoding, because we can spot which edge our scheme traveled down.</p><h3 id=viterbi-decoding>Viterbi Decoding</h3><p>bottom-up DP</p><ol><li>go through your edges, calculating <a href=/posts/kbhsu_engr76_may142024/#hamming-distance>Hamming Distance</a> of each edge of your trellis&rsquo; decoding and the one you recieved; replace each edge with that distance</li><li>edit distance minimize lol through the path to solve (i.e. run dijikstra on these edges)</li></ol></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

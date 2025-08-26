@@ -1,0 +1,88 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 OCT102024</title>
+<meta name=description content="more on types
+Remember: when we say \(e: t\), this means that as we evaluate \(e\), after all reductions we will get a thing of type \(t\).
+type checking
+
+start at the leaves, integers and variables
+for each one above, match the expression to the type rules
+
+a* type inference
+
+for every distinct lambda variable, we name a new type
+then, for function applications, we have then also substitute the output type of the function with a type variable
+
+then, to saturating the constraint, we solve them using:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 OCT102024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>more on <a href=/posts/kbhtyping/>type</a>s</p><p>Remember: when we say \(e: t\), this means that as we evaluate \(e\), after all reductions we will get a thing of type \(t\).</p><h2 id=type-checking>type checking</h2><ol><li>start at the leaves, integers and variables</li><li>for each one above, match the expression to the <a href=/posts/kbhtyping/#type-rules>type rules</a></li></ol><p>a* type inference</p><ol><li>for every distinct lambda variable, we name a new type</li><li>then, for function applications, we have then also substitute the output type of the function with a type variable</li></ol><p>then, to saturating the constraint, we solve them using:</p><ul><li>\(t = a \implies a = t\)</li><li>\(a = t_1, a = t_2 \implies a = t_1, a = t_2, t_1=t_2\)</li><li>\(t_1 \to t_2 = t_3 \to t_4 \implies t_1 \to t_2 = t_3 \to t_4 = t_1 = t_3, t_2 =t_4\)</li></ul><p>to then check and infer types</p><ul><li>we want to make sure no functions are int \(x \to y = int\)</li><li>we want to make sure that an equation has no infinite solutions: \(int \to int \to \ldots\)</li></ul><p>we do the first thing by staring at it real hard; we do the second thing by <a href=#canonicalization>canonicalization</a>.</p><h3 id=canonicalization>canonicalization</h3><ul><li>That no equation \(x \to y = int\) is present</li><li>That the equations do not have infinite solutions</li><li>Otherwise the program is ill-typed</li></ul><p>we want every equivalent type to be represented by one thing.</p><ul><li>\(C(S, int) = int\)</li><li>\(C(S, t\to t&rsquo;) = C(S,t) \to C(S, t&rsquo;)\)</li><li>\(C(S, a) = C(S, t)\) if \(a = t \in S\), and \(t\) is not a type variable</li><li>\(C(S, a) = C(S, b)\) if \(a = b \in S\), and \(a &lt; b\) (for some oner)</li><li>\(C(S, a) = a\), otherwise</li></ul><p>This could go into an infinite loop&mdash;whenever you are canonicalizing something and you got the same expression twice you need to stop because you have an infinite loop. You can do this by keeping what you have seen of variables around.</p><h2 id=let-expression>let expression</h2><p>god we finally have variables.</p><p>\begin{equation}
+let\ f = \lambda x.e\text{ in } e'
+\end{equation}</p><p>is equivalent to</p><p>\begin{equation}
+(\lambda f . e&rsquo;) \lambda x .e
+\end{equation}</p><h2 id=polymorphic-types>polymorphic types</h2><h3 id=universally-quantified-types>universally quantified types</h3><p>types are allowed to be what they were before</p><p>\begin{equation}
+t \to a | t \to t | int
+\end{equation}</p><p>but then we also have some kind of type qualifier</p><p>\begin{equation}
+o \to \forall a . o | t
+\end{equation}</p><h3 id=key-idea>key idea</h3><p>&ldquo;if we prove that \(e :t\), and the proof doesn&rsquo;t rely on assumptions about \(\alpha\), then we have also proven \(e: \forall a. t\)&rdquo;</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

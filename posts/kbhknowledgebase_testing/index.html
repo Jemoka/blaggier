@@ -1,0 +1,152 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>knowledgebase testing page</title>
+<meta name=description content="\begin{equation}
+x_1^{(j)} = x_1^{(j-1)} + Attn\qty(x_{k}^{(j-1)}, \forall k)
+\end{equation}
+\begin{equation}
+At_{x_{1}^{(j-1)}} = \text{softmax}\qty(\frac{q_{1} k_{j}, \forall j}{\sqrt{d_{\ \text{model}}}}) v_{j}
+\end{equation}
+\begin{equation}
+At_{x_{1}^{(j-1)}} = \text{softmax}_{\text{top-k cliff}}\qty(\frac{q_{1} k_{j}, \forall j}{\sqrt{d_{\ \text{model}}}}) v_{j}
+\end{equation}
+trigger ci
+Two steps:
+
+obtaining a function for the gradient of policy against some parameters \(\theta\)
+making them more based than they are right now by optimization
+
+Thoughout all of this, \(U(\theta)\) is \(U(\pi_{\theta})\).
+Obtaining a policy gradient
+Finite-Difference Gradient Estimation
+We want some expression for:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>knowledgebase testing page</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>\begin{equation}
+x_1^{(j)} = x_1^{(j-1)} + Attn\qty(x_{k}^{(j-1)}, \forall k)
+\end{equation}</p><p>\begin{equation}
+At_{x_{1}^{(j-1)}} = \text{softmax}\qty(\frac{q_{1} k_{j}, \forall j}{\sqrt{d_{\ \text{model}}}}) v_{j}
+\end{equation}</p><p>\begin{equation}
+At_{x_{1}^{(j-1)}} = \text{softmax}_{\text{top-k cliff}}\qty(\frac{q_{1} k_{j}, \forall j}{\sqrt{d_{\ \text{model}}}}) v_{j}
+\end{equation}</p><p>trigger ci</p><p>Two steps:</p><ol><li>obtaining a function for the gradient of policy against some parameters \(\theta\)</li><li>making them more based than they are right now by optimization</li></ol><p>Thoughout all of this, \(U(\theta)\) is \(U(\pi_{\theta})\).</p><h2 id=obtaining-a-policy-gradient>Obtaining a policy gradient</h2><h3 id=finite-difference-gradient-estimation>Finite-Difference Gradient Estimation</h3><p>We want some expression for:</p><p>\begin{equation}
+\nabla U(\theta) = \qty[\pdv{U}{\theta_{1}} (\theta), \dots, \pdv{U}{\theta_{n}}]
+\end{equation}</p><p>we can estimate that with the finite-difference &ldquo;epsilon trick&rdquo;:</p><p>\begin{equation}
+\nabla U(\theta) = \qty[ \frac{U(\theta + \delta e^{1}) - U(\theta)}{\delta} , \dots, \frac{U(\theta + \delta e^{n}) - U(\theta)}{\delta} ]
+\end{equation}</p><p>where \(e^{j}\) is the standard <a href=/posts/kbhbasis/>basis</a> <a href=/posts/kbhvector/>vector</a> at position \(j\). We essentially add a small \(\delta\) to the \(j\) th slot of each parameter \(\theta_{j}\), and divide to get an estimate of the gradient.</p><h3 id=linear-regression-gradient-estimate>Linear Regression Gradient Estimate</h3><p>We perform \(m\) random perturbations of \(\theta\) parameters, and lay each resulting <a href=/posts/kbhparameter/>parameter</a> vector flat onto a matrix:</p><p>\begin{equation}
+\Delta \theta = \mqty[(\Delta \theta^{1})^{T} \\ \dots \\ (\Delta \theta^{m})^{T}]
+\end{equation}</p><p>For \(\theta\) that contains \(n\) parameters, this is a matrix \(m\times n\).</p><p>We can now write out the \(\Delta U\) with:</p><p>\begin{equation}
+\Delta U = \qty[U(\theta+ \Delta \theta^{1}) - U(\theta), \dots, U(\theta+ \Delta \theta^{m}) - U(\theta)]
+\end{equation}</p><p>We have to compute <a href=/posts/kbhpolicy_evaluation/#rollout-utility>Roll-out utility</a> for each \(U(\theta + &mldr;)\)</p><p>We now want to fit a function between \(\Delta \theta\) to \(\Delta U\), because from the definition of the gradient we have:</p><p>\begin{equation}
+\Delta U = \nabla_{\theta} U(\theta)\ \Delta \theta
+\end{equation}</p><p>(that is \(y = mx\))</p><p>Rearranging the expression above</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) \approx \Delta \theta^{\dagger} \Delta U
+\end{equation}</p><p>where \(\Delta \theta^{\dagger}\) is the <a href>pseudoinverse</a> of \(\Delta \theta\) matrix.</p><p>To end up at a gradient estimate.</p><h3 id=likelyhood-ratio-gradient--kbhpolicy-gradient-dot-md>Likelyhood Ratio <a href=/posts/kbhpolicy_gradient/>Gradient</a></h3><p>This is likely good, but requires a few things:</p><ol><li>an explicit transition model that you can compute over</li><li>you being able to take the gradient of the policy</li></ol><p>this is what people usually refers to as &ldquo;<a href=/posts/kbhpolicy_gradient/>Policy Gradient</a>&rdquo;.</p><p>Recall:</p><p>\begin{align}
+U(\pi_{\theta}) &= \mathbb{E}[R(\tau)] \\
+&= \int_{\tau} p_{\pi} (\tau) R(\tau) d\tau
+\end{align}</p><p>Now consider:</p><p>\begin{align}
+\nabla_{\theta} U(\theta) &= \int_{\tau} \nabla_{\theta} p_{\pi}(\tau) R(\tau) d \tau \\
+&= \int_{\tau} \frac{p_{\pi} (\tau)}{p_{\pi} (\tau)} \nabla_{\tau} p_{\tau}(\tau) R(\tau) d \tau
+\end{align}</p><hr><p>Aside 1:</p><p>Now, consider the expression:</p><p>\begin{equation}
+\nabla \log p_{\pi} (\tau) = \frac{\nabla p_{\pi}(\tau)}{p_{\pi} \tau}
+\end{equation}</p><p>This is just out of calculus. Consider the derivative chain rule; now, the derivative of \(\log (x) = \frac{1}{x}\) , and the derivative of the inside is \(\nabla x\).</p><p>Rearranging that, we have:</p><p>\begin{equation}
+\nabla p_{\pi}(\tau) = (\nabla \log p_{\pi} (\tau))(p_{\pi} \tau)
+\end{equation}</p><hr><p>Substituting that in, one of our \(p_{\pi}(\tau)\) cancels out, and, we have:</p><p>\begin{equation}
+\int_{\tau} p_{\pi}(\tau) \nabla_{\theta} \log p_{\pi}(\tau) R(\tau) \dd{\tau}
+\end{equation}</p><p>You will note that this is the definition of the <a href=/posts/kbhexpectation/>expectation</a> of the right half (everything to the right of \(\nabla_{\theta}\)) vis a vi all \(\tau\) (multiplying it by \(p(\tau)\)). Therefore:</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} [\nabla_{\theta} \log p_{\pi}(\tau) R(\tau)]
+\end{equation}</p><hr><p>Aside 2:</p><p>Recall that \(\tau\) a trajectory is a pair of \(s_1, a_1, &mldr;, s_{n}, a_{d}\).</p><p>We want to come up with some \(p_{\pi}(\tau)\), &ldquo;what&rsquo;s the probability of a trajectory happening given a policy&rdquo;.</p><p>\begin{equation}
+p_{\pi}(\tau) = p(s^{1}) \prod_{k=1}^{d} p(s^{k+1} | s^{k}, a^{k}) \pi_{\theta} (a^{k}|s^{k})
+\end{equation}</p><p>(&ldquo;probably of being at a state, times probability of the transition happening, times the probability of the action happening, so on, so on&rdquo;)</p><p>Now, taking the log of it causes the product to become a summation:</p><p>\begin{equation}
+\log p_{\pi}(\tau) = p(s^{1}) + \sum_{k=1}^{d} p(s^{k+1} | s^{k}, a^{k}) + \pi_{\theta} (a^{k}|s^{k})
+\end{equation}</p><hr><p>Plugging this into our expectation equation:</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\nabla_{\theta} \qty(p(s^{1}) + \sum_{k=1}^{d} p(s^{k+1} | s^{k}, a^{k}) + \pi_{\theta} (a^{k}|s^{k})) R(\tau)]
+\end{equation}</p><p>This is an important result. You will note that \(p(s^{1})\) and \(p(s^{k+1}|s^{k},a^{k})\) <strong>doesn&rsquo;t have a \(\theta\) term in them!!!!</strong>. Therefore, taking term in them!!!!*. Therefore, taking the \(\nabla_{\theta}\) of them becomes&mldr; ZERO!!! Therefore:</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\qty(0 + \sum_{k=1}^{d} 0 + \nabla_{\theta} \pi_{\theta} (a^{k}|s^{k})) R(\tau)]
+\end{equation}</p><p>So based. We now have:</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\sum_{k=1}^{d} \nabla_{\theta} \log \pi_{\theta}(a^{k}|s^{k}) R(\tau)]
+\end{equation}</p><p>where,</p><p>\begin{equation}
+R(\tau) = \sum_{k=1}^{d} r_{k}\ \gamma^{k-1}
+\end{equation}</p><p>&ldquo;this is very nice&rdquo; because we do not need to know anything regarding the transition model. This means we don&rsquo;t actually need to know what \(p(s^{k+1}|s^{k}a^{k})\) because that term just dropped out of the gradient.</p><p>We can simulate a few trajectories; calculate the gradient, and average them to end up with our overall gradient.</p><h3 id=reward-to-go>Reward-to-Go</h3><p>Variance typically increases with <a href=/posts/kbhrollout_with_lookahead/#rollout>Rollout</a> depth. We don&rsquo;t want that. We want to correct for the causality of action/reward. Action in the FUTURE do not influence reward in the PAST.</p><p>Recall:</p><p>\begin{equation}
+R(\tau) = \sum_{k=1}^{d} r_{k}\ \gamma^{k-1}
+\end{equation}</p><p>Let us plug this into the <a href=#linear-regression-gradient-estimate>policy gradient</a> expression:</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\sum_{k=1}^{d} \nabla_{\theta} \log \pi_{\theta}(a^{k}|s^{k}) \qty(\sum_{k=1}^{d} r_{k}\ \gamma^{k-1})]
+\end{equation}</p><p>Let us split this reward into two piece; one piece for the past (up to \(k-1\)), and one for the future:</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\sum_{k=1}^{d} \nabla_{\theta} \log \pi_{\theta}(a^{k}|s^{k}) \qty(\sum_{l=1}^{k-1} r_{l}\ \gamma^{l-1} + \sum_{l=k}^{d} r_{l}\ \gamma^{l-1})]
+\end{equation}</p><p>We now want to ignore all the past rewards (i.e. the first half of the internal summation). Again, this is because action in the future shouldn&rsquo;t care about what reward was gather in the past.</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\sum_{k=1}^{d} \nabla_{\theta} \log \pi_{\theta}(a^{k}|s^{k}) \sum_{l=k}^{d} r_{l}\ \gamma^{l-1}]
+\end{equation}</p><p>We now factor out \(\gamma^{k-1}\) to make the expression look like:</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\sum_{k=1}^{d} \nabla_{\theta} \log \pi_{\theta}(a^{k}|s^{k}) \qty(\gamma^{k-1} \sum_{l=k}^{d} r_{l}\ \gamma^{l-k})]
+\end{equation}</p><p>We call the right term <a href=#reward-to-go>Reward-to-Go</a>:</p><p>\begin{equation}
+r_{togo}(k) = \sum_{l=k}^{d} r_{l}\ \gamma^{l-k}
+\end{equation}</p><p>where \(d\) is the depth of your trajectory and \(k\) is your current state. Finally, then:</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\sum_{k=1}^{d} \nabla_{\theta} \log \pi_{\theta}(a^{k}|s^{k}) \qty(\gamma^{k-1} r_{togo}(k))]
+\end{equation}</p><h3 id=baseline-subtraction>Baseline subtraction</h3><p>Sometimes, we want to subtract a baseline reward to show how much actually better an action is (instead of blindly summing all future rewards). This could be the average reward at all actions at that state, this could be any other thing of your choosing.</p><p>\begin{equation}
+\nabla_{\theta} U(\theta) = \mathbb{E}_{\tau} \qty[\sum_{k=1}^{d} \nabla_{\theta} \log \pi_{\theta}(a^{k}|s^{k}) \qty(\gamma^{k-1} (r_{togo}(k) - r_{baseline}(k)))]
+\end{equation}</p><p>For instance, if you have a system where each action all gave \(+1000\) reward, taking any particular action isn&rsquo;t actually very good. Hence:</p><h2 id=optimizing-the-policy-gradient--kbhpolicy-gradient-dot-md>Optimizing the <a href=/posts/kbhpolicy_gradient/>Policy Gradient</a></h2><p>We want to make \(U(\theta)\) real big. We have two knobs: what is our objective function, and what is your restriction?</p><h3 id=policy-gradient-ascent>Policy Gradient Ascent</h3><p>good &lsquo;ol fashioned</p><p>\begin{equation}
+\theta \leftarrow \theta + \alpha \nabla U(\theta)
+\end{equation}</p><p>where \(\alpha\) is learning rate/step <strong>factor</strong>. This is not your STEP SIZE. If you want to specify a step size, see <a href=#restricted-step-method>Restricted Step Method</a>.</p><h3 id=restricted-step-method>Restricted Step Method</h3><p><a href=#policy-gradient-ascent>Policy Gradient Ascent</a> can take very large steps if the gradient is too large.</p><figure><img src=/ox-hugo/2023-11-02_16-23-21_screenshot.png></figure><p>One by which we can optimize the gradient, ensuring that we don&rsquo;t take steps larger than:</p><p>\begin{equation}
+\frac{1}{2}(\theta&rsquo; - \theta)^{T} I(\theta&rsquo; - \theta) \leq \epsilon
+\end{equation}</p><p>is through <a href=#restricted-step-method>Restricted Gradient</a>:</p><p>\begin{equation}
+\theta \leftarrow \theta + \sqrt{2 \epsilon} \frac{\nabla U(\theta)}{|| \nabla U(\theta)||}
+\end{equation}</p><p>Occasionally, if a step-size is directly given to you in terms of euclidean distance, then you would replace the entirety of \(\sqrt{2 \epsilon}\) with your provided step size.</p><h3 id=trust-region-policy-optimization>Trust Region Policy Optimization</h3><p>Using a different way of restricting the update.</p><h3 id=proximal-policy-optimization>Proximal Policy Optimization</h3><p>Clipping the gradients.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

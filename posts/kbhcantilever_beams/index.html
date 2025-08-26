@@ -1,0 +1,90 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Cantilever Beams</title>
+<meta name=description content="A Cantilever beam is a rigid structure which is extended horizontally and supported on one end.
+
+Working with Cantilever Beams
+curvature
+Let&rsquo;s first define a function:
+\begin{equation}
+w(x)
+\end{equation}
+this represents the deflection of the beam at point \(x\). We will begin by taking its derivative by location:
+\begin{equation}
+\Delta w = \pdv{w}{x}
+\end{equation}
+is the change in deflection over location. &ldquo;How much deviation of the beam from the resting axi is there as you run along it?&rdquo;"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Cantilever Beams</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhcantilever_beams/>Cantilever</a> beam is a rigid structure which is extended horizontally and supported on one end.</p><hr><h2 id=working-with-cantilever-beams--kbhcantilever-beams-dot-md>Working with <a href=/posts/kbhcantilever_beams/>Cantilever Beams</a></h2><h3 id=curvature>curvature</h3><p>Let&rsquo;s first define a function:</p><p>\begin{equation}
+w(x)
+\end{equation}</p><p>this represents the deflection of the beam at point \(x\). We will begin by taking its derivative by location:</p><p>\begin{equation}
+\Delta w = \pdv{w}{x}
+\end{equation}</p><p>is the change in deflection over location. &ldquo;How much deviation of the beam from the resting axi is there as you run along it?&rdquo;</p><p>We now take another derivative:</p><p>\begin{equation}
+k = \pdv[2]{w}{x}
+\end{equation}</p><p>\(k\) is defined as the &ldquo;<a href=#curvature>Curvature</a>&rdquo; of the beam: the &ldquo;change in the change of bentness.&rdquo; The intuition is essentially this:</p><ul><li>a straight, flat beam fixed an one end has \(\Delta w=0\), \(k=0\). It does <strong>not change</strong> from its resting axis, and its rate of change from resting does <strong><strong>not change</strong></strong></li><li>a straight, slanted beam fixed at one end has \(\Delta w=C, k=0\). It <strong><strong>changes</strong></strong> from its resting axis with a linear rate, and its rate of change from resting does <strong><strong>not change</strong></strong>.</li><li>a <em>curved</em>, slanted beam fixed at one end has \(\Delta \omega = f(x), k=C\). It <strong><strong>changes</strong></strong> from its resting axis non-linearly (hence curving at a function of \(x\)), and its rate of change from resting is <strong>changing</strong> at a constant \(c\).</li></ul><h3 id=flexural-rigidity>flexural rigidity</h3><p><a href=#flexural-rigidity>Flexural Rigidity</a> is the &ldquo;force couple&rdquo; (&ldquo;rate&rdquo;) which relates the <a href=#curvature>Curvature</a> of an non-rigid body and how much torque it actually generates given the object&rsquo;s properties.</p><p>Recall first our <a href=/posts/kbhelastic_modulus/>Elastic Modulus</a> \(E\): it is a fraction of \(\frac{stress}{strain}\) measured in Pascals (force per unit area, i.e. \(\frac{N}{m^{2}} = \frac{kg}{ms^{2}}\)).</p><p>Find also <a href=/posts/kbhsecond_moment_of_area/>second moment of area</a> \(I\): a value in units \(m^{4}\) which is the sum (by area) of the squared displacement of each infinitesimal area to the axis of origin.</p><p>And we bam! we multiply the two things together, creating a value \(EI\) in units \(Nm^{2}\).</p><h3 id=bending-moment>bending moment</h3><p><a href=#bending-moment>bending moment</a> is the <a href=#bending-moment>torque from bending</a>. It is expressed usually in \(M\). As mentioned in the section about <a href=#flexural-rigidity>Flexural Rigidity</a>, we can use that value to relate \(M\) with the actual <a href=#curvature>Curvature</a> of your object.</p><p>Specifically, that:</p><p>\begin{equation}
+M = -(EI)k = -EI\pdv[2]{w}{x}
+\end{equation}</p><p>&ldquo;<a href=#bending-moment>bending moment</a> is <a href=#flexural-rigidity>flexural rigidity</a> times <a href=#curvature>curvature</a>&rdquo; => &ldquo;[how much force per distance you exert] is the result of [how bendy your thing is] times [how much you bent it].&rdquo;</p><p>There is a negative in front because if you pull out your lovely little right hand, point your thumb forward (+y), start curling your nice fingers around your nice hand (-z), you will notice that you are wrapping them downwards (the - part of the z) which is rather not positive. If we want \(\pdv[2]{w}{x}\) to be positive (bend up), we will need to chuck a negative in front of it to make both things positive.</p><p>This relation, while intuitive, is not from first-principles. In order to get such a derivation, <a href=https://en.wikipedia.org/wiki/Euler%E2%80%93Bernoulli_beam_theory#Derivation_of_the_bending_equation>you read Wikipedia</a>.</p><h3 id=magic>magic</h3><p>We can take two derivatives by location&mdash;</p><p>\begin{equation}
+\pdv[2] x \qty(EI \pdv[2]{w}{x}) = -\mu \pdv{w}{t}+q(x)
+\end{equation}</p><p>where \(\mu\) is the mass density, \(q(x)\) is the force applied (in Newtons) by area. this is magic. Will come back to it.</p><h2 id=solving-this>Solving this?</h2><p>See <a href=/posts/kbhfinite_difference_method/>Finite Difference Method</a></p><h2 id=actually-attempting-to-solve-it>Actually attempting to solve it</h2><p><a href=/posts/kbhnumerical_cantileaver_simulations/>Numerical Cantileaver Simulations</a></p><h2 id=working-on-deformation>Working on Deformation</h2></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

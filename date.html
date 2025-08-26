@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html style="overflow:hidden">
+    <head>
+        <title>About</title>
+    </head>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <body style="width:100vw;height:100vh;display:flex;align-items:center;justify-content:center">
+        <pre style="display:inline-block">It's currently <b><span id="1date"></span></b>
+in Stanford, California. I'm not sure
+about anywhere else.
+
+Thank you for your attention to this
+consequential fact.
+
+<a href="https://stanford.marriagepact.com/">here's a free link</a>.</pre>
+
+    <div
+        style="position:fixed;top:0;left:0;width:100vw;height:100vh;backdrop-filter:blur(13px);display:flex;align-items:center;justify-content:center;z-index:1000">
+        <pre style="text-align:center;font-family:monospace;line-height:1.4;padding-bottom:10vh;"><h1 style="display:inline-block;border-bottom:4px solid #eaedad">409 Conflict</h1>
+The request could not be completed due to a conflict 
+with the current state of the target resource.
+<pre style="display:inline-block"><b><span id="date"></span></b></pre>
+    </div>
+            <script>
+               var myDate = new Date();
+var pstDate = myDate.toLocaleString("en-US", {
+  timeZone: "America/Los_Angeles"
+});
+document.getElementById("date").innerHTML = pstDate;
+
+var intervalId = window.setInterval(function(){
+               var myDate = new Date();
+var pstDate = myDate.toLocaleString("en-US", {
+  timeZone: "America/Los_Angeles"
+});
+document.getElementById("date").innerHTML = pstDate;
+
+}, 1000);
+
+               </script>
+    <style>
+a:not(.header-social):not(#TableOfContents *):not(.csl-entry:first-child):not(.page-link) {
+    text-decoration: none;
+    color: inherit;
+    border-bottom: solid 1.25px #dade8a;
+    transition: border-width 0.3s;
+}
+
+a:not(.header-social):not(#TableOfContents *):not(.noannot):not(.page-link):hover {
+    border-bottom: solid 4px #dade8a !important;
+}
+
+
+    </style>
+    </body>
+</html>

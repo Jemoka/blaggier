@@ -1,0 +1,70 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>machine learning</title>
+<meta name=description content="CS229: instead of solving a problem, learn from data to find a model to solve the problem approximately.
+CS109: machine learning is the act of using some input to come up with some prediction, where the model is parameterized via a bunch of parameters. Hence, parameter learning approaches is how machine learning works.
+CS205L: training data + model to estimate new data points with minimal error; the parallel is a &ldquo;knowledge based system&rdquo; with interpolation"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>machine learning</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><strong>CS229</strong>: instead of solving a problem, learn from data to find a model to solve the problem approximately.</p><p><strong>CS109</strong>: <a href=/posts/kbhmachine_learning/>machine learning</a> is the act of using some input to come up with some prediction, where the model is parameterized via a bunch of <a href=/posts/kbhparameter/>parameter</a>s. Hence, <a href=/posts/kbhparameter_learning/>parameter learning</a> approaches is how machine learning works.</p><p><strong>CS205L</strong>: training data + model to estimate new data points with minimal error; the parallel is a &ldquo;<a href=/posts/kbhsu_cs205l_jan072025/#knowledge-based-system>knowledge based system</a>&rdquo; with interpolation</p><hr><p><a href=/posts/kbhmachine_learning/>machine learning</a> excels when we don&rsquo;t know how to program a computer to solve a particular problem; but, what we can do with effort is to collect input, output pairs that demonstrate what we want our programs to do.</p><p><a href=/posts/kbhmachine_learning/>machine learning</a> is a set of tools to learn programs from sets of data.</p><h2 id=concepts>concepts</h2><ul><li><a href=/posts/kbhsupervised_learning/>supervised learning</a></li><li><a href=/posts/kbhmachine_learning_evaluation/>evaluation</a></li></ul><h2 id=philosophizing>philosophizing</h2><h3 id=pros-cons>pros/cons</h3><ul><li><strong>advantage</strong>: broadly applicable and can solve many programs</li><li><strong>disadvantage</strong>: need (potentially a bunch) of data, and learned results are approximations<ul><li>learned programs can fail in unexpected ways</li><li>approximate solutions maybe better than having no solution</li></ul></li></ul><h3 id=applications>applications</h3><ul><li>spam classification &mdash; in: email, out: spam/not span</li><li>sign detection (stop signs, etc.) &mdash; in: image, output: location of stop sign</li><li><a href=/posts/kbhhouse_price_prediction/>house price prediction</a> &mdash; in: house description, out: price</li></ul><h3 id=types-of-ml>types of ML</h3><p>our job is to do the things in the parentheses</p><h4 id=supervised-learning>supervised learning</h4><p>&ldquo;collect training data with both input and output examples, and make a prediction&rdquo;</p><h4 id=unsupervised-learning>unsupervised learning</h4><ul><li>applies with data with <strong>no labels</strong></li><li>allows us to find <strong>structure in our data</strong> (clustering)</li></ul><h4 id=reinforcement-learning>reinforcement learning</h4><ul><li>learn in an interactive environment (as opposed to static data)</li><li>controlling and games (chess, go)</li></ul><h3 id=history-of-ml>history of ML</h3><p>Samuel 1959: &ldquo;some studies in machine learning using the game of checkers&rdquo;</p><p>Rosenblatt 1958: perception &mdash; <strong>binary classification</strong> (prediction with two possible outputs); implemented on a sota computer; and trained to perform simple <strong>geometric pattern recognition</strong>. 20x20 grid of photocells; output: is a square in the left or right half of the image.</p><p>Noticed a trend of the 50s? Why? <a href=/posts/kbhibm704/>IBM704</a>!</p><p>Nothing then happened for many years. Then, ML started having impact again the last 15 years, especially the last 3 years: this is because we now have more <strong>compute</strong> and more <strong>data</strong>.</p><h3 id=key-ideas-of-ml>Key Ideas of ML</h3><ul><li>ML is largely guided by <strong>benchmarks</strong></li><li>several key datasets for each task (image calssification, detection, etc.)</li><li>algorithmic/model innovations justified by (usually mulitple) benchmarks</li><li>very little math</li><li>rapid progress over the decade</li></ul><h4 id=a-culture-shift>a culture shift</h4><ul><li>2000-2010: emperical progress goes with theoretical results; emphassis on theory, no specialized hardware</li><li>2010-now: appreciable progress comes without theory, emphasis on benchmarks, large-scale purely experimental work</li></ul><h3 id=examples>examples</h3><h4 id=addition>addition</h4><ul><li>make a 2D domain in \(R^{2}\), and a 1D range \(R^{1}\) in addition</li><li>take any pair, choose a number of inputs \((x_i, y_{j})\) and output \(z=x_{i} + y_{j}\)</li><li>our goal: find a model function \(z = f(x,y)\); in this case, \(z = x+y\), which means we only need 3 training points to determine a plane<ul><li>&mldr;.however, if the errors exist, generalizing very much out of distribution (extremely far away), the errors will increase</li></ul></li></ul><h3 id=imagenet>ImageNet</h3><p>Large image classification dataset. <strong>1.2 million train</strong>, <strong>1000</strong> classes.</p><h4 id=motivation>motivation</h4><p>WordNet was at Princeton; and so why don&rsquo;t we have the same thing for images?</p><ul><li>humans know thousands of visual categories</li><li>if we want human-like CV, we need correspondingly large datasets</li><li>goal: <strong>let&rsquo;s populate all of WordNet with 1000 images, per node</strong></li></ul><h4 id=how>how?</h4><p>&ldquo;get a really really good grad student&rdquo;</p><ul><li>&mldr;download all of the image in Flickr</li><li>&mldr;then label them with MTurk<ul><li>(lots of work in task design, annotation, etc.)</li></ul></li></ul><h4 id=imagenet-large-scale-visual-recognition-challenge--ilsvrc>ImageNet Large Scale Visual Recognition Challenge (ILSVRC)</h4><ul><li>1.2 million training images for 1,000 classes (roughly balanced)</li><li>50,000 images for 1,000 classes (exactly balanced)</li><li>150,000 images for 1,000 classes (exactly class-balanced, hidden labels)</li></ul><p>top-5 accuracy: 5 predictions per image</p><ul><li><p>AlexNet</p><p><a href=#alexnet>AlexNet</a> beat <a href=#imagenet>ImageNet</a> from 25 => 15% error</p><p>Its a large CNN. Invented&mldr;.</p><ol><li>ReLU</li><li>Local Response Normalization (not really used anymore)</li><li>Training on GPUs (GTX 580)</li><li>Overlapping pooling</li><li><a href=/posts/kbhsu_cs224n_apr162024/#dropout>Dropout</a></li><li>Data augmentation</li></ol><p>each of these is 0-2% improvements.</p></li></ul><ul><li><p>Networks Became Bigger</p><ul><li>AleNet (8 layers)</li><li>VGG (17 layers)</li><li>ResNet (hundreds of layers)</li></ul></li></ul><h3 id=language-model--kbhlanguage-model-dot-md--s><a href=/posts/kbhlanguage_model/>Language Model</a>s</h3><p>see <a href=/posts/kbhlanguage_model/>Language Model</a></p><h3 id=risks-of-ml>Risks of ML</h3><p>ML can be used for <strong>beneficial and harmful</strong></p><ul><li>surveillance</li><li>addictive social media</li><li>automated hacking</li></ul><p>Or malfunction:</p><ul><li>underperformance</li><li>biases</li></ul><h3 id=machine-learning-with-knowledge-based-system>Machine Learning with Knowledge Based System</h3><ol><li><a href=/posts/kbhsu_cs205l_jan072025/#knowledge-based-system>knowledge based system</a> is discrete, whereas machine learning is continuous math and has errors</li><li>ML is derived from continuous math, which means it may have inherent approximation errors (early ML tends to be on problems whose baseline is &ldquo;random&rdquo;, such as ads recommendation)</li></ol><p>When you don&rsquo;t have any priors regarding</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

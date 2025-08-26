@@ -1,0 +1,93 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS361 APR112024</title>
+<meta name=description content="Hyper-gradient Descent
+Adapt the execution of gradient descent to Hyper-gradient Descent! Recall the Descent Direction Iteration update rule:
+For LR \(\alpha\), what if we write:
+\begin{equation}
+\pdv{f\qty(x^{(k+1)})}{\alpha} = \pdv{f(x^{(k+1)}}{x^{(k+1)}} \pdv{x^{(k+1)}}{\alpha}
+\end{equation}
+The left side is just \(f&rsquo;(x^{(k+1)}) = \nabla_{x}f(x^{(k+1)})\). Recall that the right side is \(\pdv{\alpha} \qty(x^{(k)} - \alpha \nabla_{x} f(x^{(k)}))\). This evaluates to simply \(-\nabla_{x}f(x^{(k)})\).
+Therefore:
+\begin{align}
+\pdv{f\qty(x^{(k+1)})}{\alpha} &= \pdv{f(x^{(k+1)}}{x^{(k+1)}} \pdv{x^{(k+1)}}{\alpha}  \\
+&= \nabla_{x}f(x^{(k+1)}) \cdot (-\nabla_{x}f(x^{(k)}))
+\end{align}
+And so, to update our step size/learning rate, we can:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS361 APR112024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=hyper-gradient-descent>Hyper-gradient Descent</h2><p>Adapt the execution of <a href=/posts/kbhlogistic_regression/#gradient-descent>gradient descent</a> to <a href=#hyper-gradient-descent>Hyper-gradient Descent</a>! Recall the <a href=/posts/kbhsu_cs361_apr092024/#descent-direction-iteration>Descent Direction Iteration</a> update rule:</p><p>For LR \(\alpha\), what if we write:</p><p>\begin{equation}
+\pdv{f\qty(x^{(k+1)})}{\alpha} = \pdv{f(x^{(k+1)}}{x^{(k+1)}} \pdv{x^{(k+1)}}{\alpha}
+\end{equation}</p><p>The left side is just \(f&rsquo;(x^{(k+1)}) = \nabla_{x}f(x^{(k+1)})\). Recall that the right side is \(\pdv{\alpha} \qty(x^{(k)} - \alpha \nabla_{x} f(x^{(k)}))\). This evaluates to simply \(-\nabla_{x}f(x^{(k)})\).</p><p>Therefore:</p><p>\begin{align}
+\pdv{f\qty(x^{(k+1)})}{\alpha} &= \pdv{f(x^{(k+1)}}{x^{(k+1)}} \pdv{x^{(k+1)}}{\alpha} \\
+&= \nabla_{x}f(x^{(k+1)}) \cdot (-\nabla_{x}f(x^{(k)}))
+\end{align}</p><p>And so, to update our step size/learning rate, we can:</p><p>\begin{align}
+\alpha^{(k+1)} &= \alpha^{(k)} - \mu \qty(\pdv{f\qty(x^{(k+1)})}{\alpha}) \\
+&= \alpha^{(k)} - \mu \qty[\nabla_{x}f(x^{(k+1)}) \cdot (-\nabla_{x}f(x^{(k)}))] \\
+&= \alpha^{(k)} + \mu \qty[\nabla_{x}f(x^{(k+1)}) \cdot (\nabla_{x}f(x^{(k)}))]
+\end{align}</p><p>Therefore, we <strong>update our weights</strong> based on steps of \(\alpha\), and update our learning rate too with respect to minimizing \(f\). You will note that <strong>optimal step sizes</strong> results in gradients being orthogonal; we see that this reflects this&mdash;no updates to \(\alpha\) happen if the gradients from \((k+1)\) is orthogonal to \(k\).</p><h2 id=second-order-methods>Second-Order Methods</h2><h3 id=newton-s-method>Newton&rsquo;s Method</h3><p>See <a href=/posts/kbhnewton_s_method/>Newton&rsquo;s Method</a></p><h3 id=secant-method>Secant Method</h3><p>You can estimate the <a href=/posts/kbhsu_math53_feb212024/#hessian>Hessian</a> from the gradient to apply <a href=/posts/kbhnewton_s_method/>Newton&rsquo;s Method</a>; this requires doing a thing:</p><p>\begin{equation}
+f&rsquo;&rsquo;(x_{k}) \approx \frac{f&rsquo;(x_{k}) - f&rsquo;(x_{k-1})}{x_{k} - x_{k-1}}
+\end{equation}</p><p>Now, we can write:</p><p>\begin{equation}
+x_{t+1} = x_{t} - \frac{x_{t} - x_{t-1}}{f&rsquo;(x_{t}) -f&rsquo;(x_{t-1})} f&rsquo;(x_{t})
+\end{equation}</p><p>How do we do this for Hessian? Use one of&mdash;</p><ul><li><a href=/posts/kbhdavidson_fletcher_powell_dfp/>Davidson-Fletcher-Powell (DFP)</a></li><li><a href=/posts/kbhbroyden_fletcher_goldfarb_shanno_bfgs/>Broyden-Fletcher-Goldfarb-SHanno (BFGS)</a></li><li><a href=/posts/kbhlimited_memory_bfgs/>Limited Memory BFGS</a></li></ul><p>due to approximate nature, this may take more steps to converge.</p><h2 id=direct-methods>Direct Methods</h2><h3 id=cyclic-coordinate-search>Cyclic Coordinate Search</h3><p><strong>cycle</strong> through the <strong>coordinates</strong> and do line <strong>search</strong>. For a function that has \(n\) design variables in the design point. In each iteration, we freeze all dimensions except one, do line search, then move on to the next coordinate frame, and repeat.</p><h4 id=broken>Broken</h4><p>This may fail when there is a trough <strong>between</strong> two axes</p><h4 id=accelerated-coordinate-search>Accelerated Coordinate Search</h4><p>After taking \(n\) cycles through all the directions once, also take a step in the average of the directions of the previous \(n\) steps. This kinda fixes the case where there&rsquo;s a trough in between.</p><h3 id=powell-s-method>Powell&rsquo;s Method</h3><p>This is <a href=#accelerated-coordinate-search>Accelerated Coordinate Search</a>, but we forget the oldest search direction. Consider <a href=#cyclic-coordinate-search>Cyclic Coordinate Search</a>, which searches in steps of the basis vectors \(e^{1}, e^{2}, &mldr;, e_{n}\). <a href=#accelerated-coordinate-search>Accelerated Coordinate Search</a> searches in \(e^{1} &mldr; e^{n}, d\), where \(d\) is the averages of your previous steps.</p><p><a href=#powell-s-method>Powell&rsquo;s Method</a> go once forward by dropping the first member of the list</p><ul><li>\(e^{1} &mldr; e^{n}, d^{(1)}\)</li><li>\(e^{2}, &mldr;, e^{n}, d^{(1)}, d^{(2)}\)</li><li>\(e^{3}, &mldr;, e^{n}, d^{(1)}, d^{(2)}, d^{(3)}\)</li></ul><h4 id=failure>Failure</h4><p>This may rapidly result in linearly dependent variables due to so much averaging. We therefore perform a linear search to obtain a new \(d\) or just reset this list back to independent bases every so often.</p><h3 id=hooke-jeeves-search>Hooke-Jeeves Search</h3><p>See <a href=/posts/kbhlocal_policy_search/>Hooke-Jeeves Policy Search</a>, but you don&rsquo;t check the <a href=/posts/kbhrollout_with_lookahead/#rollout-policy>Rollout Policy</a>; you just go and evaluate the function.</p><p>big picture: check a set of local perturbations, move your center point to the lowest one, and perturb again. If you converge, shrink your perturbation size.</p><h3 id=generalized-pattern-search>Generalized Pattern Search</h3><p><a href=#hooke-jeeves-search>Hooke-Jeeves Search</a> uses \(2n\) searches, one in each direction; for \(\mathbb{R}^{2}\), for instance, this requires \(4\) lookups because 2 basis, and one sample in positive and one sample in negative direction.</p><p>So, to save one lookup, we create a positive spanning set instead (i.e. <a href=/posts/kbhspan/#spans>spanning</a> set for the space for which you are constrained to only use positive coefficients, meaning we need one more vector). This creates a &ldquo;triangle&rdquo; which requires \(n+1\) vectors, but we only check one point per <a href=/posts/kbhspan/#spans>spanning</a> set member.</p><h4 id=opportunistic-search>Opportunistic Search</h4><p>If you get a minimum point, just go there.</p><h4 id=dynamic-ordering>Dynamic Ordering</h4><p>If you found a minimum point once, check that point again first after going there.</p><h3 id=nelder-mead-simplex-method>Nelder-Mead Simplex Method</h3><p>Take a simplex to search. Sort its verticies by lowest to highest in terms of objective function value, with lowest point being called \(x_{l}\), the \(x_{h}\) the highest function value, \(x_{s}\) being the second highest function value. \(\bar{x}\) being the mean point between all points except \(x_{h}\).</p><p>You have four possible actions</p><ul><li><strong>reflection</strong>: take your worst point, and reflex across the mean line formed across the remaining points</li><li><strong>expansion</strong>: take your best point, and move them</li><li><strong>contraction</strong>: move the worst point closer to the mean of the other two</li><li><strong>shrink</strong>: move all points closer together</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

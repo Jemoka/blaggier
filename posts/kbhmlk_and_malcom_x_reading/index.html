@@ -1,0 +1,92 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>MLK and Malcom X Reading</title>
+<meta name=description content="Reading notes
+Malcom X&rsquo;s father was an active prechear in the scene
+Malcom X and MLK are both made mostly charactures out of context
+Malcom X had a belligent upbringing with a belligent father, whereas MLK lived in relative comfort as a son of a successful minister
+Malcom was sent into white foster families as his mother became institutionalized
+Becasue of his experience in foster system, Malcom tried to pass/be white
+King&rsquo;s nonviolent priciples not understood and became conflicted with ideas of local leaders
+Malcom found a father figure in the Nation of Islam, changing his name in prison
+MLK had more positive African American role models in life
+Malcom X disallusioned with the policy of nonengagement by the nation of islam
+Malcom X had support over racial seperatism
+Nation of Islam wanted to create a completely seperate Black state, promoting Black Nationalism secret
+Malcom X wanted break because of skeptism again Eli Mohammed
+Malcom charged MLK with infiltration
+Martin believes that the process of voilence is a form of naïve expression
+King believes that the &ldquo;strong demagogic oratory&rdquo; of Malcom was detrimental and extremist
+Martin believes that the personal nature of assults from Malcom maybe result in physical assult
+Malcom was suspended during 1963, and became independent&mdash;wanted to combine religion and politics like King
+Malcom began forging ties with millitan Black movement
+Martin regretted that integration has not proceeded, but believed it would have been difficult anyways
+Rejected nonviolent and intergrational movement
+People saw King and X&rsquo;s ideas inrecosiliable
+But, King and X themselves made a possible shared ending by the end
+Believes that suicides were cut short
+Racial pride was a centering point: while Malcom saw it as something to be harbored, Martin saw it as inate"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>MLK and Malcom X Reading</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=reading-notes>Reading notes</h2><h3 id=malcom-x-s-father-was-an-active-prechear-in-the-scene>Malcom X&rsquo;s father was an active prechear in the scene</h3><h3 id=malcom-x-and-mlk-are-both-made-mostly-charactures-out-of-context>Malcom X and MLK are both made mostly charactures out of context</h3><h3 id=malcom-x-had-a-belligent-upbringing-with-a-belligent-father-whereas-mlk-lived-in-relative-comfort-as-a-son-of-a-successful-minister>Malcom X had a belligent upbringing with a belligent father, whereas MLK lived in relative comfort as a son of a successful minister</h3><h3 id=malcom-was-sent-into-white-foster-families-as-his-mother-became-institutionalized>Malcom was sent into white foster families as his mother became institutionalized</h3><h3 id=becasue-of-his-experience-in-foster-system-malcom-tried-to-pass-be-white>Becasue of his experience in foster system, Malcom tried to pass/be white</h3><h3 id=king-s-nonviolent-priciples-not-understood-and-became-conflicted-with-ideas-of-local-leaders>King&rsquo;s nonviolent priciples not understood and became conflicted with ideas of local leaders</h3><h3 id=malcom-found-a-father-figure-in-the-nation-of-islam-changing-his-name-in-prison>Malcom found a father figure in the Nation of Islam, changing his name in prison</h3><h3 id=mlk-had-more-positive-african-american-role-models-in-life>MLK had more positive African American role models in life</h3><h3 id=malcom-x-disallusioned-with-the-policy-of-nonengagement-by-the-nation-of-islam>Malcom X disallusioned with the policy of nonengagement by the nation of islam</h3><h3 id=malcom-x-had-support-over-racial-seperatism>Malcom X had support over racial seperatism</h3><h3 id=nation-of-islam-wanted-to-create-a-completely-seperate-black-state-promoting-black-nationalism-secret>Nation of Islam wanted to create a completely seperate Black state, promoting Black Nationalism secret</h3><h3 id=malcom-x-wanted-break-because-of-skeptism-again-eli-mohammed>Malcom X wanted break because of skeptism again Eli Mohammed</h3><h3 id=malcom-charged-mlk-with-infiltration>Malcom charged MLK with infiltration</h3><h3 id=martin-believes-that-the-process-of-voilence-is-a-form-of-naïve-expression>Martin believes that the process of voilence is a form of naïve expression</h3><h3 id=king-believes-that-the-strong-demagogic-oratory-of-malcom-was-detrimental-and-extremist>King believes that the &ldquo;strong demagogic oratory&rdquo; of Malcom was detrimental and extremist</h3><h3 id=martin-believes-that-the-personal-nature-of-assults-from-malcom-maybe-result-in-physical-assult>Martin believes that the personal nature of assults from Malcom maybe result in physical assult</h3><h3 id=malcom-was-suspended-during-1963-and-became-independent-wanted-to-combine-religion-and-politics-like-king>Malcom was suspended during 1963, and became independent&mdash;wanted to combine religion and politics like King</h3><h3 id=malcom-began-forging-ties-with-millitan-black-movement>Malcom began forging ties with millitan Black movement</h3><h3 id=martin-regretted-that-integration-has-not-proceeded-but-believed-it-would-have-been-difficult-anyways>Martin regretted that integration has not proceeded, but believed it would have been difficult anyways</h3><h3 id=rejected-nonviolent-and-intergrational-movement>Rejected nonviolent and intergrational movement</h3><h3 id=people-saw-king-and-x-s-ideas-inrecosiliable>People saw King and X&rsquo;s ideas inrecosiliable</h3><h3 id=but-king-and-x-themselves-made-a-possible-shared-ending-by-the-end>But, King and X themselves made a possible shared ending by the end</h3><h3 id=believes-that-suicides-were-cut-short>Believes that suicides were cut short</h3><h3 id=racial-pride-was-a-centering-point-while-malcom-saw-it-as-something-to-be-harbored-martin-saw-it-as-inate>Racial pride was a centering point: while Malcom saw it as something to be harbored, Martin saw it as inate</h3></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

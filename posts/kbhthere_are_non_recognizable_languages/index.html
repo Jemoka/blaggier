@@ -1,0 +1,72 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>there are non-recognizable languages</title>
+<meta name=description content="Assuming the Church-Turing thesis holds, there are problems that no computing device can solve.
+We can prove this using a counting argument: there are no surjective function from the set of all Turing Machines to the set of all languages over \(\qty {0,1}\).
+That is: every mapping from \(TM\) to languages fails to cover some language.
+proof
+Suppose for contradiction all languages are recognizable, then for all \(L\), there is as truing machine \(M\) recognizing \(L\). Meaning, there&rsquo;s some surjection \(R: TM \to L\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>there are non-recognizable languages</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Assuming the <a href=/posts/kbhchurch_turing_thesis/>Church-Turing thesis</a> holds, there are problems that no computing device can solve.</p><p>We can prove this using a counting argument: there are no <a href=/posts/kbhsurjectivity/>surjective</a> function from the set of all Turing Machines to the set of all languages over \(\qty {0,1}\).</p><p>That is: every mapping from \(TM\) to languages fails to cover some language.</p><h2 id=proof>proof</h2><p>Suppose for contradiction all languages are recognizable, then for all \(L\), there is as truing machine \(M\) recognizing \(L\). Meaning, there&rsquo;s some surjection \(R: TM \to L\).</p><p>Recall, <a href=/posts/kbhuniversal_turing_machine/#turing-machine-encoding>Turing Machine Encoding</a> exists, so \(TM \subseteq \qty {0,1}^{* }\); call this contained in \(M\). Languages over \(\qty {0,1}\) are <strong>SETs</strong> of strings over zeros and ones&mdash;notice, this is the POWER SET of \(M\), so its \(2^{M}\).</p><p>Now, <a href=#no-surjection-for-power-sets>no surjection for power sets</a>, so there is no such surjection \(R\). We have contradiction.</p><h2 id=no-surjection-for-power-sets>no surjection for power sets</h2><p>Let \(L\) be a set and \(2^{L}\) be its power set. Meaning: no matter what the set \(L\) is, the power set \(2^{L}\) always has strictly larger cardinality.</p><h3 id=one-proof>one proof</h3><p>Let \(f: L \to 2^{L}\); suppose \(S = \qty {x \in L \mid x \not \in f(x)} \in 2^{L}\) (that is, the set \(S\) contains the \(x \in L\) which isn&rsquo;t in the range of \(f(x)\).</p><p>For all \(x \in L\): if \(x \in S\), then \(x \not \in f(x)\) (by definition); if \(x \not \in S\), then \(x \in f(x)\). Therefore, \(S \neq f(x)\). In particular this means that \(f\) is not surjective because it doesn&rsquo;t map anything to the set \(S \in 2^{L}\).</p><h3 id=another-proof>another proof</h3><figure><img src=/ox-hugo/2024-10-21_21-45-56_screenshot.png></figure><h2 id=russell-s-paradox>Russell&rsquo;s Paradox</h2><p>Similar idea as here: suppose \(X\) is the universe of all possible sets.</p><p>Frege: Let \(f: X \to \qty {0,1}\), then \(\qty {S \in X \mid f(S) = 1}\) is a set (this makes sense, \(f\) is just the membership predicate of the set).</p><p>Define: \(F = \qty {S \in X | S \not \in S}\) &mdash; because being in \(S\) is a predicate you can track.</p><p>Suppose now \(F \in F\), then, by the definition of \(F\), \(F \not \in F\). Contradiction &mdash; this logical system is inconsistent.</p><p>This type of argument is called a <a href=#russell-s-paradox>Diagonalization Arguments</a>.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

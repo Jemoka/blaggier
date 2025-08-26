@@ -1,0 +1,109 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS238V FEB112025</title>
+<meta name=description content="Key Sequence
+Notation
+
+Linear Dynamical System
+set operations
+
+New Concepts
+
+reachability analysis
+Set Propagation Techniques
+
+Important Results / Claims
+Questions
+
+Set Propagation Techniques
+Now, how exactly do we compute the reachable set.
+&mldr;for Linear Dynamical Systems
+Let&rsquo;s consider writing \(s&rsquo;\) as a function of \(s, x\). For a linear system, we have:
+\begin{equation}
+s&rsquo; = \qty(T_{s}+T_{a}\Pi_{o}O_{s})s + T_{a}\Pi_{o}x_{o} + T_{a}x_{a} + x_{s}
+\end{equation}
+our goal is to then write this for sets of initial \(s\). Write this in terms of Set Propagation Techniques:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS238V FEB112025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=key-sequence>Key Sequence</h2><h2 id=notation>Notation</h2><ul><li><a href>Linear Dynamical System</a></li><li><a href=/posts/kbhset_operations/>set operations</a></li></ul><h2 id=new-concepts>New Concepts</h2><ul><li><a href>reachability analysis</a></li><li><a href=#set-propagation-techniques>Set Propagation Techniques</a></li></ul><h2 id=important-results-claims>Important Results / Claims</h2><h2 id=questions>Questions</h2><hr><h2 id=set-propagation-techniques>Set Propagation Techniques</h2><p>Now, how exactly do we compute the <a href>reachable set</a>.</p><h3 id=dot-dot-dot-for-linear-dynamical-systems--kbhlinear-dynamical-system-dot-md>&mldr;for <a href>Linear Dynamical Systems</a></h3><p>Let&rsquo;s consider writing \(s&rsquo;\) as a function of \(s, x\). For a linear system, we have:</p><p>\begin{equation}
+s&rsquo; = \qty(T_{s}+T_{a}\Pi_{o}O_{s})s + T_{a}\Pi_{o}x_{o} + T_{a}x_{a} + x_{s}
+\end{equation}</p><p>our goal is to then <strong>write this</strong> for <strong>sets</strong> of initial \(s\). Write this in terms of <a href=#set-propagation-techniques>Set Propagation Techniques</a>:</p><p>\begin{equation}
+\mathcal{S}&rsquo; = \qty(T_{s} + T_{a}\Pi_{o}O_{s}) \mathcal{S} \oplus T_{a}\Pi_{o}\mathcal{X}_{o} \oplus T_{a}\mathcal{X}_{a} \oplus \mathcal{X}_{s}
+\end{equation}</p><p>We can then build out the reachable set over time by continuously applying this expression, namely:</p><p>\begin{equation}
+\mathcal{R}_{d} = \qty(T_{s} + T_{a}\Pi_{o}O_{s}) \mathcal{S}_{d-1} \oplus T_{a}\Pi_{o}\mathcal{X}_{o} \oplus T_{a}\mathcal{X}_{a} \oplus \mathcal{X}_{s}
+\end{equation}</p><p>Now, to bound our reachable set for horizon up to \(t\), we can write:</p><p>\begin{equation}
+\mathcal{R}_{1:t} = \bigcup_{d=1}^{t} \mathcal{R}_{d}
+\end{equation}</p><p>Now, if you want to bound your reachable set up to infinite horizon, we have to show for <strong>SOME</strong> \(d\) we have:</p><p>\begin{equation}
+\mathcal{R}_{d} \subseteq \mathcal{R}_{d-1}
+\end{equation}</p><p>(why some but not all? because once this happens once, you are forever trapped into the set \(\mathcal{R}_{d-1}\) at least (since the next one is smaller) and so will be bounded forever.)</p><h2 id=set-representations>set representations</h2><ol><li>finite representations: specify all points in the set without enumerating all systems</li><li><strong>convex</strong> tend to be nice: a set \(\mathcal{P}\) is convex if \(\alpha p + \qty(1-\alpha) p \in \mathcal{P}\), for all \(p,q \in \mathcal{P}\) and \(\alpha \in [0,1]\)</li></ol><h3 id=polytope>polytope</h3><p>We are most interested in <a href=#polytope>polytope</a>: a bounded intersection of half-spaces&mdash;a series of inequality \(a^{T}x \leq b\).</p><p>Two types of polytopes:</p><h4 id=h-polytopes>H polytopes</h4><p>a set of half-spaces: \(Ax \leq b\) for matrices \(A, b\), which are a series of things that are specified.</p><h4 id=v-polytope>V polytope</h4><p>the convex hull of a set of vertices: \(\text{conv}\qty(\mathcal{V})\) &mdash; i.e. give a set of vertices at the edges of the hull.</p><p><a href=/posts/kbhset_operations/>set operations</a> for \(\mathcal{V}\) polytopes:</p><p>\begin{equation}
+A\mathcal{P} = \text{conv}\qty(A v \midv \in\mathcal{V})
+\end{equation}</p><p>\begin{equation}
+\mathcal{P} \oplus \mathcal{Q} = \text{conv}\qty(\qty{v_1 + v_2 \mid v_1 \in \mathcal{V}_{p}, v_2 \in \mathcal{V}_{q}})
+\end{equation}</p><p>^ computing this convex hull is <strong>wayyyy</strong> to expensive as verticies scale; we can solve this with one of two ways.</p><ol><li>use a <a href=#zonotope>zonotope</a> instead</li><li>overapproximate: &ldquo;bound it with a box&rdquo;&mdash;which do not loose our safety guarantees if it does <strong>not</strong> intersect with the avoid set; if it <strong>does</strong> intersect with the avoid set, we can&rsquo;t make any conclusions. see <a href>overapproximation</a></li></ol><h3 id=zonotope>zonotope</h3><p>A <a href=#zonotope>zonotope</a> is a symmetric <a href=#polytope>polytope</a>. A <a href=#zonotope>zonotope</a> is a subset of <a href=#polytope>polytope</a> that&rsquo;s easy to parametrize.</p><ul><li>a set of vector generators \(g\)</li><li>a center point \(c\)</li></ul><p>for any ordering of \(g\), \(g_{j}\), we maintain a set of active verticies \(\qty {c}\) in the beginning and concatenate one of the remaining $g<sub>j</sub>$s into each vertex and also in the negative direction. And then, get a convex hull.</p><p>that is:</p><p>\begin{equation}
+\mathcal{Z} = \qty {c + \sum_{i=1}^{m} \alpha_{i} g_{i} \mid \alpha_{i} \in \qty {-1, 1}}
+\end{equation}</p><p><a href=/posts/kbhset_operations/>set operations</a> for <a href=#zonotope>zonotope</a></p><p>\begin{equation}
+A \mathcal{L} = \qty (Ac, \langle Ag_{i_1:m} \rangle)
+\end{equation}</p><p>\begin{equation}
+\mathcal{L} \oplus \mathcal{L} = \qty(c+c&rsquo;, \langle g_{1:m}, g&rsquo;_{1:m} \rangle)
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

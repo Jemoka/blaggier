@@ -1,0 +1,76 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Oracle Reduction</title>
+<meta name=description content="Oracle Turing Machine
+An Oracle Turing Machine \(M\) is a machine that can ask membership queries in a set \(B \subseteq \Gamma^{*}\) on a special &ldquo;oracle tape&rdquo;. This Turing machine will receive an answer in one step: in particular, if the string written on the oracle tape is in \(B\), then the state will be set to \(q_{yes}\), and otherwise, we move to \(q_{no}\)
+Importantly, \(B\) does not have to be decidable. We think of them as subroutines."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Oracle Reduction</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=oracle-turing-machine>Oracle Turing Machine</h2><p>An <a href=#oracle-turing-machine>Oracle Turing Machine</a> \(M\) is a machine that can ask membership queries in a set \(B \subseteq \Gamma^{*}\) on a special &ldquo;oracle tape&rdquo;. This Turing machine will receive an answer in one step: in particular, if the string written on the oracle tape is in \(B\), then the state will be set to \(q_{yes}\), and otherwise, we move to \(q_{no}\)</p><p>Importantly, \(B\) does <strong>not</strong> have to be decidable. We think of them as subroutines.</p><h3 id=recognizing-and-deciding>Recognizing and Deciding</h3><ul><li>We say that \(A\) is recognizable with \(B\) if there is an oracle TM \(M\) with oracle \(B\) that recognizes \(A\)</li><li>We say that \(A\) is decidable with \(B\) if there is an oracle TM \(M\) with oracle \(B\) that decides \(A\)</li></ul><p>When \(A\) is decidable with \(B\), we call \(A\) <a href=#oracle-turing-machine>Turing Reduce</a>s to \(B\); that is, \(A \leq_{T} B\).</p><h3 id=some-example>Some example</h3><h4 id=a-tm-leq-t-halt-tm-a-tm-leq-t-halt-tm>\(A_{TM} \leq_{T} HALT_{TM}\), \(A_{TM} \leq_{T} HALT_{TM}\)</h4><p>On input \((M,w)\), if \((M,w)\) is in \(HALT_{TM}\), then run \(M(w)\) sound output the answer; otherwise, reject.</p><p>On input \((M,w)\), we want to decide if \(M\) halts on \(w\), so we just check that \((M, w) \in A_{TM}\) or swap accept and reject of \(M\) to get \(M&rsquo;\), and if \((M&rsquo;,w) \in A_{TM}\), then we also accept. Otherwise, we reject.</p><h2 id=mapping-reduction--kbhmapping-reduction-dot-md--s-and-turing-reductions--org0b02025><a href=/posts/kbhmapping_reduction/>mapping reduction</a>s and <a href=#oracle-turing-machine>turing reductions</a></h2><h3 id=mapping-reduction-is-weaker-than-turing-reduction>mapping reduction is weaker than turing reduction</h3><p>if \(A \leq_{M} B\), then \(A \leq_{T} B\)</p><p>if \(A \leq_{M} B\), then there is a <a href=/posts/kbhmapping_reduction/#computable-function>computable function</a> \(f\) for every \(w\). So, to decide \(A\) on string \(w\), we compute \(f(w)\) and check if \(f(w) \in L(B)\) by calling the oracle.</p><h3 id=for-instance-dot-dot-dot>for instance&mldr;</h3><p>notice:</p><p>\begin{equation}
+\neg HALT_{TM} \leq_{T} HALT_{TM}
+\end{equation}</p><p>(because we just look it up and return the opposite)</p><p>and</p><p>\begin{equation}
+\neg HALT_{TM} \not \leq_{M} HALT_{TM}
+\end{equation}</p><p>because if this were to be true than \(\neg HALT_{TM}\) should be recognizable since \(HALT_{TM}\) is recognizable.</p><h2 id=superhalt>SUPERHALT</h2><p>\begin{equation}
+SUPERHALT = \qty {(M,x) | M, \text{ with an oracle for the halting problem, halts on $x$ } }
+\end{equation}</p><p>We show that this problem can&rsquo;t be decided through diagonalization. For contradiction suppose \(H\) decides \(SUPERHALT\). Let us define now a \(D(X)\) for which if \(H(X,X)\) accepts we loop, and otherwise accept. Now, consider \(D(D)\). Suppose \(D(D)\) accepts, this means that \(H(D,D)\) rejected, meaning \(D\) didn&rsquo;t halt on \(D\), but that contradicts that \(D(D)\) accepts. Suppose \(D(D)\) rejects, that means that \(H(D,D)\) accepts, but that means \(D(D)\) is supposed to loop. Contradiction.</p><h3 id=given-any-oracle-o-there-s-always-a-harder-problem-that-cannot-be-decided-with-that-oracle-o>Given any oracle O, there&rsquo;s always a harder problem that cannot be decided with that oracle O</h3><ul><li>SUPERHALT0 = HALT = for (M,x), M halts on x</li><li>SUPERTHALT1 = for (M,x), M with an oracle for HALTtm, halts on x</li><li>SUPERTHALTn = for (M,x), M with an oracle for SUPERHALTn-1, halts on x</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

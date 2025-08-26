@@ -1,0 +1,124 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-MATH570 Supply Demand</title>
+<meta name=description content="We are given a set of expressions:
+\begin{equation}
+\begin{cases}
+\dv{x}{t} = \frac{x}{w}\\
+\dv{y}{t} = \frac{xz}{w} \\
+\dv{z}{t} = \beta y \\
+\dv{w}{t} = \beta y
+\end{cases}
+\end{equation}
+We are asked to analyze the solutions to this system, its periodicity, etc.
+Stability Analysis
+The immediate thing to do is to shove all of this into a Jacobian matrix&mdash;not for linearnalization, but to check how the slope changes. We will take the eigenvalues of the matrix at the critical points of the function, which will tell us whether or not the functions converge or diverge from those points."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-MATH570 Supply Demand</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>We are given a set of expressions:</p><p>\begin{equation}
+\begin{cases}
+\dv{x}{t} = \frac{x}{w}\\
+\dv{y}{t} = \frac{xz}{w} \\
+\dv{z}{t} = \beta y \\
+\dv{w}{t} = \beta y
+\end{cases}
+\end{equation}</p><p>We are asked to analyze the solutions to this system, its periodicity, etc.</p><h2 id=stability-analysis>Stability Analysis</h2><p>The immediate thing to do is to shove all of this into a Jacobian matrix&mdash;not for linearnalization, but to check how the slope changes. We will take the eigenvalues of the matrix at the critical points of the function, which will tell us whether or not the functions converge or diverge from those points.</p><p>Let&rsquo;s go about doing that. Let us declare:</p><p>\begin{equation}
+\begin{cases}
+\dv{x}{t} = \frac{x}{w} = f(x,y,z,w)\\
+\dv{y}{t} = \frac{xz}{w} = g(x,y,z,w)\\
+\dv{z}{t} = \beta y = h(x,y,z,w)\\
+\dv{w}{t} = \beta y = j(x,y,z,w)
+\end{cases}
+\end{equation}</p><p>Then, the Jacobian is (with each cell being \(\dv{row}{column}\)):</p><table><thead><tr><th></th><th>dx</th><th>dy</th><th>dz</th><th>dw</th></tr></thead><tbody><tr><td>df</td><td>1/w</td><td>0</td><td>0</td><td>-x/w^2</td></tr><tr><td>dg</td><td>z/w</td><td>0</td><td>0</td><td>-(xz)/w^2</td></tr><tr><td>dh</td><td>0</td><td>beta</td><td>0</td><td>0</td></tr><tr><td>dj</td><td>0</td><td>beta</td><td>0</td><td>0</td></tr></tbody></table><p>Properly writing that out, this means that:</p><p>\begin{equation}
+J = \mqty(\frac{1}{w} & 0 & 0 & -\frac{x}{w^{2}} \\ \frac{z}{w} & 0 & 0 & -\frac{xz}{w^{2}} \\ 0 & \beta & 0 & 0 \\ 0 & \beta & 0 & 0)
+\end{equation}</p><p>Now, let us solve for the critical points of this expression. Setting all expressions to \(0\):</p><p>\begin{equation}
+\begin{cases}
+f = 0 \\
+g = 0 \\
+h = 0 \\
+j = 0
+\end{cases}
+\end{equation}</p><p>we have that:</p><p>\begin{equation}
+f(\dots) = \frac{x}{w} = 0
+\end{equation}</p><p>so \(x=0\).</p><p>We have also:</p><p>\begin{equation}
+h(\dots) = \beta y= 0
+\end{equation}</p><p>therefore, \(y = 0\).</p><p>Everything else is a free variable.</p><p>Substituting that into our expressions, we have:</p><p>\begin{equation}
+J* = \mqty(\frac{1}{w} & 0 & 0 & 0 \\ \frac{z}{w} & 0 & 0 & 0 \\ 0 & \beta & 0 & 0 \\ 0 & \beta & 0 & 0)
+\end{equation}</p><p>We are now ready to eigenvalueize. Using technology:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>w</span><span style=color:#111>,</span><span style=color:#111>z</span><span style=color:#111>,</span><span style=color:#111>b</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;w z b&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>M</span> <span style=color:#f92672>=</span> <span style=color:#111>matrix</span><span style=color:#111>([[</span><span style=color:#ae81ff>1</span><span style=color:#f92672>/</span><span style=color:#111>w</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#111>[</span><span style=color:#111>z</span><span style=color:#f92672>/</span><span style=color:#111>w</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#111>b</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#111>b</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>]])</span>
+</span></span><span style=display:flex><span><span style=color:#111>M</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[1/w   0   0   0]
+</span></span><span style=display:flex><span>[z/w   0   0   0]
+</span></span><span style=display:flex><span>[  0   b   0   0]
+</span></span><span style=display:flex><span>[  0   b   0   0]
+</span></span></code></pre></div><p>So, the moment of truth:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>M</span><span style=color:#f92672>.</span><span style=color:#111>eigenvalues</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[1/w, 0, 0, 0]
+</span></span></code></pre></div><p>Excellent, so we have two eigenvalues: \(\frac{1}{w}\) and \(0\). The \(0\) eigenvalue indicates to us that the system has &ldquo;<a href=/posts/kbhneutral_stability/>neutral stability</a>&rdquo;: that there will be results for which our system: while not exponentially increasing towards asymptotically, does not settle to a stable point.</p><h2 id=behavior-to-extrema>Behavior to Extrema</h2><p>The next natural question is then&mdash;even if our system doesn&rsquo;t settle down, does it become larger over time? For this, we turn to the \(\frac{1}{w}\) term. If our initial conditions render negative \(w\) eventually at that point, our system will converge to unstable but containable (i.e. does not go to infinity over time); otherwise, it does becomes unstable AND uncontainable (goes to infinity.)</p><p>To do this, we need to check two things; regrettably, it seems like we could&rsquo;t end up with a properly described solution to evolve our variables analytically. However, we can leverage the Lipschitz condition and hand-fisted dimensional analysis to clue us in about the behavior of the system.</p><h3 id=continuity>Continuity</h3><p>Recall again that our system is:</p><p>We are given a set of expressions:</p><p>\begin{equation}
+\begin{cases}
+\dv{x}{t} = \frac{x}{w}\\
+\dv{y}{t} = \frac{xz}{w} \\
+\dv{z}{t} = \beta y \\
+\dv{w}{t} = \beta y
+\end{cases}
+\end{equation}</p><p>To check the Lipschitz Continuity is actually not super difficult. Research indicates that the Litpschitz condition extends in the expected manner into multiple dimensions, checking continuity with a partial in each direction.</p><p>The actual partials of the terms on the right, though, are really only discontinuous in this case when we have something under a fraction&mdash;there is fortunately no weird exponential/log/sinusoidal/radical here. Evidently, then, we loose Lipschitz continuity at \(w=0\). As long as we don&rsquo;t cross that line, anything to the left or right of it exists and is unique(?) is each dimension.</p><h3 id=ham-fisting-dimensional-analysis>Ham-fisting Dimensional Analysis</h3><p>The initial conditions asks us for starting with \(w(0)=5\sqrt 5\). Recall that we are interested in the value of \(w\) at \((x,y)=(0,0)\).</p><p>Furthermore, recall the Lipschitz condition we discussed above. That the function is Lipschitz continuous at two boundary intervals: between \((-\infty, 0)\) and \((0, \infty )\). Starting at the conditions of \(w(0) = 5\sqrt{5}\) indicates that there will be no way for \(w\) to cross into \(\frac{1}{w} &lt;0\) territory.</p><p>Note, again, that the eigenvalues of the Jacobian of the system are \(\{0, \frac{1}{w}\}\), therefore, a positive \(\frac{1}{w}\) will indicate that the system tends towards infinity as there is one positive eigenvalue.</p><p>However, if we started at a negative \(w\) in the first place, we will equally be unable to use the same initial conditions to cross into \(\frac{1}{w} > 0\) territory. Because of this, conditions that begin with negative \(w\) will be unstable but not asymptotically increasing as there will be no positive eigenvalues of its Jacobian at any given point.</p><figure><img src=/ox-hugo/2022-11-27_16-28-45_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

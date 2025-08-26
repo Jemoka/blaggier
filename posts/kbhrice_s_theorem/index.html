@@ -1,0 +1,84 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Rice's Theorem</title>
+<meta name=description content="For some predicate \(P\):
+\begin{equation}
+P: \qty {TM} \to \qty {0,1}
+\end{equation}
+think of \(0\) (false), \(1\) (true), where \(P\) satisfies:
+
+non trivial: there are Turing Machines \(M_{yes}\), \(M_{no}\) such that \(P(M_{yes}) = 1\), and \(P(M_{no}) = 0\)
+semantic: for all Turing Machines \(M_1\) and \(M_2\), if \(L(M_1) = L(M_2)\) then \(P(M_1) = P(M_2)\)
+
+then, the language \(L = \qty {M \mid P(M) = 1}\) is undecidable.
+to do this, check if \(P(M_{\emptyset}) = 0\) or \(P(M_{\emptyset}) = 1\); if the former, then ATM reduces to your language and your language isn&rsquo;t decidable. If the latter, than not ATM reduces to your language and your language isn&rsquo;t recognizable."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Rice's Theorem</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>For some predicate \(P\):</p><p>\begin{equation}
+P: \qty {TM} \to \qty {0,1}
+\end{equation}</p><p>think of \(0\) (false), \(1\) (true), where \(P\) satisfies:</p><ol><li><strong>non trivial</strong>: there are Turing Machines \(M_{yes}\), \(M_{no}\) such that \(P(M_{yes}) = 1\), and \(P(M_{no}) = 0\)</li><li><strong>semantic</strong>: for all Turing Machines \(M_1\) and \(M_2\), if \(L(M_1) = L(M_2)\) then \(P(M_1) = P(M_2)\)</li></ol><p>then, the language \(L = \qty {M \mid P(M) = 1}\) is undecidable.</p><p>to do this, check if \(P(M_{\emptyset}) = 0\) or \(P(M_{\emptyset}) = 1\); if the former, then ATM reduces to your language and your language isn&rsquo;t decidable. If the latter, than not ATM reduces to your language and your language isn&rsquo;t recognizable.</p><h2 id=proof>Proof</h2><h3 id=rice-s-undecidable>Rice&rsquo;s Undecidable</h3><p>Basic idea: reduce \(A_{TM}\) or \(\not A_{TM}\) to \(L\).</p><p>Let us define \(M_{\varnothing}\) such that \(L(M_{\emptyset}) = \emptyset\)</p><ul><li>case 1: \(P(M_{\emptyset}) = 0\), since \(P\) is non-trivial, there is an \(P(M_{yes}) = 1\)<ul><li>reduction from \(A_{TM}\) to \(L\) (i.e. \(L\) is not decidable)<ul><li>for \((M,w)\), we produce \(M_{w}(x)\) for which both \(M\) accepts \(w\) AND \(M_{yes}\) accepts $x$&mdash;meaning, \(L(M_{w}) = L(M_{yes})\) when \(M\) accepts \(w\); meaning \(P(M_{yes}) = 1\), we have \(P(M_{w}) = 1\) (because \(P\) is semantic); and so \(M_{W} \in L\)</li><li>if \(M\) doesn&rsquo;t accept \(w\), then \(L(M_{w}) = L(M_{\emptyset}) = \emptyset\), and similarly, \(P(M_{\emptyset} = 0)\), so we have \(M_{W} \not \in L\)</li></ul></li></ul></li><li>case 2: \(P(M_{\emptyset}) = 1\), since \(P\) is non-trivial, there is an \(P(M_{no}) = 0\)<ul><li>reduction from \(\neg A_{TM}\) to \(L\) (i.e. \(L\) is not even recognizable)<ul><li>for \((M,w)\), we produce \(M_{w}(x)\) for which both \(M\) accepts \(w\) AND \(M_{no}\) accepts \(x\); if \(M\) doesn&rsquo;t accept \(w\), we have \(L(M_{w}) = L(M_{\emptyset}) = \emptyset\), since \(P(M_{\emptyset}) = 1\), then \(M_{w} \in L\); otherwise, if \(M\) accepts \(w\) then \(L(M_{w}) = L(M_{no})\), similarly, since \(P(M_{NO}) = 0\), we have \(P(M_{w}) = 0\), so \(M_{w}\) is not in \(L\)</li></ul></li></ul></li></ul><h2 id=examples-of-predicates-that-are-semantic>Examples of Predicates that are Semantic</h2><ul><li>M accepts 0</li><li>for all w, M(w) accepts IFF M(wr) accepts</li><li>L(M) = {0}</li><li>L(M) is empty</li><li>L(M) = sigma^*</li><li>M accepts 154 strings</li></ul><p>these are all therefore all undecidable!</p><h2 id=some-motivation>Some Motivation</h2><p><strong>It&rsquo;s not always easy to tell if stuff is decidable.</strong></p><p>Key example:</p><p>\begin{equation}
+\qty {(M,w) \mid M\text{ is a turing machine that on $w$ tries to move its head past the left of the input}}
+\end{equation}</p><p>(i.e. where you pump against the wall)</p><p>\begin{equation}
+\qty {(M,w) \mid M\text{ is a turing machine that on $w$ tries to move its head left, at least once}}
+\end{equation}</p><hr><p>problem 1 is undecidable, and the second one is decidable!</p><h3 id=problem-1>problem 1</h3><p>we can reduce \(A_{TM}\) to \(L&rsquo;\)</p><p>In particular, let us take input \((M,w)\), we will make a truing machine that \(N\) that shifts \(w\) over by one cell, and marks a special symbol <code>$</code> on the now-empty leftmost cell. If \(M\) tries to move to the cell with <code>$</code> but haven&rsquo;t yet accepted, we move its head back one step to the right; if \(M\) accepts, we then roll our way all the way to the left.</p><p>Hence, \(A_{TM}\) reduces to \(L&rsquo;\). If \(L\) is decidable, then \(A_{TM}\) should be too. But it isn&rsquo;t.</p><h3 id=problem-2>problem 2</h3><p>on input \((M,w)\), run \(M\) on \(w\) for \(|Q|+|w|+1\) for \(|Q|\) number of states of \(M\).</p><ul><li>accept if \(M\) ever move to the left</li><li>reject otherwise</li></ul><p>acceptance is clear; we can reject after \(|Q|+|w|+1\), after moving to the right \(|w|+1\) steps, we will get to an empty cell; we will then move over \(|Q|\) more times. After this, by pigeonhole we will land in another state which we have seen before. We are hence in a similar situation as before, which means we will keep moving forwards the right.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

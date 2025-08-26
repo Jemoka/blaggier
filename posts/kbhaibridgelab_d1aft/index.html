@@ -1,0 +1,103 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>AIBridgeLab D2Aft</title>
+<meta name=description content="Welcome to the Day-2 Afternoon Lab! We are super excited to work through tasks in linear regression and logistic regression, as well as familiarize you with the Iris dataset.
+Iris Dataset
+Let&rsquo;s load the Iris dataset! Begin by importing the load_iris tool from sklearn. This is an easy loader scheme for the iris dataset.
+from sklearn.datasets import load_iris
+Then, we simply execute the following to load the data.
+x,y = load_iris(return_X_y=True)
+We use the return_X_y argument here so that, instead of dumping a large CSV, we get the neat-cleaned input and output values."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>AIBridgeLab D2Aft</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Welcome to the Day-2 Afternoon Lab! We are super excited to work through tasks in linear regression and logistic regression, as well as familiarize you with the Iris dataset.</p><h2 id=iris-dataset>Iris Dataset</h2><p>Let&rsquo;s load the Iris dataset! Begin by importing the <code>load_iris</code> tool from <code>sklearn</code>. This is an easy loader scheme for the iris dataset.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>sklearn.datasets</span> <span style=color:#f92672>import</span> <span style=color:#111>load_iris</span>
+</span></span></code></pre></div><p>Then, we simply execute the following to load the data.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#111>load_iris</span><span style=color:#111>(</span><span style=color:#111>return_X_y</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>We use the <code>return_X_y</code> argument here so that, instead of dumping a large <code>CSV</code>, we get the neat-cleaned input and output values.</p><p>Let&rsquo;s inspect this data a little.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>x</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>]</span>
+</span></span></code></pre></div><table><thead><tr><th></th><th></th><th></th><th></th></tr></thead><tbody><tr><td>5.1</td><td>3.5</td><td>1.4</td><td>0.2</td></tr></tbody></table><p>We can see that each <code>sample</code> of the data is a vector in \(\mathbb{R}^4\). They correspond to four attributes:</p><ul><li>septal length</li><li>septal width</li><li>pedal length</li><li>pedal width</li></ul><p>What&rsquo;s the output?</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>y</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>]</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>0
+</span></span></code></pre></div><p>We can actually see all the possible values of the output by putting it into a set.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>set</span><span style=color:#111>(</span><span style=color:#111>y</span><span style=color:#111>)</span>
+</span></span></code></pre></div><table><thead><tr><th></th><th></th><th></th></tr></thead><tbody><tr><td>0</td><td>1</td><td>2</td></tr></tbody></table><p>There are three different <code>classes</code> of outputs.</p><ul><li>Iris Setosa</li><li>Iris Versicolour</li><li>Iris Virginica</li></ul><p>Excellent. So we can see that we have a dataset of four possible inputs and one possible output. Let&rsquo;s see what we can do with it.</p><h2 id=logistic-regression>Logistic Regression</h2><p>The simplest thing we can do is a logistic regression. We have a there <em>categories</em> for output and a lot of data for input. Let&rsquo;s figure out if we can predict the output from the input!</p><p>Let&rsquo;s import logistic regression tool first, and instantiate it.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>sklearn.linear_model</span> <span style=color:#f92672>import</span> <span style=color:#111>LogisticRegression</span>
+</span></span><span style=display:flex><span><span style=color:#111>reg</span> <span style=color:#f92672>=</span> <span style=color:#111>LogisticRegression</span><span style=color:#111>()</span>
+</span></span></code></pre></div><p>We will &ldquo;fit&rdquo; the data to the model: adjusting the model to best represent the data. Our data has 150 samples, so let&rsquo;s fit the data on 140 of them.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>testing_samples_x</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span><span style=color:#111>[</span><span style=color:#f92672>-</span><span style=color:#ae81ff>5</span><span style=color:#111>:]</span>
+</span></span><span style=display:flex><span><span style=color:#111>testing_samples_y</span> <span style=color:#f92672>=</span> <span style=color:#111>y</span><span style=color:#111>[</span><span style=color:#f92672>-</span><span style=color:#ae81ff>5</span><span style=color:#111>:]</span>
+</span></span><span style=display:flex><span><span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span><span style=color:#111>[:</span><span style=color:#f92672>-</span><span style=color:#ae81ff>5</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span><span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#111>y</span><span style=color:#111>[:</span><span style=color:#f92672>-</span><span style=color:#ae81ff>5</span><span style=color:#111>]</span>
+</span></span></code></pre></div><p>Wonderful. Let&rsquo;s fit the data onto the model.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>reg</span> <span style=color:#f92672>=</span> <span style=color:#111>reg</span><span style=color:#f92672>.</span><span style=color:#111>fit</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>y</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>Let&rsquo;s go ahead and run the model on our 10 testing samples!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>predicted_y</span> <span style=color:#f92672>=</span> <span style=color:#111>reg</span><span style=color:#f92672>.</span><span style=color:#111>predict</span><span style=color:#111>(</span><span style=color:#111>testing_samples_x</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>predicted_y</span>
+</span></span></code></pre></div><table><thead><tr><th></th><th></th><th></th><th></th><th></th></tr></thead><tbody><tr><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td></tr></tbody></table><p>And, let&rsquo;s figure out what our actual results say:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>testing_samples_y</span>
+</span></span></code></pre></div><table><thead><tr><th></th><th></th><th></th><th></th><th></th></tr></thead><tbody><tr><td>2</td><td>2</td><td>2</td><td>2</td><td>2</td></tr></tbody></table><p>Woah! That&rsquo;s excellent.</p><h2 id=linear-regression>Linear Regression</h2><p>Instead of predicting the output <em>classes</em>, we can predict some values from the output. How about if we used septal length, width, and pedal length to predict petal width? The output now is a number, not some classes, which calls for linear regression!</p><p>Let&rsquo;s import linear regression tool first, and instantiate it.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>sklearn.linear_model</span> <span style=color:#f92672>import</span> <span style=color:#111>LinearRegression</span>
+</span></span><span style=display:flex><span><span style=color:#111>reg</span> <span style=color:#f92672>=</span> <span style=color:#111>LinearRegression</span><span style=color:#111>()</span>
+</span></span></code></pre></div><p>We will &ldquo;fit&rdquo; the data to the model again. As we have cleaned out the <code>testing_samples</code>, we simply need to split out the fourth column for the new x and y:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>new_x</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span><span style=color:#111>[:,:</span><span style=color:#ae81ff>3</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span><span style=color:#111>new_y</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span><span style=color:#111>[:,</span><span style=color:#ae81ff>3</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>new_testing_samples_y</span> <span style=color:#f92672>=</span> <span style=color:#111>testing_samples_x</span><span style=color:#111>[:,</span><span style=color:#ae81ff>3</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span><span style=color:#111>new_testing_samples_x</span> <span style=color:#f92672>=</span> <span style=color:#111>testing_samples_x</span><span style=color:#111>[:,:</span><span style=color:#ae81ff>3</span><span style=color:#111>]</span>
+</span></span></code></pre></div><p>Taking now our newly parsed data, let&rsquo;s fit it to a linear model.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>reg</span> <span style=color:#f92672>=</span> <span style=color:#111>reg</span><span style=color:#f92672>.</span><span style=color:#111>fit</span><span style=color:#111>(</span><span style=color:#111>new_x</span><span style=color:#111>,</span><span style=color:#111>new_y</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>Let&rsquo;s go ahead and run the model on our 10 testing samples!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>new_predicted_y</span> <span style=color:#f92672>=</span> <span style=color:#111>reg</span><span style=color:#f92672>.</span><span style=color:#111>predict</span><span style=color:#111>(</span><span style=color:#111>new_testing_samples_x</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>new_predicted_y</span>
+</span></span></code></pre></div><table><thead><tr><th></th><th></th><th></th><th></th><th></th></tr></thead><tbody><tr><td>1.7500734</td><td>1.61927061</td><td>1.79218767</td><td>2.04824364</td><td>1.86638164</td></tr></tbody></table><p>And, let&rsquo;s figure out what our actual results say:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>new_testing_samples_y</span>
+</span></span></code></pre></div><table><thead><tr><th></th><th></th><th></th><th></th><th></th></tr></thead><tbody><tr><td>2.3</td><td>1.9</td><td>2</td><td>2.3</td><td>1.8</td></tr></tbody></table><p>Close on some samples, not quite there on others. How good does our model actually do? We can use <code>.score()</code> to figure out the \(r^2\) value of our line on some data.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>reg</span><span style=color:#f92672>.</span><span style=color:#111>score</span><span style=color:#111>(</span><span style=color:#111>new_x</span><span style=color:#111>,</span> <span style=color:#111>new_y</span><span style=color:#111>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>0.9405617534915884
+</span></span></code></pre></div><p>Evidently, it seems like about \(94\%\) of the variation in our output data can be explained by the input features. This means that the relationship between septals are not <em>exactly</em> a linear pattern!</p><h2 id=now-you-try>Now you try</h2><ul><li>Download the <a href=https://archive.ics.uci.edu/ml/datasets/Wine+Quality>wine quality dataset</a></li><li>Predict the quality of wine given its chemical metrics</li><li>Predict if its red or white wine given its chemical metrics</li><li>Vary the amount of data used to .fit the model, how does that influence the results?</li><li>Vary the amount in each &ldquo;class&rdquo; (red wine, white wine) to fit the model, how much does that influence the results.</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

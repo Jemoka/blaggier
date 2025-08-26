@@ -1,0 +1,112 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Axler 2.A</title>
+<meta name=description content="Key Sequence
+
+we defined the combination of a list of vectors as a linear combination and defined set of all linear combination of vectors to be called a span
+we defined the idea of a finite-dimensional vector space vis a vi spanning
+we took a god-forsaken divergence into polynomials that will surely not come back and bite us in chapter 4
+we defined linear independence + linear dependence and, from those definition, proved the actual usecase of these concepts which is the Linear Dependence Lemma
+we apply the Linear Dependence Lemma to show that length of linearly-independent list \(\leq\) length of spanning list as well as that finite-dimensional vector spaces make finite subspaces. Both of these proofs work by making linearly independent lists&mdash;the former by taking a spanning list and making it smaller and smaller, and the latter by taking a linearly independent list and making it bigger and bigger
+
+New Definitions
+
+linear combination
+span + &ldquo;spans&rdquo;
+finite-dimensional vector space
+
+infinite-demensional vector space
+finite-dimensional subspaces
+
+
+polynomial
+
+\(\mathcal{P}(\mathbb{F})\)
+\(\mathcal{P}_{m}(\mathbb{F})\)
+degree of a polynomial \(\deg p\)
+
+
+linear independence and linear dependence
+Linear Dependence Lemma
+
+Results and Their Proofs
+
+span is the smallest subspace containing all vectors in the list
+\(\mathcal{P}(\mathbb{F})\) is a vector space over \(\mathbb{F}\)
+the world famous Linear Dependence Lemma and its fun issue
+length of linearly-independent list \(\leq\) length of spanning list
+subspaces of inite-dimensional vector spaces is finite dimensional
+
+Questions for Jana
+
+obviously polynomials are non-linear structures; under what conditions make them nice to work with in linear algebra?
+what is the &ldquo;obvious way&rdquo; to change Linear Dependence Lemma&rsquo;s part \(b\) to make \(v_1=0\) work?
+for the finite-dimensional subspaces proof, though we know that the process terminates, how do we know that it terminates at a spanning list of \(U\) and not just a linearly independent list in \(U\)?
+direct sum and linear independence related; how exactly?
+
+Interesting Factoids
+I just ate an entire Chinese new-year worth of food while typing this up. That&rsquo;s worth something right"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Axler 2.A</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=key-sequence>Key Sequence</h2><ul><li>we defined the combination of a list of vectors as a <a href=/posts/kbhlinear_combination/>linear combination</a> and defined set of all <a href=/posts/kbhlinear_combination/>linear combination</a> of <a href=/posts/kbhvector/>vector</a>s to be called a <a href=/posts/kbhspan/>span</a></li><li>we defined the idea of a <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional vector space</a> vis a vi <a href=/posts/kbhspan/#spans>spanning</a></li><li>we took a god-forsaken divergence into <a href=/posts/kbhpolynomial/>polynomial</a>s that will surely not come back and bite us in chapter 4</li><li>we defined <a href=/posts/kbhlinear_independence/>linear independence</a> + <a href=/posts/kbhlinear_independence/#linearly-dependent>linear dependence</a> and, from those definition, proved the actual usecase of these concepts which is the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a></li><li>we apply the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a> to show that <a href=/posts/kbhlinear_independence/#length-of-linearly-independent-list-leq-length-of-spanning-list>length of linearly-independent list \(\leq\) length of spanning list</a> as well as that <a href=/posts/kbhsubspace/#finite-dimensional-subspaces>finite-dimensional vector spaces make finite subspaces</a>. Both of these proofs work by making <a href=/posts/kbhlinear_independence/>linearly independent</a> lists&mdash;the former by taking a <a href=/posts/kbhspan/#spans>spanning</a> list and making it smaller and smaller, and the latter by taking a <a href=/posts/kbhlinear_independence/>linearly independent</a> list and making it bigger and bigger</li></ul><h2 id=new-definitions>New Definitions</h2><ul><li><a href=/posts/kbhlinear_combination/>linear combination</a></li><li><a href=/posts/kbhspan/>span</a> + &ldquo;<a href=/posts/kbhspan/#spans>spans</a>&rdquo;</li><li><a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional vector space</a><ul><li><a href=/posts/kbhfinite_dimensional_vector_space/>infinite-demensional vector space</a></li><li><a href=/posts/kbhsubspace/#finite-dimensional-subspaces>finite-dimensional subspaces</a></li></ul></li><li><a href=/posts/kbhpolynomial/>polynomial</a><ul><li><a href=/posts/kbhpolynomial/#mathcal-p--mathbb-f>\(\mathcal{P}(\mathbb{F})\)</a></li><li><a href=/posts/kbhpolynomial/#mathcal-p-m--mathbb-f>\(\mathcal{P}_{m}(\mathbb{F})\)</a></li><li><a href=/posts/kbhpolynomial/#degree-of-a-polynomial-deg-p>degree of a polynomial \(\deg p\)</a></li></ul></li><li><a href=/posts/kbhlinear_independence/>linear independence</a> and <a href=/posts/kbhlinear_independence/#linearly-dependent>linear dependence</a></li><li><a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a></li></ul><h2 id=results-and-their-proofs>Results and Their Proofs</h2><ul><li><a href=/posts/kbhspan/#span-is-the-smallest-subspace-containing-all-vectors-in-the-list>span is the smallest subspace containing all vectors in the list</a></li><li><a href=/posts/kbhpolynomial/#mathcal-p--mathbb-f--is-a-vector-space-over-mathbb-f>\(\mathcal{P}(\mathbb{F})\) is a vector space over \(\mathbb{F}\)</a></li><li>the world famous <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a> and its fun <a href=/posts/kbhlinear_dependence_lemma/#issue>issue</a></li><li><a href=/posts/kbhlinear_independence/#length-of-linearly-independent-list-leq-length-of-spanning-list>length of linearly-independent list \(\leq\) length of spanning list</a></li><li><a href=/posts/kbhsubspace/#finite-dimensional-subspaces>subspaces of inite-dimensional vector spaces is finite dimensional</a></li></ul><h2 id=questions-for-jana>Questions for Jana</h2><ul><li><del>obviously <a href=/posts/kbhpolynomial/>polynomial</a>s are non-linear structures; under what conditions make them nice to work with in linear algebra?</del></li><li><del>what is the &ldquo;obvious way&rdquo; to change <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a>&rsquo;s part \(b\) to make \(v_1=0\) work?</del></li><li>for the <a href=/posts/kbhsubspace/#finite-dimensional-subspaces>finite-dimensional subspaces</a> proof, though we know that the process terminates, how do we know that it terminates at a <a href=/posts/kbhspan/#spans>spanning</a> list of \(U\) and not just a <a href=/posts/kbhlinear_independence/>linearly independent</a> list in \(U\)?</li><li>direct sum and linear independence related; how exactly?</li></ul><h2 id=interesting-factoids>Interesting Factoids</h2><p>I just ate an entire Chinese new-year worth of food while typing this up. That&rsquo;s worth <em>something</em> right</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,100 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS224N APR302024</title>
+<meta name=description content="Subword
+We use SUBWORD modeling modeling to deal with:
+
+combinatorial morphology (resolving word form and infinitives) &mdash; &ldquo;a single word has a million forms in Finnish&rdquo; (&ldquo;transformify&rdquo;)
+misspelling
+extensions/emphasis (&ldquo;gooooood vibessssss&rdquo;)
+
+You mark each actual word ending with some of combine marker.
+To fix this:
+Byte-Pair Encoding
+&ldquo;find pieces of words that are common and treat them as a vocabulary&rdquo;
+
+start with vocab containing only characters and EOS
+look at the corpus, and find the most common pair of adjacent characters
+replace all instances of the pair with the new subword
+repeat 2-3 until vecab size is big enough
+
+Writing Systems
+
+phonemic (directly translating sounds, see Spanish)
+fossilized phonemic (English, where sounds are whack)
+syllabic/moratic (each sound syllable written down)
+ideographic (syllabic, but no relation to sound instead have meaning)
+a combination of the above (Japanese)
+
+Whole-Model Pretraining
+
+all parameters are initalized via pretraining
+don&rsquo;t even bother training word vectors
+
+MLM and NTP are &ldquo;Universal Tasks&rdquo;
+Because in different circumstances, performing well MLM and NLP requires {local knowledge, scene representations, language, etc.}."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS224N APR302024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=subword>Subword</h2><p>We use SUBWORD modeling modeling to deal with:</p><ol><li>combinatorial morphology (resolving word form and infinitives) &mdash; &ldquo;a single word has a million forms in Finnish&rdquo; (&ldquo;transformify&rdquo;)</li><li>misspelling</li><li>extensions/emphasis (&ldquo;gooooood vibessssss&rdquo;)</li></ol><p>You mark each actual word ending with some of combine marker.</p><p>To fix this:</p><h3 id=byte-pair-encoding--kbhbpe-dot-md><a href=/posts/kbhbpe/>Byte-Pair Encoding</a></h3><p>&ldquo;find pieces of words that are common and treat them as a vocabulary&rdquo;</p><ol><li>start with vocab containing only characters and EOS</li><li>look at the corpus, and find the most common pair of adjacent characters</li><li>replace all instances of the pair with the new subword</li><li>repeat 2-3 until vecab size is big enough</li></ol><h2 id=writing-systems>Writing Systems</h2><ul><li>phonemic (directly translating sounds, see Spanish)</li><li>fossilized phonemic (English, where sounds are whack)</li><li>syllabic/moratic (each sound syllable written down)</li><li>ideographic (syllabic, but no relation to sound instead have meaning)</li><li>a combination of the above (Japanese)</li></ul><h2 id=whole-model-pretraining>Whole-Model Pretraining</h2><ul><li>all parameters are initalized via pretraining</li><li>don&rsquo;t even bother training word vectors</li></ul><h2 id=mlm-and-ntp-are-universal-tasks>MLM and NTP are &ldquo;Universal Tasks&rdquo;</h2><p>Because in different circumstances, performing well MLM and NLP requires {local knowledge, scene representations, language, etc.}.</p><h2 id=why-pretraining>Why Pretraining</h2><ul><li>maybe local minima near pretraining weights generalize well</li><li>or maybe, because the outputs are sensible, gradients propagate nicely because they are modulated well</li></ul><h2 id=types-of-architecture>Types of Architecture</h2><h3 id=encoders>Encoders</h3><ul><li>bidirectional context</li><li>can condition on the future</li></ul><h4 id=bert>Bert</h4><ol><li>replace input word with [mask] 80% of time</li><li>replace <strong>input word</strong> with a <strong>RANDOM WORD</strong> 10% of the time</li><li>leaving the word unchanged 10% of the time</li></ol><p>i.e. BERT will then need to resolve a proper sentence representation from lots of noise</p><p>Original BERT <em>also</em> pretrained on top a next sentence prediction loss in addition to MLM, but that ended up being unnecessary.</p><ul><li><p>Bertish</p><ol><li>RoBERTa - train on longer context</li><li>SpanBert - mask a span</li></ol></li></ul><h3 id=encoder-decoder>Encoder/Decoder</h3><ul><li>do both</li><li>pretraining maybe hard</li></ul><h4 id=t5>T5</h4><p>Encoder/Decoder model. Pretraining task: blank inversion:</p><p>&ldquo;Thank you for inviting me to your party last week&rdquo;</p><p>&ldquo;Thank you &lt;x> to your &lt;y> last week&rdquo; =>
+&ldquo;&lt;x> for inviting &lt;y> party &lt;z></p><p>This actually is BETTER than the LM training objective.</p><h3 id=decoder>Decoder</h3><ul><li>general LMs use this</li><li>nice to generate from + cannot condition no future words</li></ul><h3 id=in-context-learning>In-Context Learning</h3><ul><li>really only very capable at hundreds of billion parameters</li><li>uses no gradient steps&mdash;-repeat and attend to examples</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

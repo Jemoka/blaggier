@@ -1,0 +1,107 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Signal Processing Index</title>
+<meta name=description content="Some Ideas
+
+Error Correction Codes
+Sampling + Quantization
+Compression Algorithms
+Frequency Domain Technologies
+
+Two Main Goals
+
+Unit 1: Efficient Representation of Signal (i.e. compression)&mdash;we ideally want the smallest sequence of bits to encode the raw signal
+Unit 2: Preserving Information of Signal (i.e. communication)&mdash;we ideally want to communicate our bits while not sacrificing information despite all communication channels being noisy
+
+Unit 1 outline
+
+compress the same exactly information into less space (lossless compression)
+
+what is information (probability and entropy)
+compression and limits of compression (Huffman Coding)
+
+
+removing irrelevant/uninteresting information (lossy compression)
+
+key idea: &ldquo;frequency domain can be aggressively compressed&rdquo;
+signals, frequency representation, bandwidth (discrete cosine transform)
+quantization, sampling, reconstruction (encoding analog signal into digital signal)
+
+
+
+Unit 2 outline
+
+communication basics (channels and noise)
+representing bits for physical/analogue communication (modulation&mdash;encoding digital signal into analog signal)
+bandwidth, spectrum shaping/sharing (frequency-domain filtering)
+fundamental limits (channel capacity)
+separation of compression and communication (separation principle)
+adding redundancy to communication schemes (error-correcting codes)
+
+Lectures
+Unit 1
+SU-ENGR76 Unit 1 Index"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Signal Processing Index</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=some-ideas>Some Ideas</h2><ul><li>Error Correction Codes</li><li>Sampling + Quantization</li><li>Compression Algorithms</li><li>Frequency Domain Technologies</li></ul><h2 id=two-main-goals>Two Main Goals</h2><ol><li><strong>Unit 1</strong>: Efficient Representation of Signal (i.e. compression)&mdash;we ideally want the smallest sequence of bits to encode the raw signal</li><li><strong>Unit 2</strong>: Preserving Information of Signal (i.e. communication)&mdash;we ideally want to communicate our bits while not sacrificing information despite all communication channels being noisy</li></ol><h2 id=unit-1-outline>Unit 1 outline</h2><ul><li>compress the same exactly information into less space (<a href=/posts/kbhlossless_compression/>lossless compression</a>)<ul><li>what is information (<em>probability and entropy</em>)</li><li>compression and limits of compression (<a href=/posts/kbhhuffman_coding/>Huffman Coding</a>)</li></ul></li><li>removing irrelevant/uninteresting information (<a href=/posts/kbhlossy_compression/>lossy compression</a>)<ul><li>key idea: &ldquo;frequency domain can be aggressively compressed&rdquo;</li><li>signals, frequency representation, bandwidth (<em>discrete cosine transform</em>)</li><li>quantization, sampling, reconstruction (<em>encoding analog signal into digital signal</em>)</li></ul></li></ul><h2 id=unit-2-outline>Unit 2 outline</h2><ul><li>communication basics (<em>channels and noise</em>)</li><li>representing bits for physical/analogue communication (<a href=/posts/kbhmodulation/>modulation</a>&mdash;<em>encoding digital signal into analog signal</em>)</li><li>bandwidth, spectrum shaping/sharing (<a href=/posts/kbhfrequency_domain_filtering/>frequency-domain filtering</a>)</li><li>fundamental limits (<em>channel capacity</em>)</li><li>separation of compression and communication (<a href=/posts/kbhseperating_principle/>separation principle</a>)</li><li>adding redundancy to communication schemes (<a href=/posts/kbherror_correcting_codes/>error-correcting codes</a>)</li></ul><h2 id=lectures>Lectures</h2><h3 id=unit-1>Unit 1</h3><p><a href=/posts/kbhcompression/>SU-ENGR76 Unit 1 Index</a></p><ul><li><a href=/posts/kbhsu_engr76_apr0202024/>SU-ENGR76 APR022024</a></li><li><a href=/posts/kbhsu_engr76_apr042024/>SU-ENGR76 APR042024</a></li><li><a href=/posts/kbhsu_engr76_apr092024/>SU-ENGR76 APR092024</a></li><li><a href=/posts/kbhsu_engr76_apr112024/>SU-ENGR76 APR112024</a></li><li><a href=/posts/kbhsu_engr76_apr162024/>SU-ENGR76 APR162024</a></li><li><a href=/posts/kbhsu_engr76_apr232024/>SU-ENGR76 APR232024</a></li><li><a href=/posts/kbhsu_engr76_apr252024/>SU-ENGR76 APR252024</a></li><li><a href=/posts/kbhsu_engr76_apr302024/>SU-ENGR76 APR302024</a></li><li><a href=/posts/kbhsu_engr76_may022024/>SU-ENGR76 MAY022024</a></li></ul><h3 id=unit-2>Unit 2</h3><p><a href=/posts/kbhsu_engr76_unit_2_index/>SU-ENGR76 Unit 2 Index</a></p><ul><li><a href=/posts/kbhsu_engr76_may072024/>SU-ENGR76 MAY072024</a></li><li><a href=/posts/kbhsu_engr76_may142024/>SU-ENGR76 MAY142024</a></li><li><a href=/posts/kbhsu_engr76_may162024/>SU-ENGR76 MAY162024</a></li><li><a href=/posts/kbhsu_engr76_may232024/>SU-ENGR76 MAY232024</a></li><li><a href=/posts/kbhsu_engr76_may282024/>SU-ENGR76 MAY282024</a></li><li><a href=/posts/kbhsu_engr76_may302024/>SU-ENGR76 MAY302024</a></li><li><a href=/posts/kbhsu_engr76_june042024/>SU-ENGR76 JUN042024</a></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

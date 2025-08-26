@@ -1,0 +1,95 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Spark</title>
+<meta name=description content="Spark is not a database. Importantly, its a &ldquo;framework&rdquo; of data:
+
+Programming platform
+Distributed file system
+Prallel execution environment
+Software ecosystem
+
+It gives you the &ldquo;parallel&rdquo; search/sort needed to navigate a large database. It is based on the Hadoop ecosystem. Spark operates on RDDs to do lazy-evaluation.
+Quickstart
+When we start up Spark Shell, it will build you a sc variable which is appropriate for your supercomputer; if you are not, you need to set up the context yourself using the 3 lines noted below to make sc variable:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Spark</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhspark/>Spark</a> is not a database. Importantly, its a &ldquo;framework&rdquo; of data:</p><ul><li>Programming platform</li><li>Distributed file system</li><li>Prallel execution environment</li><li>Software ecosystem</li></ul><p>It gives you the &ldquo;parallel&rdquo; search/sort needed to navigate a large database. It is based on the <a href>Hadoop</a> ecosystem. Spark operates on <a href=/posts/kbhrdd/>RDD</a>s to do lazy-evaluation.</p><h2 id=quickstart>Quickstart</h2><p>When we start up Spark Shell, it will build you a <code>sc</code> variable which is appropriate for your supercomputer; if you are not, you need to set up the context yourself using the 3 lines noted below to make <code>sc</code> variable:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># build context, IF NOT in a SHELL</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>myspark</span> <span style=color:#f92672>import</span> <span style=color:#111>SparkConf</span><span style=color:#111>,</span> <span style=color:#111>SparkContext</span>
+</span></span><span style=display:flex><span><span style=color:#111>conf</span> <span style=color:#f92672>=</span> <span style=color:#111>SparkConf</span><span style=color:#111>()</span><span style=color:#f92672>.</span><span style=color:#111>setMaster</span><span style=color:#111>(</span><span style=color:#d88200>&#34;local&#34;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>setaAppName</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Test_App&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>sc</span> <span style=color:#f92672>=</span> <span style=color:#111>SparkContext</span><span style=color:#111>(</span><span style=color:#111>conf</span><span style=color:#f92672>=</span><span style=color:#111>conf</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># do shit &#34;transform&#34;</span>
+</span></span><span style=display:flex><span><span style=color:#111>my_rdd</span> <span style=color:#f92672>=</span> <span style=color:#111>sc</span><span style=color:#f92672>.</span><span style=color:#111>textFile</span><span style=color:#111>(</span><span style=color:#d88200>&#34;whatever&#34;</span><span style=color:#111>)</span> <span style=color:#75715e># create an RDD from a datastore</span>
+</span></span><span style=display:flex><span><span style=color:#111>filtered_rdd</span> <span style=color:#f92672>=</span> <span style=color:#111>my_rdd</span><span style=color:#f92672>.</span><span style=color:#111>filter</span><span style=color:#111>(</span><span style=color:#00a8c8>lambda</span> <span style=color:#111>Line</span><span style=color:#111>:</span> <span style=color:#d88200>&#34;hubble&#34;</span> <span style=color:#f92672>in</span> <span style=color:#111>line</span><span style=color:#111>)</span> <span style=color:#75715e># perform action in rdd</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># actually perform actions</span>
+</span></span><span style=display:flex><span><span style=color:#111>filtered_rdd</span><span style=color:#f92672>.</span><span style=color:#111>count</span><span style=color:#111>()</span> <span style=color:#75715e># 47</span>
+</span></span><span style=display:flex><span><span style=color:#111>filtered_rdd</span><span style=color:#f92672>.</span><span style=color:#111>first</span><span style=color:#111>()</span>
+</span></span></code></pre></div><p>Then, you can submit this script. If you are in a shell its REPL so you don&rsquo;t.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>spark-submit Test_App.py
+</span></span></code></pre></div><p>Main types of files Spark can handle:</p><ul><li>Text (CSV, XML, JSON, etc.)</li><li>SQL stuff</li><li>Other NoSQL Stuff<ul><li>Parquet</li><li>Hive</li><li>Hadoopy things</li><li>JDBC, Cassandra, Mongo, etc. etc. etc.</li></ul></li><li>Compressed files: tarballs, gzip</li></ul><p>Main types of filesystems:</p><ul><li>yours (local files)</li><li>HDFS</li><li>Lustre</li><li>AWS S3</li></ul><p>See also <a href=/posts/kbhcommon_spark_actions/>Common Spark Actions</a>, <a href=/posts/kbhcommon_spark_transformations/>Common Spark Transformations</a></p><h2 id=spark-rdd-api>Spark RDD API</h2><p>The base level API of <a href=/posts/kbhspark/>Spark</a> is one which interacts with <a href=/posts/kbhvector/>vector</a>s or tuples via <a href=/posts/kbhrdd/>RDD</a>s. It deals with manipulating unordered sets (i.e. <strong>not</strong> dataframes).</p><ol><li>Create/Load <a href=/posts/kbhrdd/>RDD</a></li><li>Transform <a href=/posts/kbhrdd/>RDD</a>] (performing any operations <em>in theory, lazily, without loading data</em>)</li><li>Apply some more transforms (filtering, etc.)</li><li>Perform Actions (actually get data)</li></ol><p><strong><strong>Transformations</strong></strong> move one <a href=/posts/kbhrdd/>RDD</a> to another, and <strong><strong>Actions</strong></strong> load the data from <a href=/posts/kbhrdd/>RDD</a>.</p><p>Spark is smart to not do anything that&rsquo;s not needed; removing entire stores which isn&rsquo;t needed, caching, dynamically getting them back etc.</p><p>Spark can read from whole databases, text files, etc. and move them into an RDD.</p><h3 id=tips-and-tricks>Tips and Tricks</h3><p>&ldquo;kv&rdquo; values are kinda like Pandas <code>.groupby</code> without groupyby. You can do most mapping operations by key instead, which means you can always do group.</p><ul><li>if you want a certain form, use the <code>.map</code> function to turn it into something else; for instance, if you want to turn something into a kv pair, you can <code>thing.map(lambda x: x-key, x-value)</code></li><li>if you need to work with KV data, you should think about swapping key and value if you so desire</li></ul><h4 id=spark-anti-patterns>Spark Anti-Patterns</h4><ul><li>You should never do heavy-duty compute in Python (i.e. if you end up with a for loop somewhere you are probably not using map reduce right)</li><li>You should never take an <strong>action</strong> until you absolutely, seriously, need all the data</li></ul><h4 id=optimizations>Optimizations</h4><p>See <a href=/posts/kbhoptimizing_spark/>Optimizing Spark</a></p><h2 id=spark-dataframe-api>Spark DataFrame API</h2><p><a href=#spark-dataframe-api>DataFrame</a>s are type-safe collections of tables built out of RDDs; they are collections of tuples, where columns have the same type</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>row_rdd</span> <span style=color:#f92672>=</span> <span style=color:#111>sc</span><span style=color:#f92672>.</span><span style=color:#111>parallelize</span><span style=color:#111>([(</span><span style=color:#d88200>&#34;thing1&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;thing2&#34;</span><span style=color:#111>,</span> <span style=color:#ae81ff>3</span><span style=color:#111>),</span> <span style=color:#111>(</span><span style=color:#d88200>&#34;thing1&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;thing2&#34;</span><span style=color:#111>,</span> <span style=color:#ae81ff>3</span><span style=color:#111>)])</span>
+</span></span><span style=display:flex><span><span style=color:#111>row_dataframe</span> <span style=color:#f92672>=</span> <span style=color:#111>spark</span><span style=color:#f92672>.</span><span style=color:#111>createDataFrame</span><span style=color:#111>(</span><span style=color:#111>row_rdd</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;col1&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;col2&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;col3&#34;</span><span style=color:#111>])</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>row_dataframe</span><span style=color:#f92672>.</span><span style=color:#111>show</span><span style=color:#111>()</span>
+</span></span></code></pre></div><p>You can load entire structured data via:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>df</span> <span style=color:#f92672>=</span> <span style=color:#111>spark</span><span style=color:#f92672>.</span><span style=color:#111>read</span><span style=color:#f92672>.</span><span style=color:#111>json</span><span style=color:#111>(</span><span style=color:#d88200>&#34;jsonfile.json&#34;</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>And it will create the right schema on your behalf in the DataFrame.</p><h3 id=dataframe-limitations>DataFrame Limitations</h3><ul><li>Unlike Pandas, you can&rsquo;t manipulate structured DataFrame well.</li><li>Hence, you should like. Go back to RDDs if you are manipulating specific data into unstructured form.</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

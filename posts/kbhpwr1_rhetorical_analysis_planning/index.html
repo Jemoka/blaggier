@@ -1,0 +1,92 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>PWR1 Rhetorical Analysis Essay Planning</title>
+<meta name=description content="General Information
+
+  
+      
+          Due Date
+          Topic
+          Important Documents
+      
+  
+  
+      
+          Sunday, Jan 21
+          AI Alignment
+          Yejin Choi Talk
+      
+  
+
+Claim Synthesis
+Quotes Bin
+Double entendre which frames the study of AI safety as &ldquo;intellectual&rdquo; (in contrast to War)
+“And then there are these additional intellectual questions. Can AI, without robust common sense, be truly safe for humanity?”
+double intentre: &ldquo;intellectual&rdquo; as in interesting but also &ldquo;intellectual&rdquo; as in worth asking
+Language of Extremes: AI safety is a &ldquo;bruce force&rdquo; problem which requires &ldquo;extreme scale&rdquo;
+And is brute-force scale really the only way and even the correct way to teach AI? So I’m often asked these days whether it&rsquo;s even feasible to do any meaningful research without extreme-scale compute."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>PWR1 Rhetorical Analysis Essay Planning</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=general-information>General Information</h2><table><thead><tr><th>Due Date</th><th>Topic</th><th>Important Documents</th></tr></thead><tbody><tr><td>Sunday, Jan 21</td><td>AI Alignment</td><td>Yejin Choi Talk</td></tr></tbody></table><h2 id=claim-synthesis>Claim Synthesis</h2><h3 id=quotes-bin>Quotes Bin</h3><h4 id=double-entendre-which-frames-the-study-of-ai-safety-as-intellectual--in-contrast-to-war>Double entendre which frames the study of AI safety as &ldquo;intellectual&rdquo; (in contrast to War)</h4><p>“And then there are these additional intellectual questions. Can AI, without robust common sense, be truly safe for humanity?”</p><p>double intentre: &ldquo;intellectual&rdquo; as in interesting but also &ldquo;intellectual&rdquo; as in worth asking</p><h4 id=language-of-extremes-ai-safety-is-a-bruce-force-problem-which-requires-extreme-scale>Language of Extremes: AI safety is a &ldquo;bruce force&rdquo; problem which requires &ldquo;extreme scale&rdquo;</h4><p>And is brute-force scale really the only way and even the correct way to teach AI? So I’m often asked these days whether it&rsquo;s even feasible to do any meaningful research without extreme-scale compute.</p><h4 id=framing-ai-safety-as-a-war-us-them-dynamic-between-you-and-ai>Framing AI safety as a war, us-them dynamic between you and AI</h4><p>“Perhaps we can &mldr; seek inspiration from an old-time classic, &ldquo;The Art of War,&rdquo; which tells us, in my interpretation, know your enemy, choose your battles, and innovate your weapons.”</p><p>Importing the language of war&mdash;raising urgency and stakes. Animating: more strongly dynamic.</p><h4 id=adding-scale-optimists-to-be-a-part-of-the-antagonized-group>Adding scale-optimists to be a part of the antagonized group</h4><p>“Some scale optimists might say, “Don’t worry about this. All of these can be easily fixed by adding similar examples as yet more training data for AI." But the real question is this. Why should we even do that?”</p><p>contrast: some &mldr; we—us them dynamic</p><h4 id=we-can-t-dissect-ai-models-because-of-big-tech>We can&rsquo;t dissect AI models because of big tech</h4><p>&ldquo;we are now at the mercy of those few tech companies because researchers in the larger community do not have the means to truly inspect and dissect these models. "</p><h4 id=language-of-extremes-in-both-directions-taking-agency-out-of-the-ai-too>Language of extremes in both directions, taking agency out of the AI too</h4><p>“AI today is unbelievably intelligent and then shockingly stupid.” (<a href="zotero://open-pdf/library/items/W8C8UZWS?page=3&amp;annotation=35JSUAXU">pdf</a>) phrasing: contrast</p><p>adv adj and then adv adj</p><p>Raises stakes: uses the language of extremes</p><h4 id=passive-voice-takes-agency-out-of-us-and-into-the-hands-of-the-enemy>Passive voice takes agency out of &ldquo;us&rdquo; and into the hands of the enemy</h4><p>“We’ve been told that it’s a research topic of ’70s and ’80s; shouldn’t work on it because it will never work; in fact, don&rsquo;t even say the word to be taken seriously.” (<a href="zotero://open-pdf/library/items/W8C8UZWS?page=4&amp;annotation=97H3RG7L">pdf</a>) dropping subject; &ldquo;we&rdquo;—raises urgency by highlighting contrast</p><h4 id=calls-to-action-parallel-structure-associates-we-for-the-first-time-with-shocked-picachu-face-organizations>Calls to action; parallel structure associates &ldquo;we&rdquo; for the first time with, :shocked picachu face: organizations</h4><p>“We don&rsquo;t know what&rsquo;s in this, but it should be open and publicly available so that we can inspect and ensure [it supports] diverse norms and values. &mldr; So for this reason, my teams at UW and AI2 have been working on commonsense knowledge graphs
+” (<a href="zotero://open-pdf/library/items/W8C8UZWS?page=5&amp;annotation=8ENT9PEL">pdf</a>) repeated usage of &ldquo;we&rdquo;—bilding a tride</p><h4 id=zoomorphise-ai-as-a-new-species-in-effect-animating-it>Zoomorphise AI as a new &ldquo;species&rdquo;, in effect animating it</h4><p>“We&rsquo;re now entering a new era in which AI is almost like a new intellectual species with unique strengths and weaknesses compared to humans. In order to make this powerful AI sustainable and humanistic, we need to teach AI common sense, norms and values.” (<a href="zotero://open-pdf/library/items/W8C8UZWS?page=6&amp;annotation=DLXMRF8U">pdf</a>) anthropormorphising</p><h4 id=giving-ai-agency-using-the-second-person-singular-makes-the-killing-feel-more-personal>Giving AI agency, using the second person &ldquo;singular&rdquo; makes the killing feel more personal</h4><p>“And that AI decided to kill humans to utilize them as additional resources, to turn you into paper clips.” (<a href="zotero://open-pdf/library/items/W8C8UZWS?page=3&amp;annotation=25H9C3MG">pdf</a>) humans &mldr; you—increase urgency</p><h3 id=sub-claim-development>Sub-Claim Development</h3><h4 id=victimze-ai-ai-is-a-new-species-with-blunt-force-that-s-teachable>Victimze AI: AI is a new species with blunt force that&rsquo;s teachable</h4><p>AI has <a href=#language-of-extremes-ai-safety-is-a-bruce-force-problem-which-requires-extreme-scale>extreme raw power</a>, but is somewhat of an anthropomorphizing <a href=#zoomorphise-ai-as-a-new-species-in-effect-animating-it>new &ldquo;species&rdquo;, which &ldquo;we&rdquo; can &ldquo;teach&rdquo;</a>. This breaks the audiences&rsquo; traditional framing of AI as a blind tool, and empowers the audience to imagine what &ldquo;teaching it&rdquo; looks like. However, Choi uses the <a href=#language-of-extremes-in-both-directions-taking-agency-out-of-the-ai-too>language of extremes in both directions, framing AI as &ldquo;stupid&rdquo; to victimize it</a>. [She spent much of the talk giving copious examples]. This places the audience at a position of power, wanting to help the subjugated AI.</p><h4 id=victimize-audience-wanting-help-ai-pitting-the-audience-against-the-ai-deveolpers>Victimize Audience wanting help AI: pitting the audience against the AI deveolpers</h4><p>After victimizing AI and inspiring audience to teach it, Choi then victimizes audience wanting to help. Choi introduces that <a href=#we-can-t-dissect-ai-models-because-of-big-tech>big tech disenfranchises the audience&rsquo;s goals of teaching &ldquo;AI&rdquo;</a>, who we are at the &ldquo;mercy of&rdquo;. Establishes an us-them dynamic that Choi continues to develop: <a href=#passive-voice-takes-agency-out-of-us-and-into-the-hands-of-the-enemy>passive voice takes agency out of &ldquo;us&rdquo; and into the hands of the enemy, objectifying it</a>, further establishing and antagonizing the two groups and highlighting how the audience, and by proxy Choi, is disenfranchised.</p><h4 id=we-are-at-war-and-choi-is-the-savior>We are at war, and Choi is the savior</h4><p>This two-sided dynamic comes to a head with the <a href=#framing-ai-safety-as-a-war-us-them-dynamic-between-you-and-ai>language of war</a>. <a href=#giving-ai-agency-using-the-second-person-singular-makes-the-killing-feel-more-personal>AI can kill &ldquo;you&rdquo;-the second person &ldquo;singular&rdquo; makes the killing feel more personal, further justifying the &ldquo;war&rdquo;</a>. With a parallel structure, Choi <a href=#calls-to-action-parallel-structure-associates-we-for-the-first-time-with-shocked-picachu-face-organizations>frames herself and her research as the leader of the &ldquo;audience&rsquo;s side&rdquo;, wading into the unknown</a> in this war. She frames this war as an <a href=#double-entendre-which-frames-the-study-of-ai-safety-as-intellectual--in-contrast-to-war>intellectual one</a>, which she has the credibility <em>ethos</em> to lead.</p><h3 id=the-claim>The Claim</h3><p>Choi uses the language of antagonism to victimize AI language models and, by proxy, the audience wanting the help the victimized AI&mdash;placing both groups at a &ldquo;war&rdquo; of disenfranchisement against big-tech model developers. This dynamic allowing Choi to justify her research as the intellectual savior which empowers the fight of humanity in this &ldquo;war&rdquo;.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

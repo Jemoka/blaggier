@@ -1,0 +1,79 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>MCVI</title>
+<meta name=description content="MCVI solves POMDPs with continuous state space, but with discrete observation and action spaces. It does this by formulating a POMDP as a graph.
+Fast algorithms require discretized state spaces, which makes the problem much more difficult to model. MCVI makes continuous representations possible for complex domains.
+MC Backup
+Normal POMDP Bellman Backup isn&rsquo;t going to work well with continuous state spaces.
+Therefore, we reformulate our value backup as:
+\begin{equation}
+V_{t+1}(b) = \max_{a \in A} \qty(\int_{s} R(s,a)b(s) \dd{s}) + \gamma \sum_{o \in O}^{} p(o|b,a) V_{t}(update(b,a,o))
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>MCVI</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhmcvi/>MCVI</a> solves <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a>s with continuous state space, but with discrete observation and action spaces. It does this by formulating a POMDP as a graph.</p><p>Fast algorithms require discretized state spaces, which makes the problem much more difficult to model. MCVI makes continuous representations possible for complex domains.</p><h2 id=mc-backup>MC Backup</h2><p>Normal <a href=/posts/kbhvalue_iteration/#pomdp-bellman-update>POMDP Bellman Backup</a> isn&rsquo;t going to work well with continuous state spaces.</p><p>Therefore, we reformulate our value backup as:</p><p>\begin{equation}
+V_{t+1}(b) = \max_{a \in A} \qty(\int_{s} R(s,a)b(s) \dd{s}) + \gamma \sum_{o \in O}^{} p(o|b,a) V_{t}(update(b,a,o))
+\end{equation}</p><p>whereby, a continuous belief update:</p><p>\begin{equation}
+update(b,a,o) = \kappa O(o|s&rsquo;,a) \int_{s \in S} T(s&rsquo;|s,a) b(s) \dd{s}
+\end{equation}</p><p>where \(\kappa\) is a normalisation constant to keep the new belief a probability.</p><p>But! Instead of actually taking the integral, we simulate a series of trajectories and sum the toal reward</p><h2 id=mc-backup-at-graph>MC-Backup at Graph</h2><p>We construct at graph by sticking each best action determined by rolling out \(L\) steps and computing the reward.</p><p>Collecting the values given each observation, we create a new node for the best action; the best action per observation is connected as well.</p><figure><img src=/ox-hugo/2024-01-30_20-02-16_screenshot.png></figure><p>This creates a new optimal policy graph from the rollouts.</p><h2 id=mcvi>MCVI</h2><ul><li>initial each reward at action to \(0\)</li><li>for each observation, initialize each observation, node as \(0\)</li><li>Take monte-carlo samples across the actions and states to take integrals to obtain:<ul><li>\(HV_{g}(b) = \max_{a \in A} \qty(\int_{s \in S} R(s,a)b(s) \dd{s} + \sum_{o}^{} ???)\)</li><li>each future observation is sampled using monte-carlo simulation</li></ul></li></ul><p>each backup, you pick one new node to add.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

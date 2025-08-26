@@ -1,0 +1,95 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>random variable</title>
+<meta name=description content="A random variable is a quantity that can take on different values, whereby there is a separate probability associated with each value:
+
+discrete: finite number of values
+continuous: infinitely many possible values
+
+probability mass function
+A discrete random variable is encoded as a probability mass function
+probability density function
+A continuous random variable is represented as a probability density function.
+summary statistics
+
+probability mass function is a description for the random variable: and random variables are usually communicated via probability mass functions
+expected value
+
+adding random variables
+&ldquo;what&rsquo;s the probability of \(X + Y = n\) with IID \(X\) and \(Y\)?&rdquo;
+&ldquo;what&rsquo;s the probability of two independent samples from the same exact distribution adding up to \(n\)?&rdquo;"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>random variable</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhrandom_variables/>random variable</a> is a quantity that can take on different values, whereby there is a separate probability associated with each value:</p><ul><li><strong>discrete</strong>: finite number of values</li><li><strong>continuous</strong>: infinitely many possible values</li></ul><h2 id=probability-mass-function--kbhprobability-mass-function-dot-md><a href=/posts/kbhprobability_mass_function/>probability mass function</a></h2><p>A discrete random variable is encoded as a <a href=/posts/kbhprobability_mass_function/>probability mass function</a></p><h2 id=probability-density-function--kbhprobability-distributions-dot-md><a href=/posts/kbhprobability_distributions/#probability-density-function>probability density function</a></h2><p>A continuous <a href=/posts/kbhrandom_variables/>random variable</a> is represented as a <a href=/posts/kbhprobability_distributions/#probability-density-function>probability density function</a>.</p><h2 id=summary-statistics>summary statistics</h2><ul><li><a href=/posts/kbhprobability_mass_function/>probability mass function</a> is a description for the random variable: and <a href=/posts/kbhrandom_variables/>random variable</a>s are usually communicated via <a href=/posts/kbhprobability_mass_function/>probability mass function</a>s</li><li><a href=/posts/kbhexpectation/>expected value</a></li></ul><h2 id=adding-random-variables>adding random variables</h2><p>&ldquo;what&rsquo;s the probability of \(X + Y = n\) with <a href=/posts/kbhindependently_and_identically_distributed/>IID</a> \(X\) and \(Y\)?&rdquo;
+&ldquo;what&rsquo;s the probability of two independent samples from the same exact distribution adding up to \(n\)?&rdquo;</p><p>\begin{equation}
+\sum_{i=-\infty}^{\infty} P(X=i, Y=n-i)
+\end{equation}</p><p>or integrals and <a href=/posts/kbhprobability_distributions/#probability-density-function>PDF</a>s, as appropriate for <a href=/posts/kbhuniqueness_and_existance/#continuity>continuous</a> cases</p><p>for every single outcome, we want to create every possible operation which causes the two variables to sum to \(n\).</p><p>We can use <a href=#adding-random-variables>convolution</a> to figure out every combination of assignments to random variables which add to a value, and sum their probabilities together.</p><ul><li><a href=/posts/kbhbinomial_distribution/#adding-id-6ef4a641-135c-45f5-9c71-efd1fe34166c-binomial-distribution>adding binomial distribution</a></li><li><a href=/posts/kbhgaussian_distribution/#adding-id-8194b001-e4a1-43c9-9409-cd07bf1f00d4-gaussian-distribution-s>adding Gaussian distributions</a></li><li><a href=/posts/kbhprobability_of_k_in_x_time/#adding-id-58a7600a-5169-4473-8ddc-f286534fc1f4-poisson-distribution>adding poisson distribution</a></li></ul><p>If you add a bunch of <a href=/posts/kbhindependently_and_identically_distributed/>IID</a> things together&mldr;. <a href=/posts/kbhcentral_limit_theorem/>central limit theorem</a></p><h2 id=averaging-random-variables>averaging random variables</h2><p><a href=#adding-random-variables>adding random variables</a> + <a href=/posts/kbhgaussian_distribution/#linear-transformations-on-gaussian>linear transformers on Gaussian</a></p><p>You end up with:</p><p>\begin{equation}
+\mathcal{N}\qty(\mu, \frac{1}{n} \sigma^{2})
+\end{equation}</p><p>you note: as you sum together many things that is <a href=/posts/kbhindependently_and_identically_distributed/>IID</a>, the average is pretty the same; but the <a href=/posts/kbhvariance/>variance</a> gets smaller as you add more.</p><h2 id=maxing-random-variables>maxing random variables</h2><p>Gumbel distribution: fisher tripplett gedembo theorem???</p><h2 id=sampling-statistics>sampling statistics</h2><p>We assume that there&rsquo;s some underlying distribution with some true mean \(\mu\) and true variance \(\sigma^{2}\). We would like to model it with some confidence.</p><p>Consider a series of measured samples \(x_1, &mldr;, x_{n}\), each being an instantiation of a <a href=/posts/kbhindependently_and_identically_distributed/>IID</a> <a href=/posts/kbhrandom_variables/>random variable</a> drawn from the underlying distribution each being \(X_1, &mldr;, X_{n}\).</p><h3 id=sample-mean>sample mean</h3><p>Let us estimate the true population mean&mldr; by creating a <a href=/posts/kbhrandom_variables/>random variable</a> representing the the averaging \(n\) measured <a href=/posts/kbhrandom_variables/>random variable</a>s representing the observations:</p><p>\begin{equation}
+\bar{X} = \frac{1}{N} \sum_{i=1}^{n} X_{i}
+\end{equation}</p><p>we can do this because we really would like to know \(\mathbb{E}[\bar{X}] = \mathbb{E}[\frac{1}{N} \sum_{i=1}^{n} X_i] = \frac{1}{N}\sum_{i=1}^{n} \mathbb{E}[X_{i}] = \frac{1}{N} N \mu = \mu\) and so as long as each of the underlying variables have the same expected mean (they do because <a href=/posts/kbhindependently_and_identically_distributed/>IID</a>) drawn, we can use the <a href=#sample-mean>sample mean</a> to estimate the population mean.</p><h3 id=sample-variance>sample variance</h3><p>We can&rsquo;t just calculate the <a href=#sample-variance>sample variance</a> with the variance of the sample. This is because the <a href=#sample-mean>sample mean</a> will be by definition by closer to each of the sampled points than the actual value. So we correct for it. This is a <a href=/posts/kbhrandom_variables/>random variable</a> too:</p><p>\begin{equation}
+S^{2} = \frac{1}{n-1} \sum_{i=1}^{N} (X_{i} - \bar{X})^{2}
+\end{equation}</p><h3 id=standard-error-of-the-mean>standard error of the mean</h3><p>\begin{equation}
+Var(\bar{X}) = \frac{S^{2}}{n}
+\end{equation}</p><p>this is the <strong>ERROR OF the mean</strong> given what you measured because of the central limit theorem</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

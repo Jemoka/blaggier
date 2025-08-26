@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>abstract syntax tree</title>
+<meta name=description content="abstract syntax tree is what happens when CFGs is applied to text (i.e., the parser traces the AST in time).
+Building an AST
+Generally, each production will have an action, which is the relevant computation.
+X -> Y1... Yn { action }
+Each symbol X admits an attribute X.val
+
+for each terminal, val is the associated lexeme
+for non-terminals, val is the expression&rsquo;s value (i.e., from the values of the subexpressions)
+
+you job is to compose the subexpressions&rsquo; values and stick it into X.val. Notably, cycles are not allowed because we typically parse bottom-up, left ot right."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>abstract syntax tree</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhabstract_syntax_tree/>abstract syntax tree</a> is what happens when <a href=/posts/kbhcontext_free_grammars/>CFG</a>s is applied to text (i.e., the parser traces the AST in time).</p><h2 id=building-an-ast>Building an AST</h2><p>Generally, each production will have an <em>action</em>, which is the relevant computation.</p><pre tabindex=0><code class=language-bison data-lang=bison>X -&gt; Y1... Yn { action }
+</code></pre><p>Each symbol <code>X</code> admits an attribute <code>X.val</code></p><ul><li>for each terminal, <code>val</code> is the associated lexeme</li><li>for non-terminals, <code>val</code> is the expression&rsquo;s value (i.e., from the values of the subexpressions)</li></ul><p>you job is to compose the subexpressions&rsquo; values and stick it into <code>X.val</code>. Notably, cycles are not allowed because we typically parse bottom-up, left ot right.</p><h3 id=actually-doing-it>actually doing it</h3><p>For instance, consider:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>E</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>int</span> <span style=color:#111>{</span> <span style=color:#00a8c8>E</span><span style=color:#f92672>.</span><span style=color:#111>ast</span> <span style=color:#f92672>=</span> <span style=color:#111>mkleaf</span><span style=color:#111>(</span><span style=color:#111>int</span><span style=color:#f92672>.</span><span style=color:#111>lexval</span><span style=color:#111>)</span> <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>   <span style=color:#f92672>|</span> <span style=color:#00a8c8>E1</span> <span style=color:#f92672>+</span> <span style=color:#00a8c8>E2</span> <span style=color:#111>{</span> <span style=color:#00a8c8>E</span><span style=color:#f92672>.</span><span style=color:#111>ast</span> <span style=color:#f92672>=</span> <span style=color:#111>mkplus</span><span style=color:#111>(</span><span style=color:#00a8c8>E</span><span style=color:#f92672>.</span><span style=color:#111>ast</span><span style=color:#111>,</span> <span style=color:#00a8c8>E2</span><span style=color:#f92672>.</span><span style=color:#111>ast</span><span style=color:#111>)</span> <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>   <span style=color:#f92672>|</span> <span style=color:#00a8c8>E</span><span style=color:#f92672>.</span><span style=color:#111>ast</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>E1</span><span style=color:#f92672>.</span><span style=color:#111>ast</span>
+</span></span></code></pre></div><h3 id=s-attribute>s-attribute</h3><p>&mldr;or synthesized attributes, are calculated from attributes of descendent in the parse tree. For instance, <code>E.val</code> is a synthesized attribute</p><p><a href=#s-attribute>inherited-attribute</a>, which is rarer, is attributes parsed from teh parent.</p><h3 id=declarative-vs-imperative-style>declarative vs imperative style</h3><p>Two parsing ordering styles&mldr;</p><h4 id=declarative-style>Declarative style</h4><ul><li>resolution is not specified</li><li>parser figures it out</li></ul><h4 id=imperative-style>Imperative style</h4><ul><li>evalution is fixed</li><li>suppose action manipulates global state</li></ul><h3 id=an-example>an example</h3><p>Consider the grammar</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>E</span> <span style=color:#f92672>-&gt;</span> <span style=color:#00a8c8>Int</span> <span style=color:#f92672>|</span> <span style=color:#00a8c8>E</span> <span style=color:#f92672>+</span> <span style=color:#00a8c8>E</span> <span style=color:#f92672>|</span> <span style=color:#111>(</span><span style=color:#00a8c8>E</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>For instance:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>E</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>int</span> <span style=color:#111>{</span> <span style=color:#00a8c8>E</span><span style=color:#f92672>.</span><span style=color:#111>val</span> <span style=color:#f92672>=</span> <span style=color:#111>int</span><span style=color:#f92672>.</span><span style=color:#111>val</span> <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>   <span style=color:#f92672>|</span> <span style=color:#00a8c8>E1</span> <span style=color:#f92672>+</span> <span style=color:#00a8c8>E2</span> <span style=color:#111>{</span> <span style=color:#00a8c8>E</span><span style=color:#f92672>.</span><span style=color:#111>val</span>  <span style=color:#f92672>=</span> <span style=color:#00a8c8>E1</span><span style=color:#f92672>.</span><span style=color:#111>val</span> <span style=color:#f92672>+</span> <span style=color:#00a8c8>E2</span><span style=color:#f92672>.</span><span style=color:#111>val</span> <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>   <span style=color:#f92672>|</span> <span style=color:#111>(</span> <span style=color:#00a8c8>E1</span> <span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span> <span style=color:#00a8c8>E</span><span style=color:#f92672>.</span><span style=color:#111>val</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>E1</span><span style=color:#f92672>.</span><span style=color:#111>val</span> <span style=color:#111>}</span>
+</span></span></code></pre></div><h2 id=example>example</h2><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>E</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>int</span> <span style=color:#f92672>|</span> <span style=color:#111>(</span><span style=color:#00a8c8>E</span><span style=color:#111>)</span> <span style=color:#f92672>|</span> <span style=color:#00a8c8>E</span> <span style=color:#f92672>+</span> <span style=color:#00a8c8>E</span>
+</span></span></code></pre></div><p>and the string</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#ae81ff>5</span> <span style=color:#f92672>+</span> <span style=color:#111>(</span><span style=color:#ae81ff>2</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>3</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>We would draw a tree</p><figure><img src=/ox-hugo/2025-04-17_11-03-19_screenshot.png></figure><p>and crunch that into a data structure (where exprs can point to other structures.)</p><figure><img src=/ox-hugo/2025-04-17_11-05-54_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

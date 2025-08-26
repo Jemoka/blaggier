@@ -1,0 +1,99 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>direct sum</title>
+<meta name=description content="A direct sum is a sum of subspaces (not just subsets!!) where there&rsquo;s only one way to represent each element.
+constituents
+subspaces of \(V\) named \(U_1, \dots, U_{m}\)
+requirements
+The sum of subsets of \(U_1+\dots+U_{m}\) is called a direct sum IFF:
+each element in \(U_1+\dots +U_{m}\) can only be written in one way as a sum \(u_1 +\dots +u_{m}\) (as in, they are linearly independent?)
+We use \(\oplus\) to represent direct sum.
+additional information
+why is it called a direct sum?
+Something is not a direct sum if any of its components can be described using the others. Its kind of line linear independence but! on entire spaces."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>direct sum</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhdirect_sum/>direct sum</a> is a sum of <strong><strong><a href=/posts/kbhsubspace/>subspace</a>s</strong></strong> (not just subsets!!) where there&rsquo;s only one way to represent each element.</p><h2 id=constituents>constituents</h2><p><a href=/posts/kbhsubspace/>subspace</a>s of \(V\) named \(U_1, \dots, U_{m}\)</p><h2 id=requirements>requirements</h2><p>The <a href=/posts/kbhsum_of_subsets/>sum of subsets</a> of \(U_1+\dots+U_{m}\) is called a <em>direct sum</em> <a href=/posts/kbhequivalence/>IFF</a>:</p><p>each element in \(U_1+\dots +U_{m}\) can only be written in one way as a sum \(u_1 +\dots +u_{m}\) (as in, they are linearly independent?)</p><p>We use \(\oplus\) to represent <a href=/posts/kbhdirect_sum/>direct sum</a>.</p><h2 id=additional-information>additional information</h2><h3 id=why-is-it-called-a-direct-sum--kbhdirect-sum-dot-md>why is it <em>called</em> a <a href=/posts/kbhdirect_sum/>direct sum?</a></h3><p>Something is <em>not</em> a <a href=/posts/kbhdirect_sum/>direct sum</a> if any of its components can be described using the others. Its kind of line linear independence but! on entire spaces.</p><h3 id=a-sum-of-subsets--kbhsum-of-subsets-dot-md--is-a-direct-sum--kbhdirect-sum-dot-md--iff--kbhequivalence-dot-md--there-is-only-one-way-to-write-0>a <a href=/posts/kbhsum_of_subsets/>sum of subsets</a> is a <a href=/posts/kbhdirect_sum/>direct sum</a> <a href=/posts/kbhequivalence/>IFF</a> there is only one way to write \(0\)</h3><p>Given \(U_1, \dots, U_{m}\) are subspaces of \(V\), then \(U_1+\dots +U_{m}\) is a direct sum IFF the only way to write \(0\) as a sum \(u_1 +\dots +u_{m}\) is by taking each element to \(0\).</p><p>Proof:</p><p>if&mdash;
+If some \(U_1 + \dots +U_{m}\) is a <a href=/posts/kbhdirect_sum/>direct sum</a>, definitionally there is only one way to write \(0\). And you can always write \(0\) by taking all the constituents to \(0\) as they are <a href=/posts/kbhsubspace/>subspace</a>s, so the <a href=/posts/kbhadditive_identity/>additive identity</a> exists.</p><p>only if&mdash;
+We are given that there is only one way to write \(0\), that:</p><p>\begin{equation}
+0 = u_1+ u_2+ \dots+ u_{m}: u_j \in U_{j}
+\end{equation}</p><p>as \(U_{j}\) are all subspaces, and the <a href=/posts/kbhadditive_identity/>additive identity</a> exists, we can say that \(u_1=u_2=\dots =0\).</p><p>Assume for the sake of contradiction that \(U_1 + \dots +U_{m}\) is not a <a href=/posts/kbhdirect_sum/>direct sum</a>. Therefore:</p><p>\begin{equation}
+\exists\ v_1 = u_1+u_2+\dots + u_{m}: u_{j} \in U_{j}
+\end{equation}</p><p>and</p><p>\begin{equation}
+\exists\ v_1 = w_1+w_2+\dots + w_{m}: w_{j} \in U_{j}
+\end{equation}</p><p>&ldquo;there are two unique representations of a <a href=/posts/kbhvector/>vector</a> given the <a href=/posts/kbhsum_of_subsets/>sum of subsets</a>&rdquo;</p><p>Subtracting these representations, then:</p><p>\begin{equation}
+(v_1-v_1) = (u_1-w_1) + \dots +(u_{m}-w_{m}): u_{j}, w_{j} \in U_{j}
+\end{equation}</p><p>Finally, then:</p><p>\begin{equation}
+0 = (u_1-w_1) + \dots +(u_{m}-w_{m}): u_{j}, w_{j} \in U_{j}
+\end{equation}</p><p>We have established that each slot that makes up this particular sum \(=0\). Therefore, \(u_{i}-w_{i} = 0\). This means $u<sub>i</sub>=w<sub>i</sub>$&mdash;there are no two unique representations of \(v_{1}\). Reaching contradiction. \(\blacksquare\)</p><h3 id=a-sum-of-subsets--kbhsum-of-subsets-dot-md--is-only-a-direct-sum--kbhdirect-sum-dot-md--iff--kbhequivalence-dot-md--their-intersection-is-set-containing-0>a <a href=/posts/kbhsum_of_subsets/>sum of subsets</a> is only a <a href=/posts/kbhdirect_sum/>direct sum</a> <a href=/posts/kbhequivalence/>IFF</a> their intersection is set containing \(0\)</h3><p>Take \(U\) and \(W\), two <a href=/posts/kbhsubspace/>subspace</a>s of \(V\). \(U+V\) is a <a href=/posts/kbhdirect_sum/>direct sum</a> <a href=/posts/kbhequivalence/>IFF</a> \(U \cap W = \{0\}\).</p><p>Proof:</p><p>if&mdash;
+Suppose \(U+V\) is a <a href=/posts/kbhdirect_sum/>direct sum</a>. \(\forall v \in U \cap V\), as \(v\) is equal to itself, we have that:</p><p>\begin{equation}
+0 = v+(-v)
+\end{equation}</p><p>where, \(v\) is in \(U\) and \(-v\) is in \(V\) (as both \(U\) and \(V\) are vector spaces, both would contain \(-1v=-v\) as we are given \(v \in U \cap V\) and <a href=/posts/kbhscalar_multiplication/>scalar multiplication</a> is closed on both.)</p><p>By the unique representation in the definition of <a href=/posts/kbhdirect_sum/>direct sum</a>s, you have only one way to construct this expression: namely, that \(v=0\) as both are <a href=/posts/kbhvector_space/>vector space</a>s so the <a href=/posts/kbhadditive_identity/>additive identity</a> exists on both.</p><p>Hence:</p><p>\begin{equation}
+\{0\} = U \cap V
+\end{equation}</p><p>only if&mdash;
+Suppose \(U \cap W = \{0\}\). Take also \(u \in U\) and \(w \in W\); we can construct an expression:</p><p>\begin{equation}
+u + w = 0
+\end{equation}</p><p>If we can show that there is only one unique combination of \(u\) and \(w\) to write \(0\), we satisfy the previous proof and therefore \(U+W\) is a direct sum.</p><p>The expression above implies that \(w\) is the <a href=/posts/kbhinverses/>additive inverse</a> of \(u\); therefore; \(u = -w\). As both \(U\) and \(W\) are <a href=/posts/kbhvector_space/>vector space</a>s, their elements all have <a href=/posts/kbhinverses/>inverse</a>s. As \(u\) is the inverse of \(w\), and given the definition of <a href=/posts/kbhsum_of_subsets/>sum of subsets</a> that \(u \in U\) and \(w \in W\), \(u\) and \(w\) are both in both \(U\) and \(W\).</p><p>As the intersection of \(U\) and \(V\) is \(0\), \(u=w=0\). Therefore, there is only one unique representation of \(0\), namely with \(u=0,w=0\), making \(U+W\) a <a href=/posts/kbhdirect_sum/>direct sum</a>. \(\blacksquare\)</p><h3 id=direct-sum--kbhdirect-sum-dot-md--proofs-are-not-pairwise><a href=/posts/kbhdirect_sum/>direct sum</a> proofs are not pairwise!</h3><p>Those two proofs above only deal with pairs of <a href=/posts/kbhsum_of_subsets/>sum of subsets</a>. If you have multiple subsets, they don&rsquo;t apply!</p><h3 id=every-subspace--kbhsubspace-dot-md--of-v-is-a-part-of-a-direct-sum--kbhdirect-sum-dot-md--equaling-to-v>every <a href=/posts/kbhsubspace/>subspace</a> of \(V\) is a part of a <a href=/posts/kbhdirect_sum/>direct sum</a> equaling to \(V\)</h3><p>For every <a href=/posts/kbhsubspace/>subspace</a> \(U\) of a <strong><strong>finite-dimensional</strong></strong> \(V\), there is a <a href=/posts/kbhsubspace/>subspace</a> \(W\) of \(V\) for which \(V = U \oplus W\).</p><p>Because \(V\) is defined to be <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional</a>, and the fact that a <a href=/posts/kbhsubspace/#finite-dimensional-subspaces>finite-dimensional subspace</a> is <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional</a>, \(U\) is <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional</a>.</p><p>Therefore, because <a href=/posts/kbhfinite_dimensional_vector_space/#every-id-4ed27ed5-4edc-4ef4-afd7-9b8e3bcd9b96-finite-dimensional-vector-space-has-a-id-f88170b1-08b5-48a7-a7b5-1ace768e7b28-basis>every finite-dimensional vector space has a basis</a>, \(U\) has a basis \(u_1, \dots u_{m}\).</p><p>Because <a href=/posts/kbhbasis/>bases</a> are <a href=/posts/kbhlinear_independence/>linearly independent</a>, and \(U \subset V\), \(u_1, \dots u_{m}\) is a <a href=/posts/kbhlinear_independence/>linearly independent</a> list in \(V\).</p><p>Because <a href=/posts/kbhbasis/#a-id-45384b28-f1e3-4fb1-aeb2-21c875834744-linearly-independent-list-expends-to-a-id-f88170b1-08b5-48a7-a7b5-1ace768e7b28-basis>a linearly independent list expends to a basis</a>, we can construct \(u_1, \dots u_{m}, w_{1}, \dots w_{n}\) as the <a href=/posts/kbhbasis/>basis</a> of \(V\). We will construct a \(W = span(w_1, \dots w_{n})\) &mdash; the space formed as the <a href=/posts/kbhspan/>span</a> of the &ldquo;extension&rdquo; vectors to make the <a href=/posts/kbhbasis/>basis</a> in \(V\).</p><p>Because the list \(u_{j}\dots w_{k}\) we made is a <a href=/posts/kbhbasis/>basis</a> in \(V\), \(U+W=V\).</p><p>You can see this because every element \(v \in V\) can be constructed with a <a href=/posts/kbhlinear_combination/>linear combination</a> \(u_1, \dots u_{m}, w_{1}, \dots w_{n}\) (again, because this list shown to be a <a href=/posts/kbhbasis/>basis</a> of \(V\) therefore it <a href=/posts/kbhspan/>span</a>s \(V\).) Then, to show that \(U+W=V\), we can collapse \(a_{1}u_1\dots + a_{m}u_{m}=u \in U\), and \(c_{1}w_1 \dots +c_{m}w_{m} = w \in W\). Hence, every element \(v \in V\) can be constructed by some \(u \in U + w \in W\), making \(U+W=V\).</p><p>Now, we have to show that the combination is a <a href=/posts/kbhdirect_sum/>direct sum</a>. There is a few ways of going about this, the one presented by <a href=/posts/kbhlinear_algebra_index/>Axler</a> is leveraging the fact that <a href=#a-sum-of-subsets--kbhsum-of-subsets-dot-md--is-only-a-direct-sum--kbhdirect-sum-dot-md--iff--kbhequivalence-dot-md--their-intersection-is-set-containing-0>a sum of subsets is only a direct sum IFF their intersection is set containing \(0\)</a>&mdash;that \(U \cap W = \{0\}\).</p><p>Given some element \(v\) that lives in the intersection between \(U\) and \(W\), it must be formed as a <a href=/posts/kbhlinear_combination/>linear combination</a> of two <a href=/posts/kbhlinear_independence/>linearly independent</a> lists (as \(u_j, \dots w_{j}\) is a <a href=/posts/kbhbasis/>basis</a>, they are <a href=/posts/kbhlinear_independence/>linearly independent</a>.)</p><p>Intuition: if an non-zero element lives in the intersection between two <a href=/posts/kbhlinear_independence/>linearly independent</a> lists which together is still <a href=/posts/kbhlinear_independence/>linearly independent</a>, it must be able to be written by a <a href=/posts/kbhlinear_combination/>linear combination</a> of other elements of that <a href=/posts/kbhlinear_independence/>linearly independent</a> list to live in the intersection of the two lists&mdash;which is absurd (violates the definition of <a href=/posts/kbhlinear_independence/#linearly-dependent>linearly dependent</a>). The only element for which this is an exception is \(0\).</p><p>Actual proof:</p><p>suppose \(v \in U \cap W\), so \(v = a_1u_1\dots +a_{m}v_{m}\) as well as \(v=b_1w_{1} + \dots b_{n}w_{n}\). Subtracting the two lists results in:</p><p>\begin{equation}
+0 = a_1u_1+ \dots a_{m} u_{m} - b_1w_1+ \dots +b_{n}w_{n}
+\end{equation}</p><p>having already declared this list <a href=/posts/kbhlinear_independence/>linearly independent</a>, we see that each scalar \(a_1, \dots -b_{n}\) must equal to \(0\) for this expression. Therefore, the intersection \(v\) must be \(\{0\}\) as \(0u_1 + \dots +0u_{m}=0\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

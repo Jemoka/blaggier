@@ -1,0 +1,71 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Regarding R@N</title>
+<meta name=description content="Thanks for opening Jack&rsquo;s long rambly PDF. Please read all of it; I wanted to get this out there before anything else so I apologize in advance for a letter that&rsquo;s on the longer side and I didn&rsquo;t have time to write a shorter one.
+Before you begin, please read Michael&rsquo;s AMAZING notes on our pitch to get the context. It&rsquo;s amazing. I will not repeat here anything mentioned there.
+Pat yourself on the back
+Oh god was that a difficult semester. We got through many a challenges and worked together to solve most of them. That&rsquo;s cool. We also built a thing that the XRT team liked; so that&rsquo;s cool too."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Regarding R@N</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Thanks for opening Jack&rsquo;s long rambly PDF. Please read all of it; I wanted to get this out there before anything else so I apologize in advance for a letter that&rsquo;s on the longer side and I didn&rsquo;t have time to write a shorter one.</p><p>Before you begin, please read <a href=https://docs.google.com/document/d/1ZvE4QGFjhR6VeujNzejh1AcmILkLUiYLY0DwKSGsLPs/edit>Michael&rsquo;s AMAZING notes on our pitch</a> to get the context. It&rsquo;s amazing. I will not repeat here anything mentioned there.</p><h2 id=pat-yourself-on-the-back>Pat yourself on the back</h2><p>Oh god was that a difficult semester. We got through many a challenges and worked together to solve most of them. That&rsquo;s cool. We also built a thing that the XRT team liked; so that&rsquo;s cool too.</p><p>Some of you (in the meeting) will already have known, but we are greenlit to go into phase -1! What does that mean? What changes? How can you help? Will meetings finally end on time? When will Jack finish asking silly questions? Find out more&mldr; below.</p><h2 id=but-not-too-hard>But not too hard</h2><p>Just to reiterate our master deliverable as a team (like how this pitch is culminating the deliverable assigned to us on 1/6), we have until <strong><strong>July 8th, 2022</strong></strong> to pitch, again:</p><ul><li>What exactly are we doing, in one line, in laymen&rsquo;s terms? Why is it helpful?</li><li>Clarify the roles and responsibilities for the &ldquo;master faculty member&rdquo;, what time commitments and value they add, and what they have to drop to support the program</li><li>How can we derive legitimacy for what we are doing? (see below)</li></ul><p>For me, he also added the derivable of talking more slowly. Presumably, De wants us to come with a glossy pitch too.</p><h2 id=be-legit>Be legit</h2><p>Why do we need &ldquo;legitimacy&rdquo;? We need motivation for kids to do this, and Nueva&rsquo;s rubber stamp would be a good way to do so. <strong><strong>this is the focus of how we are asking Lisa to greenlight phase 2</strong></strong> (see below)</p><p>A valid answer for &ldquo;legitimacy&rdquo; is &ldquo;adding the list of skills students achieved on their transcript.&rdquo; Is this a good answer? Not at the moment. Its very unmotivated (this response does not pass the &ldquo;why is that helpful?&rdquo; test).</p><h2 id=and-follow-the-yellow-brick-road>And follow the yellow-brick road</h2><p>There is going to be a three stage roadmap.</p><ul><li><strong>Phase -1</strong>: developing answers to PREPARE to pitch to Liza the idea, asking her to give feedback WITHOUT any of the &ldquo;asks&rdquo; (legitimacy, faculty time, etc.)</li><li><strong>Phase 1</strong>: building a down-scaled version of the program somewhere. Ted has mentioned interest in this, so we maybe able to co-opt some or all of his classes. Developing details and proof-of-feasibility to pitch to Liza again, this time WITH the asks to roll out to the whole school</li><li><strong>Phase 2</strong>: roll out to the whole school and prey to the Research Gods</li></ul><h2 id=but-not-the-leader>But not the leader</h2><p>I can&rsquo;t be around forever. We are in phase -1; I will probably be gone in the middle of phase 1. We will probably have to have a faculty supporting this program unofficially for sometime, which will be a big ask.</p><p>This means we have to make some program changes in anticipation&mdash;</p><h2 id=seek-a-corpus-callosotomy>Seek a corpus callosotomy</h2><p>&ldquo;R@N&rdquo; is now separated form &ldquo;Nueva Research Program.&rdquo; &ldquo;R@N&rdquo;&rsquo;s purpose is a working group to build the &ldquo;Nueva Research Program.&rdquo;</p><p>We need to separate the two as soon as possible, so that means soon. As soon as after the 7/8 deadline, I hope to make this happen. This means changes changes to our leadership structure.</p><p>As <a href=https://docs.google.com/document/d/1UgOiVyKE0iixSNyrbh35Y3zDHfI7-eGgBoAZ0tMlDK0/edit>node A.2</a> outlines, &ldquo;Nueva Research Program&rdquo; meetings have three stable positions.</p><ul><li>Teams’ Stable — Responsible for managing the count, content, and quality of active Research at Nueva projects, as well as the proces of matching team members to teams. (2-3 hrs/wk)</li><li>Content Stable — Responsible for managing the content of the training program and review teams. Responsible for updating nodes. Runs meetings. (1-2 hrs/wk)</li><li>Participant Stable — Responsible for managing the count and recruitment of new students into the program, and identifying key experts and mentors to help build new nodes or support the program. Responsible for participant sheet (1-2 hrs/wk)</li></ul><p>As well as three review teams</p><ul><li>Hypothesis Sciences (key mentor: TBD)</li><li>Non-Hypothesis Sciences (key mentor: Ted)</li><li>Literacy, Soft Skills, and Development (key mentor: TBD)</li></ul><p>In a meeting (TBD) before 7/8, we will organize ourselves into three pairs again. Each pair will choose one &ldquo;stable&rdquo; role and one &ldquo;review team&rdquo; role&mdash;essentially acting as a joint-power head for the new program and a review team in itself.</p><p>We will split our meetings from then on in half; the first bit dealing with R@N, which I will run; the second, ACTUALLY DOING Nueva Research Programs&rsquo; work, lead by the &ldquo;content stable&rdquo; team. This also means that we will separate the two work docs.</p><p>Oh, yeah, also, if you have gotten this far; the headings of this document forms a pretty bad poem. Please send this poem to me privately on a direct message. Thank you.</p><p>Presumably, much of the early &ldquo;nueva research program&rdquo; meetings will be solely the participant stable thinking about recruiting metrics and content stable voting on new nodes. That&rsquo;s OK. The protocol&rsquo;s there to be changed if needed.</p><h2 id=but-not-without-your-consent>But not without your consent</h2><p>Although we want each and every one of you on the team (evidenced by the fact that we will be pretty screwed if anyone leaves), your main academics comes first. Please talk to me privately if you have any concerns, no harm no foul.</p><h2 id=alrighty-dot>Alrighty.</h2><p>Let&rsquo;s find a time to meet.</p><p><a href=https://www.when2meet.com/?15887080-XHXI8>https://www.when2meet.com/?15887080-XHXI8</a></p><p>I kinda want to meet y&rsquo;all physically over coffee if you want; but if not virtual is all good.</p><p>Thanks again for everything!</p><p>&mdash;Jack</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

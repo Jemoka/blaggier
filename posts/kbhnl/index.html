@@ -1,0 +1,99 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NL</title>
+<meta name=description content="\begin{equation}
+\text{NL} = \text{NSPACE} \qty( \log n)
+\end{equation}
+See also Certificates-Based Intepretation of NL
+problems in \(NL\)
+We can see \(L \subseteq NL\), because a TM is a NTM.
+STCONN is in NL
+On input \(\qty(G, s,t)\), if \(s = t\), accept; otherwise,
+
+currNode = 5
+numSteps = 0
+while steps <= n
+
+non-deterministically choose a next node
+update currNode = w
+if w = t, accept
+set numSteps ++
+
+
+reject
+
+so we just have to remember the current node. So this whole thing is \(O\qty(\log n)\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NL</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>\begin{equation}
+\text{NL} = \text{NSPACE} \qty( \log n)
+\end{equation}</p><p>See also <a href=/posts/kbhcertificates_based_intepretation_of_nl/>Certificates-Based Intepretation of NL</a></p><h2 id=problems-in-nl>problems in \(NL\)</h2><p>We can see \(L \subseteq NL\), because a TM is a NTM.</p><h2 id=stconn-is-in-nl>STCONN is in NL</h2><p>On input \(\qty(G, s,t)\), if \(s = t\), accept; otherwise,</p><ul><li>currNode = 5</li><li>numSteps = 0</li><li>while steps &lt;= n<ul><li>non-deterministically choose a next node</li><li>update currNode = w</li><li>if w = t, accept</li><li>set numSteps ++</li></ul></li><li>reject</li></ul><p>so we just have to remember the current node. So this whole thing is \(O\qty(\log n)\).</p><h2 id=three-statements>three statements</h2><h3 id=bounding-nl-space-by-p-time>bounding NL space by P time</h3><p>\begin{equation}
+NL \subseteq P
+\end{equation}</p><p><strong>key insights: <a href=/posts/kbhstconn/>STCONN</a> in \(P\)</strong></p><hr><p>preliminaries:</p><p>Recap: \(L \subseteq P\): Recall the definition of <a href=/posts/kbhturing_machinea/#configuration>configuration</a> of TM \(M\) which solves \(L\) on input \(x\). Since \(M\) uses \(O \qty(\log n)\) space, then \(\leq n^{k}\) configurations because otherwise you&rsquo;d run out of space.</p><p>Yet, this time, a configuration <em>can</em> repeat on different branches within the non-determinism. Instead of a binary tree, instead, draw a digraph with each possible configuration corresponding at a vertex.</p><p>This is now a \(G\), such that \(V\) is all possible configurations; \(\qty(c, c&rsquo;) \in E\), if \(c&rsquo;\) is a next con fig coming from \(c\). For space \(S \qty(n)\), we have \(|V| = 2^{O(s \qty(n))}\)</p><p>By definition of non-deterministic TM, \(M\) accepts \(x\) IFF \(\exists\) path \(C_{\text{start}}\) to <strong>any</strong> accepting configuration.</p><p>We then take this graph, take each of the accepting configurations, and point each of the accepting configurations to a particular node \(C_{\text{accept}}\). We call this graph \(G&rsquo;\), suddenly this reduces to <a href=/posts/kbhstconn/>STCONN</a>.</p><hr><p>proof:</p><p>Let \(A \in \text{NL}\), for input \(x\), we spend poly time above to build graph \(G&rsquo;\) (we know this is poly time because there is only Poly N Verticies for space \(\log n\).</p><p>After this is done, \(x \in A\) if and only if \(\qty(G&rsquo;x, C_{\text{start}}, C_{\text{accept}}) \in \text{STCONN}\).</p><h3 id=non-determinism-buys-quadratic-savings>non-determinism buys quadratic savings</h3><p>\begin{equation}
+NL \subseteq \text{SPACE}\qty(\log^{2}\qty(n))
+\end{equation}</p><p><strong>key insights: <a href=/posts/kbhstconn/>STCONN</a> in \(\log^{2}\qty(n)\)</strong></p><hr><p>preliminaries:</p><p>this is almost <a href=#bounding-nl-space-by-p-time>bounding space by time</a>, but writing down the graph as a whole is decently difficult. we just have to solve this by never actually giving the <a href=/posts/kbhstconn/#savitch-s-algorithm>Savitch&rsquo;s Algorithm</a> the graph, and instead just giving it all the vertices; at \(k=0\), then we check once whether or not an edge is present.</p><p>To do this &ldquo;edge checking&rdquo;, we need to show that: let \(M\) be an NTM, given \(x\) and 2 configs \(c_1\) and \(c_2\), we can check in \(O\qty(\log n)\) space whether there is an edge between \(c_1\) and \(c_2\).</p><h3 id=nl-conl>NL = coNL</h3><p>\begin{equation}
+\text{NL} = \text{coNL}
+\end{equation}</p><p><strong>key insights: <a href=/posts/kbhstconn/>STCONN</a> is in coNL</strong></p><p>That is, we want to show that:</p><p>\begin{equation}
+\neg \text{STCONN} \in \text{NL}
+\end{equation}</p><p>in particular is that we want to show a short certificate for \(S\) and \(T\) are <strong>not</strong> connected.</p><p>see <a href=/posts/kbhproof_of_nl_conl/>Proof of the Immerman-Szelepscenyi Theorem</a>. Since \(\neg \text{STCONN} \in NL\), and since <a href=/posts/kbhstconn/>STCONN</a> is NL complete, \(\text{NL} = \text{coNL}\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

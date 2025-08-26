@@ -1,0 +1,83 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Web Graph</title>
+<meta name=description content='let&rsquo;s consider the web as a directed graph, where&mldr;
+
+a hyper-link denotes perceived relevance (&ldquo;quality&rdquo;)
+anchor of the hyper-link describe the target page (&ldquo;textual context&rdquo;)
+
+anchor text
+consider:
+
+IBM&rsquo;s mostly graphical homepage
+IBM&rsquo;s copyright page
+Rival&rsquo;s span IBM page
+
+Consider, a million picees of anchor text saying &ldquo;IBM&rdquo; pointing to ibm.com, suddenly, that legitimizes the home page
+<a href="target">[archor text that says IBM]</a>
+So, when we index a website, we index not just the website but 1) all links pointing to it and 2) the text of those links.'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Web Graph</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>let&rsquo;s consider the web as a <strong>directed graph</strong>, where&mldr;</p><ol><li>a hyper-link denotes perceived relevance (&ldquo;quality&rdquo;)</li><li>anchor of the hyper-link describe the target page (&ldquo;textual context&rdquo;)</li></ol><h2 id=anchor-text>anchor text</h2><p>consider:</p><ul><li>IBM&rsquo;s mostly graphical homepage</li><li>IBM&rsquo;s copyright page</li><li>Rival&rsquo;s span IBM page</li></ul><p>Consider, a million picees of <a href=#anchor-text>anchor text</a> saying &ldquo;IBM&rdquo; pointing to ibm.com, suddenly, that legitimizes the home page</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-html data-lang=html><span style=display:flex><span><span style=color:#111>&lt;</span><span style=color:#f92672>a</span> <span style=color:#75af00>href</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;target&#34;</span><span style=color:#111>&gt;</span>[archor text that says IBM]<span style=color:#111>&lt;/</span><span style=color:#f92672>a</span><span style=color:#111>&gt;</span>
+</span></span></code></pre></div><p>So, when we index a website, we index not just the website but 1) all links pointing to it and 2) the text of those links.</p><h3 id=side-effects>side effects</h3><p>&ldquo;Google Bombing&rdquo;&mdash;a lot of people artificially increasing the rank of the website by pointing a lot to it on more fake websites and writing in anchor text about the spoofed website</p><p>solution: weight each web page&rsquo;s target anchors based on their &ldquo;authoritativeness&rdquo;&mdash;either curated or calculated.</p><h3 id=uses-of-anchor-text>uses of anchor text</h3><ul><li>synonym usage (collect multiple ways of referring to the same website)</li><li>finding translations (collect multiple languages referring to the same website)</li><li>providing constituency boundaries (i.e. the anchor text is a NP within the larger sentence)</li></ul><h2 id=pagerank>PageRank</h2><p>&ldquo;A page that&rsquo;s a very popular is a good page.&rdquo;</p><h3 id=page-rank>Page Rank</h3><p>Solves the LinkCount problem by using the intuition that we want to weight <a href=#directed-popularity>Directed Popularity</a> based on the importance of the page where the link is from.</p><p><strong>Precisely</strong>: after starting at a random page, we walk along each link with equal probability and continue until we reach a time where a page&rsquo;s visitation rate converges. We will use this as PageRank</p><h4 id=teleporting>Teleporting</h4><p>To resolve the problem of dead ends, if we reach a dead end we jump to a random page.</p><p>Even if we didn&rsquo;t reach a dead end, with probability \(\alpha\) we still jump to a random page.</p><ul><li>if the node has no out-link, the transition probability to each other node is \(\frac{1}{N}\)</li><li>if the node does have \(K\) out links, the probability of telephoning to a random node is \(\frac{\alpha}{N}\), and the probability of going to a normal out link is \(\frac{1-\alpha}{k}\).</li></ul><h4 id=building-pagerank-matrix>Building PageRank Matrix</h4><p>For some matrix A, \(A_{ij}\) is \(1\) if there is a hyper-link from \(i\) to \(j\).</p><p>If row \(A\) has no 1s, then we will replace each element by \(\frac{1}{N}\). For all other rows, divide each row by the sum of the row, and multplying each entry by \((1-\alpha)\). Then, add \(\frac{a}{N}\) to the whole row.</p><h4 id=calculating-pagerank--org69f1397>calculating <a href=#pagerank>PageRank</a></h4><p>uses the fact that the matrix you built in the previous step is <a href=/posts/kbhmarkov_chain/#ergotic-markov-chain>Ergotic</a> to <a href=/posts/kbhmarkov_chain/#computing-steady-state>compute its steady state</a>.</p><h3 id=link-count>Link Count</h3><p><strong>page that is pointed to by lots of other pages</strong></p><p>Failure: this is <strong>very easy to spam</strong>&ndash;we can just create a bunch of pages and add arbitrary number of links.</p><h4 id=undirected-popularity>Undirected Popularity</h4><p>&ldquo;Degree&rdquo;: number of in links plus the number of out-links.</p><h4 id=directed-popularity>Directed Popularity</h4><p>Number of in-links</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

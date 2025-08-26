@@ -1,0 +1,130 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Nueva Courses Index</title>
+<meta name=description content="NUS Secondary School Other Duties
+
+AP Statistics Index
+AP Phys C Mech Index
+AP Phys C EM Index
+Tuning Forks
+bioinformatics
+PKM
+Intersession 2023
+
+NUS-MATH580 QIC
+
+  
+      
+          Date
+          Topic
+      
+  
+  
+      
+          <2022-04-05 Tue>
+          physical qubits, manipulating physical qubits
+      
+      
+          <2022-04-08 Fri>
+          making qubits interact
+      
+      
+          <2022-05-10 Tue>
+          Chiara Marletto
+      
+      
+          <2022-05-24 Tue>
+          Strong Free Will
+      
+  
+
+NUS-CS223 Algorithms
+Backlog: Finite State Machine
+
+  
+      
+          Date
+          Topic
+      
+  
+  
+      
+          <2022-04-07 Thu>
+          stable matching problem, stable matching algorithm
+      
+      
+          <2022-05-02 Mon>
+          dynamic programming, relaxation
+      
+      
+          <2022-05-23 Mon>
+          distributed algorithum, randomized algorithum, complexity theory
+      
+  
+
+NUS-HIST301 American History
+Backlog: New Deal, Franklin D. Roosevelt (FDR), Works Progress Administration, effects of the New Deal, Great Depression, Herber Hoover, disinformation, Guilded Age"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Nueva Courses Index</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=nus-secondary-school-other-duties>NUS Secondary School Other Duties</h2><ul><li><a href=/posts/kbhapstats/>AP Statistics Index</a></li><li><a href=/posts/kbhap_phys_c_mech_index/>AP Phys C Mech Index</a></li><li><a href=/posts/kbhap_phys_c_em_index/>AP Phys C EM Index</a></li><li><a href=/posts/kbhtuning_forks/>Tuning Forks</a></li><li><a href=/posts/kbhbioinformatics/>bioinformatics</a></li><li><a href=/posts/kbhpkm/>PKM</a></li><li><a href=/posts/kbhintersession_2023/>Intersession 2023</a></li></ul><h2 id=nus-math580-qic>NUS-MATH580 QIC</h2><table><thead><tr><th>Date</th><th>Topic</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-04-05 Tue></span></span></td><td><a href=/posts/kbhphysical_qubits/>physical qubits</a>, <a href=/posts/kbhatoms_as_qubits/#manipulating-physical-qubits>manipulating physical qubits</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-04-08 Fri></span></span></td><td><a href=/posts/kbhmaking_qubits_interact/>making qubits interact</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-05-10 Tue></span></span></td><td><a href=/posts/kbhchiara_marletto/>Chiara Marletto</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-05-24 Tue></span></span></td><td><a href=/posts/kbhstrong_free_will/>Strong Free Will</a></td></tr></tbody></table><h2 id=nus-cs223-algorithms>NUS-CS223 Algorithms</h2><p>Backlog: <a href=/posts/kbhfinite_state_machine/>Finite State Machine</a></p><table><thead><tr><th>Date</th><th>Topic</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-04-07 Thu></span></span></td><td><a href=/posts/kbhstable_matching_problem/>stable matching problem</a>, <a href>stable matching algorithm</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-05-02 Mon></span></span></td><td><a href=/posts/kbhdynamic_programming/>dynamic programming</a>, <a href=/posts/kbhrelaxation_algorithums/>relaxation</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-05-23 Mon></span></span></td><td><a href=/posts/kbhdistributed_algorithum/>distributed algorithum</a>, <a href=/posts/kbhrandomized_algorithum/>randomized algorithum</a>, <a href=/posts/kbhcomplexity_theory/>complexity theory</a></td></tr></tbody></table><h2 id=nus-hist301-american-history>NUS-HIST301 American History</h2><p>Backlog: <a href=/posts/kbhnew_deal/>New Deal</a>, <a href=/posts/kbhfdr/>Franklin D. Roosevelt (FDR)</a>, <a href=/posts/kbhwpa/>Works Progress Administration</a>, <a href=/posts/kbheffects_of_the_new_deal/>effects of the New Deal</a>, <a href=/posts/kbhgreat_depression/>Great Depression</a>, <a href=/posts/kbhherber_hoover/>Herber Hoover</a>, <a href>disinformation</a>, <a href=/posts/kbhguilded_age/>Guilded Age</a></p><table><thead><tr><th>Date</th><th>Topic</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-04-07 Thu></span></span></td><td><a href>WWII</a>, <a href=/posts/kbhpropaganda/>propaganda</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-05-02 Mon></span></span></td><td><a href=/posts/kbhcold_war/>cold war</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-05-09 Mon></span></span></td><td><a href=/posts/kbhcivil_rights/>civil rights</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-05-26 Thu></span></span></td><td><a href=/posts/kbhrichard_nixon/>Richard Nixon</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-06-01 Wed></span></span></td><td><a href=/posts/kbhronald_raegan/>Ronald Raegan</a></td></tr></tbody></table><h2 id=nus-phys301-mech>NUS-PHYS301 Mech</h2><table><thead><tr><th>Date</th><th>Topic</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-04-12 Tue></span></span></td><td><a href>String Yo-Yo Problem</a>, <a href=/posts/kbhrotational_energy/>rotational energy</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-05-24 Tue></span></span></td><td><a href>Gyroscopes</a></td></tr></tbody></table><h2 id=nus-eng401-english>NUS-ENG401 English</h2><table><thead><tr><th>Date</th><th>Topic</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-04-15 Fri></span></span></td><td><a href=/posts/kbhsecondary_source_comparison_activity/>secondary source comparison activity</a></td></tr></tbody></table><h3 id=essays>Essays</h3><ul><li><a href=/posts/kbhenglish_bluest_eye/>Bluest Eye Essay Planning</a></li><li><a href=/posts/kbhi_tituba_essay_planning/>I, Tituba Essay Planning</a></li></ul><h2 id=nus-math530>NUS-MATH530</h2><p>Please refer to <a href=/posts/kbhlinear_algebra_index/>Linear Algebra Index</a></p><h2 id=nus-econ320-financial-econometrics>NUS-ECON320 Financial Econometrics</h2><table><thead><tr><th>Date</th><th>Topic</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-08-25 Thu></span></span></td><td><a href=/posts/kbhfinancial_markets_intro/>Financial Markets Intro</a>, <a href=/posts/kbhecon320_architecture/>ECON320 Architecture</a></td></tr></tbody></table><h2 id=nus-cs350-software-studio>NUS-CS350 Software Studio</h2><table><thead><tr><th>Date</th><th>Topic</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-08-25 Thu></span></span></td><td><a href=/posts/kbhuser_interviews/>User Interviews</a>, <a href=/posts/kbhuser_interviews/#user-story>User Story</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-09-07 Wed></span></span></td><td><a href=/posts/kbhsoftware_engineering/>Software Engineering</a>, <a href=/posts/kbhprototyping/>Prototyping</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-09-12 Mon></span></span></td><td><a href=/posts/kbhtask_estimation/>Task Estimation</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-09-15 Thu></span></span></td><td><a href=/posts/kbhdocumentation_and_specification/>Documentation and Specification</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-09-19 Mon></span></span></td><td><a href=/posts/kbhtesting/>Testing</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-10-06 Thu></span></span></td><td><a href=/posts/kbhdefensive_programming/>Defensive Programming</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-11-03 Thu></span></span></td><td><a href=/posts/kbhcode_review/>Code Review</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-12-01 Thu></span></span></td><td><a href=/posts/kbhux_design/>UX Design</a></td></tr></tbody></table><h2 id=nus-math570-diffeq>NUS-MATH570 DiffEq</h2><table><thead><tr><th>Date</th><th>Topic</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2022-08-26 Fri></span></span></td><td><a href=/posts/kbhdiffeq_intro/>DiffEq Intro</a></td></tr></tbody></table><h2 id=nus-lang250-translation>NUS-LANG250 Translation</h2><p><a href=/posts/kbhtranslation_studies_index/>Translation Studies Index</a></p><h2 id=nus-math575-compbio>NUS-MATH575 CompBio</h2><p><a href=/posts/kbhcomputational_biology_index/>Computational Biology Index</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

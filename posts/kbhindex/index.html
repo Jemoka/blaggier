@@ -1,0 +1,73 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>About</title>
+<meta name=description content="Welcome to the personal site of Houjun &ldquo;Jack&rdquo; Liu.
+I&rsquo;m on the blaggosphere as u/jemoka and @jemoka.
+
+Who&rsquo;s this guy?
+I am a human interested in linguistic analysis, NLP, and user interfaces. I think AGI & Emacs are cool. I run Shabang, do research in NLP and model-based RL, and am working for TalkBank on the intersection between speech and language.
+I&rsquo;m currently doing my undergrad at Stanford, where I write some code for Stanza, a NLP package for many human languages, and a rover that we are sending to Antarctica."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>About</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Welcome to the personal site of <strong><strong>Houjun &ldquo;Jack&rdquo; Liu</strong></strong>.</p><p>I&rsquo;m on the blaggosphere as <a href=https://www.reddit.com/user/Jemoka/>u/jemoka</a> and <a href=https://github.com/Jemoka/>@jemoka</a>.</p><hr><h2 id=who-s-this-guy>Who&rsquo;s this guy?</h2><p>I am a <a href="https://avatars.githubusercontent.com/u/28765741?v=4">human</a> interested in <a href=http://pubs.asha.org/doi/10.1044/2023_JSLHR-22-00642>linguistic analysis</a>, <a href=https://aclanthology.org/2024.crac-1.4.pdf>NLP</a>, and <a href=https://www.shabang.io>user interfaces</a>. I think <a href=https://en.wikipedia.org/wiki/Artificial_general_intelligence>AGI</a> & <a href=https://github.com/Jemoka/.emacs.d>Emacs</a> are cool. I run <a href=https://www.shabang.io>Shabang</a>, <a href=/posts/kbhresearch_index/>do research in NLP and model-based RL</a>, and am working for <a href=https://www.talkbank.org/>TalkBank</a> on the intersection between speech and language.</p><p>I&rsquo;m currently doing my undergrad at Stanford, where I write some code for <a href=https://github.com/stanfordnlp/stanza>Stanza</a>, a NLP package for many human languages, and a <a href=https://github.com/stanford-ssi>rover that we are sending to Antarctica</a>.</p><p>Need to catch me? Email me at <code>houjun@jemoka.com</code>. Please do email me, I actually check.</p><h2 id=recent-projects>Recent Projects</h2><p>Take a look at my <a href=https://github.com/Jemoka/>GitHub profile</a> for programming projects. For larger scale things, you may be interested in learning about my <a href=https://ai.stanford.edu/~houjun/>research projects</a> or <a href=https://www.jemoka.com/posts/kbhprojects/>stuff I&rsquo;ve built</a>.</p><h2 id=notes>Notes</h2><p>This site also contains the vast majority of my course notes. It is a organized in a <a href=/posts/kbhzettlekasten/>zettlekasten</a> format. To begin exploring, why don&rsquo;t you check out <a href=/posts/kbhnueva_courses_index/>Nueva Courses Index</a> and <a href=/posts/kbhstanford_courses_index/>Stanford UG Courses Index</a>.</p><h2 id=jklsnt>jklsnt</h2><p>Some friends and I started a small collection of fun internets that we made. <a href=https://www.jklsnt.com/>Check it out!</a>.</p><h2 id=how-do-i-know-you-are-you>How do I know you are you?</h2><p>Good question! <code>gpg --locate-keys houjun@jemoka.com</code>. Note that GPG don&rsquo;t actually check fingerprints you received so do that yourself (<code>CA0D6B9C1EA1CD08F0AC1802E7EDDE691807A0C6</code>).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

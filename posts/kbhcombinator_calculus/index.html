@@ -1,0 +1,98 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Combinator Calculus</title>
+<meta name=description content="combinator is a variable free programming language; it is a turing complete computational formalism.
+
+this is a language of functions
+it is extremely minimalist
+
+clear away the complexity of a real language
+allows for illustration of ideas
+
+
+
+combinator
+a combinator is a function with no free variables
+Why do we care?
+
+no variables! its entirely compositional
+all computations are rewrite rules => making proofs like confluence, etc. easier
+its functional: we don&rsquo;t reason about individual data accesses, which is a natural fit for bulk and parallel data
+
+&mldr;variables are often a problem is parallel computation
+
+
+
+Why do we not care?
+Duplication is really hard in SKI; we had to use \(S\) and possibly a \(K\) to get multiple thing to be passed. This is basically the only way we can pass information around&mdash;we have to drill any data all the way down with \(S\) until you consume it"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Combinator Calculus</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>combinator is a variable free programming language; it is a turing complete computational formalism.</p><ul><li>this is a language of functions</li><li>it is extremely minimalist<ul><li>clear away the complexity of a real language</li><li>allows for illustration of ideas</li></ul></li></ul><h2 id=combinator>combinator</h2><p>a <a href=#combinator>combinator</a> is a function with no <a href=/posts/kbhsu_cs242_oct032024/#free-variables>free variables</a></p><h2 id=why-do-we-care>Why do we care?</h2><ul><li>no variables! its entirely compositional</li><li>all computations are rewrite rules => making proofs like <a href=/posts/kbhconfluence/>confluence</a>, etc. easier</li><li>its functional: we don&rsquo;t reason about individual data accesses, which is a natural fit for bulk and parallel data<ul><li>&mldr;variables are often a problem is parallel computation</li></ul></li></ul><h2 id=why-do-we-not-care>Why do we not care?</h2><p>Duplication is really hard in SKI; we had to use \(S\) and possibly a \(K\) to get multiple thing to be passed. This is basically the only way we can pass information around&mdash;we have to drill any data all the way down with \(S\) until you consume it</p><p>this doesn&rsquo;t really match the way we build computers&mdash;memories exist.</p><h2 id=definition>definition</h2><p>Terms of SKI calculus are the smallest sets such that \(S, K, I\) are terms; and if \(x, y\) are terms, then \(x y\) is a term.</p><p><strong>key fact</strong>: terms are <em>trees</em>, not <em>strings</em>&mdash;in absence of parans, association is to the left: \(S x y z \to (((Sx) y) z)\)</p><h3 id=rewrite-system>rewrite system</h3><ul><li>\(I x \to x\), identity function</li><li>\(K x y \to x\), constant functions</li><li>\(S x y z \to (xz) (yz)\), generalized function application</li></ul><h4 id=constant-formating-function-k>Constant formating function \(K\)</h4><p>\(K\) semantics:</p><ul><li>\(K\), pass; doesn&rsquo;t cause computation</li><li>\(Kx\), partial function application; doesn&rsquo;t cause comptation</li><li>\(K x y \to x\), only executes when it has two arguments</li><li>\(K x y z \to x z\), again a partial application</li></ul><p>this is a constant-forming function, meaning apply \(x\) to \(K\) will give you the constant \(x\), no mater what else ouo do to it</p><h4 id=function-application-s>function application \(S\)</h4><p>this allows you to&mdash;</p><ul><li>have fnction calls</li><li>reuse values</li></ul><p>\begin{equation}
+S x y z \to (xz) (yz)
+\end{equation}</p><h3 id=cfg>CFG</h3><ul><li>\(Expr \to S\)</li><li>\(Expr \to K\)</li><li>\(Expr \to I\)</li><li>\(Expr \to Expr Expr\)</li><li>\(Expr \to (Expr)\)</li><li>\(Expr \to S | K | I | Expr Expr | (Expr)\)</li></ul><p>\(Expr\) is a non terminal; CFG application is done when we have no more \(Expr\) left.</p><h2 id=abstraction-algorithm>abstraction algorithm</h2><p>the <a href=#abstraction-algorithm>abstraction algorithm</a> is a system for writing out combinators.</p><ol><li>start with a function equation using the variables we want \(swap\ x y \to y x\)</li><li>then, use an <strong>abstraction algorithm</strong> \(A\) which eliminates variables on RHS and replace them with \(S, K, I\)</li></ol><p>key: <strong>run this algorithm in the currying order; so if we have $f x y = &mldr;$, run \(A\) on \(y\) first, then \(x\)</strong></p><hr><p>\(A(b,a)\) is an algorithm that drops <strong>a</strong> from the expression <strong>b</strong>. consider: \(f x = E\), we want a <strong>combinator that does</strong> \(A(E,x)\) which implements \(f\).</p><ul><li>\(A(x,x) = I\)</li><li>\(A (E, x) = K E\), if \(x\) is not in \(E\)</li><li>\(A ( E_1 E_2, x) = S A(E_1, x) A (E_2, x)\)</li></ul><p>(non standard) Alex&rsquo;s special abstraction rules</p><p>define:</p><ul><li><p>\(c_1 x y z \to x ( y z)\)</p></li><li><p>\(c_2 x y z = (x z) y\)</p></li><li><p>\(A(E_1 E_2, x) = c_1 E_1 A (E_2, x)\), if \(x\) doesn&rsquo;t appear in \(E_1\)</p></li><li><p>\(A(E_1 E_2, x) = c_2 A (E_1, x) E_2\) , if \(x\) doesn&rsquo;t appear in \(E_2\)</p></li><li><p>\(A(E_1 E_2, x) = S A(E_1, x) A(E_2, x)\), otherwise</p></li></ul><hr><p>For each variable on the right time, we want to apply the abstraction algorithm \(A\) once: an example with \(swap\ x y \to y x\)</p><ol><li>\(yx = A(y x, y) = S A (y,y) A(x,y) = SI (K x)\)</li><li>\(SI (K x) = A(SI (K x), x)\) and so on</li></ol><p>we apply \(A\) in the currying order, meaning for \(f x y z\), we apply \(A\) first on \(z\), then \(y\), and \(x\). It is essentially defining \(SKI\) in reverse.</p><h2 id=programming-with-sii-calculus>programming with SII calculus</h2><h3 id=general-recursion>general recursion</h3><p>Notice that \((SII)(SII) \to I (SII) I(SII) \to (SII) (SII)\) is a basic infinite loop. suppose we want to keep applying \(f\) to something.</p><p>Let us define \(x = S(Kf)(SII)\).</p><p>So now:</p><p>\begin{equation}
+S II x \to^{*} x x \to^{*} f (x x) \to^{*} f(f(x x)) \dots
+\end{equation}</p><p><strong>general tip</strong>: notice apply \(K\) to things is a good way to get more of that thing. We use that trick in \(x\)</p><h4 id=expanding-one-step>expanding one step</h4><p>\(x x \to S (Kf) (S II ) x \to S (K f) x ( S I I) x\)</p><h3 id=conditionals>conditionals</h3><p>Let&rsquo;s first create some <strong>encoding</strong> (weak &ldquo;ADT&rdquo; without type system) which gives you booleans. Perhaps we can design true and false such that \(T a b \to a\) and \(F a b \to b\).</p><ul><li>\(T = K\)</li><li>\(F = SK\)</li></ul><p>Now, we also need to create our boolean operations:</p><ul><li><strong>not</strong>: \(B F T\) because if \(B\) is true, it will pick the first thing which is a False; otherwise, it will pick the second thing which is a True</li><li><strong>or</strong>: \(B_1 T B_2\) because if \(B_1\) is true, it will give you \(T\), otherwise, it will give you what \(B_2\)</li><li><strong>and</strong>: \(B_1 B_2 F\) because if \(B_1\) is true, we also need \(B_2\) to be true; otherwise, it will give you False</li></ul><p>If statements:</p><ul><li>\(B X Y\), because our boolean <em>is</em> the thing that allows us to choose between branches</li></ul><h3 id=pair>pair</h3><p><strong>pair</strong> is 2-tuples:</p><ul><li>\(pair\ x y\ first = x\)</li><li>\(pair\ x y\ second = y\)</li></ul><p>let us choose</p><ul><li>\(first = T\)</li><li>\(second = F\)</li></ul><figure><img src=/ox-hugo/2024-09-26_10-12-40_screenshot.png></figure><h3 id=natural-numbers>natural numbers</h3><p>natural number \(n\) is a function that applies its first argument \(n\) times to the second arguments, meaning:</p><ul><li>\(0 f x = x\); so \(0 = S K\)</li><li>\(succ\ n f x = f (n f x)\); so \(succ = S(S (K S) K)\)</li></ul><p>some operations</p><ul><li>\(1 = succ\ 0\)</li><li>\(add\ x y = x\ succ\ y\)</li><li>\(mul\ x\ y = x\ (add\ y)\ 0\)</li></ul><p>you will note that this is <a href=#natural-numbers>primitive recursion</a>: the number of times we iterate is <strong>fixed</strong> (or capped, as in <code>break</code>) on entry&mdash;we cannot use control flow to stop recursion.</p><h2 id=reduction-order>Reduction Order</h2><p>When do we actually apply the reduction? As in, when and how do we apply the rewrites?</p><ul><li><p>in a large expression, many rewrite rules may apply</p></li><li><p>so how do we choose when to actually evaluate?</p><figure><img src=/ox-hugo/2024-10-01_09-15-15_screenshot.png></figure></li></ul><p>The process for choosing where to apply the rules is a <strong>reduction strategy</strong>&mdash;most languages have a fixed reduction/evaluation order. However, concurrent programming/parallel do provide multiple choices.</p><h3 id=one-place-in-c-where-the-evaluation-order-is-not-specified>one place in C where the evaluation order is not specified</h3><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#75af00>f</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#111>y</span><span style=color:#f92672>*</span><span style=color:#ae81ff>3</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>its not specified if we evaluate the arguments left to right or right to left. This causes a problem, say in globals. Suppose you had:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#111>z</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>f</span><span style=color:#111>(</span><span style=color:#75af00>g</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>),</span> <span style=color:#75af00>h</span><span style=color:#111>(</span><span style=color:#111>y</span><span style=color:#111>));</span>
+</span></span></code></pre></div><p>suppose with side effects <code>g</code> changes <code>z</code>, and <code>h</code> reads <code>z</code>. The evaluation order, then, change the read order.</p><h3 id=a-good-reduction-strategy-normal-order>a good reduction strategy: normal order</h3><h4 id=normal-order>normal order</h4><ul><li>traverse the leftmost spine of the expression tree from root to the leaf</li><li>if a rewrite rule applies (i.e. backup enough rules to get your arguments, etc.), apply it, repeat</li><li>otherwise, halt (yes, this can leave things unevaluated, but so does <code>f() { x+y }</code> without calling <code>f</code>)</li></ul><p>this is also called <em>lazy evaluation</em> &mdash; only evaluates what is absolutely necessary to get an answer; if <strong>any reduction order terminates, normal order will terminate</strong></p><p>other languages mostly <a href=/posts/kbhcall_by_value/>call by value</a> instead of lazy order (except Haskall).</p><h4 id=what-could-go-wrong-if-you-don-t-use-normal-order>what could go wrong if you don&rsquo;t use normal order?</h4><p>no! <a href=/posts/kbhconfluence/>confluence</a>: <a href=/posts/kbhconfluence/#ski-exhibits-id-6d79a838-4287-4370-bc51-6acfac32dfbf-one-step-diamond-property>SKI exhibits one-step diamond property</a></p><h2 id=examples>Examples</h2><ul><li>\(SK xy \to (K y) (x y) \to y\) &mdash; so the function \(SK\) returns the second argument</li><li>\(K x y \to x\) &mdash; so the function \(K\) returns the first argument</li><li>\(S II X \to (Ix) (Ix) \to x (I x) \to x x\)</li><li>\((SII)(SII) \to I (SII) I(SII) \to (SII) (SII)\) &mdash; infinite loop</li><li><strong>swap</strong>: \(swap\ x y \to y x\) is defined by \(swap = S ( K ( SI)) (S (K K) I)\)</li></ul><h3 id=factorial>factorial</h3><p>Let&rsquo;s write it out first:</p><ul><li>\(fac\ n = fac&rsquo;\ 1\ 1\ n\)</li><li>\(fac&rsquo;\ a\ i\ n = if\ i > n\ then\ a\ else\ fac&rsquo;\ (a * i) (i + 1)\ n\)</li></ul><p>[TODO]</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

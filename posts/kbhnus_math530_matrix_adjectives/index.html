@@ -1,0 +1,81 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-MATH530 Matrix Adjectives</title>
+<meta name=description content="Factoids:
+
+\((AB)^{*} = B^{*} A^{*}\), \((A+B)^{*} = A^{*} + B^{*}\)
+
+An unitary operator is invertible, and the inverse of its matrix representation is its transpose
+Take \(M\) an unitary square matrix, with orthonormal columns. Note that this matrix, by construction, sends each basis \(v_{j}\) to $ej$&mdash;a set of \(dim\ V\) (as there are \(dim\ V\) columns to \(M\)) linearly independent (as \(e_{j}\), through orthonormality, are linearly independent) vectors. As we have \(dim\ V\) linearly independent vectors, the \(e_{j}\) form a basis. As each \(v_{j}\) is sent to $ej$&mdash;both a basis of $V$&mdash;we note that the finite-dimensional operator corresponding to \(M\) is subjective and hence invertible."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-MATH530 Matrix Adjectives</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=factoids>Factoids:</h2><ul><li>\((AB)^{*} = B^{*} A^{*}\), \((A+B)^{*} = A^{*} + B^{*}\)</li></ul><h2 id=an-unitary-operator-is-invertible-and-the-inverse-of-its-matrix-representation-is-its-transpose>An unitary operator is invertible, and the inverse of its matrix representation is its transpose</h2><p>Take \(M\) an unitary square matrix, with orthonormal columns. Note that this matrix, by construction, sends each basis \(v_{j}\) to $e<sub>j</sub>$&mdash;a set of \(dim\ V\) (as there are \(dim\ V\) columns to \(M\)) linearly independent (as \(e_{j}\), through orthonormality, are linearly independent) vectors. As we have \(dim\ V\) linearly independent vectors, the \(e_{j}\) form a basis. As each \(v_{j}\) is sent to $e<sub>j</sub>$&mdash;both a basis of $V$&mdash;we note that the finite-dimensional operator corresponding to \(M\) is subjective and hence invertible.</p><p>Construct now the matrix \(M^{*}\). Consider \(M M^{*}\). Note that the multiplication operation will require taking the inner product of each <em>row</em> of \(M\), against each <em>column</em> of \(M^{*}\); that is, this operation will result in taking the inner products between each pair of orthonormal columns of \(M\).</p><p>Recall that, per the definition of orthonormal vectors, for a pair of vectors \(e_{i}, e_{j}\), \(\langle e_{i}, e_{j} \rangle = 0\) for \(i \neq j\) and \(=1\) for \(i=j\). Therefore, this row-column product will be \(1\) when row \(j\) and column \(j\) is multiplied together and \(0\) otherwise.</p><p>In this fashion, \(M M^{*} =I\); in a similar fashion, \(M^{*} M = I\). Therefore, \(M^{*} = M^{-1}\).</p><h2 id=result-2-unitary-matricies-are-normal>Result 2: unitary matricies are normal</h2><p>Recall the matrix \(M\) is normal if \(A A^{*} = A^{*} A\). Now, recall that for a unitary operator \(A^{*} = A^{-1}\).</p><p>Now, we have that:</p><p>\begin{equation}
+A A^{*} = A A^{-1} = I = A^{-1} A = A^{*}A
+\end{equation}</p><h2 id=result-3-self-adjoint-matricies-are-normal>Result 3: self-adjoint matricies are normal</h2><p>Recall a self-adjoint matrix acts like \(A = A^{*}\).</p><p>Now:</p><p>\begin{equation}
+A A^{*} = A A = A^{*} A
+\end{equation}</p><h2 id=observation-1-some-matricies-are-both-self-adjoint-and-unitary>Observation 1: some matricies are both self-adjoint and unitary</h2><p>Take the symmetric matrix formed by conjoining each of the standard bases of euclidian space \(\mathbb{F}^{n}\). That is, the identity matrix.</p><p>The matrix has orthonormal columns (as the standard bases are orthonormal), and self-adjoint as it is symmetric.</p><h2 id=problem-1-venn-diagram>Problem 1: Venn Diagram</h2><figure><img src=/ox-hugo/2023-05-04_20-58-41_screenshot.png></figure><p>Per results above.</p><h2 id=problem-2-group>Problem 2: Group!</h2><h3 id=self-adjoint>Self-Adjoint</h3><p>Not closed under multiplication:</p><p>\begin{equation}
+\mqty(a & b \\ b & c) \mqty(f & g \\ g& h) = \mqty(af + bg & ag+bh \\ bf+cg & bg+ch)
+\end{equation}</p><p>Evidently, this matrix is no longer symmetric (i.e. not self adjoint).</p><h3 id=unitary>Unitary</h3><p>Do form a group!</p><h3 id=normal>Normal</h3><p>There&rsquo;s no inverse for \(0\).</p><p>Is this proof taking too much of a shortcut? / Wishywashy.</p><p>By the complex spectral theorm, \(T\) being normal implies that there is an orthonormal bases of eigenvalues of \(T\) (i.e. there is a diagonal representation of \(T\)). This can be obtained with Schur&rsquo;s theorem, then applying the condition that \(A A^{*} = A^{*}A\) to show that the &ldquo;upper-triangular&rdquo; matrix formed by the orthonormal bases is actually diagonal.</p><p>By calculation, diagonal matricies&rsquo; multiplication is closed.</p><p>We now inherit the identity and associativity from general matricies.</p><p>So invertible normal matricies form a group.</p><h2 id=matrix-adjoint>&ldquo;Matrix Adjoint&rdquo;</h2><p>\(A^{*}\) is the <strong>adjoint</strong> of the matrix.</p><p>That:</p><p>\begin{equation}
+\langle Tv,w \rangle = \langle v, T^{*}w \rangle
+\end{equation}</p><figure><img src=/ox-hugo/2023-05-08_09-42-00_screenshot.png></figure><hr><ol><li>\(A = A^{*} \implies \lambda_{i} \in \mathbb{R}\)</li><li>\(A^{*} A = A A^{*} \implies\) diagonalizable based on an orthonormal basis of eigenvectors</li><li>\(A\) is orthogonal/unitary \(\implies\) \(A^{*} = A^{-1}\)</li></ol><hr><p><strong>7.13</strong>: E.v. of self-adjoint operators are real.</p><p>7.14: Over \(\mathbb{C}\), \(Tv\) is orthogonal to all \(v\) IFF \(T\) is the zero matrix</p><p>7.16: Over \(\mathbb{R}\), \(Tv\) is orthogonal to all \(v\) and \(T\) is self-adjoint, then \(T\) is the zero matrix</p><p><strong>7.22</strong>: eigenvectors of \(T\) corresponding to distinct eigenvalues are orthogonal if \(T \in \mathcal{L}(V)\) is normal.</p><p>Also <strong>7.24</strong>: the spectral theorem&mdash;that if \(T\) is normal, then \(V\) has an orthonormal basis of eigenvectors of \(T\) and so \(T\) is diagonalizable with respect to an orthonormal basis</p><p>Recall &ldquo;normal&rdquo;: \(A A^{*} = A^{*} A\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

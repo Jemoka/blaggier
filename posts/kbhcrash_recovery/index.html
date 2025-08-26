@@ -1,0 +1,93 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>crash recovery</title>
+<meta name=description content="Major Challenges
+
+data loss: crashes can happen, and not all data could be saved to disk
+inconsistency: crashes can happen in the middle of operations
+
+crashes could occur when someone of the blocks that have been written to disk, but not others
+inode and free lists don&rsquo;t agree.
+
+
+
+Ideally, filesystem operations should be atomic. Every operation should happen or not happen at all&mdash;but not halfway.
+Case study: Block Cache Modification
+Tradeoffs
+The overall design tradeoffs between this:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>crash recovery</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=major-challenges>Major Challenges</h2><ul><li><strong>data loss</strong>: crashes can happen, and not all data could be saved to disk</li><li><strong>inconsistency</strong>: crashes can happen in the middle of operations<ul><li>crashes could occur when someone of the blocks that have been written to disk, but not others</li><li>inode and free lists don&rsquo;t agree.</li></ul></li></ul><p>Ideally, filesystem operations should be <strong>atomic</strong>. Every operation should happen or not happen at all&mdash;but not halfway.</p><p>Case study: <a href=/posts/kbhunix_v6_filesystem/#block-cache-modification>Block Cache Modification</a></p><h2 id=tradeoffs>Tradeoffs</h2><p>The overall design tradeoffs between this:</p><ul><li>durability - the data needs to be safe (which is slow, and may require manual crash recovery (sans cache, etc.))</li><li>performance - it needs to be fast (which may mean less error checking)</li><li>consistency - the filesystem needs to be uniform (which means that we need to be slower and we may drop data in favor of previous checkpoints that worked)</li></ul><p>Also the disks themselves can still fail.</p><h2 id=fsck>fsck</h2><p>Don&rsquo;t make any changes to filesystem at all. At the system boot time, check filesystem for consistency.</p><p>main limitation:</p><ul><li>can&rsquo;t restart filesystem until it completes: this process <strong><strong>takes forever</strong></strong></li><li>restores consistency, but doesn&rsquo;t prevent loss of info</li><li>restores consistency, but filesystem may still be unusable (core files moved to lost+found)</li><li>a block could migrate from a password file to some other random file, hence removing info</li></ul><hr><ul><li>Check whether or not there is a clean shutdown: setting a disk flag on clean shutdown; so if the flag isn&rsquo;t set there isn&rsquo;t a clean shutdown.</li><li>If it wasn&rsquo;t a clean shutdown, identify inconsistencies</li><li>Scans meta data (inodes, indirect blocks, free list, directory blocks) and handle any of the following situations&mdash;</li></ul><h3 id=block-in-an-inode-and-in-free-list>block in an inode and in free list</h3><p>Solution: pull the block off of free list</p><h3 id=block-is-a-part-of-two-inodes>block is a part of two inodes</h3><p>Solutions:</p><ul><li>give to newest</li><li>randomly pick</li><li>make a copy</li><li>remove (generally a bad idea, we don&rsquo;t want to destroy data)</li></ul><h3 id=inode-claims-one-dirent-refers-to-it-but-there-are-no-such-dirent>inode claims one dirent refers to it, but there are no such dirent</h3><p>put the file under the <code>lost+found</code> folder</p><h2 id=ordered-writes>ordered writes</h2><p><strong><strong>Example</strong></strong>: block is in file and also in the free list.</p><p>This basically removes the need to wait for fsck on reboot.</p><p>We can use a certain <strong>order</strong> of operations to prevent these types of errors from occurring:</p><ol><li>Always initialize the <strong>TARGET</strong> before initializing the <strong>REFERENCE</strong><ul><li>Initialize inode before initalize directory entry to it</li></ul></li><li>Never reuse a resource before <strong>NULLIFYING</strong> all existing <strong><strong>REFERENCES</strong></strong><ul><li>Remove the inode reference before putting a block on the free list</li></ul></li><li>Never clear the <strong><strong>LAST REFERENCE</strong></strong> to a live resource before setting a <strong><strong>NEW REFERENCE</strong></strong> (&ldquo;its better to have 2 copies instead of none&rdquo;)<ul><li>Make the new directory entry before get rid of the old one</li></ul></li></ol><hr><p>Limitations:</p><ul><li><strong>performance</strong>: we need to do operations synchronously<ul><li>if we really want to do caching async, we can track dependencies</li><li>circular dependencies are possible</li></ul></li><li><strong><strong>leak</strong></strong>: it could leak resources (reference nullification happens but resource not added)<ul><li>We can run fsck in the background</li></ul></li></ul><h2 id=journaling>journaling</h2><p><a href=#journaling>journaling</a> keeps a paper trail of disk appertains in the event of a crash. We have an append-only log on disk that stores disk operations.</p><ul><li>before performing an operation, record its info in the log</li><li>and write that to disk</li></ul><p>The log will always record what&rsquo;s happening ahead. The actual block updates can eventually be carried out in any order.</p><h3 id=what-do-we-log>what do we log?</h3><ul><li>we only log <strong>metadata</strong> changes (inodes, moving stuff around, etc.)</li><li>payload operations are not saved</li></ul><h3 id=structure>structure</h3><p>We typically have a LSN: log serial number, operations, and metadata.</p><p>#+begin_src toml
+[offset 335050]
+LSN 18384030
+operation = &ldquo;LogBlockAlloc&rdquo;
+blockno = 1027
+zero_on_replay = 0</p><p>[offset 23232]
+LSN N
+operation = &ldquo;LogPatch&rdquo;
+blockno = 8
+offset = 137
+bytes = 0.04
+inode = 52
+#+end_arc</p><p>&ldquo;zero-on-replay&rdquo;:</p><blockquote><p>Specifies that block number blockno, which was previously free, should now be marked as allocated (0 or false in the freemap). If zero_on_replay is non-zero, it means that the block is being used for metadata&mdash;i.e., as an indirect (or double-indirect) block, or for a directory.</p></blockquote><h3 id=limitations>limitations</h3><h4 id=checkpoints>checkpoints</h4><p>Its an add-only paper trial. We can truncate the log occasionally at a &ldquo;checkpoint&rdquo;, and truncate the log which is no longer needed.</p><h4 id=multiple-log-entries>multiple log entries</h4><p>An atomic operations may have multiple log entries corresponding to it (because they have many steps). We need to make sure that the entire operation is replayed or none at all.</p><p>So, we introduce <strong>transactions</strong>: each atomic operation will be wrapped into a unit transaction.</p><h4 id=where-do-we-start-replaying>where do we start replaying</h4><p>You don&rsquo;t know where <strong>exactly</strong> you crashed.</p><p>So, log entries should be <strong>idempotent</strong>: doing something multiple times should have the same effect of doing them once. To make this happen, we need to cache all the data that&rsquo;s needed to write to the log in the log itself. It cannot have external dependencies.</p><p>So we just replay the entire log. To save time every so often you trim the logs via <a href=#checkpoints>checkpoints</a></p><h4 id=log-entries-may-take-time>log entries may take time</h4><p>We can also make log entry writes in the block cache too. This doesn&rsquo;t matter too much: if both the log and the actual data is wiped from the cache, the filesystem is <strong>still consistent</strong> (we just lost data).</p><p>When finally we write stuff to disk, we write the logs first. So no problems there.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,129 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS238 SEP252024: Probability Review</title>
+<meta name=description content="Random Variable
+random variables takes on different values with different probabilities. Each value a random variable take on is an event.
+For instance, here&rsquo;s a random variable representing a die: \(X\). It can takes on the following values, with the following probabilities:
+\begin{align}
+P(X=1) = \frac{1}{6}\\
+P(X=2) = \frac{1}{6}\\
+\dots \\
+P(X=6) = \frac{1}{6}
+\end{align}
+where each assignment \(X=k\) is what we refer to above as an event.
+The set of assignments of a random variable and their associated probability is called a distribution: distributions &ldquo;assigns probabilities to outcomes.&rdquo; When we say a certain random variable \(X\) is &ldquo;distributed&rdquo; following a distribution \(D\), we say \(X \sim D\). Semantically, we say \(X\) is a \(D\) random variable."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><div style="padding:20px 0 30px"><main><article><div><h2 id=random-variable>Random Variable</h2><p><strong>random variables</strong> takes on different values with different probabilities. Each value a <strong>random variable</strong> take on is an <strong>event</strong>.</p><p>For instance, here&rsquo;s a random variable representing a die: \(X\). It can takes on the following values, with the following probabilities:</p><p>\begin{align}
+P(X=1) = \frac{1}{6}\\
+P(X=2) = \frac{1}{6}\\
+\dots \\
+P(X=6) = \frac{1}{6}
+\end{align}</p><p>where each assignment \(X=k\) is what we refer to above as an <strong>event</strong>.</p><p>The set of assignments of a random variable and their associated probability is called a <em>distribution</em>: distributions &ldquo;assigns probabilities to outcomes.&rdquo; When we say a certain random variable \(X\) is &ldquo;distributed&rdquo; following a distribution \(D\), we say \(X \sim D\). Semantically, we say \(X\) is a \(D\) random variable.</p><h2 id=notation-time>notation time!</h2><p>\begin{equation}
+P(X=k)
+\end{equation}</p><p>&ldquo;our random variable \(X\) takes up the value \(k\)&rdquo;. We (including the textbook!) write it as:</p><p>\begin{equation}
+P(x^{k})
+\end{equation}</p><p>as a shorthand.</p><h2 id=a-frequentist-definition>a frequentist definition</h2><p>say you performed \(n\) trials, and you are wondering what the probability of a certain event \(E\) is amongst those trials</p><p>\begin{equation}
+P(x^{j}) = \lim_{n\to \infty} \frac{n(x^{j})}{n}
+\end{equation}</p><p>&ldquo;the ratio of trials that result in the event to the number of times you tried&rdquo;</p><h2 id=probability-axioms>Probability Axioms</h2><ul><li>\(0 \leq P(x^j) \leq 1, \forall X, \forall j\): all probabilities are numbers between 0 and 1</li><li>\(P(x^1 \vee \ldots \vee x^n)=1\): set of all possible outcomes must be from the sample space</li><li>if \(x^{a}\) and \(x^{b}\) are mutually exclusive, \(P(x^a)+P(x^b) = P(x^a \vee x^b)\)<ul><li>so: if \(if \ x^a \wedge x^b = F\) (there&rsquo;s no world in with \(x^{a}\) and \(x^{b}\) is both true), then \(P(x^a)+P(x^b) = P(x^a \vee x^b)\)</li></ul></li></ul><h2 id=probabilities-correlaries>Probabilities Correlaries</h2><p>To prove the results in this part, we will use the language of set theory. However, axioms derived in this language directly translate into the logic language before and after.</p><h3 id=probability-of-complements>Probability of complements</h3><p>Statement:</p><p>\begin{equation}
+P(\neg x^j) = 1-p(x^j)
+\end{equation}</p><p>Discussion:
+The worlds in which \(\neg x^{j}\) is the complement of the world in which \(x^{j}\) is true. Let the worlds in which \(x^{j}\) is true be \(E\), then, we desire:</p><p>\(P(E^{C}) = 1- P(E)\)</p><p>Because:</p><p>We know that \(E\) and \(E^{C}\) are mutually exclusive, so</p><p>\begin{align}
+P(S) = 1 &= P(E \cup E^{C}) \\
+&= P(E) + P(E^{C})
+\end{align}</p><p>So \(1-P(E) = P(E^{C})\)</p><h3 id=probability-of-subsets>Probability of Subsets</h3><p>Statement:</p><p>\begin{equation}
+x^a \rightarrow x^b, P(x^a) \leq P(x^b)
+\end{equation}</p><p>Discussion:
+The first part implies that the worlds in which \(x^{a}\) is true is a subset than the words in which \(x^{b}\) is true (because \(x^{a}\) implies \(x^{b}\)). Meaning, if \(E\) was the worlds in which \(x^{a}\) is true, and \(F\) is the world in which \(x^{b}\) is true, we desire:</p><p>if \(E \subseteq F\), then \(P(F) \geq P(E)\).</p><p>Recall a result from set theory: if \(E \subseteq F\), \(F = E \cup (E^{C} \cap F)\).</p><p>Then, we have:</p><p>\begin{align}
+P(F) &= P(E \cup (E^{C} \cap F)) \\
+&= P(E) + P(E^{C} \cap F)
+\end{align}</p><p>\(P(E^{C} \cap F) \geq 0\), so:</p><p>\begin{equation}
+P(F) \geq P(E)
+\end{equation}</p><h3 id=inclusion-exclusion-principle>Inclusion-Exclusion Principle</h3><p>Statement:</p><p>\begin{equation}
+P(x^a)+P(x^b) - P(x^a\wedge x^b) = P(x^a \vee x^b)
+\end{equation}</p><p>Discussion:
+Consider \(A\) be the set of worlds in which \(x^{a}\) is true; and \(B\) the set of worlds in which \(x^{b}\) is true.</p><p>\begin{equation}
+P(A \cup B) = P(A) + P(B) - P(A\cap B)
+\end{equation}</p><p>Again, consider: \(A \cup B = A \cup (A^{C} \cap B)\), and \(B = (A \cap B) \cup (A^{C} \cap B)\)</p><p>so:</p><p>\begin{align}
+P(A\cup B) &= P(A \cup (A^{C} \cap B)) \\
+&= P(A) + P(A^{C} \cap B) \\
+&= P(A) + P(B) - P(A \cap B)
+\end{align}</p><h2 id=conditional-probabilities>Conditional Probabilities</h2><p>\(x\): loosing contact, \(y\): sensor failure.</p><p>&ldquo;what&rsquo;s the probability of us loosing contact given we had a sensor failure?&rdquo;</p><p>\begin{equation}
+P(x|y) := \frac{P(x \wedge y)}{P(y)}
+\end{equation}</p><p>for simplicity we will write <strong>AND</strong> with a comma:</p><p>\begin{equation}
+P(x|y) := \frac{P(x, y)}{P(y)}
+\end{equation}</p><p>multiplying:</p><p>\begin{equation}
+P(x|y)P(y) := P(x, y)
+\end{equation}</p><p>We can keep going!</p><p>\begin{equation}
+P(z|x,y) P(x,y) = P(z,x,y)
+\end{equation}</p><p>stick them together:</p><p>\begin{equation}
+P(z|x,y) P(x|y)P(y) = P(z,x,y)
+\end{equation}</p><p>so, in general:</p><h3 id=probability-chain-rule>Probability chain rule</h3><p>\begin{equation}
+P(a^1, a^2 \dots, a^{n}) = P(a^{n} \mid a^1, a^2 \dots a^{n-1})P(a^1, a^2 \dots a^{n-1})
+\end{equation}</p><h3 id=condition-does-not-change-axioms-results-if-ts-consistent>Condition does not change axioms/results if ts consistent</h3><ul><li>$0 ≤ P(x) ≤ 1\(0 \leq P(x|y) \leq 1\)</li><li>&mldr;</li></ul><h2 id=bayes-theorem>Bayes Theorem</h2><p>&ldquo;Inference!&rdquo;</p><p>it provides us a way of going from \(P(x|y) \implies P(y|x)\); let \(y\) be spam, and \(x\) be emails with the word &ldquo;gold&rdquo; in it. It&rsquo;s easy to measure \(P(x|y)\) (get a bunch of spam, check for the word &ldquo;gold&rdquo;), and by doing this we can get the more important value of \(P(y|x)\) (probability of spam given &ldquo;gold&rdquo;.)</p><p>Recall conditional probability:</p><p>\begin{equation}
+P(x|y) := \frac{P(x, y)}{P(y)}
+\end{equation}</p><p>and the fact that \(P(x,y) = P(y,x)\). so:</p><p>\begin{align}
+P(x|y) &= \frac{P(x, y)}{P(y)} \\
+&= \frac{P(y,x)}{P(y)} \\
+&= \frac{P(y|x) P(x)}{P(y)}
+\end{align}</p><h2 id=independence>Independence</h2><p>We define \(y \perp x\) if:</p><p>\begin{equation}
+P(x|y) = P(x)
+\end{equation}</p><p>&ldquo;knowing \(y\) doesn&rsquo;t do anything to our knowledge of \(x\)&rdquo;</p><p>Now. Consider the conditional probability:</p><p>\begin{equation}
+P(x|y) P(y) = P(x,y)
+\end{equation}</p><p>substituting our definition in:</p><p>\begin{equation}
+P(x) P(y) = P(x,y)
+\end{equation}</p><p>if \(y \perp x\).</p><hr><p>stuff could be <strong>conditionally</strong> independent:</p><p>\begin{equation}
+P(e^{1}, e^{2}|f) = P(e^{1}|f) P(e^{2}|f)
+\end{equation}</p><p>does <strong>not</strong> imply \(e^{1} \perp e^{2}\)</p><p>conversely, \(e^{1}\perp e^{2}\) does <strong>not</strong> imply \(e^{1} | f \perp e^{2} | f\)</p><h2 id=law-of-total-probability>Law of Total Probability</h2><p>\begin{equation}
+P(x) = \sum_{y \in Y} P(x,y)
+\end{equation}</p><p>meaning also:</p><p>\begin{equation}
+P(x) = \sum_{y \in Y} P(x|y) P(y)
+\end{equation}</p><p>applying this to Bayes theorem</p><p>\begin{align}
+P(x|y) &= \frac{P(y|x) P(x)}{\sum_{x} P(y|x) P(x)}
+\end{align}</p><h2 id=practice-problems>Practice Problems</h2><h3 id=mammogram>Mammogram</h3><p>Conditions:</p><ul><li>natural occurrence of breast cancer is \(8\%\)</li><li>mammogram results a positive in \(95\%\) in people with breast cancer</li><li>mammogram results a positive in \(7\%\) in people without breast cancer</li></ul><p><strong>What&rsquo;s the probability that a patient has breast cancer with a positive mammogram result?</strong></p><p>Let \(x\) be the event that the patient has breast cancer, and \(y\) is a positive mammogram result. We want \(P(x|y)\).</p><p>Let&rsquo;s convert each of our conditions into this formalism!</p><ul><li>\(P(x) = 0.08\)</li><li>\(P(y|x) = 0.95\)</li><li>\(P(y|\neg x) = 0.07\)</li></ul><p>Now, recall we want:</p><p>\begin{equation}
+P(x|y) = \frac{P(y|x)P(x)}{P(y|x)P(x)+P(y|\neg x)P(\neg x)}
+\end{equation}</p><p>The only thing we don&rsquo;t directly have \(P(\neg x)\), but recall by the properties is \(P(\neg x) = 1-P(x)\). So, \(P(\neg x) = 1-0.08 = 0.92\).</p><p>Plugging everything in:</p><p>\begin{equation}
+P(x|y) = \frac{0.95\cdot0.08}{0.95\cdot0.08+0.07\cdot0.92} \approx 0.5413
+\end{equation}</p><h3 id=monty-hall>Monty Hall</h3><p>Three doors, prize behind one, midterm behind the other two. Assume the likelihood of the prize behind each door is equivalent, and assume that the host is playing rationally.</p><p>You picked a door, and the host said another door had a midterm. Should you switch?</p><hr><p>WLOG you picked door 1, host said door 3 had midterm.</p><p>Let&rsquo;s formalize this first. Let \(p^{i}\) be the event that \(i\) door had prize; and \(h^{j}\) be the event that host picks \(j\) door.</p><p>We desire to answer:</p><p>\begin{equation}
+P(p^{1} | h^{3}) \stackrel{?}{\succ} P(p^{2} | h^{3})
+\end{equation}</p><hr><p>recall: \(P(p^{(i)}) = \frac{1}{3}\)</p><h4 id=left-case>Left Case</h4><p>let us consider first:</p><p>\begin{equation}
+P(p^{1} | h^{3}) = \frac{P(p^{1}, h^{3})}{P(h^{3})}
+\end{equation}</p><p>Let us expand this out with the LoTP:</p><p>\begin{equation}
+\frac{P(h^{3}|p^{1}) P(p^{1})}{P(h^{3}|p^{1}) P(p^{1}) + P(h^{3}|p^{2}) P(p^{2}) + P(h^{3}|p^{3}) P(p^{3})}
+\end{equation}</p><ul><li>Recall all \(P(p^{j}) = \frac{1}{3}\)</li><li>Now, let&rsquo;s consider each case:<ul><li>\(P(h^{3}|p^{1}) = \frac{1}{2}\) &mdash; the host has no bias towards opening either doors 2 or 3, just not door 1</li><li>\(P(h^{3}|p^{2}) = 1\) &mdash; the host will definitely
+open door \(3\), because they can&rsquo;t open your door and door 2 has
+the prize</li><li>\(P(h^{3}|p^{3}) = 0\) &mdash; a rational host will not open the door that has the prize</li></ul></li></ul><p>Plugging this in:</p><p>\begin{equation}
+P(p^{1} | h^{3}) = \frac{\frac{1}{2} \frac{1}{3}}{\frac{1}{2} \frac{1}{3} + 1 \frac{1}{3}} = \frac{1}{3}
+\end{equation}</p><h4 id=right-case>Right case</h4><p>Note that the denominator is exactly the same</p><p>\begin{equation}
+P(p^{2} | h^{3}) = \frac{P(p^{2}, h^{3})}{P(h^{3})}
+\end{equation}</p><p>Our numerator is \(P(p^{2}, h^{3}) = P(h^{3}|p^{2}}) P(p^{2})\). The left value is \(1\), and the right value is still \(\frac{1}{3}\). Plugging it in:</p><p>\begin{equation}
+P(p^{2} | h^{3}) = \frac{1 \frac{1}{3}}{\frac{1}{2} \frac{1}{3} + 1 \frac{1}{3}} = \frac{2}{3}
+\end{equation}</p><h4 id=conclusion>Conclusion</h4><p>\begin{equation}
+P(p^{1} | h^{3}) &lt; P(p^{2} | h^{3})
+\end{equation}</p><p>meaning</p><p>\begin{equation}
+p^{1} | h^{3} \prec p^{2} | h^{3}
+\end{equation}</p><p>so we should probably switch</p><h2 id=continuous-and-discrete-probabilities>Continuous and Discrete Probabilities</h2><h3 id=discrete-distributions>Discrete Distributions</h3><p>So far we have been talking about <strong>discrete</strong> distributions, where a random variable takes on discrete values such as dice rolls \(1:6\). These distributions use a <strong>probability mass function</strong> (by convention uppercase \(P\)), which is written as an assignment of probabilities to values.</p><p>As a reminder:</p><p>\(P(S) = 1\), where \(S\) is the sample space. Since our probability mass function specify all possible events, we should expect:</p><p>\begin{equation}
+\sum_{X}^{} P(X) = 1
+\end{equation}</p><h3 id=continuous-distributions>Continuous Distributions</h3><p>&ldquo;what&rsquo;s the probability of the high tomorrow at Stanford being exactly \(82.9239328452^{\circ} F\)?&rdquo;</p><p>Vanishingly unlikely. So, events in continuous distribution are formulated as an <em>integral</em> over ranges of likely outcomes. That is:</p><p>\begin{equation}
+P(a \leq X \leq b)
+\end{equation}</p><p>if \(X \sim D\) where \(D\) is continuous.</p><p>Continuous distributions are given by a <strong>probability density function</strong> (PDF), which defines <em>changes</em> in probabilities over a range. Integrating it results in the actual probability value. That is, for PDF \(f(x)\) (by convention lowercase \(f\)), we have:</p><p>\begin{equation}
+P(a \leq X \leq b) = \int_{a}^{b} f(x) \dd{x}
+\end{equation}</p><p>We often ask for events of the shape \(X \leq x\) (or, the complement thereof, \(X \geq x\))&mdash;&ldquo;what&rsquo;s the chance that it will be hotter than \(90^{\circ}\) tomorrow? So, we often compute the <strong>cumulative density function</strong> (CDF) of a probability \(F(x)\) (by convention uppercase \(f\)), which is defined by:</p><p>\begin{equation}
+F(x) = P[X \leq x] = \int_{-\infty}^{x} f(z) \dd{z}
+\end{equation}</p><h3 id=moments>Moments</h3><p>expected value: the &ldquo;mean&rdquo; of the random variable:</p><p>\begin{equation}
+E[X] = \int_{-\infty}^{\infty} x f(x) \dd{x}
+\end{equation}</p><p>and variance:</p><p>\begin{equation}
+Var[X] = E[X^{2}] - [E[X]]^{2}
+\end{equation}</p><h2 id=some-useful-distributions>Some Useful Distributions</h2><p>See slides.</p><h3 id=gaussian>Gaussian</h3><p>It&rsquo;s the best because the <strong>central limit theorem</strong> exists: if you have a bunch of independent, and identical random variables, adding more them together results in more of a Gaussian distribution. That is, for a bunch of independent \(X_{n}\) where all \(X_{j}\sim X\), we have that:</p><p>\begin{equation}
+\sum_{i=1}^{N} X_{n} \sim \mathcal{N}(n\mu, n \sigma^{2}), \text{as}\ n \to \infty
+\end{equation}</p><h2 id=compute-a-cdf>Compute a CDF!</h2><p>2.1, Chapter 2 of AlgDM: Consider a continuous random variable \(X\), which exponential distribution parameterized by \(\lambda\) with density \(p(x|\lambda) = \lambda e^{-\lambda x}\) with nonnegative support; compute the CDF of \(X\).</p><p>We want:</p><p>\begin{equation}
+F(x) = \int_{-\infty}^{x} f(z) \dd{z}
+\end{equation}</p><p>recall we are also &ldquo;parameterized by \(\lambda\)&rdquo;, meaning we have some fixed, given \(\lambda\). Also, we are given our \(f_{\lambda}(x)\); recall this function has &ldquo;nonnegative support&rdquo;, meaning that our:</p><p>\begin{equation}
+f_{\lambda}(x) = 0, x &lt; 0
+\end{equation}</p><p>Writing it out fully, then, our PDF is:</p><p>\begin{equation}
+f_{\lambda}(x) =
+\begin{cases}
+0, x&lt;0\\
+p(x|\lambda) = \lambda e^{-\lambda x}$, x\geq 0
+\end{cases}
+\end{equation}</p><p>Plugging it in:</p><p>\begin{align}
+F(x) &= \int_{-\infty}^{x} f_{\lambda}(z) \dd{z} \\
+&= \int_{0}^{x} \lambda e^{-\lambda z} \dd{z} \\
+&= \left -e^{-\lambda z} \right|_{0}^{x} \\
+&= 1-e^{-\lambda x}
+\end{align}</p></div></article></main></div></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

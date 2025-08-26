@@ -1,0 +1,127 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-MATH53 FEB122024</title>
+<meta name=description content="How would we solve equations like:
+\begin{equation}
+\begin{cases}
+y&rsquo;&rsquo; - 2xy&rsquo; + 2\lambda y = 0 \\
+y&rsquo;&rsquo; - xy = 0
+\end{cases}
+\end{equation}
+Taylor Series
+Its time to have a blast from the past! Taylor Series time.
+\begin{equation}
+p_{n}(x) = \sum_{i=0}^{n} \frac{f^{(n)}(0) x^{n}}{n!}
+\end{equation}
+Taylor&rsquo;s Theorem with Remainder gives us that, at some \(n\), \(|f(x) - p_{n}(x)|\) is bounded.
+\begin{equation}
+|x(t+h) - (x(t) + h x&rsquo;(t))| \leq Ch
+\end{equation}
+Insight: if your derivatives are bounded, then at high values of \(j\) we have \(\frac{f^{(j)}\qty(0)}{n!}\) tends eventually towards zero as \(n\) increases."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-MATH53 FEB122024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>How would we solve equations like:</p><p>\begin{equation}
+\begin{cases}
+y&rsquo;&rsquo; - 2xy&rsquo; + 2\lambda y = 0 \\
+y&rsquo;&rsquo; - xy = 0
+\end{cases}
+\end{equation}</p><h2 id=taylor-series>Taylor Series</h2><p>Its time to have a blast from the past! <a href=#taylor-series>Taylor Series</a> time.</p><p>\begin{equation}
+p_{n}(x) = \sum_{i=0}^{n} \frac{f^{(n)}(0) x^{n}}{n!}
+\end{equation}</p><p><a href=#taylor-series>Taylor&rsquo;s Theorem with Remainder</a> gives us that, at some \(n\), \(|f(x) - p_{n}(x)|\) is bounded.</p><p>\begin{equation}
+|x(t+h) - (x(t) + h x&rsquo;(t))| \leq Ch
+\end{equation}</p><p>Insight: if your derivatives are bounded, then at high values of \(j\) we have \(\frac{f^{(j)}\qty(0)}{n!}\) tends eventually towards zero as \(n\) increases.</p><p>Two constraints:</p><ol><li>need \(f^{(n)}\) to exist infinitely</li><li>and there&rsquo;s a set of functions that are representable by Taylor Series (even if differentiable; such as \(e^{-\frac{1}{|x|}}\)</li></ol><h2 id=variable-coefficient-odes>variable-coefficient ODEs</h2><p>\begin{equation}
+\dv[2]{y}{x} + a(x) \dv{y}{x} + b(x) y = 0
+\end{equation}</p><p>We can no longer use any linearizion facilities we have developed before because <a href=/posts/kbhmatrix_exponentiation/>matrix exponentiation</a> (i.e. the eigenvalue trick) no longer work very well as squaring independent variable within the expression actually have consequences now.</p><h2 id=solving-odes-via-power-series--kbhpower-series-o-dot-md>Solving ODEs via <a href=/posts/kbhpower_series_o/>power series</a></h2><p>if \(a_0(t), &mldr;, a_{n}(t), f(t)\) are all convergent <a href=/posts/kbhpower_series_o/>power series</a> on an interval centered at \(t_0\) then, solutions of \(a_{n}(t)y^{(n)} + &mldr; a_0(t)y = f(t)\) is also a convergent power series on an interval at \(t_{0}\), provided that \(a_{n}(t)\) doesn&rsquo;t go to \(0\) on that interval.</p><ol><li>write down solutions in terms of \(y(t) = \sum_{n=0}^{\infty} c_{n}(t-t_0)^{n}\)</li><li>take enough derivatives of that expression \(y(t)\) above</li><li>solve for \(c_0\), \(c_1\), etc. by using the fact that \(c_{n} = \frac{y^{(n)}(t_0)}{n!}\) (i.e. plug in the given \(y^{(n)}\) from the IVP and solve for \(c_{j}\))</li><li>plug what you have in terms of derivatives as well as the initial coefficients, and relate to a general power series</li><li>notice patterns</li></ol><h3 id=case-study>Case Study</h3><p>Take \(y&rsquo; = 2y\). Consider:</p><p>\begin{equation}
+y = \sum_{n=0}^{\infty} a_{n}x^{n}
+\end{equation}</p><p>We hope that our solution function can be fit to this form.</p><p>If we differentiate:</p><p>\begin{equation}
+y&rsquo; = \sum_{n=0}^{\infty} a_{n} n x^{n-1}
+\end{equation}</p><p>We want to line up powers of \(x\), which makes life earlier. Because this is an infinite series, and at \(n=0\) the whole differentiated term looks like \(0\), we can actually just shift \(n\) one over and we&rsquo;d be good.</p><p>\begin{equation}
+y&rsquo; = \sum_{n=0}^{\infty} a_{n+1} (n+1) x^{n}
+\end{equation}</p><p>We can now plug the whole thing into our original equation:</p><p>\begin{equation}
+\sum_{n=0}^{\infty} a_{n+1} (n+1) x^{n} = \sum_{n=0}^{\infty} 2a_{n}x^{n}
+\end{equation}</p><p>Because these are two polynomials that equal, corresponding coefficients should match:</p><p>\begin{equation}
+a_{n+1}(n+1) = 2a_{n}
+\end{equation}</p><p>So, we have:</p><p>\begin{equation}
+a_{n+1} = \frac{2a_{n}}{n+1}
+\end{equation}</p><p>At \(y(0)=a_{0}\), so we can start the recursion relationship at any initial condition we&rsquo;d like.</p><p>We notice that the value:</p><p>\begin{equation}
+a_{n} = \frac{2^{n}}{n!} a_{0}
+\end{equation}</p><p>satisfies the system above. Which means we can write out the general answer as \(a_0 \sum_{i=0}^{\infty} \frac{2^{n}x^{n}}{n!}\)</p><h3 id=case-study-2>Case Study 2</h3><p>We have:</p><p>\begin{equation}
+y&rsquo;&rsquo; - 2xy&rsquo; + 2\lambda y = 0
+\end{equation}</p><p>Let&rsquo;s calculate our Taylor series:</p><p>\begin{equation}
+y = \sum_{i=0}^{\infty} a_{n} x^{n}
+\end{equation}</p><p>\begin{equation}
+y&rsquo; = \sum_{i=0}^{\infty} n a_{n}x^{n-1}
+\end{equation}</p><p>\begin{equation}
+y&rsquo;&rsquo; = \sum_{n=0}^{\infty} n(n-1)a_{n}x^{n-2}
+\end{equation}</p><p>Reindexing:</p><p>\begin{equation}
+y&rsquo;&rsquo; = \sum_{n=0}^{\infty} (n+1)(n+1) a_{n+2} x^{n}
+\end{equation}</p><p>Because \(2xy&rsquo;\) appears in the equation, we can actually write:</p><p>\begin{equation}
+-2xy&rsquo; = -\sum_{i=0}^{\infty} 2n a_{n} x^{n}
+\end{equation}</p><p>and the final term:</p><p>\begin{equation}
+2\lambda = \sum_{n=0}^{\infty} a_{n} x^{n}
+\end{equation}</p><p>Adding the whole thing up, we obtain that:</p><p>\begin{equation}
+\sum_{n=0}^{\infty} \qty[(n+2)(n+1) a_{n+2} - 2_{n}a_{n} + 2\lambda a_{n}] x^{n} = 0
+\end{equation}</p><p>For each term, we get a recursion relationship in:</p><p>\begin{equation}
+a_{n+2} = \frac{2(n-\lambda)}{(n+2)(n+1)} a_{n}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

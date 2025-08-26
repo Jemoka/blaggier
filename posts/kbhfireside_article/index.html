@@ -1,0 +1,70 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Welcome to the Fireside</title>
+<meta name=description content="Fireside a series of articles that I&rsquo;m writing to consolidate my learning.
+I have always dreamed of blogging. I have even tried once called 20MinuteRants. They worked quite well as a basic format whereby I can write about things in a fairly efficient manner (hence the 20 minutes), and be able to reflect about the things I&rsquo;m up to.
+The problem with the project is that I rarely had the motivation to do one. Once I was too busy, or out of ideas to write about, I stop. If there&rsquo;s not anything to rant about, why is there a 20MinuteRant?"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Welcome to the Fireside</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhfireside/>Fireside</a> a series of articles that I&rsquo;m writing to consolidate my learning.</p><p>I have always dreamed of blogging. I have even tried once <a href=https://medium.com/20minuterants>called 20MinuteRants</a>. They worked quite well as a basic format whereby I can write about things in a fairly efficient manner (hence the 20 minutes), and be able to reflect about the things I&rsquo;m up to.</p><p>The problem with the project is that I rarely had the motivation to do one. Once I was too busy, or out of ideas to write about, I stop. If there&rsquo;s not anything to rant about, why is there a 20MinuteRant?</p><p>Indeed that has been why the blog has been on hiatus for the past many months. I suppose we can consider this entry the last of the 20MinuteRants and the first one of a new series of writings&mdash;<a href=/posts/kbhfireside/>Fireside</a>&mdash;which I hope will continue for a long time.</p><h2 id=impetus>Impetus</h2><p>My mentor D has always told me to start arguments with why. The larger system in which <a href=/posts/kbhfireside/>Fireside</a> is located, my knowlegebase system, has <a href=/posts/kbhstarting_with_why_the_knowledgebase/>such a page</a> arguing why its a good idea.</p><p>And here&rsquo;s the why: starting university has made me surprisingly lost in terms of what I want to do. In that: there&rsquo;s so much of the vicissitudes of daily life that I no longer have the same intellectual curiosity that I think I had during middle and high school. And, in doing this, I hope to get it back.</p><p>This illustrates the key goal of <a href=/posts/kbhfireside/>Fireside</a>: a once+ per week posting, illustrating some new thing I&rsquo;m aiming to learn for the week. It can even be in the classroom: but something I&rsquo;m going above and beyond to try to understand. Each article will either plan something to learn, or summarize my learning in it.</p><p>I remember seeing an article through HN at one point (<a href=https://addyosmani.com/blog/write-learn/>its not this one, it was significantly less &ldquo;ha ha! business&rdquo; language, but this will do</a>) that &ldquo;You never really learn something until you write about it.&rdquo; A dormmate of mine working on ray tracing also said something to the same effect. And, so, what the heck. Let&rsquo;s try this out.</p><p>A part of me wishes that this fulfills the &ldquo;deliverable&rdquo; in my head of &ldquo;YOU AREN&rsquo;T DOING ENOUGH!&rdquo; whenever I spend time wandering aimlessly to try to learn something. If it has become a <a href=/posts/kbhfireside/>Fireside</a>, it counts. I guess.</p><p>I should also add that <a href=/posts/kbhfireside/>Fireside</a> is named <a href=/posts/kbhfireside/>Fireside</a> because of FDR&rsquo;s <a href=/posts/kbhfireside_chats/>Fireside Chats</a>, where he got to directly talk to people unfiltered about his views.</p><h2 id=parameters>Parameters</h2><h3 id=frequency>Frequency</h3><p>At a minimum once a week. No promises though.</p><h3 id=names>Names</h3><p>You have already noticed one of the parameters. Unless it is a general concept or a well known thing I did, I won&rsquo;t be using names throughout the articles. Somewhat contrarily, I firmly believe that the process of building shit is a very personal one. Hence, following the example of one of my favorite essayists <a href=https://en.wikipedia.org/wiki/Zhu_Ziqing>Zhu Ziqing</a>, I will be using the first letter of the name I refer to them to refer to all people mentioned. Of course, if you don&rsquo;t want to be included, I&rsquo;d be happy to pull things down.</p><h3 id=themes>Themes</h3><ul><li>technology in general</li><li>random nerdism</li><li>deep learning and language models, methods and applications</li><li>the shit I get up to</li></ul><h2 id=we-begin>We Begin</h2><p>I hope to begin this weekend. I&rsquo;ve spent the last while trying to train a serious deep learning model (read: OpenAI Whisper Large V2), and dying because all I have access to is 2 32GB V-100s on the PSC (and yes, I point out that this is terribly privileged statement: woe is me with a cutting edge GPU).</p><p>However, the <a href=/posts/kbhnlp/#language-model>Language Model</a> literally doesn&rsquo;t fit in the damned box. So, I&rsquo;m trying to learn about distributed training methods like Ray, methods of efficient tuning with LoRA, and new-fangled memory sharing things like DeepSpeed.</p><p>Stay tuned.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

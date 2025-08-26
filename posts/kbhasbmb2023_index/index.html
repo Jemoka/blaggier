@@ -1,0 +1,119 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>ASBMB2023 Index</title>
+<meta name=description content="2023 annual meeting of ASBMB.
+Talks
+Molecular Engineering
+
+  
+      
+          Christopher Barnes, Stanford
+          SARS-COV2 Structural Analysis
+          10.1126/sciimmunol.ade0958
+      
+  
+  
+      
+          Emma J. Chory, Duke
+          Robotics-Assisted Directed Evolution
+          10.1038/s41592-021-01348-4
+      
+      
+          Daniel-Adriano Silva, Monod
+          De novo biosensors
+          10.1038/s41586-021-03258-z
+      
+  
+
+Structure Determination and Machine Learning
+
+  
+      
+          Sonya Hanson, Flatiron
+          cyro-EM + ensemble reweighting
+          10.1073/pnas.1419276111
+      
+  
+  
+      
+          Celia Schiffer, UMass Med
+          Drug Resistance Analysis
+          10.7554/eLife.77433
+      
+      
+          Arvind Ramanathan, Argonne Lab
+          Models of Interaction Analysis
+          ?, see GenSLMs
+      
+      
+          Jason K Perry, Gilead
+          Structure of COVID Replication
+          
+      
+  
+
+Protein Structure and Biophysics"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>ASBMB2023 Index</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>2023 annual meeting of <a href=/posts/kbhasbmb/>ASBMB</a>.</p><h2 id=talks>Talks</h2><p><strong>Molecular Engineering</strong></p><table><thead><tr><th>Christopher Barnes, <a href=/posts/kbhstanford/>Stanford</a></th><th><a href=/posts/kbhsars_cov2_structural_analysis/>SARS-COV2 Structural Analysis</a></th><th>10.1126/sciimmunol.ade0958</th></tr></thead><tbody><tr><td>Emma J. Chory, Duke</td><td><a href=/posts/kbhrobotics_assisted_directed_evolution/>Robotics-Assisted Directed Evolution</a></td><td>10.1038/s41592-021-01348-4</td></tr><tr><td>Daniel-Adriano Silva, Monod</td><td><a href=/posts/kbhde_novo_biosensors/>De novo biosensors</a></td><td>10.1038/s41586-021-03258-z</td></tr></tbody></table><p><strong>Structure Determination and Machine Learning</strong></p><table><thead><tr><th>Sonya Hanson, Flatiron</th><th><a href=/posts/kbhcyro_em/#manifold-embedding>cyro-EM</a> + <a href=/posts/kbhcyro_em/#ensemble-reweighting>ensemble reweighting</a></th><th>10.1073/pnas.1419276111</th></tr></thead><tbody><tr><td>Celia Schiffer, UMass Med</td><td><a href=/posts/kbhmolecular_drug_resistance/>Drug Resistance Analysis</a></td><td>10.7554/eLife.77433</td></tr><tr><td>Arvind Ramanathan, Argonne Lab</td><td><a href=/posts/kbhfundational_models_of_interaction_analysis/>Models of Interaction Analysis</a></td><td>?, see <a href=/posts/kbhgenslms/>GenSLMs</a></td></tr><tr><td>Jason K Perry, Gilead</td><td><a href=/posts/kbhstructure_of_covid_replication/>Structure of COVID Replication</a></td><td></td></tr></tbody></table><p><strong>Protein Structure and Biophysics</strong></p><table><thead><tr><th>Erik Yukl</th><th><a href=/posts/kbhzinc_abc_transporters/>Zinc ABC Transporters</a></th><th>?</th></tr></thead><tbody><tr><td>Wentao Li</td><td><a href=/posts/kbhcalpains_afib/>Calpains &mldr; AFIB</a></td><td></td></tr></tbody></table><p><strong>Drug Design w/ AI</strong></p><table><thead><tr><th>Alpha Lee, PostEra</th><th><a href=/posts/kbhml_drug_discovery/>ML COVID Drug Discovery</a></th><th>10.1101/2020.10.29.339317</th></tr></thead><tbody><tr><td>David Baker, UW</td><td><a href=/posts/kbhde_novo_protein_design/>De Novo Protein Design</a></td><td><a href=/posts/kbhrfdiffusion/>RFDiffusion</a>, <a href=/posts/kbhrosettafold2/>RoseTTAFold2</a></td></tr><tr><td>Relay Therapeutics</td><td><a href=/posts/kbhactive_learning_molecule_iteration/>Active Learning Molecule Iteration</a></td><td></td></tr><tr><td>Rommie E Amary, UCSD</td><td><a href=/posts/kbhimmunogen_design/>Immunogen Design</a></td><td></td></tr></tbody></table><h2 id=things-to-google>Things to Google</h2><ul><li><a href=/posts/kbhdiffusion_map/>diffusion map</a>s and</li><li><a href=https://www.charmm-gui.org/>https://www.charmm-gui.org/</a></li><li><a href=/posts/kbhgenslms/>GenSLMs</a>: LLMs, but genome sequence</li><li><a href=/posts/kbhrepresentation_learning/>representation learning</a></li><li><a href=/posts/kbhrfdiffusion/>RFDiffusion</a></li><li>&ldquo;quantum chemistry&rdquo;</li><li><a href=https://www.biosolveit.de/infiniSee>https://www.biosolveit.de/infiniSee</a></li><li>what tool do these people use to make these?</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

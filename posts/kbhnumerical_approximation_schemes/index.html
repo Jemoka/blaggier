@@ -1,0 +1,158 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Numerical Approximation Schemes</title>
+<meta name=description content="Consider a general non-linear First Order ODEs:
+\begin{equation}
+x&rsquo; = F(x)
+\end{equation}
+Suppose we have some time interval, we have some solutions to the expression given. Is it possible for us to, given \(x(t_0) = x_0\), what \(x(t_0+T)\) would be? Can we approximate for explicit numbers?
+The solutions have to exist for all time: blow-up cannot be present during numerical estimations.
+Explicit Euler Method
+\begin{equation}
+x(t+h) \approx x_{t+1} = x_{t} + h f(x_t)
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Numerical Approximation Schemes</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Consider a general non-linear <a href=/posts/kbhfirst_order_odes/>First Order ODEs</a>:</p><p>\begin{equation}
+x&rsquo; = F(x)
+\end{equation}</p><p>Suppose we have some time interval, we have some solutions to the expression given. Is it possible for us to, given \(x(t_0) = x_0\), what \(x(t_0+T)\) would be? Can we approximate for explicit numbers?</p><p>The solutions have to exist for all time: blow-up <strong>cannot</strong> be present during numerical estimations.</p><h2 id=explicit-euler-method>Explicit Euler Method</h2><p>\begin{equation}
+x(t+h) \approx x_{t+1} = x_{t} + h f(x_t)
+\end{equation}</p><h3 id=motivation>motivation</h3><p>recall that given \(x(t_0) = x_0\), we desire \(x(t_0+T)\).</p><ol><li>divide your solution interval into \(N\) small intervals; each interval would have length \(h= \frac{T}{N}\)</li><li>let \(t_{i} = t_0 + i \frac{T}{N}\), where \(t_{N} = t_{0}+T\)</li><li>for each segment \(t_{i}\), we attempt to compute a \(x_{i}\), and we&rsquo;d like to approximate the error between \(x_{i}\) and \(x(t_{i})\).</li></ol><p>In the explicit Euler method, we make piecewise linear approximations. At each \(x_0\), we follow the slope estimated via the <a href=/posts/kbhordinary_differential_equations/>ODE</a> at that point. Specifically:</p><p>\begin{equation}
+x&rsquo;(t) = \lim_{k \to 0} \frac{x(t+k)-x(t)}{k} \approx \frac{x(t+h)-x(t)}{h}
+\end{equation}</p><p>for some small \(h\). Meaning, specifically, \(x(t+h) \approx x(t) + h x&rsquo;(t)\), where \(h\) is the step size we computed before.</p><p>Consider that we had an <a href=/posts/kbhordinary_differential_equations/>ODE</a> that is \(x&rsquo; = F(x)\), whech gives us:</p><p>\begin{equation}
+x_1 = x_{0}+ h f(x_0) \approx x(t_0 + h)
+\end{equation}</p><p>Following this scheme, we can calculate from \(x_0\) all the way stepwise to \(x_{N}\).</p><h3 id=evaluation>evaluation</h3><p>Situation: we have \(X_{N}\), we have \(x(t_{N})\), how close are they? In fact:</p><p>\begin{equation}
+|x_{N} - x(t_{n}) | \leq Ch
+\end{equation}</p><p>We have some constant \(C(x_0, t_0, T, f)\), which we can use to estimate \(C\) the bounds specific to the problem you are solving.</p><h3 id=stiffness>stiffness</h3><p>Certain parts of a solution maybe decaying/oscillating very different from another part of the solution&mdash;</p><h4 id=example>example</h4><p>Consider a system:</p><p>\begin{equation}
+y&rsquo; = \mqty(-1 & 0 \\ 0 & -10)y
+\end{equation}</p><p>our solutions look like:</p><p>\begin{equation}
+y(t) = \mqty(c_1 e^{-t} \\ c_2 e^{-10t})
+\end{equation}</p><p>so the top expression gives \(x_i = (1-h)^{i} x_0\) and bottom \(x_{i} = (1-10h)^{i}x_0\), which means they will have different requirements for \(h\) to be able to converge</p><h4 id=example-2>example 2</h4><p>\begin{equation}
+y&rsquo; = -5 (y-\cos x)
+\end{equation}</p><p>with <a href=/posts/kbhsecond_order_linear_differential_equation/#method-of-undetermined-coefficients>method of undetermined coefficients</a>, we obtain:</p><p>\begin{equation}
+y = \frac{25}{26} \cos t + \frac{5}{26} \sin t + Ce^{-5t}
+\end{equation}</p><p>the first parts are fine and not stiff at all, the third part, we realize that we need \((1-5h)^{i}x_0\), meaning we need \(h &lt; \frac{1}{5}\).</p><h4 id=motivation>motivation</h4><p>Let&rsquo;s consider:</p><p>\begin{equation}
+x&rsquo; = -\lambda x
+\end{equation}</p><p>The explicit Euler gives out:</p><p>\begin{equation}
+x_{t+1} = (1-\lambda h)x_{i}
+\end{equation}</p><p>meaning, in general:</p><p>\begin{equation}
+x_{i} = (1-\lambda h)^{i} x_0
+\end{equation}</p><p>We know the function is bound to decay, yet the Explicit Euler will give us that this decays only when:</p><p>\begin{equation}
+-1 &lt; 1-\lambda h &lt; 1
+\end{equation}</p><p><a href=#implicit-euler-method>Implicit Euler Method</a> doesn&rsquo;t have this problem&mdash;</p><p>consider:</p><p>\begin{equation}
+x_{i+1} = x_{i} - \lambda h x_{i+1}
+\end{equation}</p><p>meaning:</p><p>\begin{equation}
+x_{i} = \frac{1}{(1+\lambda h)^{i}}x_0
+\end{equation}</p><h2 id=implicit-euler-method>Implicit Euler Method</h2><p>A small twist on the <a href=#explicit-euler-method>Explicit Euler Method</a>. To be able to use this method, we can formulate this as:</p><p>\begin{equation}
+x_{i+1} - h f(x_{i+1}) = x_i
+\end{equation}</p><p>where we use <a href=/posts/kbhnewton_s_method/>Newton&rsquo;s Method</a> to estimate some input \(i+1\) for which the above statement gets to \(x_{i}\).</p><h3 id=evaluation>evaluation</h3><p>We actually didn&rsquo;t do that much error; its is still bounded by:</p><p>\begin{equation}
+|x_{N} - x(t_{n}) | \leq Ch
+\end{equation}</p><h3 id=derivation>Derivation</h3><p>\begin{equation}
+\frac{x((t+h)-h) - x(t+h)}{-h} \approx x&rsquo;(t+h)
+\end{equation}</p><p>this is first-order Taylor Approximation <strong>written backwards</strong></p><p>This also yields:</p><p>\begin{equation}
+\frac{x((t+h)-h) - x(t+h)}{-h} = \frac{x(t+h)-x((t+h)-h)}{h}
+\end{equation}</p><p>Now, let \(t = t_0\), and therefore we have \(t_1 = t +h\), this gives us that:</p><p>Now, recall that, because \(f\) is the ODE:</p><p>\begin{equation}
+x&rsquo;(t_1) = f(x(t_1)) = x&rsquo;(t+h) \approx \frac{x(t_1) - x(t_0)}{h}
+\end{equation}</p><p>Multiplying \(h\) to both sides gives:</p><p>\begin{equation}
+hf(x(t_1)) = x(t_1) - x(t_0)
+\end{equation}</p><p>which gives:</p><p>\begin{equation}
+x(t_0) = x(t_1) - h f(x(t_1))
+\end{equation}</p><p>we will now attempt to estimate \(x_1\) by declaring \(x_1 := x(t_{1})\), which will give us:</p><p>\begin{equation}
+x_1 - h f(x_1) = x_0
+\end{equation}</p><p>Let us call \(G(x_{1}) = x_1 - h f(x_1) = x_0\).</p><p>Finally, we run <a href=/posts/kbhnewton_s_method/>Newton&rsquo;s Method</a> to solve the \(x_1\) such that we can obtain \(x_0\) by trying to find the zeros of \(G(x_1) - x_0\). Because \(h\) is small, a good initial guess is actually \(G(x_0)\), and then we can optimize.</p><h2 id=trapezoidal-method>Trapezoidal Method</h2><p>\begin{equation}
+x_{t+1} = x_t + h \frac{f(x_{t+1})+f(x_t)}{2}
+\end{equation}</p><h3 id=motivation>motivation</h3><p>&ldquo;averaging smoothed things out&rdquo;:</p><p>\begin{equation}
+\frac{x(t+h) - x(t)}{h} \approx \frac{f(x(t+h)) + f(x(t))}{2}
+\end{equation}</p><p>meaning we have:</p><p>\begin{equation}
+\frac{x_1-x_0}{h} = \frac{f(x_1) + f(x_0)}{2}
+\end{equation}</p><p>which averages our derivatives out.</p><p>Cross-multiplying, this gives:</p><p>\begin{equation}
+x_1 - \frac{1}{2}h f(x_1) = x_0 + \frac{1}{2} h f(x_0)
+\end{equation}</p><p>which can also be written as, multiplying by some \(h\):</p><p>\begin{equation}
+x_1 = x_0 + h \frac{f(x_1)+f(x_0)}{2}
+\end{equation}</p><h3 id=explicitly>explicitly</h3><p>\begin{equation}
+x_{i} = \qty( \frac{(1- \frac{1}{2}\lambda h)}{(1+ \frac{1}{2}\lambda h)})^{i} x_0
+\end{equation}</p><h3 id=evaluation>evaluation</h3><p>Importantly, this gives bounds</p><p>\begin{equation}
+|x_{N} - x(t_{n}) | \leq Ch^{2}
+\end{equation}</p><h2 id=modified-euler-method>Modified Euler Method</h2><p>This is also called &ldquo;<a href=#modified-euler-method>Midpoint Method</a>&rdquo;.</p><p>This is one of thee methods which doesn&rsquo;t break during &ldquo;stiff&rdquo; <a href=/posts/kbhordinary_differential_equations/>ODE</a>s, and converges \(h^{N}\) times quickly.</p><p>For some:</p><p>\begin{equation}
+\dv{x}{t} = f(t,x)
+\end{equation}</p><p>\begin{equation}
+x_{i+1} = x_{i} + h f\qty(t_{i} + \frac{1}{2}h, x_{i} + \frac{1}{2}h f(t_{i}, x_{i}))
+\end{equation}</p><p>this is motivated by the <a href=#trapezoidal-method>Trapezoidal Method</a>, but</p><blockquote><p>&ldquo;A thorough introduction to these methods requires additional background in approximation theory and numerical analysis&rdquo;</p><ul><li>The Book</li></ul></blockquote><h3 id=error>error</h3><p>\begin{equation}
+|x_{N} - x(t_{n}) | \leq Ch^{2}
+\end{equation}</p><h3 id=motivation>motivation</h3><p>we take a half step in front of our original point using its slope, and compute the slope there.</p><h2 id=improved-euler-method>Improved Euler Method</h2><p>This is also called &ldquo;<a href=#improved-euler-method>Heun&rsquo;s Method</a>&rdquo;</p><p>\begin{equation}
+x_{i+1} = x_{i} + \frac{1}{2} h(f(t_{i}, x_{i}) + f(t_{i}+h, x_{i}+hf(t_{i}, x_{i})))
+\end{equation}</p><h3 id=error>error</h3><p>\begin{equation}
+|x_{N} - x(t_{n}) | \leq Ch^{2}
+\end{equation}</p><h3 id=motivation>motivation</h3><p>we average the slopes of the current location and a full step in front, calculating their slopes, and average them</p><h2 id=runge-kutta-method>Runge-Kutta Method</h2><p>a.k.a. instead of contending with the forward, backward, middle slope, or native slope from \(f\), we just ball and average all of them:</p><p>\begin{equation}
+\begin{cases}
+m_1 = f(t_{i}, x_{i}) \\
+m_2 = f\qty(t_{i} + \frac{h}{2}, x_{i}+\frac{h}{2}m_{1}) \\
+m_3 = f\qty(t_{i}+\frac{h}{2}, x_{i}+\frac{h}{2}m_{2}) \\
+m_4 = f\qty(t_{i} + h, x_{i}+hm_{3})
+\end{cases}
+\end{equation}</p><p>and then:</p><p>\begin{equation}
+x_{i+1} = x_{i} + \frac{1}{6}h m_{1} + \frac{1}{3} h m_{2} + \frac{1}{3} h m_{3} + \frac{1}{6} h m_{4}
+\end{equation}</p><p>the coefficients are that from pascal&rsquo;s triangle.</p><h3 id=error>error</h3><p>\begin{equation}
+|x_{N} - x(t_{n}) | \leq Ch^{4}
+\end{equation}</p><h3 id=motivation>motivation</h3><p>this is essentially like &ldquo;fitting a parabola&rdquo; against our curve</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

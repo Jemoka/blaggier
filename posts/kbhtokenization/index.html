@@ -1,0 +1,90 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>tokenization</title>
+<meta name=description content="Every NLP task involve some kind of text normalization.
+
+tokenizing words
+normalizing word formats (lemmatize?)
+sentence and paragraph segmentation
+
+For Latin, Arabic, Cyrillic, Greek systems, spaces can usually be used for tokenization. Other writing systems can&rsquo;t do this. See morpheme
+Subword Tokenization
+Algorithms for breaking up tokens using corpus statistics which acts on lower-than-word level.
+
+BPE
+Unigram Language Modeling tokenization
+WordPiece
+
+They all work in 2 parst:
+
+a token learner: takes training corpus and derives a vocabulary set
+a token segmenter that tokenizes text according to the vocab
+
+See also Downsides of Subword Tokenization"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>tokenization</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Every NLP task involve some kind of text normalization.</p><ol><li>tokenizing words</li><li>normalizing word formats (lemmatize?)</li><li>sentence and paragraph segmentation</li></ol><p>For Latin, Arabic, Cyrillic, Greek systems, spaces can usually be used for tokenization. Other writing systems can&rsquo;t do this. See <a href=/posts/kbhmorpheme/>morpheme</a></p><h2 id=subword-tokenization>Subword Tokenization</h2><p>Algorithms for breaking up tokens using <a href=/posts/kbhcorpus/>corpus</a> statistics which acts on lower-than-word level.</p><ul><li><a href=/posts/kbhbpe/>BPE</a></li><li>Unigram Language Modeling tokenization</li><li>WordPiece</li></ul><p>They all work in 2 parst:</p><ul><li>a token <strong>learner</strong>: takes training corpus and derives a vocabulary set</li><li>a token <strong>segmenter</strong> that tokenizes text according to the vocab</li></ul><p>See also <a href=/posts/kbhiclr2025_tokenizer_free_approaches/#downsides-of-id-ea3f9d36-0439-436e-96c1-f31ed3004346-subword-tokenization>Downsides of Subword Tokenization</a></p><h2 id=tr>tr</h2><p>For those languages, you can use these systems to perform tokenization.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tr -sc <span style=color:#d88200>&#34;A-Za-z&#34;</span> <span style=color:#d88200>&#34;\n&#34;</span> &lt; input.txt
+</span></span></code></pre></div><p>this takes every form which is not text (<code>-c</code> is the complement operator) and replaces it with a newline. <code>-s</code> squeezes the text so that there are not multiple newlines.</p><p>This turns the text into one word per line.</p><p>Sorting it (because <code>uniq</code> requires it) and piping into <code>uniq</code> gives word count</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tr -sc <span style=color:#d88200>&#34;A-Za-z&#34;</span> <span style=color:#d88200>&#34;\n&#34;</span> &lt; input.txt <span style=color:#111>|</span> sort <span style=color:#111>|</span> uniq
+</span></span></code></pre></div><p>We can then do a reverse numerical sort:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=display:flex><span>tr -sc <span style=color:#d88200>&#34;A-Za-z&#34;</span> <span style=color:#d88200>&#34;\n&#34;</span> &lt; input.txt <span style=color:#111>|</span> sort <span style=color:#111>|</span> uniq <span style=color:#111>|</span> sort -r -n
+</span></span></code></pre></div><p>which gives a list of words per frequency.</p><p>This is a <strong>BAD RESULT</strong> most of the time: some words have punctuation with meaning that&rsquo;s not tokenizaiton: <code>m.p.h.</code>, or <code>AT&amp;T</code>, or <code>John's</code>, or <code>1/1/12</code>.</p><h2 id=what-to-tokenize>What to Tokenize</h2><p>&ldquo;I do uh main- mainly business data processing&rdquo;</p><ul><li><code>uh</code>: filled pause</li><li><code>main-</code>: fragments</li></ul><p>Consider:</p><p>&ldquo;Seuss&rsquo;s cat in the cat is different from other cats!&rdquo;</p><ul><li><code>cat</code> and <code>cats</code>: same <a href=/posts/kbhtokenization/>lemma</a> (i.e. stem + part of speech + word sense)</li><li><code>cat</code> and <code>cats</code>: different <a href=/posts/kbhtokenization/>wordform</a>s</li></ul><p>We usually consider a <a href=/posts/kbhtokenization/>token</a> as distinct <a href=/posts/kbhtokenization/>wordform</a>, counting duplicates; whereas, we usually consider <a href=/posts/kbhtokenization/>word type</a>s as unique, non-duplicated distinct <a href=/posts/kbhtokenization/>wordform</a>s.</p><h3 id=clitics>clitics</h3><p><code>John's</code>: word that doesn&rsquo;t stand on its own.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

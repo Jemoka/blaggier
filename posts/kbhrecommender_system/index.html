@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Recommender System</title>
+<meta name=description content="Recommender System is a system that provide recommendations due to search; it combines Information Retrival with another goal:
+
+Editorial/Hand-Curated lists: &ldquo;list of favorites&rdquo;, &ldquo;essential items&rdquo;, etc.
+Aggregates: top 10 lists, most popular, recent uploads
+(hardest) Individual tailors: user-based recommendation
+
+Formal Model
+
+\(X\) the set of users
+\(S\) the set of things to recommend
+\(R\) the set of distinct and totally ordered ratings  (stars 1-5, real number 0-1, etc.)
+Utility function: \(U:X \times S \to R\) (&ldquo;how much
+
+Three key problems:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Recommender System</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhrecommender_system/>Recommender System</a> is a system that provide recommendations due to search; it combines <a href=/posts/kbhinformation_retrival/>Information Retrival</a> with another goal:</p><ul><li><strong>Editorial/Hand-Curated lists</strong>: &ldquo;list of favorites&rdquo;, &ldquo;essential items&rdquo;, etc.</li><li><strong>Aggregates</strong>: top 10 lists, most popular, recent uploads</li><li>(hardest) <strong>Individual tailors</strong>: user-based recommendation</li></ul><h2 id=formal-model>Formal Model</h2><ul><li>\(X\) the set of users</li><li>\(S\) the set of things to recommend</li><li>\(R\) the set of distinct and totally ordered ratings (stars 1-5, real number 0-1, etc.)</li><li>Utility function: \(U:X \times S \to R\) (&ldquo;how much</li></ul><p>Three key problems:</p><ul><li><strong>obtain</strong> \(U\) as much as possible, leaving something blank</li><li><strong>extrapolate</strong> blank entries in \(U\) which maybe high (&ldquo;recommend something&rdquo;)</li><li><strong>evaluate</strong> our recommendation method</li></ul><h2 id=obtaining-u>obtaining \(U\)</h2><ul><li>ask people (rate!)</li><li>implicit signals (buying book, picking song, watching video, etc.)&mdash;this will create a binary matrix</li></ul><h2 id=extrapolating-u>extrapolating \(U\)</h2><p>\(U\) is sparse (people can&rsquo;t rate everything).</p><p><strong>Cold Start problem</strong>:</p><ul><li>new items have no ratings</li><li>new users have no history</li></ul><p><strong>Three Main Approaches</strong>:</p><h3 id=content-based-filtering>content based filtering</h3><p><strong>Recommend \(s\) to \(x\) if \(s \sim s&rsquo;\) based on content where \(s&rsquo;\) is already rated highly by \(x\)</strong></p><p>(&ldquo;if the user likes Jazz, given them more Jazz&rdquo;)</p><ol><li>create profile of each item (movie: genre, actor, years; lexicon: important words by <a href=/posts/kbhranked_information_retrieval/#tf-idf>TF-IDF</a>; etc)</li><li>create profile of user, say by averaging ratings of the things the user marked as high</li><li>cosine similarity</li></ol><hr><p>Advantages:</p><ul><li>no need for data on other users (no user sparsity)</li><li>able to tailor to unique tastes</li><li>able to recommend new and unpopular things</li><li>transparent</li></ul><p>Disadvantages:</p><ul><li>need to build a profile for user</li><li>overspecialization (never recommend outside of user&rsquo;s preferences)</li><li>unable to exploit other users&rsquo; judgments</li><li>finding good features is hard</li></ul><h3 id=collaborative-filtering>collaborative filtering</h3><p>Instead of using content features of items to recommend, we find user instead.</p><h4 id=user-user-collaborative-filtering--orga6897ce>user-user <a href=#collaborative-filtering>collaborative filtering</a></h4><p>Consider a user \(x\), and some set of unrated items \(i\).</p><p>Let&rsquo;s find \(N\) other users with similar ratings: 1) find similar users and 2) recommend items they like.</p><p>Then, we estimate \(x\)&rsquo;s ratings for \(i\) based on the similar users&rsquo; ratings for \(i\).</p><ul><li><p>problem</p><p>because the sparsity of the user vectors which we treat as \(0\), cosine gets confused. Cosine doesn&rsquo;t really capture the &ldquo;oppositeness&rdquo; of a 5 star vs a 1 star rating.</p><p>solution: <strong>mean center</strong> each user&mdash;subtracting each user&rsquo;s score from their mean rating (ignoring missing values, and do not subtract anything to the missing values). This allows opposite opinions to have opposite signs as well.</p></li></ul><ul><li><p>sparsity</p><p>we prevent computing values for which one user does not rate; as in, we chop the vectors such that the comparison between \(x\) and \(x_{n} \in X\) are both dense (i.e. if one of the two users don&rsquo;t rate something, we do not include that in the vector).</p><p>after this, we can compute our normal cosine similarity; remember to normalise.</p></li></ul><ul><li><p>prediction</p><p>finally, after we got our \(N\), we can return our prediction for \(I\) either based on an average score of the similar users retrieved in \(N\) or average weighted of scores in \(N\) weighted by similarity to our target user \(x\).</p><p>\begin{equation}
+r_{xi} = \frac{1}{N} \sum_{}^{} r_{yi}
+\end{equation}</p><p>or</p><p>\begin{equation}
+r_{xi} = \sum_{}^{} \frac{sim(x,y) r_{yi}}{sim(x,y)}
+\end{equation}</p></li></ul><h4 id=item-item-collaborative-filtering--orga6897ce>item-item <a href=#collaborative-filtering>collaborative filtering</a></h4><p>For item \(i\), we want to find other similar <strong>items</strong> to our item \(i\), and average the user&rsquo;s own ratings on those similar items onto \(i\).</p><p>this tends to work better because items are easier to classify than users.</p><ul><li><p>problem</p><ul><li>cold start (we need initial data to seed the rating)</li><li>sparsity (user ratings are sparse)</li><li>popularity bias&mdash;creates filter bubbles and hard to generalize over unique tastes</li></ul></li></ul><h3 id=latent-factor--neural--systems>latent factor (neural) systems</h3><ol><li>represent each video and user as an embedding</li><li><a href=#collaborative-filtering>collaborative filtering</a>.</li></ol><p>YouTube obtains this embedding by predicting what video user is going to watch</p><h2 id=evaluation>evaluation</h2><p>RMSE between held out ratings:</p><p>\begin{equation}
+\sqrt{\frac{\sum_{xi}^{}(r_{xi} - r^{*}_{xi})^{2}}{N}}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

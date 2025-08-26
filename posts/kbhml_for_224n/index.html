@@ -1,0 +1,84 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Basics of ML for 224n</title>
+<meta name=description content="Random thoughts as I scan through the book:
+Central framing: learning as a means to generalize + predict
+Key Tasks
+
+regression (predict a value)
+binary classification (sort an example into a boolean class of Y/N)
+multi-class classification (sort an example into multiple classes)
+ranking (sorting an object into relevant order)
+
+Optimality of Bayes Optimal Classifier
+If you have the underlying data distribution, we can classify \(y\) from \(x\) by choosing:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Basics of ML for 224n</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Random thoughts as I scan through the book:</p><p>Central framing: learning as a means to <strong>generalize</strong> + <strong>predict</strong></p><h2 id=key-tasks>Key Tasks</h2><ul><li>regression (predict a value)</li><li>binary classification (sort an example into a boolean class of Y/N)</li><li>multi-class classification (sort an example into multiple classes)</li><li>ranking (sorting an object into relevant order)</li></ul><h2 id=optimality-of-bayes-optimal-classifier>Optimality of Bayes Optimal Classifier</h2><p>If you have the underlying data distribution, we can classify \(y\) from \(x\) by choosing:</p><p>\begin{equation}
+f(x) = \arg\max_{y \in Y} P(x, y)
+\end{equation}</p><p>where \(P(a,b)\) is the probability of \(a,b\) pain on the data \(D\); but like you don&rsquo;t have the probability distributed over \(D\), so sadge.</p><p>Optimality:</p><p>assume for contradiction \(\exists\) some \(g\) which works better than \(f\), meaning \(\exists x: g(x) \neq f(x)\). The error rate of \(f\) on \(x\) is \(1-P(x, f(x))\), of \(g\) is \(1-P(x, g(x))\). Yet, \(P(x,f(x))\) is maximized by definition of \(f\), so \(1-P(x, f(x)) \leq 1-P(x,g(x))\), meaning, \(P(x,g(x)) \leq P(x,f(x))\); recall \(P\) is the distribution on actual data so \(g\) is worse than \(f\), reaching contradiction. \(\blacksquare\)</p><h2 id=decision-tree>Decision Tree</h2><p>Its usually presented in terms of Gini impurity in a multi-class setting; as in the &ldquo;score&rdquo; is formalized as &ldquo;Gini Purity&rdquo;:</p><p>\begin{equation}
+G_{f} = \sum_{j=1}^{N} p_{f}(j) \cdot p_{f}(\neg j)
+\end{equation}</p><p>with \(N\) classes and \(f \in F\) features, and where \(p_{f}(j)\) means the probability that, for the subset of the data with condition \(f\), a random sample takes on class \(j\). Then, we select the feature:</p><p>\begin{equation}
+f_{split} = \arg\min_{f}\qty( G_{f} + G_{\neg f})
+\end{equation}</p><p>We want this because we want each feature split to be &ldquo;pure&rdquo;&mdash;we want there to be either high probability of each split containing one class, or absolutely not containing it, so either \(p_{f}(j)\) or \(p_{f}(\neg j)\) should be very low.</p><p>Yet, this textbook uses a goofy representation where their splitting score is, after splitting by some feature \(f\) the count in each group having the majority class of that group&mdash;which functionally measures the same thing (class &ldquo;purity&rdquo; of each group); ideally, we want this value to be high, so we take argmax of it.</p><p>also I&rsquo;m pretty sure we can recycle features instead of popping them out; check me on this.</p><h2 id=bias>Bias</h2><h3 id=inductive-bias>Inductive Bias</h3><p><a href=#inductive-bias>Inductive Bias</a> is defined here as the bias towards a particular choice of solution in a set of possible variations of valid solutions in absence of data which further narrows down the relevant concept.</p><p>Nice.</p><p>Confused about their treatment of parity, will come back later.</p><h3 id=so-true>So true</h3><figure><img src=/ox-hugo/2024-03-24_19-30-56_screenshot.png></figure><p>so true</p><h3 id=sooo-true>Sooo true</h3><figure><img src=/ox-hugo/2024-03-24_19-31-45_screenshot.png></figure><p>I officially have no opinions on their treatment of KNN/kmeans or single layer perceptrons</p><p>I wish there was a proof for why kmeans works</p><h2 id=perception>Perception</h2><p>See <a href=/posts/kbhlogistic_regression/>logistic regression</a> and <a href=/posts/kbhneural_networks/>Neural Networks</a></p><h3 id=perception-convergence>Perception Convergence</h3><p>Suppose \(D\) is linearly separable with margin \(\gamma >0\) (otherwise it wouldn&rsquo;t be very separable); assume \(\mid x \mid \leq 1\); then, 1-layer perceptrons converge in \(\frac{1}{\gamma^{2}}\) updates.</p><p>Sketch: take the fact that \(w^{(k)} = w^{(k-1)} + yx\). Compare it to \(w^{*}\) to obtain that \(w^{*} \cdot w^{(k)} \geq k \gamma\). Norm it and because \(x\) is within \(1\) so \(\mid w^{(k)}\mid^{2} \leq k\). Now do algebra.</p><p>We will obtain \(k \leq \frac{1}{\gamma^{2}}\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

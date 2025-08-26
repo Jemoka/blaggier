@@ -1,0 +1,104 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>upper-triangular matrix</title>
+<meta name=description content="A matrix is upper-triangular if the entries below the diagonal are \(0\):
+\begin{equation}
+\mqty(\lambda_{1} & & * \\ & \ddots & \\ 0 & & \lambda_{n})
+\end{equation}
+properties of upper-triangular matrix
+Suppose \(T \in \mathcal{L}(V)\), and \(v_1 &mldr; v_{n}\) is a basis of \(V\). Then:
+
+the matrix of \(T\) w.r.t. \(v_1 &mldr; v_{n}\) is upper-triangular
+\(Tv_{j} \in span(v_1 \dots v_{j})\) for each \(v_{j}\)
+\(span(v_{1}, &mldr; v_{j})\) is invariant under \(T\) for each \(v_{j}\)
+
+\(1 \implies 2\)
+Recall that our matrix \(A=\mathcal{M}(T)\) is upper-triangular. So, for any \(v_{j}\) sent through \(A\), it will be multiplied to the $j$-th column vector of the matrix. Now, that $j$-th column has \(0\) for rows \(j+1 &mldr; n\), meaning that only through a linear combination of the first \(j\) vectors we can construct \(T v_{j}\). Hence, \(Tv_{j} \in span(v_1 &mldr; v_{j})\)"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>upper-triangular matrix</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhmatricies/>matrix</a> is <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a> if the entries below the <a href=/posts/kbhmatricies/#diagonal>diagonal</a> are \(0\):</p><p>\begin{equation}
+\mqty(\lambda_{1} & & * \\ & \ddots & \\ 0 & & \lambda_{n})
+\end{equation}</p><h2 id=properties-of-upper-triangular-matrix--kbhupper-triangular-matrix-dot-md>properties of <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a></h2><p>Suppose \(T \in \mathcal{L}(V)\), and \(v_1 &mldr; v_{n}\) is a basis of \(V\). Then:</p><ol><li>the matrix of \(T\) w.r.t. \(v_1 &mldr; v_{n}\) is <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a></li><li>\(Tv_{j} \in span(v_1 \dots v_{j})\) for each \(v_{j}\)</li><li>\(span(v_{1}, &mldr; v_{j})\) is <a href=/posts/kbhinvariant_subspace/>invariant</a> under \(T\) for each \(v_{j}\)</li></ol><h3 id=1-implies-2>\(1 \implies 2\)</h3><p>Recall that our matrix \(A=\mathcal{M}(T)\) is <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a>. So, for any \(v_{j}\) sent through \(A\), it will be multiplied to the $j$-th column <a href=/posts/kbhvector/>vector</a> of the <a href=/posts/kbhmatricies/>matrix</a>. Now, that $j$-th column has \(0\) for rows \(j+1 &mldr; n\), meaning that only through a linear combination of the first \(j\) vectors we can construct \(T v_{j}\). Hence, \(Tv_{j} \in span(v_1 &mldr; v_{j})\)</p><h3 id=3-implies-2>\(3 \implies 2\)</h3><p>&ldquo;obviously&rdquo;</p><p>All \(v_{j} \in span(v_1, \dots v_{j})\), and yet \(T v_{j} \in span (v_{1}, &mldr; v_{j})\) as it is given. Hence, \(span(v_1, &mldr; v_{j})\) is <a href=/posts/kbhinvariant_subspace/>invariant</a> under \(T\).</p><h3 id=2-implies-3>\(2 \implies 3\)</h3><p>Let \(v \in span(v_1, &mldr; v_{j})\); meaning: \(v = a_1 v_1 + &mldr; + a_{j} v_{j}\). Now, \(Tv = a_1 T v_{1} + &mldr; + a_{j} T v_{j}\). Recall now we are given \(T v_{j} \in span(v_1, &mldr; v_{j})\) for each \(v_{j}\) (of course if \(T{v_{1}} \in span(v_{1})\) it is also in \(span(v_1, &mldr; v_{j})\) so the statement make sense.) Therefore, a linear combinations of \(T v_{j}\) also is in \(span(v_1 &mldr; v_{j})\). Making the latter <a href=/posts/kbhinvariant_subspace/>invariant</a> under \(T\). \(\blacksquare\)</p><h2 id=every-complex-operator-has-an-upper-triangular-matrix--kbhupper-triangular-matrix-dot-md>every complex operator has an <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a></h2><p>Suppose \(V\) is a finite-dimensional <a href=/posts/kbhvector_space/#vector-space-over-fields>complex vector space</a>, with an <a href=/posts/kbhoperator/>operator</a> \(T \in \mathcal{L}(V)\). Then, \(T\) has an <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a> w.r.t. some <a href=/posts/kbhbasis/>basis</a> of \(V\).</p><p>Proof:</p><p>We will use induction.</p><p>Inductive hypothesis: given dimension of \(V\), \(T \in \mathcal{L}(V)\) has an <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a> for a <a href=/posts/kbhbasis/>basis</a> of \(V\).</p><p>Base case: \(\dim V=1\)</p><p>If \(\dim V = 1\), any matrix of \(T\) is technically <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a> because its just one number \(\mqty(a)\).</p><p>Step: \(\dim V = n\), and \(T \in \mathcal{L}(V)\)</p><p>Because <a href=/posts/kbhoperators_on_complex_vector_spaces_have_an_eigenvalue/>operators on complex vector spaces have an eigenvalue</a>, let \(v_1\) be an <a href=/posts/kbheigenvalue/>eigenvector</a> corresponding to an <a href=/posts/kbheigenvalue/>eigenvalue</a> of \(T\). Now, create an <a href=/posts/kbhinvariant_subspace/>invariant subspace</a> \(U = span(v_1)\). (it is <a href=/posts/kbhinvariant_subspace/>invariant</a> because \(v_1\) is an <a href=/posts/kbheigenvalue/>eigenvalue</a>). Now, evidently \(\dim U =1\).</p><p>Now, \(\dim V / U = n-1\), the previous step from induction tells us that there exists a <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a> for \(T/U \in \mathcal{L}(V / U)\). Specifically, because of the <a href=#properties-of-upper-triangular-matrix--kbhupper-triangular-matrix-dot-md>properties of upper-triangular matrix</a>, it tells us that there is a basis \(v_{2} + U &mldr; v_{n} + U\) such that its <a href=/posts/kbhspan/>span</a> is <a href=/posts/kbhinvariant_subspace/>invariant</a> under \(T / U\). Meaning:</p><p>\begin{equation}
+(T / U) (v_{j} + U ) \in span( v_{2} + U \dots v_{j} + U)
+\end{equation}</p><p>Writing it out:</p><p>\begin{equation}
+T v_{j} + U = (a_{2} v_{2} + \dots + a_{j} v_{j}) + U
+\end{equation}</p><p>Specifically, this means, there exists at least one pair \(u_1, u_2\) for which:</p><p>\begin{equation}
+T v_{j} + u_1 = (a_{2} v_{2} + \dots + a_{j} v_{j}) + u_2
+\end{equation}</p><p>And so:</p><p>\begin{equation}
+T v_{j} = (a_{2} v_{2} + \dots + a_{j} v_{j}) + (u_2 - u_1)
+\end{equation}</p><p>And since \(\{v_1\}\) is a <a href=/posts/kbhbasis/>basis</a> of \(U\), and \(u_2 - u_1 \in U\), we can say:</p><p>\begin{equation}
+T v_{j} = (a_{2} v_{2} + \dots + a_{j} v_{j}) + a_1 v_1
+\end{equation}</p><p>Hence:</p><p>\begin{equation}
+T v_{j} \in span(v_1, \dots v_{j})
+\end{equation}</p><p>It has been shown in the past (see <a href=/posts/kbhlinear_algebra_errors/>Linear Algebra Errors</a>) that if a list form a <a href=/posts/kbhbasis/>basis</a> of \(V /U\) and another form a basis of \(U\) then the two lists combined form a <a href=/posts/kbhbasis/>basis</a> of the whole thing \(V\). So \(v_1 &mldr; v_{j}\) is a <a href=/posts/kbhbasis/>basis</a> of \(V\).</p><p>Now, by the <a href=#properties-of-upper-triangular-matrix--kbhupper-triangular-matrix-dot-md>properties of upper-triangular matrix</a> again, we have that there exists an <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a> of \(T\) for \(\dim V = n\). \(\blacksquare\)</p><h2 id=operator-is-only-invertible-if-diagonal--kbhmatricies-dot-md--of-its-upper-triangular-matrix--kbhupper-triangular-matrix-dot-md--is-nonzero>operator is only invertible if <a href=/posts/kbhmatricies/#diagonal>diagonal</a> of its <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a> is nonzero</h2><p>Suppose \(T \in \mathcal{L}(V)\) has an <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a> w.r.t. a <a href=/posts/kbhbasis/>basis</a> of \(V\). Then, \(T\) is <a href=/posts/kbhinvertability/>invertable</a> IFF all the entries on the <a href=/posts/kbhmatricies/#diagonal>diagonal</a> of the <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a> is nonzero.</p><h3 id=assume-nonzero-diagonal>assume nonzero diagonal</h3><p>Let \(\lambda_{1} &mldr; \lambda_{n}\) be the <a href=/posts/kbhmatricies/#diagonal>diagonal</a> entries of \(T\). Per given, let there be an <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a> <a href=/posts/kbhmatricies/>matrix</a> of \(T\) under the basis \(v_1 &mldr; v_{n}\). The <a href=/posts/kbhmatricies/>matrix</a> w.r.t. \(T\)&rsquo;s matrix being <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a> under the list of \(v_{j}\) means that:</p><p>\begin{equation}
+T v_1 = \lambda_{1} v_1
+\end{equation}</p><p>(because \(T v_{j} \in span(v_1 &mldr; v_{j})\), and let \(j=1\)). And so:</p><p>\begin{equation}
+T \frac{v_1}{\lambda_{1}} = v_{1}
+\end{equation}</p><p>(legal as \(\lambda_{j} \neq 0\) per given).</p><p>Thus, \(v_1 \in range(T)\).</p><p>In a similar fashion, let:</p><p>\begin{equation}
+T v_{2} = a v_{1} + \lambda_{2} v_{2}
+\end{equation}</p><p>(\(a\) being the element just to the right of the \(\lambda_{1}\) diagonal; recall again that \(T\)&rsquo;s matrix under \(v_{j}\) is <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a>)</p><p>Now:</p><p>\begin{equation}
+T \frac{v_2}{\lambda 2} = \frac{a}{\lambda_{2}} v_{1} + v_{2}
+\end{equation}</p><p>The left side is in <a href=/posts/kbhrange/>range</a> \(T\) by definition; the right side&rsquo;s \(\frac{a}{\lambda 2} v_{1} \in range\ T\) and hence so is its scaled versions. Thus, \(v_2 \in range\ T\).</p><p>Continuing in this fashion, we have all \(v_{j} \in range\ T\). So \(T\) is <a href=/posts/kbhsurjectivity/>surjective</a> as it can hit all <a href=/posts/kbhbasis/>basis</a> of \(V\). Now, <a href=/posts/kbhoperator/#id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injectivity-is-id-1af529ce-e2fb-43a4-8f13-aee1dc743b5f-surjectivity-in-id-4ed27ed5-4edc-4ef4-afd7-9b8e3bcd9b96-finite-dimensional-id-36e84a46-76f1-481e-b031-8ab2f0da0aa8-operator-s>injectivity is surjectivity in finite-dimensional operators</a>, so \(T\) is <a href=/posts/kbhinvertability/>invertable</a>, as desired.</p><h3 id=assume-invertible>assume invertible</h3><p>We will prove this by induction. Let \(\lambda_{1} &mldr; \lambda_{n}\) be the <a href=/posts/kbhmatricies/#diagonal>diagonal</a> entries of \(T\).</p><p>Inductive hypothesis: \(\lambda_{j} \neq 0\)</p><p>Base case: \(\lambda_{1} \neq 0\) because if not, \(T v_{1} = 0\) and \(v_{1} \neq 0\) as it is part of a <a href=/posts/kbhbasis/>basis</a> so that would make \(T\) not <a href=/posts/kbhinjectivity/>injective</a> and hence not <a href=/posts/kbhinvertability/>invertable</a>. Hence, by contradiction, \(\lambda_{1} = 0\).</p><p>Step: \(\lambda_{j}\)</p><p>Suppose for the sake of contradiction \(\lambda_{j} = 0\). This means that the basis \(v_{j}\) is mapped to somewhere in \(span(v_{1}, &mldr; v_{j-1})\) as only the top \(j-1\) slots are non-zero for the $j$-th column. And so, \(T\), under the assumption, would map \(span(v_1, &mldr; v_{j})\) into \(span(v_1, &mldr; v_{j-1})\).</p><p>Now, because \(v_{j}\) are <a href=/posts/kbhlinear_independence/>linearly independent</a> (they form a <a href=/posts/kbhbasis/>basis</a> after all), \(\dim span(v_1, &mldr; v_{j}) = j\) and \(\dim span(v_1, &mldr;, v_{j-1}) = j-1\). Now, as \(T\) <a href=/posts/kbhmap_restriction_operator/>restricted</a> on \(span(v_1, ..v_{j})\) maps to a smaller <a href=/posts/kbhsubspace/>subspace</a>, <a href=/posts/kbhlinear_map/#map-to-smaller-space-is-not-id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injective>it is not injective</a>. So, \(T\) as a whole is not <a href=/posts/kbhinjectivity/>injective</a>, so it is not <a href=/posts/kbhinvertability/>invertable</a>. Reaching contradiction, \(\blacksquare\).</p><h2 id=eigenvalues-of-a-map-are-the-entries-of-the-diagonal--kbhmatricies-dot-md--of-its-upper-triangular-matrix--kbhupper-triangular-matrix-dot-md>eigenvalues of a map are the entries of the <a href=/posts/kbhmatricies/#diagonal>diagonal</a> of its <a href=/posts/kbhupper_triangular_matrix/>upper-triangular matrix</a></h2><p>The <a href=/posts/kbhmatricies/>matrix</a> of \(T-\lambda I\) for an <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a> form of \(T\) would look like:</p><p>\begin{equation}
+\mqty(\lambda_{1} - \lambda &&* \\ & \ddots & \\ 0 &&\lambda_{n} - \lambda)
+\end{equation}</p><p>where \(\lambda_{j}\) are the <a href=/posts/kbhmatricies/#diagonal>diagonal</a>s of the <a href=/posts/kbhupper_triangular_matrix/>upper-triangular</a> form of \(T\), and \(\lambda\) an <a href=/posts/kbheigenvalue/>eigenvalue</a> of \(T\).</p><p>Recall that <a href=#operator-is-only-invertible-if-diagonal--kbhmatricies-dot-md--of-its-upper-triangular-matrix--kbhupper-triangular-matrix-dot-md--is-nonzero>operator is only invertible if diagonal of its upper-triangular matrix is nonzero</a>; so if \(\lambda\) equals any of the \(\lambda_{j}\), it will make the matrix above for \(T - \lambda I\) not <a href=/posts/kbhinvertability/>invertable</a> as one of its <a href=/posts/kbhmatricies/#diagonal>diagonal</a> will be \(0\). Recall the <a href=/posts/kbheigenvalue/#properties-of-id-7d742b39-4a4a-4a9d-a55b-07e2030dfdeb-eigenvalue-s>properties of eigenvalues</a>, specifically that \(\lambda\) is an <a href=/posts/kbheigenvalue/>eigenvalue</a> <a href=/posts/kbhequivalence/>IFF</a> \((T-\lambda I)\) is not <a href=/posts/kbhinvertability/>invertable</a>. Hence, each \(\lambda_{j}\) is an <a href=/posts/kbheigenvalue/>eigenvalue</a> of \(T\). \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

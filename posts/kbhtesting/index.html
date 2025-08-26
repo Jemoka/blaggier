@@ -1,0 +1,85 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Testing</title>
+<meta name=description content="How many bugs are in 1,000 lines of code?
+
+Typical code: 1-10
+Platform code: 0.1-1
+The best&mdash;NASA: 0.01-0.1
+
+Never assume your software doesn&rsquo;t have bugs.
+Test-Driven Development
+Test before you build!
+
+Specs are already written
+We know what the expected behavior is
+We can write tests for the expected behavior first
+All tests fail to start
+We know we are done writing code when all tests pass
+
+&ldquo;NYI&rdquo; (not-yet implemented)"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Testing</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>How many bugs are in 1,000 lines of code?</p><ul><li>Typical code: 1-10</li><li>Platform code: 0.1-1</li><li>The best&mdash;NASA: 0.01-0.1</li></ul><p>Never <em>assume</em> your software doesn&rsquo;t have bugs.</p><h2 id=test-driven-development>Test-Driven Development</h2><p>Test <em>before</em> you build!</p><ul><li>Specs are already written</li><li>We know what the expected behavior is</li><li>We can write tests for the expected behavior <em>first</em></li><li>All tests fail to start</li><li>We know we are done writing code when all tests pass</li></ul><p>&ldquo;NYI&rdquo; (not-yet implemented)</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>often, writing test exposes gaps in your specs
+</span></span></code></pre></div><h2 id=how-not-not-write-tests>How <em>NOT!</em> not write tests</h2><h3 id=random-sampling>Random Sampling</h3><ul><li>Pick one or two inputs and show your code works on it</li><li>Why it doesn&rsquo;t work: there maybe specific inputs that break your code</li></ul><h3 id=exhaustive-testing>Exhaustive Testing</h3><ul><li>Test for the domain of inputs</li><li>Why it doesn&rsquo;t work: tests run forever</li></ul><h2 id=how-do-you-write-tsets>How <em>DO</em> you write tsets</h2><h3 id=black-box-testing>Black-Box Testing</h3><ul><li>Pretend the code implementation is a black box</li><li>All you know is what the specification; and what the input/output produces</li></ul><h3 id=white-box-testing>White-Box Testing</h3><ul><li>You can see the implementation</li><li>You test for specific edge cases</li><li>Off-by-one, running time, specific inputs, etc.</li></ul><h3 id=malicious-testing>Malicious Testing</h3><ul><li>What happens if a user is <em>trying</em> to break your system</li><li>Sometimes, this is known as &ldquo;pen-testing&rdquo; or &ldquo;white-hack hacking&rdquo;</li><li>Take CS340 Compsec</li></ul><h2 id=how-big-are-your-tests>How <em>BIG</em> are your tests</h2><h3 id=unit-testing>Unit Testing</h3><ul><li>Backbone of testing</li><li>Typically, that means one test per function</li><li>Tests choose representative inputs</li><li><strong><strong>Idempotent</strong></strong>: the state of the testing system should be a the beginning and end of the test (tests should revert) (setup + teardown tests)</li></ul><h3 id=subsystem-testing>Subsystem Testing</h3><ul><li>Exercise multiple functions working together in a system</li><li>Often takes longer</li><li>OK to run these less frequently</li></ul><h3 id=end-to-end-integration>End-to-End Integration</h3><ul><li>Exercise the entire workflow</li><li>May involve external libraries, hardware, etc.</li></ul><h3 id=regression-testing>Regression Testing</h3><ul><li>Isolate the cause of the bug to the smallest possible test case</li><li>Write a test assuming the bug is fixed</li><li>Fix the bug</li><li>Add the test to your test suite</li></ul><h2 id=how-much-do-we-run-tests>How <em>MUCH</em> do we run tests</h2><ul><li>Ideally, run tests every time code is committed</li><li>Ideally&mdash;run tests that address the function</li><li>Schedule long tests</li></ul><h2 id=what-to-test-for><em>What</em> to test for</h2><p><a href=https://softwareengineering.stackexchange.com/questions/750/what-should-you-test-with-unit-tests>see also here</a></p><h3 id=equivalence-partitioning>equivalence partitioning</h3><p>Come up with one test case per equivalence class. For instance, for a function that uppercases letters, analyze the following:</p><ol><li>Lowercase letters</li><li>Uppercase letters</li><li>Non-alpha letters</li><li>Non-printable letters</li><li>Combinations</li></ol><p>Each group will therefore have nicely the requirements covered</p><h3 id=boundary-value-analysis>boundary value analysis</h3><p>In addition to just testing 1 element per class in <a href=#equivalence-partitioning>equivalence partitioning</a>, try to test boundary values (off-by-one, etc.) cases for each equivalence class if you can come up with them.</p><h3 id=arrange-act-assert>Arrange, Act, Assert</h3><ol><li><strong>arrange</strong> for setup by setting up variables, etc., and <strong>define the expected result</strong> (yes we do it before to be more readable)</li><li><strong>act</strong> do the thing</li><li><strong>assert</strong> correctness by checking the expected result</li></ol></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

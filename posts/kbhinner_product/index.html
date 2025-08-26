@@ -1,0 +1,98 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>inner product</title>
+<meta name=description content="constituents
+
+\(V\) a vector space
+\((u,v)\), an ordered pair of vectors in \(V\) (its not commutative!)
+
+requirements
+We define \(\langle u, v \rangle \in \mathbb{F}\) as the inner product of \((u,v)\) in that order!. It carries the following properties:
+
+positivity: \(\langle v, v\rangle \geq 0, \forall v \in V\)
+definiteness: \(\langle v, v\rangle = 0\) IFF \(v = 0\)
+additivity in the first slot: \(\langle u+v, w\rangle = \langle u, w \rangle + \langle v, w \rangle\)
+homogeneity in the first slot: \(\langle \lambda u, v \rangle = \lambda \langle u, v \rangle\)
+conjugate symmetry: \(\langle u,v \rangle = \overline{\langle v,u \rangle}\)
+
+additional information
+Inner Product Space
+An Inner Product Space is a vector space with a well-defined inner product. For instance, \(\mathbb{F}^{n}\) has the canonical inner product named Euclidean Inner Product (see below, a.k.a. dot product for reals). The existence of such a well-defined inner product makes \(\mathbb{F}^{n}\) an Inner Product Space."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>inner product</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=constituents>constituents</h2><ul><li>\(V\) a <a href=/posts/kbhvector_space/>vector space</a></li><li>\((u,v)\), an <em>ordered</em> pair of <a href=/posts/kbhvector/>vector</a>s in \(V\) (its not commutative!)</li></ul><h2 id=requirements>requirements</h2><p>We define \(\langle u, v \rangle \in \mathbb{F}\) as the <a href=/posts/kbhinner_product/>inner product</a> of \((u,v)\) <strong>in that order!</strong>. It carries the following properties:</p><ol><li><strong>positivity</strong>: \(\langle v, v\rangle \geq 0, \forall v \in V\)</li><li><strong>definiteness</strong>: \(\langle v, v\rangle = 0\) IFF \(v = 0\)</li><li><strong>additivity in the first slot</strong>: \(\langle u+v, w\rangle = \langle u, w \rangle + \langle v, w \rangle\)</li><li><strong>homogeneity in the first slot</strong>: \(\langle \lambda u, v \rangle = \lambda \langle u, v \rangle\)</li><li><strong>conjugate symmetry</strong>: \(\langle u,v \rangle = \overline{\langle v,u \rangle}\)</li></ol><h2 id=additional-information>additional information</h2><h3 id=inner-product-space>Inner Product Space</h3><p>An <a href=#inner-product-space>Inner Product Space</a> is a <a href=/posts/kbhvector_space/>vector space</a> with a well-defined <a href=/posts/kbhinner_product/>inner product</a>. For instance, \(\mathbb{F}^{n}\) has the canonical <a href=/posts/kbhinner_product/>inner product</a> named <a href=#euclidean-inner-product>Euclidean Inner Product</a> (see below, a.k.a. <a href=/posts/kbhdot_product/>dot product</a> for reals). The existence of such a well-defined <a href=/posts/kbhinner_product/>inner product</a> makes \(\mathbb{F}^{n}\) an <a href=#inner-product-space>Inner Product Space</a>.</p><p>Rare Axler moment, instead of &ldquo;well-defined&rdquo;, he says we want a <a href=/posts/kbhvector_space/>vector space</a> with an <a href=/posts/kbhinner_product/>inner product</a> &ldquo;lurking nearby&rdquo;; james bond style.</p><h3 id=properties-of-inner-product>properties of inner product</h3><ol><li>For a fixed \(u \in V\), the function takes \(v\) to \(\langle v,u \rangle\) is a <a href=/posts/kbhlinear_map/>Linear Map</a> \(V \to \mathbb{F}\)</li><li>\(\langle 0,u \rangle = 0\)</li><li>\(\langle u,0 \rangle = 0\)</li><li>\(\langle u,v+w \rangle = \langle u,v \rangle + \langle u,w \rangle\)</li><li>\(\langle u,\lambda v \rangle = \bar{\lambda}\langle u,v \rangle\)</li></ol><p>Proof:</p><ol><li>Inheriting the additivity and homogeneity of the definition of <a href=/posts/kbhinner_product/>inner product</a>s</li><li>Set \(u\) to be the fixed element for 1), set \(0\) to be the input, linear maps take \(0\) to \(0\)</li><li>Apply conjugate symmetry to 2)</li><li>Apply conjugate symmetry, <a href=/posts/kbhinner_product/>inner product</a> additivty, then conjugate back</li><li>Apply conjugate symmetry, <a href=/posts/kbhinner_product/>inner product</a> homogeneity in the first slot, then conjugate back (of course leaving \(\lambda\) out conjugated)</li></ol><h3 id=euclidean-inner-product>Euclidean Inner Product</h3><p>For \(x,y \in \mathbb{F}^{n}\), one can define a pretty well-defined <a href=/posts/kbhinner_product/>inner product</a> by</p><p>\begin{equation}
+x \cdot y = x_1 \bar{y_{1}} + &mldr; + x_{n} \bar{y_{n}}
+\end{equation}</p><p>similar to <a href=/posts/kbhdot_product/>dot product</a> for the reals. This is called the <a href=#euclidean-inner-product>Euclidean Inner Product</a> and has the nice parallelity properties we saw.</p><h3 id=matrix-scaled-inner-product>Matrix-scaled inner product</h3><p><strong><strong>THIS DOESN&rsquo;T SATISFY THE INNER PRODUCT PROPERTIES</strong></strong></p><p>\begin{equation}
+\langle u, v \rangle_{A} = u \cdot Av = u^{T} Av
+\end{equation}</p><p>consider \(\langle v,v \rangle_{A}\), \(v \in \text{null}\ A\), then \(\langle v,v \rangle =0 \not \implies v = 0\) .</p><p>But it does transpose:</p><p>\begin{equation}
+\qty(\langle u,v \rangle_{A})^{T} = \qty(u^{T} Av)^{T} = v^{T}A^{T}u = \langle v,v \rangle_{A^{T}}
+\end{equation}</p><h3 id=complex-number--kbhcomplex-number-dot-md--shenanigans-that-motivate-the-inner-product--kbhinner-product-dot-md><a href=/posts/kbhcomplex_number/>complex number</a> shenanigans that motivate the <a href=/posts/kbhinner_product/>inner product</a></h3><p>&mldr;as both relevant and more general than the <a href=/posts/kbhdot_product/>dot product</a>, but also different in key areas.</p><p><a href=/posts/kbhthoughts_on_axler_4/#first-review-id-7c982e7e-b8be-4053-a71e-fc0dba7a5da5-complex-number-s>First, review complex numbers</a> from our discussion in chapter 4. The main problem here is this:</p><p>for \(z = (z_1, \dots, z_{n}) \in \mathbb{C}^{n}\), simply squaring each slot to take the <a href=/posts/kbhnorm/>norm</a> may cause us to take a square root of a negative number (as each slot would then be \(a^{2}-b^{2}\) for a complex number). That&rsquo;s no bueno because we want \(\|z\|\) to be real and non-negative.</p><p>This, therefore, suggests something similar for our <a href=/posts/kbhinner_product/>inner product</a> definition; to make sure that each slot end up being a real and non-negative number, we simply <a href=/posts/kbhcomplex_number/#complex-conjugate>conjugate</a> the second value:</p><p>\begin{equation}
+x \cdot y = x_1 \bar{y_{1}} + &mldr; + x_{n} \bar{y_{n}}
+\end{equation}</p><p>Also, note that this definition give us an important result: if we reverse \(x\) and \(y\), we would be conjugating the other element! And so, we have that:</p><p>\begin{equation}
+x \cdot y = \bar{{y \cdot x}}
+\end{equation}</p><p>derived by following the usual rules of <a href=/posts/kbhcomplex_number/#complex-conjugate>complex conjugation</a>. Note that none of these elementwisethings (the \(x_{n}y_{n}\) business) are actually in the definition of the <a href=/posts/kbhinner_product/>inner product</a>, as it is the rules of an <a href=#euclidean-inner-product>Euclidean Inner Product</a>.</p><h3 id=inner-product-of-l-periodic-functions>inner product of \(L\) periodic functions</h3><p>For \(f,g : [0,L] \to \mathbb{R}\), which are <a href=/posts/kbhsu_math53_feb252024/#l-periodicity>L-periodic</a>, we define:</p><p>\begin{equation}
+\langle f,g \rangle := \frac{1}{L} \int_{0}^{L} f(x) g(x) \dd{x}
+\end{equation}</p><p>Recall that <a href=/posts/kbhsu_math53_feb252024/#l-periodicity>L-periodic</a> functions can be shifted without changing periodicity. But if for some reason you want to base it off of any two numbers with distance \(L\) in between:</p><p>\begin{equation}
+\langle f,g \rangle_{[a,b]} := \frac{1}{b-a} \int^{b}_{a} f(x) g(x) \dd{x}
+\end{equation}</p><p>The work of checking this is a well-formed <a href=/posts/kbhinner_product/>inner product</a> is left to absolutely nobody.</p><h3 id=inner-product-over-complex-valued-functions--kbhcomplex-exponential-dot-md><a href=/posts/kbhcomplex_exponential/#id-650c9b2b-2e99-4e47-b61f-36d45fcedcd0-inner-product-over-complex-valued-functions>inner product over complex-valued functions</a></h3><p>see <a href=/posts/kbhcomplex_exponential/#id-650c9b2b-2e99-4e47-b61f-36d45fcedcd0-inner-product-over-complex-valued-functions>inner product over complex-valued functions</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

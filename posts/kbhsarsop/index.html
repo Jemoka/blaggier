@@ -1,0 +1,79 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SARSOP</title>
+<meta name=description content="Big problem: curse of dimensionality and the curse of history.
+PBVI and HSVI tries to sample the belief simplex generally. But instead we should try to sample OPTIMAL REACHABLE SET.
+Background
+Recall one-step lookahead in POMDP. The difficulty here is that the sum over all of the alpha-vectors is still very hard. So, in PBVI, we only do this to a small set of beliefs
+SARSOP
+
+sample \(R^{*}\)
+backup
+prune
+
+Initialization
+choose an initial belief, action, and observation using &ldquo;suitable heuristics&rdquo;. Initialize a set of alpha vectors corresponding to this belief."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SARSOP</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Big problem: curse of <strong>dimensionality</strong> and the curse of <strong>history</strong>.</p><p><a href=/posts/kbhpoint_based_value_iteration/>PBVI</a> and <a href=/posts/kbhhsvi/>HSVI</a> tries to sample the belief simplex generally. But instead we should try to sample <strong>OPTIMAL REACHABLE SET</strong>.</p><h2 id=background>Background</h2><p>Recall <a href=/posts/kbhalpha_vector/#one-step-lookahead-in-pomdp>one-step lookahead in POMDP</a>. The difficulty here is that the sum over all of the alpha-vectors is still very hard. So, in <a href=/posts/kbhpoint_based_value_iteration/>PBVI</a>, we only do this to a small set of beliefs</p><h2 id=sarsop>SARSOP</h2><ul><li>sample \(R^{*}\)</li><li>backup</li><li>prune</li></ul><h3 id=initialization>Initialization</h3><p>choose an initial belief, action, and observation using &ldquo;suitable heuristics&rdquo;. Initialize a set of <a href=/posts/kbhalpha_vector/>alpha vector</a>s corresponding to this belief.</p><h3 id=sampling>Sampling</h3><ul><li>compute \(b&rsquo; = update(b,a,o)\)</li><li>add node \(b&rsquo;\) to the tree</li></ul><p>So far, this is just <a href=/posts/kbhpoint_based_value_iteration/>PBVI</a>, <a href=/posts/kbhhsvi/>HSVI</a>. The point is that we only want to update the reachable set.</p><p>To do this, we now take the new \(b&rsquo;\), we give an upper bound via <a href=/posts/kbhfast_informed_bound/>FIB</a>, and a lower bound with <a href=/posts/kbhblind_lower_bound/>blind lower bound</a> over the alpha vectors you already got.</p><p>Now:</p><figure><img src=/ox-hugo/2024-01-27_22-11-41_screenshot.png></figure><p>where \(\mathcal{R}^{*}\) is a reachable space tree set from \(b_0\).</p><h3 id=backup>Backup</h3><p><a href=/posts/kbhpoint_based_value_iteration/#pbvi-backup>PBVI Backup</a> on the beliefs you sampled to update your <a href=/posts/kbhalpha_vector/>alpha vector</a>s.</p><h3 id=pruning>Pruning</h3><p>We can prune anything that&rsquo;s suboptimal: every step, we perform <a href=/posts/kbhalpha_vector/#id-a11af4cf-7e36-4b3f-876f-e6a26cf6817e-alpha-vector-pruning>alpha vector pruning</a> at every step.</p><h2 id=limitations>Limitations</h2><p><a href=/posts/kbhhsvi/>HSVI</a> is better at handling systems with lower uncertainty.</p><ul><li>Does not make an attempt at challenges of dimensionality</li><li>Make unproven theoretical claims</li><li>Don&rsquo;t compare to domain contraction</li><li>Compare algorithm to a single alternative</li><li>Compared to continuous state spaces</li><li>Subsection headings</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

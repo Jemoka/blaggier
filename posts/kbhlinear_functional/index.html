@@ -1,0 +1,99 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>linear functional</title>
+<meta name=description content="A linear map to numbers. Its very powerful because any linear functional can be represented as an inner product using Riesz Representation Theorem
+constituents
+
+vector space \(V\)
+a linear map \(\varphi \in \mathcal{L}(V, \mathbb{F})\)
+
+requirements
+\(\varphi\) is called a linear functional on \(V\) if \(\varphi: V \to \mathbb{F}\). That is, it maps elements of \(V\) to scalars. For instance, every inner product is a Linear Map to scalars and hence a linear functional.
+additional information
+Riesz Representation Theorem
+Suppose \(V\) is finite-dimensional, and \(\varphi\) is a linear functional on \(V\); then, there exists an unique \(u \in V\) such that:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>linear functional</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A linear map to numbers. Its very powerful because any <a href=/posts/kbhlinear_functional/>linear functional</a> can be represented as an <a href=/posts/kbhinner_product/>inner product</a> using <a href=#riesz-representation-theorem>Riesz Representation Theorem</a></p><h2 id=constituents>constituents</h2><ul><li>vector space \(V\)</li><li>a linear map \(\varphi \in \mathcal{L}(V, \mathbb{F})\)</li></ul><h2 id=requirements>requirements</h2><p>\(\varphi\) is called a <a href=/posts/kbhlinear_functional/>linear functional</a> on \(V\) if \(\varphi: V \to \mathbb{F}\). That is, it maps elements of \(V\) to scalars. For instance, every <a href=/posts/kbhinner_product/>inner product</a> is a <a href=/posts/kbhlinear_map/>Linear Map</a> to scalars and hence a <a href=/posts/kbhlinear_functional/>linear functional</a>.</p><h2 id=additional-information>additional information</h2><h3 id=riesz-representation-theorem>Riesz Representation Theorem</h3><p>Suppose \(V\) is <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional</a>, and \(\varphi\) is a <a href=/posts/kbhlinear_functional/>linear functional</a> on \(V\); then, there exists an <strong>unique</strong> \(u \in V\) such that:</p><p>\begin{equation}
+\varphi(v) = \langle v,u \rangle
+\end{equation}</p><p>\(\forall v \in V\). Kinda a mindblowing fact.</p><p>Proof:</p><p><a href=/posts/kbhgram_schmidt/#every-id-4a788e29-a3e9-4c13-8c97-08746878966e-inner-product-space-has-an-id-2a1eecb2-f23a-469f-a860-b561a9197906-orthonormal-basis>Every Inner Product Space has an orthonormal basis</a>; let \(e_1, &mldr;e_{n}\) be an <a href=/posts/kbhorthonormal_basis/>orthonormal basis</a> of \(V\). Recall there&rsquo;s a specific way of <a href=/posts/kbhorthonormal_basis/#writing-a-vector-as-a-linear-combination-of-orthonormal-basis>writing a vector as a linear combination of orthonormal basis</a>, that WLOG \(v \in V\):</p><p>\begin{equation}
+v = \langle v, e_1 \rangle e_1 + \dots \langle v, e_{n} \rangle e_{n}
+\end{equation}</p><p>Now:</p><p>\begin{equation}
+\varphi(v) = \varphi(\langle v, e_1 \rangle e_1 + \dots \langle v, e_{n} \rangle e_{n})
+\end{equation}</p><p>Given homogenity and addtivity, we then have:</p><p>\begin{align}
+\varphi(v) &= \varphi(\langle v, e_1 \rangle e_1 + \dots \langle v, e_{n} \rangle e_{n}) \\
+&= \langle v, e_1 \rangle \varphi(e_1) + \dots + \langle v, e_n \rangle \varphi(e_n)
+\end{align}</p><p>Now, shoving \(\varphi\) into the second slot (remember we have conjugate homogenity on the secon slot), and adding it all together (as inner products are additive in both slots):</p><p>\begin{align}
+\varphi(v) &= \varphi(\langle v, e_1 \rangle e_1 + \dots \langle v, e_{n} \rangle e_{n}) \\
+&= \langle v, e_1 \rangle \varphi(e_1) + \dots + \langle v, e_n \rangle \varphi(e_n) \\
+&= \langle v, \overline{\varphi(e_1)} e_1 + \dots + \overline{\varphi(e_n)}e_n \rangle
+\end{align}</p><p>You will note now that the second slot to this <a href=/posts/kbhinner_product/>inner product</a> is <strong>v-independent!</strong> So as long as we know the <a href=/posts/kbhorthonormal_basis/>orthonormal basis</a> we can encode \(\varphi\) with:</p><p>\begin{equation}
+u = \overline{\varphi(e_1)} e_1 + \dots + \overline{\varphi(e_n)}e_n
+\end{equation}</p><p>and:</p><p>\begin{equation}
+\varphi(v) = \langle v, u \rangle
+\end{equation}</p><p>Now, to show uniqueness, we probably do the same damned thing we have a million times:</p><p>Suppose:</p><p>\begin{equation}
+\varphi(v) = \langle v,u_1 \rangle = \langle v,u_{2} \rangle
+\end{equation}</p><p>holds for all \(v \in V\), as required by the theorem.</p><p>This means that:</p><p>\begin{equation}
+\langle v, u_1-u_2 \rangle = 0
+\end{equation}</p><p>For every \(v \in V\). Let \(v = u_1-u_2\). Now by definiteness we have \(u_1-u_2=0\) meaning \(u_1=u_2\) as desired. \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

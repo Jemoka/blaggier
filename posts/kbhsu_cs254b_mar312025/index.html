@@ -1,0 +1,93 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS254B MAR312025</title>
+<meta name=description content='A Tour Through 254B&rsquo;s Complexity Theory
+Chapter 1: No School like the Old School
+6 lectures, 4 theorems from the 70s.
+the *relavitization barrier" to P vs. NP
+
+Diagonalization is doomed to fail at resolving P vs. NP
+
+
+
+
+what has diagonalization proved?
+It shows a lot of impossibilities (&ldquo;x can&rsquo;t be applied to y&rdquo;)
+
+Cantor&rsquo;s theorem
+Godel&rsquo;s incompleteness
+halting problem
+time/space hierarchy theorems
+
+
+
+Hopcroft-Paul-Valiant
+&ldquo;On space versus time&rdquo;'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS254B MAR312025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=a-tour-through-254b-s-complexity-theory>A Tour Through 254B&rsquo;s Complexity Theory</h2><h3 id=chapter-1-no-school-like-the-old-school>Chapter 1: No School like the Old School</h3><p>6 lectures, 4 theorems from the 70s.</p><h4 id=the-relavitization-barrier-to-p-vs-dot-np>the *relavitization barrier" to P vs. NP</h4><div class=theorem><span><p>Diagonalization is doomed to fail at resolving P vs. NP</p><p></span></div></p><ul><li><p>what <em>has</em> diagonalization proved?</p><p>It shows a lot of impossibilities (&ldquo;x can&rsquo;t be applied to y&rdquo;)</p><ul><li>Cantor&rsquo;s theorem</li><li><a href=/posts/kbhmathematics/#godel-s-incompleteness>Godel&rsquo;s incompleteness</a></li><li><a href=/posts/kbhmapping_reduction/#halting-problem>halting problem</a></li><li>time/space hierarchy theorems</li></ul></li></ul><h4 id=hopcroft-paul-valiant>Hopcroft-Paul-Valiant</h4><p>&ldquo;On space versus time&rdquo;</p><div class=theorem><span><p>\begin{equation}
+\text{TIME}\qty(t\qty(n)) \subseteq \text{SPACE}\qty(\frac{t}{\log t})
+\end{equation}</p><p>meaning, in particular,</p><p>\begin{equation}
+\text{TIME}\qty(t\qty(n)) \subset \text{SPACE}\qty(t\qty(n))
+\end{equation}</p><p></span></div></p><p>so <a href=/posts/kbhspace_complexity/#upper-bounding-space-complexity-with-time-complexity>upper-bounding space complexity with time complexity</a> is actually strict! We will do this using a &ldquo;pebble game&rdquo; reduction.</p><h4 id=time-space-tradeoffs>Time-Space Tradeoffs</h4><p>So far been studying time and space as separate resources; we ask: is there any tension between using time or space.</p><p>&ldquo;if you want to be very time/space efficient your space/time explodes!&rdquo;</p><h4 id=ladner-s-theorem-on-np-intermediate-problems>Ladner&rsquo;s Theorem on &ldquo;NP-intermediate Problems&rdquo;</h4><p>Two important types of problems in NP:</p><ul><li>easy: those in \(P\)</li><li>hard: those that are NP-complete</li></ul><div class=theorem><span><p>If P != NP, then there exists a non-NP complete NP problem.</p><p></span></div></p><h3 id=chapter-2-the-big-surprise>Chapter 2: The Big Surprise</h3><p>20 years&rsquo; worth of one theorem&mdash;the hardness vs. randomness paradigm. &ldquo;Hardness is in tension with randomness.&rdquo;</p><p>&ldquo;If SAT is hard then randomness is useless.&rdquo; Formally:</p><div class=theorem><span><p>If SAT requires exponential size circuits, then P = BPP.</p><p></span></div></p><h4 id=ingredients>ingredients</h4><ul><li>&ldquo;pesudorandom generators&rdquo; (PRGs) and derandomization</li><li>to prove P = BPP, it suffices to design good PRGs</li><li>average-case hardness gives good PRGs</li><li>worst-case hardness can be made harder to average case harder (&ldquo;hardness amplification&rdquo;)</li></ul><h3 id=chapter-3-the-research-frontier>Chapter 3: The Research Frontier</h3><h4 id=beyond-worst-case-analysis>beyond worst-case analysis</h4><p>typically, the standard definition of &ldquo;solving a task&rdquo; must be able to handle all possible instances, but we may be able to relax this.</p><ul><li><strong>constant factors</strong>: we may be able to find a &ldquo;goodish&rdquo; solution; for instance, solving sat in \(1.8^{n}\) is far better than \(2^{n}\)</li><li><strong>average case</strong>: we can change &ldquo;for all&rdquo; to &ldquo;for most&rdquo;, so we don&rsquo;t solve all of a problem but a distribution subpart of it</li><li><strong>approximate</strong>: we can change the acceptance criteria to be weaker (for <a href=/posts/kbhnon_deterministic_turing_machines/#boolean-formula-satisfiability>SAT</a>, for instance, we perhaps can relax it such that we only subset of clauses is satisfied)</li></ul><h4 id=hardness-within-p>hardness within P</h4><p>So far, we think of all polynomial operations in <a href=/posts/kbhtime_complexity/#polynomial-time>P</a> as &ldquo;efficient.&rdquo; \(n^{3}\), in reality, isn&rsquo;t that efficient. Often times, with large \(n\), even \(n^{2}\) is too slow.</p><ul><li><p>dynamic programming problems</p><p>Longest Common Subsequence &mdash; whether or not there exists a possibly-not-continuous subsequence of an input sequence. Big open problem: does there exist an \(O\qty(n^{1.99})\) time algorithm.</p><p>We&rsquo;ll see connections of this task to the <a href=/posts/kbhp_vs_np/>P vs. NP</a> problem! This is quite surprising. We can show the connection with \(O\qty(n^{1.99})\) and <a href=/posts/kbhp_vs_np/>P vs. NP</a> with a reduction!</p></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

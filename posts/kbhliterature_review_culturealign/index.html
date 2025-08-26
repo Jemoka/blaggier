@@ -1,0 +1,71 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Literature Review: CultureAlign</title>
+<meta name=description content="LRCultureAlign Sukiennik: An Evaluation of Cultural Value Alignment in LLM (arXiv:2504.08863v1)
+Take the Values Survey Module, evaluate ground truth, prompt LMs in 1) country-native language 2) model developer language 3) across all languages with role-play based on specific human characteristics, show that GLM-4 is best aligned, and generally models are more US aligned.
+LRCultureAlign Adiga: Attention Speaks Volumes: Localizing And  Mitigating Bias In Language Models (arXiv:2410.22517v1)
+Analyzing concentrated attention across protected class entities shows models&rsquo; preference for one entity vs. another; intervening on the attention by rescaling the attention across entities allow bias to somewhat mitigated."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Literature Review: CultureAlign</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=lrculturealign-sukiennik-an-evaluation-of-cultural-value-alignment-in-llm--arxiv-2504-dot-08863v1>LRCultureAlign Sukiennik: An Evaluation of Cultural Value Alignment in LLM (arXiv:2504.08863v1)</h2><p>Take the Values Survey Module, evaluate ground truth, prompt LMs in 1) country-native language 2) model developer language 3) across all languages with role-play based on specific human characteristics, show that GLM-4 is best aligned, and generally models are more US aligned.</p><h2 id=lrculturealign-adiga-attention-speaks-volumes-localizing-and-mitigating-bias-in-language-models--arxiv-2410-dot-22517v1>LRCultureAlign Adiga: Attention Speaks Volumes: Localizing And Mitigating Bias In Language Models (arXiv:2410.22517v1)</h2><p>Analyzing concentrated attention across protected class entities shows models&rsquo; preference for one entity vs. another; intervening on the attention by rescaling the attention across entities allow bias to somewhat mitigated.</p><h2 id=lrculturealign-huang-culturally-aware-natural-language-inference--emnlp-2023>LRCultureAlign Huang: Culturally Aware Natural Language Inference (EMNLP 2023)</h2><p>Dataset in the shape of NLI, for culture bias identification. MTurk labeled each generation step, while LM generated the hypotheses.</p><h2 id=lrculuteralign-li-culturepark-boosting-cross-cultural-understanding-in-large-language-models--arxiv-2405-dot-15145v1>LRCuluterAlign Li: CulturePark&mdash;Boosting Cross-cultural Understanding in Large Language Models (arXiv:2405.15145v1)</h2><p>Prompt LLMs to role-play different cultures. Fine-tuning on rollouts will improve culture evaluation on VSM.</p><h2 id=lrculturealign-naous-having-beer-after-prayer-measuring-cultural-bias-in-large-language-models--arxiv-2305-dot-14456v4>LRCultureAlign Naous: Having Beer after Prayer? Measuring Cultural Bias in Large Language Models (arXiv:2305.14456v4)</h2><p>Made a Blimp-y dataset (continuation, NER, story generation) and found that a lot of Muslim cultural norms are ignored in favor of wester value.</p><h2 id=lrculturealign-ziems-multi-value-a-framework-for-cross-dialectal-english-nlp--acl-2023>LRCultureAlign Ziems: Multi-VALUE: A Framework for Cross-Dialectal English NLP (ACL 2023)</h2><p>Uses rules based translation to change Standard American English to other forms, found that LMs perform worse after perturbation on a serious of tasks.</p><h2 id=lrculturealign-khan-randomness-not-representation-the-unreliability-of-evaluating-cultural-alignment-in-llms--arxiv-2503-dot-08688v2>LRCultureAlign Khan: Randomness, Not Representation: The Unreliability of Evaluating Cultural Alignment in LLMs (arXiv:2503.08688v2)</h2><p>Culture evaluation results are extremely variant under different testing methodologies. Slight variations break and change benchmark.</p><h2 id=lrculturealign-xiao-task-agnostic-low-rank-adapters-for-unseen-english-dialects--emnlp-2023>LRCultureAlign Xiao: Task-Agnostic Low-Rank Adapters for Unseen English Dialects (EMNLP 2023)</h2><p>Stick a LoRA between dialect feature network and then the adapter weights to perform alignment</p><h2 id=lrculuteralign-ryan-unintended-impacts-of-llm-alignment-on-global-representation--arxiv-2402-dot-15018v2>LRCuluterAlign Ryan: Unintended Impacts of LLM Alignment on Global Representation (arXiv:2402.15018v2)</h2><p>Alignment improves capabilities a few languages, but rewards lower to other places. i.e., alignment makes things more American centric.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

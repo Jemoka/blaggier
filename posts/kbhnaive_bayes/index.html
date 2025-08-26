@@ -1,0 +1,102 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Naive Bayes</title>
+<meta name=description content="Naive Bayes is a special class of Baysian Network inference problem which follows a specific structure used to solve classification problems.
+The Naive Bayes classifier is a Baysian Network of the shape:
+
+
+
+(Why is this backwards(ish)? Though we typically think about models as a function M(obs) = cls, the real world is almost kind of opposite; it kinda works like World(thing happening) = things we observe. Therefore, the observations are a RESULT of the class happening.)"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Naive Bayes</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhnaive_bayes/>Naive Bayes</a> is a special class of <a href=/posts/kbhbaysian_network/>Baysian Network</a> <a href=/posts/kbhinference/>inference</a> problem which follows a specific structure used to solve classification problems.</p><p>The <a href=/posts/kbhnaive_bayes/>Naive Bayes</a> classifier is a <a href=/posts/kbhbaysian_network/>Baysian Network</a> of the shape:</p><figure><img src=/ox-hugo/2023-10-03_13-15-54_screenshot.png></figure><p>(Why is this backwards(ish)? Though we typically think about models as a function M(obs) = cls, the real world is almost kind of opposite; it kinda works like World(thing happening) = things we observe. Therefore, the observations are a RESULT of the class happening.)</p><p>We consider, <strong>naively</strong>, \(o_{1:n}\) are all <a href=/posts/kbhbaysian_network/#conditional-independence>conditionally independent</a> on \(c\). From this graph, we can therefore use the <a href=/posts/kbhprobability/#conditional-probability>probability chain rule</a> + <a href=/posts/kbhprobability/#conditional-probability>conditional probability</a> to write that:</p><p>\begin{equation}
+P(c, o_{1:n}) = P( c) \prod_{i=1}^{n} P(o_{i} | c)
+\end{equation}</p><p>so, to actually compute this, we don&rsquo;t want to bother going over all the multiplications because of underflow, we write:</p><p>\begin{equation}
+\hat{y} = \arg\max_{y} \log \hat{P}(y) + \sum_{i=1}^{m} \log \hat{P}(x|y)
+\end{equation}</p><h2 id=brute-force-bayes-classifier>brute-force Bayes classifier</h2><p>\begin{equation}
+\arg\max_{y} P(y|x) = \arg\max_{y} \frac{P(x|y)P(y)}{P(x)}
+\end{equation}</p><p>but because we are taking argmax, we can not normalize:</p><p>\begin{equation}
+\arg\max_{y} P(y|x) = \arg\max_{y} P(x|y)P(y)
+\end{equation}</p><p>this only works if \(x\) is a single <strong>value</strong> (i.e. you have a one-feature classifier</p><p>This system has 6 parameters; they can be <a href=/posts/kbhbernoulli_random_variable/#mle-for-bernouli>MLE for Bernouli</a> from data, but you can also use <a href=/posts/kbhmodel_based_reinforcement_learning/#method>Baysian Parameter Learning Method</a></p><table><thead><tr><th></th><th>y = 0</th><th>y = 1</th></tr></thead><tbody><tr><td>x1 = 0</td><td>theta0</td><td>theta2</td></tr><tr><td>x1 = 1</td><td>theta1</td><td>theta3</td></tr></tbody></table><table><thead><tr><th></th><th>y = 0</th></tr></thead><tbody><tr><td>y = 0</td><td>theta4</td></tr><tr><td>y = 1</td><td>theta5 (=1-theta4)</td></tr></tbody></table><p>to perform estiimation with MAP</p><p>\begin{equation}
+p(X=1| Y=0) = \frac{\text{examples where X=1, Y=0}}{\text{examples where Y=0}}
+\end{equation}</p><p>whith MLE with a <a href=/posts/kbhmaximum_a_posteriori_estimate/#map-for-bernoulli-and-binomial-p>Laplace prior</a>:</p><p>\begin{equation}
+p(X=1| Y=0) = \frac{\text{(examples where X=1, Y=0)}+1}{\text{(examples where Y=0)}+\text{(nclass = 2)}}
+\end{equation}</p><p>We can keep going; for instance, if you wave \(x_1, x_2\) two diffferent features:</p><p>\begin{equation}
+\arg\max_{y} P(y|x) = \arg\max_{y} P(x_1, x_2|y)P(y)
+\end{equation}</p><p>but this requires us to have \(2^{2}\) and ultimately \(2^{n}\) parameters, which is exponential blowup. Hence, we need to treat the variables as&mdash;naivly&mdash;independent so we can multiply them. Hence:</p><h2 id=naive-bayes--kbhnaive-bayes-dot-md--assumption><a href=/posts/kbhnaive_bayes/>Naive Bayes</a> assumption</h2><p>we assume <a href=/posts/kbhprobability/#independence>independence</a> between the input features. That is, we assume:</p><p>\begin{equation}
+P(x_1, \dots, x_{n}|y) = \prod_{i=1}^{n} P(X_{i}|y)
+\end{equation}</p><figure><img src=/ox-hugo/2023-11-17_16-35-58_screenshot.png></figure><h2 id=inference--kbhinference-dot-md--with-naive-bayes--kbhnaive-bayes-dot-md><a href=/posts/kbhinference/>inference</a> with <a href=/posts/kbhnaive_bayes/>Naive Bayes</a></h2><p>Recall the definition of <a href=/posts/kbhinference/>inference</a>, for our case here:</p><p>given observations \(o_{1:n}\), we desire to know what&rsquo;s the <a href=/posts/kbhprobability/>probability</a> of \(c\) happening. That is, from <a href=/posts/kbhprobability/#conditional-probability>conditional probability</a>:</p><p>\begin{equation}
+P(c | o_{1:n}) = \frac{P(c, o_{1:n})}{P(o_{1:n})}
+\end{equation}</p><p>Now, from above we have \(P(c, o_{1:n})\) already. To get the denominator, we invoke <a href=/posts/kbhprobability/#law-of-total-probability>law of total probability</a> to add up the probability of all observations occurring given all classes. That is:</p><p>\begin{equation}
+P(o_{1:n}) = \sum_{c \in C} P(c, o_{1:n})
+\end{equation}</p><p>You will note that this value \(P(o_{1:n})\) is actually constant as long as the network structure does not change. Therefore, we tend to write:</p><p>\begin{align}
+P(c | o_{1:n}) &= \frac{P(c, o_{1:n})}{P(o_{1:n})} \\
+&= \kappa P(c, o_{1:n})
+\end{align}</p><p>or, that:</p><p>\begin{equation}
+P(c|o_{1:n}) \propto P(c, o_{1:n})
+\end{equation}</p><p>&ldquo;the probability of a class occurring given the inputs is proportional to the probability of that class occurring along with the inputs&rdquo;</p><h3 id=multiple-believes>Multiple believes</h3><p>\begin{equation}
+P(A=a | R_1) \propto P(R_1 | A=a) \cdot P(A=a)
+\end{equation}</p><p>But now</p><h2 id=motivation-bayes-rule--kbhbayes-theorem-dot-md>Motivation: <a href=/posts/kbhbayes_theorem/>Bayes rule</a></h2><figure><img src=/ox-hugo/2023-10-05_09-14-17_screenshot.png></figure><p>This will give us:</p><figure><img src=/ox-hugo/2023-10-05_09-14-32_screenshot.png></figure><p>However, what if we don&rsquo;t want to use the <a href=/posts/kbhprobability/#law-of-total-probability>law of total probability</a> to add up \(P(FB&rsquo;)\)?</p><p>We can actually write a relation that essentially reminds us that the fact that \(P(FB&rsquo;)\) as not dependent on \(TSF\), so we can write:</p><p>\begin{equation}
+P(TSF^{1}|FB^{1}) \porpto P(TSF^{1})P(FB^{1} | TSF^{1})
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

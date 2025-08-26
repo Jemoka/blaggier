@@ -1,0 +1,81 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Chatbot</title>
+<meta name=description content="Two main Dialogue Systems architectures:
+
+frame based systems: talk to users + accomplish specific tasks
+LLM: reasoning as agents
+
+Dialogue Systems vs Chatbot
+Previously, when we say Chatbot we mean task-based systems
+humans and chat
+humans tend to think of Dialogue Systems as human-like even if they know its not. this makes users more prone to share private information and worry less about its disclosure.
+ELIZA
+see ELIZA
+LLM Chatbots
+Training Corpus
+C4: colossal clean crawled corpus"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Chatbot</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Two main <a href=/posts/kbhchatbot/>Dialogue Systems</a> architectures:</p><ul><li><strong>frame based</strong> systems: talk to users + accomplish specific tasks</li><li><strong>LLM</strong>: reasoning as agents</li></ul><h2 id=dialogue-systems--kbhchatbot-dot-md--vs-chatbot--kbhchatbot-dot-md><a href=/posts/kbhchatbot/>Dialogue Systems</a> vs <a href=/posts/kbhchatbot/>Chatbot</a></h2><p>Previously, when we say <a href=/posts/kbhchatbot/>Chatbot</a> we mean task-based systems</p><h2 id=humans-and-chat>humans and chat</h2><p>humans tend to think of <a href=/posts/kbhchatbot/>Dialogue Systems</a> as human-like even if they know its not. this makes users more prone to share private information and worry less about its disclosure.</p><h2 id=eliza--kbheliza-dot-md><a href=/posts/kbheliza/>ELIZA</a></h2><p>see <a href=/posts/kbheliza/>ELIZA</a></p><h2 id=llm-chatbots>LLM Chatbots</h2><h3 id=training-corpus>Training Corpus</h3><p>C4: colossal clean crawled corpus</p><p>patent, wikipedia, news</p><h3 id=chatbots>Chatbots</h3><ul><li>EmphaticDialogues</li><li>SaFeRDialogues</li><li>Pseudo-conversations: reddit, twitter, weibo</li></ul><h3 id=fine-tuning>Fine-Tuning</h3><ul><li><strong>quality</strong>: improving sensible and interesting responses</li><li><strong>safety</strong>: prevention of suggesting harmful actions</li></ul><p><strong>IFT</strong>: perhaps you can add positive data as fine tuning as a part of instruction-finetuning step.</p><p><strong>Filtering</strong>: build a filter for whether something is safe/unsafe, etc.</p><h3 id=retrieval-augmented-generation>Retrieval Augmented Generation</h3><ol><li>call search engine</li><li>get back a retrieved passages</li><li>shove them into prompt</li><li>&ldquo;based on this tasks, answer:&rdquo;</li></ol><p>we can make <a href=/posts/kbhchatbot/>Chatbot</a>s use <a href=#retrieval-augmented-generation>RAG</a> by adding &ldquo;pseudo-participants&rdquo; to make the chat bots, which the system should add.</p><h2 id=evaluation>Evaluation</h2><ul><li><strong>task based systems</strong>: measure task performance</li><li><strong>chatbot</strong>: enjoyability by humans</li></ul><p>we evaluate chatbots by asking a human to assign a score, and observer is a third party that assigns a score via a transcript of a conversation.</p><h3 id=participants-scoring>participants scoring</h3><p>interact with 6 turns, then score:</p><ul><li>avoiding repetition</li><li>interestingness</li><li>sensemaking</li><li>fluency</li><li>listening</li><li>inquisitiveness</li><li>humanness</li><li>engagingness</li></ul><p>ACUTE-EVAL: <strong>choosing who you would like to speak to</strong></p><h3 id=adversarial-evaluation>adversarial evaluation</h3><p>train a human/robot classifier, use it, use the inverse of its score at the metric of the chat bot</p><h3 id=task-evaluatino>task evaluatino</h3><p>measure overall task success, or measure slot error rate</p><h2 id=design-system-design>design system design</h2><p>Don&rsquo;t build <strong>Frankenstein</strong>: safety (ensure people aren&rsquo;t crashing cars), limiting representation harm (don&rsquo;t demean social groups), privacy</p><h3 id=study-users-and-task>study users and task</h3><p>what are their values? how do they interact?</p><h3 id=build-simulations>build simulations</h3><p><strong>wizard of oz</strong> study: observe user interaction with a <strong>HUMAN</strong> pretending to be a chat bot</p><h3 id=test-the-design>test the design</h3><p>test on users</p><h3 id=info-leakage>info leakage</h3><ul><li>accidentally leaking information (microphone, etc.)</li><li>intentionally leaking information due to advertising, etc.</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

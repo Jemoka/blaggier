@@ -1,0 +1,125 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 NOV072024</title>
+<meta name=description content="Logic Programming
+Logic is the study of correct arguments. For instance, for some predicate \(P\); for instance:
+\begin{equation}
+\forall x .\exists y. P(x,y)
+\end{equation}
+
+we can &ldquo;prove&rdquo; this by doing the thing
+we can also do that by contradiction (but that won&rsquo;t create a witness \(y\) of the statement)
+
+PROLOG
+PROgramming LOgic - PROLOG; not general, but good in specific cases (databases, scheduling outputs, etc.)
+pros and cons
+pros
+
+very declarative
+easy to write some backtracking search approaches
+
+worst
+
+&ldquo;algorithm&rdquo; / &ldquo;complexity&rdquo; obscured because you only have one algorithm
+because you get performance only by wrangling goal ordering
+
+PROLOG time
+So, every predicate returns true/false."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 NOV072024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=logic-programming>Logic Programming</h2><p>Logic is the study of correct arguments. For instance, for some <a href=/posts/kbhpredicates/>predicate</a> \(P\); for instance:</p><p>\begin{equation}
+\forall x .\exists y. P(x,y)
+\end{equation}</p><ul><li>we can &ldquo;prove&rdquo; this by doing the thing</li><li>we can also do that by contradiction (but that won&rsquo;t create a witness \(y\) of the statement)</li></ul><h3 id=prolog>PROLOG</h3><p><strong>PROgramming LOgic</strong> - PROLOG; not general, but good in specific cases (databases, scheduling outputs, etc.)</p><h3 id=pros-and-cons>pros and cons</h3><h4 id=pros>pros</h4><ul><li>very declarative</li><li>easy to write some backtracking search approaches</li></ul><h4 id=worst>worst</h4><ul><li>&ldquo;algorithm&rdquo; / &ldquo;complexity&rdquo; obscured because you only have one algorithm</li><li>because you get performance only by wrangling goal ordering</li></ul><h2 id=prolog--org689a56a--time><a href=#prolog>PROLOG</a> time</h2><p>So, every <strong>predicate</strong> returns true/false.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#75af00>rev</span><span style=color:#111>([</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>2</span><span style=color:#111>,</span><span style=color:#ae81ff>3</span><span style=color:#111>],</span> <span style=color:#111>[</span><span style=color:#ae81ff>3</span><span style=color:#111>,</span><span style=color:#ae81ff>2</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>])</span> <span style=color:#d88200>=&gt;</span> <span style=color:#d88200>true</span>
+</span></span></code></pre></div><p>However, you could give the &ldquo;witness&rdquo; as a variable, and PROLOG will fill in the witness</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#75af00>rev</span><span style=color:#111>([</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>2</span><span style=color:#111>,</span><span style=color:#ae81ff>3</span><span style=color:#111>],</span> <span style=color:#d88200>y</span><span style=color:#111>)</span> <span style=color:#d88200>=&gt;</span> <span style=color:#d88200>true</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>y</span> <span style=color:#d88200>:=</span> <span style=color:#111>[</span><span style=color:#ae81ff>3</span><span style=color:#111>,</span><span style=color:#ae81ff>2</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>]</span>
+</span></span></code></pre></div><p>you can actually put random places, and PROLOG will try to fill it out</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#75af00>rev</span><span style=color:#111>([</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>2</span><span style=color:#111>,</span><span style=color:#d88200>a</span><span style=color:#111>],</span> <span style=color:#111>[</span><span style=color:#ae81ff>3</span><span style=color:#111>,</span><span style=color:#ae81ff>2</span><span style=color:#111>,</span><span style=color:#d88200>b</span><span style=color:#111>])</span> <span style=color:#d88200>=&gt;</span> <span style=color:#d88200>true</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>a</span> <span style=color:#d88200>:=</span> <span style=color:#ae81ff>3</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>b</span> <span style=color:#d88200>:=</span> <span style=color:#ae81ff>1</span>
+</span></span></code></pre></div><h3 id=phraseology>phraseology</h3><ul><li>a constant: <code>1</code>, <code>nil</code></li><li>a variable</li><li>a constructor: <code>c(x,y,z)</code></li><li>an atom: apply a predicate to terms</li></ul><p>lists have special sugar <code>[x,y, ...]</code></p><h3 id=program>program</h3><p>A PROLOG program has facts and rules.</p><h4 id=rule-clause>rule/clause</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#111>P1</span><span style=color:#111>(</span><span style=color:#d88200>t11</span><span style=color:#111>,</span> <span style=color:#111>...)</span> <span style=color:#d88200>:=</span> <span style=color:#111>P2</span><span style=color:#111>(</span><span style=color:#d88200>t21</span><span style=color:#111>,</span> <span style=color:#111>...),</span> <span style=color:#111>...</span>
+</span></span></code></pre></div><p>(&ldquo;if all the things on the right hand side is true, then the left hand side is true&rdquo;)</p><p>(if you want to write the disjunction &ldquo;OR&rdquo; of the predicates, write <code>;</code> instead of <code>,</code>)</p><h4 id=fact>fact</h4><p>a rule without a RHS, so automatically true</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#111>P1</span><span style=color:#111>(</span><span style=color:#d88200>t11</span><span style=color:#111>,</span> <span style=color:#111>...).</span>
+</span></span></code></pre></div><h4 id=prolog-semantics>PROLOG semantics</h4><p>Let \(\sigma\) range over all &ldquo;ground substitutions&rdquo; (substitution that maps variables to terms without variables&mdash;&ldquo;grounding&rdquo; the variables).</p><p>Given:</p><p>\begin{equation}
+P_1\qty (t_{11}, \dots) \vdash P_2 \qty(t_{21}, \dots), \dots P_n \qty(t_{n1}, \dots)
+\end{equation}</p><p>the semantics is the smallest set of atoms placed in \(F\) which would be satisfying</p><p>\begin{equation}
+\qty {\sigma \qty(P_2\qty (t_{21}, \dots)), \sigma \qty(P_n\qty (t_{n1}, \dots))} \subseteq F \implies \sigma \qty(P_{1}\qty(t_{11}, \dots)) \in F
+\end{equation}</p><ul><li>all facts are in \(F\)</li><li>any implications proven by atoms in \(F\) is in \(F\)</li></ul><h3 id=prolog-execution>PROLOG execution</h3><p>Given a goal \(a\), find a rule whose LHS matches \(a\), add the RHS atoms as subgols until you get to facts.</p><h4 id=example>example</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#75af00>imokay</span> <span style=color:#f92672>:-</span> <span style=color:#d88200>youreokay</span><span style=color:#111>,</span> <span style=color:#d88200>hesokay</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>youreokay</span> <span style=color:#f92672>:-</span> <span style=color:#d88200>theyreokay</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>hesokay</span><span style=color:#111>.</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>theyreokay</span><span style=color:#111>.</span>
+</span></span></code></pre></div><p>Let&rsquo;s say we want to prove <code>imokay</code></p><ul><li><code>imokay</code> <code>> =youreokay, hesokay</code>; two more subgoals now</li><li><code>yourokay</code> <code>> =theyreokay</code>; still two more subgoals</li><li><code>theyreokay</code> => fact</li><li><code>hesokay</code> => fact</li></ul><p>Ok, now let&rsquo;s add an new constraint:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#75af00>imokay</span> <span style=color:#f92672>:-</span> <span style=color:#d88200>youreokay</span><span style=color:#111>,</span> <span style=color:#d88200>hesokay</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>youreokay</span> <span style=color:#f92672>:-</span> <span style=color:#d88200>theyreokay</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>hesokay</span><span style=color:#111>.</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>theyreokay</span><span style=color:#111>.</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#d88200>hesnotokay</span> <span style=color:#d88200>:=</span> <span style=color:#d88200>imnotok</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>shesokay</span> <span style=color:#d88200>:=</span> <span style=color:#d88200>hesnotokay</span>
+</span></span><span style=display:flex><span><span style=color:#d88200>shesokay</span> <span style=color:#d88200>:=</span> <span style=color:#d88200>theyreokay</span>
+</span></span></code></pre></div><ul><li><strong>refine rule</strong>: we will select the first textually matching rule</li><li>if a subgoal failso select the next matching rule</li><li>if no matching rule is found, fail</li></ul><p>this is standard recursive <a href=/posts/kbhbacktracing/>backtracing</a>.</p><h4 id=depth-first-instead-of-breadth-first>depth-first instead of breadth-first</h4><p>PROLOG semantics implies breadth-first search, but that&rsquo;s pretty bad (i.e. we have to keep adding our subgoals in a breadth-first way).</p><h4 id=variable-substitution>variable substitution</h4><p>To satisfy a goal \(g\), we want to find the first untried rule \(G :- H_1, &mldr;, H_{n}\), such hat \(s_1 = unify(g,G)\) such that the function computes a substitution \(s1\) s uch that after substitution the syntax are equivalent \(s_1(g) = s_1(G)\)</p><h4 id=backtracking>backtracking</h4><p>Consider a rule \(G :- H_1, H_2, &mldr;, H_{n}\)</p><p>If there are substitutions that fail on \(H_1\), we will have to backtrack on the right on different inputs as well, and not just backtrack on different \(G\).</p><p>As you match and unify statements, cache your substitutions around and keep applying them.</p><h4 id=occurs-check>occurs check</h4><p>Most implementations for substitution on \(a=T\) doesn&rsquo;t ever check that \(a\) doesn&rsquo;t occur in \(T\). But that&rsquo;s deviating from the semantics.</p><h4 id=cut>cut</h4><p>Backtracking can be super expensive, so PROLOG includes backtracking boundaries:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#111>A</span> <span style=color:#111>:-</span> <span style=color:#111>B</span><span style=color:#111>,</span><span style=color:#111>C</span><span style=color:#111>,!,</span><span style=color:#111>D</span>
+</span></span></code></pre></div><p>meaning if \(D\) fails, we don&rsquo;t try to resatisfy \(B,C\) with different variables and instead fail the entire rule.</p><h3 id=examples>examples</h3><h4 id=reverse-a-list>reverse a list</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-prolog data-lang=prolog><span style=display:flex><span><span style=color:#75715e>% first we define a predicate for (a,b,_), if b is stuck to the right of a</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>addright</span><span style=color:#111>(</span><span style=color:#d88200>nil</span><span style=color:#111>,</span> <span style=color:#111>X</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#111>X</span><span style=color:#111>]).</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>addright</span><span style=color:#111>(</span><span style=color:#75af00>cons</span><span style=color:#111>(</span><span style=color:#111>A</span><span style=color:#111>,</span><span style=color:#111>B</span><span style=color:#111>),</span> <span style=color:#111>X</span><span style=color:#111>,</span> <span style=color:#75af00>cons</span><span style=color:#111>(</span><span style=color:#111>A</span><span style=color:#111>,</span><span style=color:#111>Z</span><span style=color:#111>))</span> <span style=color:#f92672>=</span> <span style=color:#75af00>addright</span><span style=color:#111>(</span><span style=color:#111>B</span><span style=color:#111>,</span><span style=color:#111>X</span><span style=color:#111>,</span><span style=color:#111>Z</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>% now, reverse is just done simply</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>rev</span><span style=color:#111>(</span><span style=color:#d88200>nil</span><span style=color:#111>,</span> <span style=color:#d88200>nil</span><span style=color:#111>).</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>rev</span><span style=color:#111>(</span><span style=color:#75af00>cons</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#f92672>&lt;</span><span style=color:#d88200>y</span><span style=color:#111>),</span> <span style=color:#111>Z</span><span style=color:#111>)</span> <span style=color:#d88200>:=</span> <span style=color:#75af00>rev</span><span style=color:#111>(</span><span style=color:#111>Y</span><span style=color:#111>,</span><span style=color:#111>W</span><span style=color:#111>),</span> <span style=color:#75af00>addright</span><span style=color:#111>(</span><span style=color:#111>W</span><span style=color:#111>,</span><span style=color:#111>Y</span><span style=color:#111>,</span><span style=color:#111>Z</span><span style=color:#111>)</span>
+</span></span></code></pre></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

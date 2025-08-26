@@ -1,0 +1,97 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Sarsa (Lambda)</title>
+<meta name=description content="Sarsa (Lambda) is SARSA with Eligibility Traces (\(\lambda\)).
+Previous approaches to deal with Partially Observable Markov Decision Process:
+
+memory-based state estimation (beliefs)
+special planning methods
+
+Key question: Can we use MDP reinforcement learning to deal with POMDPs?
+Background
+Recall MDP SARSA:
+\begin{equation}
+Q(s,a) \leftarrow Q(s,a)  + \alpha \qty [(r + \gamma  Q(s&rsquo;, a&rsquo;)) - Q(s,a)]
+\end{equation}
+Recall that, sparse rewards with SARSA can take a long time to learn because it takes time to backpropgate.
+Hence, we use Eligibility Traces, which keeps track of what&rsquo;s &ldquo;eligible&rdquo; for updates:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Sarsa (Lambda)</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhsarsa_lambda/>Sarsa (Lambda)</a> is <a href=/posts/kbhmodel_free_reinforcement_learning/#sarsa>SARSA</a> with <a href=/posts/kbhmodel_free_reinforcement_learning/#eligibility-traces>Eligibility Traces</a> (\(\lambda\)).</p><p>Previous approaches to deal with <a href=/posts/kbhpartially_observable_markov_decision_process/>Partially Observable Markov Decision Process</a>:</p><ul><li>memory-based state estimation (<a href=/posts/kbhbelief/>belief</a>s)</li><li>special planning methods</li></ul><p>Key question: <strong>Can we use MDP <a href=/posts/kbhreinforcement_learning/>reinforcement learning</a> to deal with <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a>s?</strong></p><h2 id=background>Background</h2><p>Recall MDP <a href=/posts/kbhmodel_free_reinforcement_learning/#sarsa>SARSA</a>:</p><p>\begin{equation}
+Q(s,a) \leftarrow Q(s,a) + \alpha \qty [(r + \gamma Q(s&rsquo;, a&rsquo;)) - Q(s,a)]
+\end{equation}</p><p>Recall that, sparse rewards with <a href=/posts/kbhmodel_free_reinforcement_learning/#sarsa>SARSA</a> can take a long time to learn because it takes time to backpropgate.</p><p>Hence, we use <a href=/posts/kbhmodel_free_reinforcement_learning/#eligibility-traces>Eligibility Traces</a>, which keeps track of what&rsquo;s &ldquo;eligible&rdquo; for updates:</p><p>let \(\lambda\) be some decay parameter, we have:</p><p>\begin{equation}
+\delta = r + \gamma Q(s&rsquo;,a&rsquo;) - Q(s,a)
+\end{equation}</p><p>and, we can write:</p><p>\begin{equation}
+Q(s,a) \leftarrow Q(s,a) + \lambda \delta N(s,a)
+\end{equation}</p><p>where by the visit counts are discounted such that:</p><p>\begin{equation}
+N(s,a) \leftarrow \gamma \lambda N(s,a)
+\end{equation}</p><h2 id=worry>Worry</h2><p>Inability of fully observing the state seems to invalidate the point of \(Q\) learning, <a href=/posts/kbhmodel_free_reinforcement_learning/#sarsa>SARSA</a>, etc.</p><h2 id=applying-eligibility-traces--kbhmodel-free-reinforcement-learning-dot-md--to-pomdp--kbhpartially-observable-markov-decision-process-dot-md--s>Applying <a href=/posts/kbhmodel_free_reinforcement_learning/#eligibility-traces>Eligibility Traces</a> to <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a>s</h2><p>Instead of \(N(s,a)\) a visitation count, we initialize some \(\eta(x,a)\) for observation + action and work on the rest of it in the same way.</p><p>At each step, we sample some reward \(r_{t+1}\) and observation \(x_{t+1}\) (and remember our current \(r_{t}, x_{t}\)). Then in which case:</p><p>\begin{equation}
+\eta(x_{t},a_{t}) = 1\ \text{(reset decay)}
+\end{equation}</p><p>and</p><p>\begin{equation}
+\forall (x\neq x_{t}, a \neq a_{t}): \eta(x,a) = \gamma \lambda \eta_{t-1}(x,a)\ \text{(decay others)} \\
+\end{equation}</p><p>Using the new \(\eta\) values, we update \(Q(x, a)\) in the usualish manner:</p><p>\begin{equation}
+\delta_{t} := r_{t} + \gamma Q (x_{t+1}, a_{t+1}) - Q(x_{t}, a_{t})
+\end{equation}</p><p>\begin{equation}
+\forall (x,a): Q(x,a) = Q(x,a)+a \delta_{t} \eta(x,a)
+\end{equation}</p><p>all values of \(\eta\) are established to \(0\) per episode.</p><p>Notably, we formulate \(x\) as a tuple of <strong><strong>TWO</strong></strong> observations in the past&mdash;meaning we have a single step of memory in the past and optimise over those.</p><p><strong>This requires no belief propagation</strong>!! And note how the &ldquo;eligibility&rdquo; of each observation decays over time, such that the influence of that observation decays until we see the corresponding observation again.</p><h2 id=aliasing>aliasing</h2><p>an important failure of this is <a href=#aliasing>aliasing</a>&ndash;where you maybe in one of two different places that has similar properties observationally, but taking actions at those states results in very different places.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

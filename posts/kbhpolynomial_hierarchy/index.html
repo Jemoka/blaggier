@@ -1,0 +1,107 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>polynomial hierarchy</title>
+<meta name=description content="\begin{equation}
+\text{PH} = \bigcup_{c \in \mathbb{N}} \Sigma_{c} = \bigcup_{c \in \mathbb{N}} \pi_{c}
+\end{equation}
+&ldquo;a language is in the polynomial hierarchy if it can be described with a constant number of qualifiers&rdquo;
+results and conjectures
+polynomial hierarchy conjecture
+&ldquo;the polynomial hierarchy is infinite&rdquo;&mdash;that is, each arrow to a harder language is strict.
+\(P \neq NP\), \(NP \neq \pi_{2}\)
+PSPACE bounds the entire hierarchy
+\(\text{PH} \subseteq \text{PSPACE}\)
+because for every \(\exists\) you only have to keep one of it around."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>polynomial hierarchy</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>\begin{equation}
+\text{PH} = \bigcup_{c \in \mathbb{N}} \Sigma_{c} = \bigcup_{c \in \mathbb{N}} \pi_{c}
+\end{equation}</p><p>&ldquo;a language is in the polynomial hierarchy if it can be described with a constant number of qualifiers&rdquo;</p><h2 id=results-and-conjectures>results and conjectures</h2><h3 id=polynomial-hierarchy--kbhpolynomial-hierarchy-dot-md--conjecture><a href=/posts/kbhpolynomial_hierarchy/>polynomial hierarchy</a> conjecture</h3><p>&ldquo;the <a href=/posts/kbhpolynomial_hierarchy/>polynomial hierarchy</a> is infinite&rdquo;&mdash;that is, each arrow to a harder language is strict.</p><p>\(P \neq NP\), \(NP \neq \pi_{2}\)</p><h3 id=pspace-bounds-the-entire-hierarchy>PSPACE bounds the entire hierarchy</h3><p>\(\text{PH} \subseteq \text{PSPACE}\)</p><p>because for every \(\exists\) you only have to keep one of it around.</p><h3 id=polynomial-hierarchy-collapses>polynomial hierarchy collapses</h3><p>\(\text{P} = \text{NP} \implies \text{P} = \text{PH}\)</p><p>&ldquo;the polynomial hierarchy collapses to \(P\)&rdquo; We study PH because it captures problems that are solvable efficiently if \(\text{P} = \text{NP}\).</p><hr><p>Recall&ndash;if \(\text{P} = \text{NP}\), then \(\text{P} = \text{NP} = \text{coNP}\). The fact that \(\text{P} = \text{NP}\) lets you <strong>remove</strong> a quantifier, be it exists because \(\text{P} = \text{NP}\) for all. Our claim is that:</p><p>\(\text{P} = \text{NP}\), then \(\text{ECLIQUE} \in P\). Recall <a href>ECLIQUE</a></p><p>Recall <a href>ECLIQUE</a> can be written as:</p><p>\begin{align}
+&\exists S \subseteq V, |S| = k, \text{ s.t. $S$ is k-clique} \\
+&\forall S&rsquo; \subseteq V, |S&rsquo;| = k+1, \text{ s.t. $S&rsquo;$ is not k-clique}
+\end{align}</p><p>to show the collapse, we define an &ldquo;inner language&rdquo; which captures the second half of this expression:</p><p>\begin{equation}
+\text{MQ} = \qty {\langle G,S,k \rangle, \forall S&rsquo; \subseteq V, |S&rsquo;| = k+1, S \text{ is clique, $S&rsquo;$ is not, $| S | = k$}}
+\end{equation}</p><p>MQ is the language with a poly-time checkable for-all, meaning its in <a href=/posts/kbhconp/>coNP</a>; using our assumption now, its also in <a href=/posts/kbhtime_complexity/#polynomial-time>P</a>.</p><p>Therefore, we can write an equivalent <a href>ECLIQUE</a> expression of the shape</p><p>\begin{equation}
+\text{ECLIQUE} = \qty {\langle G,k \rangle: \exists S \subseteq V, |S| = k, MQ\qty(G,S,k) = 1}
+\end{equation}</p><p>now this is in <a href=/posts/kbhnon_polynomial_time/>NP</a> now, since we claim \(\text{MQ} \in P\). Finally if \(\text{NP} = \text{P}\), we see that \(\text{ECLIQUE} \in P\).</p><h4 id=less-dramatic-collapse>less dramatic collapse</h4><p>Suppose we only have \(\Sigma_{k} = \Pi_{k}\), then \(\text{PH} = \Sigma_{k} = \Pi_{k}\) (because we can swap the last \(k\) things and start eating up the left); sketch&mdash;</p><p>\begin{equation}
+\exists \forall \exists \forall \exists \forall \exists
+\end{equation}</p><p>suppose we can swap the last 2 (i.e. \(\Sigma_{2} = \Pi_{2}\))</p><p>\begin{equation}
+\exists \forall \exists \forall \exists \qty(\exists \forall)
+\end{equation}</p><p>the two exists next to each other can be eaten up</p><p>\begin{equation}
+\exists \forall \exists \forall \exists \forall
+\end{equation}</p><p>and so on.</p><h2 id=additional-information>additional information</h2><h3 id=sigma-and-l>\(\Sigma\) and \(L\)</h3><p>\begin{equation}
+L \in \Sigma_{2} \text{ if } \exists \text{ {polytime verifier $V$ s.t }} x \in L \Leftrightarrow \exists w_{1}\in \qty {0,1}^{\text{poly}\qty(|x|)} \forall w_{2} \in \qty {0,1}^{\text{poly}\qty(|x|)} V\qty(x, w_1, w_2) = 1
+\end{equation}</p><p>\begin{equation}
+L \in \pi_{2} \text{ if } \exists \text{ {polytime verifier $V$ s.t }} x \in L \Leftrightarrow \forall w_{1}\in \qty {0,1}^{\text{poly}\qty(|x|)} \exists w_{2} \in \qty {0,1}^{\text{poly}\qty(|x|)} V\qty(x, w_1, w_2) = 1
+\end{equation}</p><p>in general:</p><p>\begin{equation}
+L \in \Sigma_{k} \text{ if } \exists \text{ {polytime verifier $V$ s.t }} x \in L \Leftrightarrow \exists w_{1} \forall w_{2} &mldr; \underbrace{Q_{k}}_{\exists, \forall, \text{even or odd}} w_{k} V\qty(x, w_1, x_2, &mldr;, w_{k}) = 1
+\end{equation}</p><p>\(\pi_{k}\) is just like flipped, so we have \(\forall\) first, and then \(\exists\).</p><h3 id=observations>observations</h3><p>\begin{equation}
+\Sigma_{k} \subseteq \Sigma_{k+1}
+\end{equation}</p><p>\begin{equation}
+\pi_{k} \subseteq \pi_{k+1}
+\end{equation}</p><p>Also:</p><p>\begin{equation}
+\Sigma_{k} \subseteq \pi_{k+1}
+\end{equation}</p><p>\begin{equation}
+\pi_{k} \subseteq \Sigma_{k+1}
+\end{equation}</p><figure><img src=/ox-hugo/2025-01-29_15-35-29_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,91 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>System Specification</title>
+<meta name=description content="Metric
+Sometimes we can just get a specification easily from just a metric, like (&ldquo;the aircraft can&rsquo;t be more than 50 meters apart&rdquo;)
+value at risk
+see value at risk
+composite metrics
+weighted sum method
+depends on how you care about each value, perform weighted sum and optimizes over a single metric \(\sum_{i=1}^{n} w_{i}f_{i}\qty(\tau) = w^{T}f\qty(\tau)\)
+But, coming up with the weights is a bit hard! So we get them by asking pairwise questions with Preference Elicitation"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>System Specification</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=metric>Metric</h2><p>Sometimes we can just get a specification easily from just a metric, like (&ldquo;the aircraft can&rsquo;t be more than 50 meters apart&rdquo;)</p><h3 id=value-at-risk>value at risk</h3><p>see <a href>value at risk</a></p><h3 id=composite-metrics>composite metrics</h3><h4 id=weighted-sum-method>weighted sum method</h4><p>depends on how you care about each value, perform weighted sum and optimizes over a single metric \(\sum_{i=1}^{n} w_{i}f_{i}\qty(\tau) = w^{T}f\qty(\tau)\)</p><p>But, coming up with the weights is a bit hard! So we get them by asking pairwise questions with <a href=/posts/kbhpreference_elicitation/>Preference Elicitation</a></p><h4 id=goal-distance-metric>goal distance metric</h4><p>pick a <a href=/posts/kbhsu_cs361_apr302024/#utopia-point>Utopia Point</a>, and find distances from that point \(\norm\mid f\qty(\tau) - f_{\text{goal}} \norm_{p}\)</p><h2 id=logical-specification>logical specification</h2><h3 id=propositional-logic>propositional logic</h3><p>a proposition is a statement that evaluates to either true or false; an atomic proposition is a proposition that can&rsquo;t be broken down further.</p><p>For instance, consider &ldquo;not&rdquo;:</p><figure><img src=/ox-hugo/2025-01-16_13-58-31_screenshot.png></figure><h4 id=example>example</h4><p>&ldquo;If the agent is in \(S\), then agent is not in \(C\)&rdquo;</p><p>\begin{equation}
+S \to \neg C
+\end{equation}</p><h3 id=first-order-logic>first-order logic</h3><p>First order logic adds <strong>variables</strong>, <strong>predicates</strong>, and <strong>quantifiers</strong> to <a href=#propositional-logic>propositional logic</a>.</p><ul><li><strong>predicate</strong>: a function that evaluates propositions over variables</li><li><strong>variables</strong>: objects in a domain</li><li><strong>quantifiers</strong>: evaluate propositions over a collection of variables<ul><li><strong>universal quantifier</strong>: allows us to evaluates propositions over a collection of variables \(\forall\)</li><li><strong>existential quantifier</strong>: allows us to evaluate positions over any one of the variables \(\exists\)</li></ul></li></ul><h4 id=example>example</h4><p><strong>variables</strong>: state \(x\)</p><p><strong>predicates</strong></p><p>\begin{equation}
+O(x): x \text{ is an obstable}
+\end{equation}</p><p>\begin{equation}
+G(x): x \text{ is an goal}
+\end{equation}</p><p>&ldquo;an agent must reach a goal state and avoid the obstacle state</p><p>\begin{equation}
+\qty(\forall x \neg O\qty(x)) \wedge \qty(\exists x G(x))
+\end{equation}</p><h3 id=temporal-logic>temporal logic</h3><p><a href=#temporal-logic>temporal logic</a> specifies logic in time</p><h4 id=linear-temporal-logic>linear temporal logic</h4><p><strong>always</strong>:</p><p>\begin{equation}
+\square P
+\end{equation}</p><p>this means &ldquo;\(P\) is true at <strong>all time stamps</strong> in the future (including the current timestamp)&rdquo;</p><p><strong>eventually</strong>:</p><p>\begin{equation}
+\lozenge P
+\end{equation}</p><p>this means &ldquo;\(P\) is true at <strong>some timestamps</strong> in the future (including the current timestamp)&rdquo;</p><p><strong>until</strong></p><p>\begin{equation}
+P \mathcal{U} Q
+\end{equation}</p><p>&ldquo;\(Q\) is true at <strong>some timestamp</strong> in the future and \(P\) is true <strong>at least until</strong> \(Q\) becomes true&rdquo;</p><p>this lasts the lifetime until \(Q\) becomes no longer true.</p><ul><li><p>example</p><p>&ldquo;eventually reaches the goal after passing through the checkpoint and always avoids the obstacle&rdquo;</p><p>Three predicates: \(F\) the obstacle, \(G\) the goal, \(C\) the checkpoint</p><p>\begin{equation}
+\lozenge G \wedge \neg G \mathcal{U} C \wedge \square \neg F
+\end{equation}</p></li></ul><h4 id=signal-temporal-logic>signal temporal logic</h4><p><a href=/posts/kbhsignal_temporal_logic/>signal temporal logic</a> extends <a href=#linear-temporal-logic>linear temporal logic</a> to real-valued signals</p><ol><li>allows us to specify properties over a time interval \(\qty [a, b]\), so we have \(\lozenge_{[a,b]} P\) (the &ldquo;eventually&rdquo; need to hold starting at \(a\) and until \(b\))</li><li>allows us to to map real-valued signals to truth values \(\mu_{c}\qty(s_{t})\) is true if \(\mu\qty(s_{t}) > c\)</li></ol><ul><li><p>robustness (logic)</p><p>&ldquo;robustness&rdquo; is the amount by which achieve/miss a particular value; the bigger the magnitude, the &ldquo;more&rdquo; we did something; that is, very negative means super</p><figure><img src=/ox-hugo/2025-01-16_14-30-52_screenshot.png></figure><p>The above predicate could be computed for the formulae above using \(\rho \qty(s_{t}, P) = \mu_{t} \qty(s_{t}) - c\)</p><p>To calculate robustness to various predicates&mldr;</p><ul><li>\(\rho\qty(s_{t}, \neg P) = - \rho \qty(s_{t}, P)\)</li><li>\(\rho\qty(s_{t}, P \wedge Q) = \min \qty(\rho \qty(s_{t}, P), \rho \qty(s_{t}, Q))\)</li><li>\(\rho\qty(s_{t}, P \vee Q) = \max \qty(\rho \qty(s_{t}, P), \rho \qty(s_{t}, Q))\)</li><li>\(\rho\qty(s_{t}, P \to Q) = \max \qty(-\rho \qty(s_{t}, P), \rho \qty(s_{t}, Q))\)</li></ul></li></ul><ul><li><p>gradient of robustness</p><p>Binary values can&rsquo;t be taken derivatives of. But, to take temporal derivatives, we instead take the softmin/softmax.</p><figure><img src=/ox-hugo/2025-01-16_14-48-25_screenshot.png></figure><figure><img src=/ox-hugo/2025-01-16_14-48-10_screenshot.png></figure><figure><img src=/ox-hugo/2025-01-16_14-47-24_screenshot.png></figure></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

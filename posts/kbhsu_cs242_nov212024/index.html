@@ -1,0 +1,119 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 NOV212024</title>
+<meta name=description content="Today&rsquo;s lambda calculus
+
+  
+      
+          
+          
+          
+          
+          
+      
+  
+  
+      
+          e → x
+          λx:t.e
+          e e
+          i
+          e + e
+      
+  
+
+why static typing?
+
+find type errors when the program is written
+&mldr;which makes guarantees for all possible executions
+&mldr;which can leads to a faster execution because you don&rsquo;t have to do runtime type checks (this is actually non-trivial!)
+
+why (not) static typing
+
+you can detect type errors during execution&mdash;so it can be sound as well
+this is not untyped: you can still have types (untyped is raw bits)
+
+implementation
+every value has a &ldquo;tag&rdquo; &mdash; for instance, integers vs. functions"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 NOV212024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Today&rsquo;s lambda calculus</p><table><thead><tr><th></th><th></th><th></th><th></th><th></th></tr></thead><tbody><tr><td>e → x</td><td>λx:t.e</td><td>e e</td><td>i</td><td>e + e</td></tr></tbody></table><h2 id=why-static-typing>why static typing?</h2><ul><li>find type errors when the program is written</li><li>&mldr;which makes guarantees for all possible executions</li><li>&mldr;which can leads to a faster execution because you don&rsquo;t have to do runtime type checks (this is actually non-trivial!)</li></ul><h2 id=why--not--static-typing>why (not) static typing</h2><ul><li>you can detect type errors during execution&mdash;so it can be sound as well</li><li>this is not untyped: you can still have types (untyped is raw bits)</li></ul><h3 id=implementation>implementation</h3><p>every value has a &ldquo;tag&rdquo; &mdash; for instance, <code>integers</code> vs. <code>functions</code></p><p>notice that in dynamic typing <code>function</code> doesn&rsquo;t have grantees about what the domains/ranges are, unlike static typing</p><p>basic idea: whenever you are doing something that requires a certain input type, we <strong>then</strong> check the tag. then, we emit code by taking the tag off, and then perform the operation.</p><h2 id=dynamically-typed-lambda-calculus>dynamically typed lambda calculus</h2><p>user:</p><table><thead><tr><th></th><th></th><th></th><th></th><th></th></tr></thead><tbody><tr><td>e → x</td><td>λx.e</td><td>e e</td><td>i</td><td>e + e</td></tr></tbody></table><p>runtime:</p><p>we perform tagging then <strong>at runtime</strong></p><table><thead><tr><th>e → x</th><th>λx.e</th><th>e e</th><th>i</th><th>e + e</th><th>!t e</th><th>?t e</th></tr></thead><tbody><tr><td>t → int</td><td>fun</td><td></td><td></td><td></td><td></td><td></td></tr></tbody></table><ul><li>where <code>!t e</code> is to mark <code>e</code> with tag <code>t</code></li><li>where <code>?t e</code> is to check <code>e</code> to have tag <code>t</code>, and if so we remove the tag</li></ul><h3 id=inference-rules>inference rules</h3><p>dynamic type rules: first perform translation</p><figure><img src=/ox-hugo/2024-11-21_09-13-02_screenshot.png></figure><ul><li>to tag something, you steal the low-order bit from the integer</li><li>you will take that bit as <code>0</code> (this is just because addition will leave these bit)</li></ul><p>you will notice that there is a condition for every single addition&mdash;this means that this is horrendously slow</p><p>execution rules: once translated, we now execute; <strong>in addition to standard <a href=/posts/kbhsu_cs242_oct032024/#lambda-calculus>Lambda Calculus</a> execution rules</strong> as in <a href=/posts/kbhsu_cs242_oct152024/#structural-operational-semantics>structural operational semantics</a></p><figure><img src=/ox-hugo/2024-11-21_09-18-58_screenshot.png></figure><p>This means that the <strong>specific program execution</strong> is type correct: no type checker is nagging you, so arbitrary coding is much easier! It makes as lower barrier to entry for programmers.</p><h2 id=debate>Debate</h2><ul><li><strong>safety</strong>: proving safety of all executions vs. one execution</li><li><strong>productivity</strong>: writing some programs vs. all programs</li><li><strong>performance</strong>: slower compile faster run vs. faster compile slower run</li></ul><h2 id=observations>Observations</h2><ul><li>as program size grows + number of programmers involved, static typing is better</li></ul><h2 id=gradual-typing>Gradual Typing</h2><p>i.e. mypy has type errors!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>n</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#111>n</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;x&#39;</span> <span style=color:#75715e># type error!</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>n</span><span style=color:#111>:</span> <span style=color:#111>Any</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#111>n</span> <span style=color:#f92672>=</span> <span style=color:#d88200>&#39;x&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#111>n</span> <span style=color:#f92672>=</span> <span style=color:#111>a</span> <span style=color:#75715e># no type error</span>
+</span></span><span style=display:flex><span><span style=color:#111>n</span> <span style=color:#f92672>=</span> <span style=color:#111>n</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>1</span> <span style=color:#75715e># runtime type limit</span>
+</span></span></code></pre></div><p><code>Any</code> is a <strong>big deal</strong>: it changes the character of your type system to be mostly dynomic and require tagging.</p><h3 id=subtyping>subtyping</h3><h4 id=normal-subtyping>normal subtyping</h4><ul><li>when <code>B</code> inherits from <code>A</code>, we call \(B \leq A\)</li><li>so anywhere <code>A</code> is expected <code>B</code> can be used</li></ul><h4 id=structural-subtyping>structural subtyping</h4><p>&ldquo;duck typing&rdquo;</p><ul><li>when <code>B</code> just so happens to implement every method from <code>A</code>, we call \(B \leq A\)</li><li>so we can pass an <code>B</code> to naywhere that expects an <code>A</code></li></ul><h4 id=uses>uses</h4><p>whether its nominal or structural, the end result is roughly the same; however, the semantics feels really different</p><h3 id=object>Object</h3><p><code>Object</code> is the root class of the type hierarchy.</p><p>\begin{equation}
+\text{C} \leq \text{Object}
+\end{equation}</p><p>for any class \(C\).</p><p><code>Object</code> is <strong>not</strong> <code>Any</code>, however, because <code>Any</code> is a generic type</p><h3 id=covariance>Covariance</h3><p>Type constructor <code>C[A]</code> is &ldquo;<strong>covariant</strong>&rdquo; if \(X \leq Y \implies C[X] \leq C[Y]\)</p><h4 id=covariance-of-list>covariance of list</h4><p><strong>lists</strong> are <strong>NOT COVARIANT</strong>; even if \(X \leq Y\), we don&rsquo;t have that \(\text{List}[X] \leq \text{List}[Y]\)</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#00a8c8>def</span> <span style=color:#75af00>tmp</span><span style=color:#111>(</span><span style=color:#111>l</span><span style=color:#111>:</span> <span style=color:#111>List</span><span style=color:#111>[</span><span style=color:#111>Supertype</span><span style=color:#111>])</span> <span style=color:#f92672>-&gt;</span> <span style=color:#00a8c8>None</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>l</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>Supertype</span><span style=color:#111>())</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>cp</span> <span style=color:#111>:</span> <span style=color:#111>List</span><span style=color:#111>[</span><span style=color:#111>Subtype</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>[]</span>
+</span></span><span style=display:flex><span><span style=color:#111>tmp</span><span style=color:#111>(</span><span style=color:#111>cp</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>cp</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>subtype_method</span><span style=color:#111>()</span> <span style=color:#75715e># crash</span>
+</span></span></code></pre></div><p>this gets at a heart of a central issue</p><ol><li>aliasing <strong>is</strong> a symmetric relationship</li><li>subtyping <strong>is not</strong> a symmetric relationship</li></ol><p>so, you could read something as one type and read it out another place as another type. hence, mutable types in general are not covariant.</p><p>hence, on container, we have that:</p><p>\begin{equation}
+\text{List}\qty(x) \leq \text{List}\qty(y) \Leftrightarrow x = y
+\end{equation}</p><h3 id=contravariant>Contravariant</h3><p>Function types are <strong>contravariant</strong> in the domain, <strong>covariant</strong> in the range</p><p>\begin{equation}
+\text{Point} \to \text{Int} \leq \text{Colorpoint} \to \text{Int}
+\end{equation}</p><p><strong>contravariance</strong>: \(A \to B \leq C \to D\) if \(C \leq A\) and \(B \leq D\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

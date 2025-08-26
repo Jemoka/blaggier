@@ -1,0 +1,96 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS111 Outline</title>
+<meta name=description content="KEY IDEAS:
+
+filesystems - how do we design filesystems to manage files on disk
+multiprocessing - how does programs interact with one another, coordinating, etc.
+multithreading - how can we have single-process concurrency
+virtual memory - how can one set of memory can be shared among several processes
+modern technologies - busy waiting locking, Flash Storage, etc.
+
+
+
+interplay between tech + OS: OS at the hardware, software boundary
+designing with tradeoffs: not always one &ldquo;best&rdquo; way - evaluating pros/cons/priorities
+virtualization: make one thing look like something else, or many of them
+concurrency: synchronization is hard
+locality: predicting the future (scheduling, paging, block cache, etc.)&mdash;try to estimate the future with priority queues, etc.
+atomics: collections of operations that make them appear as a single, indivisible operation &mdash; synchronization + file system consistency (log transactions)
+layering: building higher level abstractions to hide details (monitors, fs layers, file descriptors, etc.)
+system builders wrangling complexity: solving complex problems with simple interfaces that others can build on (virtual memory, filesystems, etc.)
+trust: we have to trust something or someone&mdash;evaluating what to trust and how systems can incorporate trust
+
+
+
+understanding justifies how complex systems work
+elegant ideas of computing (concurrency, virtualization, etc.)
+take advantage of hardware and OS software that&rsquo;s available
+OS aren&rsquo;t standing still: OS changing and encountering new challenges
+
+
+Massive Review"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS111 Outline</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><strong>KEY IDEAS</strong>:</p><ol><li><a href=/posts/kbhfilesystem/>filesystem</a>s - how do we design filesystems to manage files on disk</li><li><a href=/posts/kbhmultiprocessing/>multiprocessing</a> - how does programs interact with one another, coordinating, etc.</li><li><a href=/posts/kbhmultithreading/>multithreading</a> - how can we have single-process concurrency</li><li><a href=/posts/kbhvirtual_memory/>virtual memory</a> - how can one set of memory can be shared among several processes</li><li>modern technologies - <a href=/posts/kbhpermits_model/>busy waiting</a> locking, <a href=/posts/kbhmodern_os/#flash-storage>Flash Storage</a>, etc.</li></ol><hr><ul><li><strong>interplay between tech + OS</strong>: OS at the hardware, software boundary</li><li><strong>designing with tradeoffs</strong>: not always one &ldquo;best&rdquo; way - evaluating pros/cons/priorities</li><li><strong>virtualization</strong>: make one thing look like something else, or many of them</li><li><strong>concurrency</strong>: synchronization is hard</li><li><strong>locality</strong>: predicting the future (scheduling, paging, block cache, etc.)&mdash;try to estimate the future with priority queues, etc.</li><li><strong>atomics</strong>: collections of operations that make them appear as a single, indivisible operation &mdash; synchronization + file system consistency (log transactions)</li><li><strong>layering</strong>: building higher level abstractions to hide details (monitors, fs layers, file descriptors, etc.)</li><li><strong>system builders wrangling complexity</strong>: solving complex problems with simple interfaces that others can build on (virtual memory, filesystems, etc.)</li><li><strong>trust</strong>: we have to trust <em>something</em> or <em>someone</em>&mdash;evaluating what to trust and how systems can incorporate trust</li></ul><hr><ol><li>understanding justifies how complex systems work</li><li>elegant ideas of computing (<strong>concurrency</strong>, <strong>virtualization</strong>, etc.)</li><li>take advantage of hardware and OS software that&rsquo;s available</li><li>OS aren&rsquo;t standing still: OS changing and encountering new challenges</li></ol><hr><p>Massive Review</p><h2 id=fs>FS</h2><p>Design filesystems to manage files, what are the tradeoffs in designing them? How can we interact with the filesystem?</p><ul><li>multiple approaches (continuous allocation, linked files, FAT, multi-level index&mdash;file access, metadata)</li><li>crash recovery designs</li><li>file descriptions</li></ul><h3 id=why>Why?</h3><ul><li>large system design</li><li>manipulate files in programs + what is a file</li><li>design challenges and limitatinos</li></ul><h2 id=mp>MP</h2><p>How can our program create and interact other programs?</p><ul><li><strong>fork/waitpid/execvp/pipe</strong>: coordinating and run other programs and erpcosses</li><li>process control block information + running processes in any order</li></ul><h3 id=why>Why?</h3><ul><li>challenges of concurrency</li><li>shells!</li><li>chrome site isolation</li></ul><h2 id=mt>MT</h2><p>Concurrency within a single process.</p><ul><li>dining philosopher problem and its solution</li><li>OS&rsquo; tracking of threads (and not processes) to run, and when to switch between them</li><li>scheduling (round robin, SRPT, <a href=/posts/kbhscheduling/#priority-based-scheduling>priority based scheduling</a>, etc.), preemption, and dispatching</li><li>Concurrency Management</li></ul><h3 id=why>Why?</h3><ul><li>maximally take advantage of hardware through multi cores</li><li>many applications in modern software (Excel&rsquo;s threads, for instance)</li><li>understand the behavior of computers&mdash;single core machines may also multi-task!</li><li>concurrency challenges + synchronization: this is <strong>hard</strong></li></ul><h3 id=concurrency-management>Concurrency Management</h3><p><strong>synchronization/race conditions/deadlock</strong></p><ul><li>processes and threads</li><li>creating and dispatching</li><li>sync primitive and their implementation: mutexes, CVs, monitor pattern</li><li>scheduling</li><li>interrupts</li><li>deadlock</li><li>races and inconsistency</li></ul><h2 id=vmem>VMem</h2><p>How can one set of memory be shared among several processes? How do we manage access to a limited amount of system memory?</p><ul><li>gives each process isolated virtual address space</li><li>OS maps what&rsquo;s needed to real physical memory</li><li>OS can manage physical memory however it wants, including swapping pages to disk</li></ul><h3 id=why>Why?</h3><ul><li><strong>virtualization</strong> - virtual world does not need to know about the complexities of where to run<ul><li>programmer: we always assume tones of contiguous memory</li></ul></li><li>thrashing, swapping, etc.</li></ul><h2 id=modern-technologies>Modern Technologies</h2><p>How do hardware impact design of OSes?</p><ul><li>multi-core scheduling + locks<ul><li>how to schedule multi-core threads&mdash;<a href=/posts/kbhmodern_os/#gang-scheduling>Gang Scheduling</a> + <a href=/posts/kbhmodern_os/#work-stealing>Work Stealing</a> + <a href=/posts/kbhmodern_os/#core-affinity>Core Affinity</a></li><li>locking between cores: busy waiting and atomics</li></ul></li><li>flash-storage: impacts on file systems with wear-out and <a href=/posts/kbhmodern_os/#flash-storage>Flash Translation Layer</a></li></ul><h3 id=why>Why?</h3><ul><li>OSes sitting at software-hardware boundary: system changes can change OSes</li><li>Can more fully understand how modern technologies impact our devices&mdash;we can understanding their impact at the OS level</li></ul><h2 id=ethics-and-trust>Ethics and Trust</h2><p>Who/what do we trust, how do we decided, what do we do when the thrust is not upheald, how gcan we factor trust?</p><ul><li><a href=/posts/kbhprivacy/#trust>agential gullibility</a></li><li><a href=/posts/kbhprivacy/>privacy</a> + <a href=/posts/kbhprivacy/#trust>trust</a><ul><li><a href=/posts/kbhprivacy/#pathways-to-trust>pathways to trust</a></li></ul></li><li><a href=/posts/kbhprivacy/#accountability>accountability</a>, <a href=/posts/kbhprivacy/#stakeholder>stakeholder</a></li></ul><h3 id=why>Why</h3><ul><li>OS has extreme <strong>scale</strong>: high amount of trust</li><li>we must trust <strong>some</strong> things, improtant to reflect what we trust and what we value</li><li>reflect on what to do when trust is violated, how can we incorporate considerations of trust into what we build</li></ul><h2 id=next-steps>Next Steps</h2><figure><img src=/ox-hugo/2024-03-13_14-03-04_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

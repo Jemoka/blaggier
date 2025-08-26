@@ -1,0 +1,80 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>T twiddle</title>
+<meta name=description content="Suppose \(T \in \mathcal{L}(V,W)\). Define a \(\widetilde{T}: V / (null\ T) \to W\)  such that:
+\begin{align}
+\widetilde{T}(v+ null\ T) = Tv
+\end{align}
+so \(\widetilde{T}\) is the map that recovers the mapped result from an affine subset from the null space of the map.
+\(\widetilde{T}\) is well defined
+Same problem as that with operations on quotient space. We need to make sure that \(\widetilde{T}\) behave the same way on distinct but equivalent representations of the same affine subset."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>T twiddle</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Suppose \(T \in \mathcal{L}(V,W)\). Define a \(\widetilde{T}: V / (null\ T) \to W\) such that:</p><p>\begin{align}
+\widetilde{T}(v+ null\ T) = Tv
+\end{align}</p><p>so \(\widetilde{T}\) is the map that recovers the mapped result from an <a href=/posts/kbhparallel_linear_algebra/>affine subset</a> from the <a href=/posts/kbhnull_space/>null space</a> of the map.</p><h2 id=widetilde-t-is-well-defined>\(\widetilde{T}\) is well defined</h2><p>Same problem as that with <a href=/posts/kbhquotient_space/#operations-on-id-53548f85-b3c8-42ce-81e7-9016ed7bd280-quotient-space>operations on quotient space</a>. We need to make sure that \(\widetilde{T}\) behave the same way on distinct but equivalent representations of the same <a href=/posts/kbhparallel_linear_algebra/>affine subset</a>.</p><p>Suppose \(u,v \in V\) such that \(u+null\ T = v+null\ T\). Because <a href=/posts/kbhparallel_linear_algebra/#two-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-affine-subset-s-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-parallel-to-u-are-either-equal-or-disjoint>two affine subsets parallel to \(U\) are either equal or disjoint</a>, we have that \(u-v \in null\ T\). This means that \(Tu-Tv = 0 \implies Tu= Tv\). So applying \(\widetilde{T}\) on equivalent representations of the same <a href=/posts/kbhparallel_linear_algebra/>affine subset</a> would yield the same result, as desired. \(\blacksquare\)</p><h2 id=properties-of-widetilde-t>properties of \(\widetilde{T}\)</h2><h3 id=it-is-a-linear-map>it is a linear map</h3><p>TBD proof. Basically just like do it inheriting operations from the <a href=/posts/kbhquotient_space/#operations-on-id-53548f85-b3c8-42ce-81e7-9016ed7bd280-quotient-space>operations on quotient space</a>.</p><h3 id=it-is-injective>it is injective</h3><p>We desire here that \(null\ \widetilde{T} = \{0\}\) which will tell us that \(\widetilde{T}\) is <a href=/posts/kbhinjectivity/>injective</a>.</p><p>Suppose some \(v + null\ T\) is in the <a href=/posts/kbhnull_space/>null space</a> of \(\widetilde{T}\). So, we have that:</p><p>\begin{equation}
+\widetilde{T}(v+null\ T) = Tv = 0
+\end{equation}</p><p>So, we have that \(v \in null\ T\). Now, this means that \(v-0 \in null\ T\). Because <a href=/posts/kbhparallel_linear_algebra/#two-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-affine-subset-s-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-parallel-to-u-are-either-equal-or-disjoint>two affine subsets parallel to \(U\) are either equal or disjoint</a>, \(v + null\ T = 0 + null\ T\) WLOG \(\forall v+null\ T \in null\ \widetilde{T}\). This means that \(null\ \widetilde{T}=\{0\}\), as desired.</p><h3 id=its-range-is-equal-to-the-map-s-range>its range is equal to the map&rsquo;s range</h3><p>\begin{equation}
+range\ \widetilde{T} = range\ T
+\end{equation}</p><p>by definition of everything.</p><h3 id=v-null-t-is-isomorphic--kbhisomorphism-dot-md--to-range-t>\(V / null\ T\) is <a href=/posts/kbhisomorphism/>isomorphic</a> to \(range\ T\)</h3><p>&mldr;.is this the point of this whole thing?</p><p>Shown by the two sub-results above, and that <a href=/posts/kbhinvertability/#id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injectivity-and-id-1af529ce-e2fb-43a4-8f13-aee1dc743b5f-surjectivity-implies-id-ff05739c-6e70-46ba-9d56-0958ef847f57-invertability>injectivity and surjectivity implies invertability</a>.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

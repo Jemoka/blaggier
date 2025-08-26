@@ -1,0 +1,101 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>top-down parsing</title>
+<meta name=description content="recursive descent parsing
+Given the grammar:
+E -> T | T + E
+T -> int | int * T | (E)
+And suppose our token stream is: (int5) We will start top-level non-terminal character E, and will try to apply the rules for E in order&mldr;
+(this is exactly how you imagine one builds a parser via recursive backtracking)
+when does it break?
+Consider S -> S a, this becomes S -> S1 a."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>top-down parsing</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=recursive-descent-parsing>recursive descent parsing</h2><p>Given the grammar:</p><pre tabindex=0><code class=language-nil data-lang=nil>E -&gt; T | T + E
+T -&gt; int | int * T | (E)
+</code></pre><p>And suppose our token stream is: (int5) We will start top-level non-terminal character <code>E</code>, and will try to apply the rules for <code>E</code> in order&mldr;</p><p>(this is exactly how you imagine one builds a parser via recursive backtracking)</p><h3 id=when-does-it-break>when does it break?</h3><p>Consider <code>S -> S a</code>, this becomes <code>S -> S1 a</code>.</p><p>Notice it will break into:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>bool</span> <span style=color:#75af00>S1</span><span style=color:#111>()</span> <span style=color:#111>{</span> <span style=color:#00a8c8>return</span> <span style=color:#75af00>S</span><span style=color:#111>()</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#75af00>term</span><span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#111>);</span> <span style=color:#111>}</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>bool</span> <span style=color:#75af00>S</span><span style=color:#111>()</span> <span style=color:#111>{</span> <span style=color:#00a8c8>return</span> <span style=color:#75af00>S1</span><span style=color:#111>();</span> <span style=color:#111>}</span>
+</span></span></code></pre></div><p>This is what we call a <a href=#left-recursive-grammar>left recursive grammar</a></p><h4 id=left-recursive-grammar>left recursive grammar</h4><p>That is, the grammar keep recurses to the left without termination.</p><h4 id=fixing-left-recursive-grammar--org2ad4ab1--s-for-top-down-parsing--kbhbuilding-a-parser-dot-md>fixing <a href=#left-recursive-grammar>left recursive grammar</a>s for <a href=/posts/kbhbuilding_a_parser/>top-down parsing</a></h4><p>For:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>S</span> <span style=color:#f92672>-&gt;</span> <span style=color:#00a8c8>S</span> <span style=color:#111>a1</span> <span style=color:#f92672>|</span> <span style=color:#f92672>...</span> <span style=color:#f92672>|</span> <span style=color:#00a8c8>S</span> <span style=color:#111>an</span> <span style=color:#f92672>|</span> <span style=color:#111>b1</span> <span style=color:#f92672>|</span> <span style=color:#f92672>...</span> <span style=color:#f92672>|</span> <span style=color:#111>bm</span>
+</span></span></code></pre></div><p>We write:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>S</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>b1</span> <span style=color:#00a8c8>S&#39;</span> <span style=color:#f92672>|</span> <span style=color:#f92672>...</span> <span style=color:#f92672>|</span> <span style=color:#111>bm</span> <span style=color:#00a8c8>S&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>S&#39;</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>a1</span> <span style=color:#00a8c8>S&#39;</span> <span style=color:#f92672>|</span> <span style=color:#f92672>...</span> <span style=color:#f92672>|</span> <span style=color:#111>an</span> <span style=color:#00a8c8>S&#39;</span> <span style=color:#f92672>|</span> <span style=color:#111>nothing</span>
+</span></span></code></pre></div><p>where nothing is the empty string.</p><ul><li><p>example</p><p>For the <a href=#left-recursive-grammar>left recursive grammar</a></p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#111>S</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>S</span> <span style=color:#111>a</span> <span style=color:#f92672>|</span> <span style=color:#111>b</span>
+</span></span></code></pre></div><p>We can refactor as</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#111>S</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>B</span> <span style=color:#111>S</span><span style=color:#960050;background-color:#1e0010>&#39;</span>
+</span></span><span style=display:flex><span><span style=color:#111>S</span><span style=color:#960050;background-color:#1e0010>&#39;</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>a</span> <span style=color:#111>S</span><span style=color:#960050;background-color:#1e0010>&#39;</span> <span style=color:#f92672>|</span> <span style=color:#111>nothing</span>
+</span></span></code></pre></div><p>where nothing is \(\epsilon\)</p></li></ul><h3 id=example>example!</h3><p>We will define boolean functions to check the string for matches.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#75715e>// gobble up the token string pointer
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#00a8c8>bool</span> <span style=color:#75af00>term</span><span style=color:#111>(</span><span style=color:#111>TOKEN</span> <span style=color:#111>tok</span><span style=color:#111>)</span> <span style=color:#111>{</span> <span style=color:#00a8c8>return</span> <span style=color:#f92672>*</span><span style=color:#111>next</span><span style=color:#f92672>++</span> <span style=color:#f92672>==</span> <span style=color:#111>tok</span><span style=color:#111>;</span> <span style=color:#111>}</span>
+</span></span></code></pre></div><p>Let&rsquo;s now match each of our productions.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#00a8c8>bool</span> <span style=color:#75af00>E1</span><span style=color:#111>()</span> <span style=color:#111>{</span> <span style=color:#00a8c8>return</span> <span style=color:#75af00>T</span><span style=color:#111>();</span> <span style=color:#111>}</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>bool</span> <span style=color:#75af00>E2</span><span style=color:#111>()</span> <span style=color:#111>{</span> <span style=color:#00a8c8>return</span> <span style=color:#75af00>T</span><span style=color:#111>()</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#75af00>term</span><span style=color:#111>(</span><span style=color:#111>PLUS</span><span style=color:#111>)</span> <span style=color:#f92672>&amp;&amp;</span> <span style=color:#75af00>E</span><span style=color:#111>();</span> <span style=color:#111>}</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>bool</span> <span style=color:#75af00>E</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>TOKEN</span> <span style=color:#f92672>*</span><span style=color:#111>save</span> <span style=color:#f92672>=</span> <span style=color:#111>next</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// that is, if E1 matches, return immediately
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// otherwise, we return our saved pointer in text (i.e. roll what what
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// checking E1 could goble), and roll back
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>return</span> <span style=color:#111>(</span>
+</span></span><span style=display:flex><span>            <span style=color:#75af00>E1</span><span style=color:#111>()</span> <span style=color:#f92672>||</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>(</span><span style=color:#111>next</span><span style=color:#f92672>=</span><span style=color:#111>save</span><span style=color:#111>,</span> <span style=color:#75af00>E2</span><span style=color:#111>());</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#00a8c8>bool</span> <span style=color:#75af00>T1</span><span style=color:#111>()</span> <span style=color:#111>{</span> <span style=color:#00a8c8>return</span> <span style=color:#75af00>term</span><span style=color:#111>(</span><span style=color:#111>INT</span><span style=color:#111>)</span> <span style=color:#111>};</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// ... you get the point
+</span></span></span></code></pre></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

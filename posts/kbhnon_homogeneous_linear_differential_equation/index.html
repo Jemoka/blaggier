@@ -1,0 +1,154 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>non-homogeneous linear differential equation</title>
+<meta name=description content="\begin{equation}
+y&rsquo; + ay = f(t)
+\end{equation}
+The general solution for this would be
+
+any solution specifically which gives \(f(t)\), plus
+any homogeneous solutions
+
+specifically:
+\begin{equation}
+y = y_{p}(t) + y_{n}(t)
+\end{equation}
+where the left is a particular solution, and the right is any homogeneous solution. We can do this because, say if we derivate it; the left derivative (the particular solution) gives \(f(t)\), and the right, because its homogeneous, gives 0."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>non-homogeneous linear differential equation</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>\begin{equation}
+y&rsquo; + ay = f(t)
+\end{equation}</p><p>The general solution for this would be</p><ol><li>any solution specifically which gives \(f(t)\), plus</li><li>any homogeneous solutions</li></ol><p>specifically:</p><p>\begin{equation}
+y = y_{p}(t) + y_{n}(t)
+\end{equation}</p><p>where the left is a particular solution, and the right is any homogeneous solution. We can do this because, say if we derivate it; the left derivative (the particular solution) gives \(f(t)\), and the right, because its homogeneous, gives 0.</p><p>Because there can be at most one solution to every IVP, we know that all solutions to the equation must take on the form of \(y_{p}(t) + c_1 y_{n_{1}}(t) + &mldr; + c_{n} y_{n_{j}}(t) = y\)</p><p>The general solution to this is:</p><p>\begin{equation}
+y(t) = e^{-at} \int_{0}^{t}e^{ax} f(x) \dd{x} + Ce^{-at}
+\end{equation}</p><p>this works equally well when \(a\) is not constant:</p><p>\begin{equation}
+y(t) = e^{-\qty(\int a(s) \dd{s})t} \int_{0}^{t}e^{\qty(\int a(s) \dd{s})x} f(x) \dd{x} + Ce^{-at}
+\end{equation}</p><p><strong>inhomogeneous solutions cannot work with the time translation trick</strong></p><h2 id=integrating-factor>integrating factor</h2><p>Consider the case where:</p><p>\begin{equation}
+y&rsquo; + ay = f(t)
+\end{equation}</p><p>ideally, we would love our whole left side to be one giant derivative which we can antiderive; let&rsquo;s try multiply both sides with \(e^{at}\):</p><p>\begin{equation}
+(e^{at}y)&rsquo; = e^{at}y&rsquo; + ae^{at}y = e^{at}(y&rsquo; + ay) = e^{at} f(t)
+\end{equation}</p><p>We note that this gives:</p><p>\begin{equation}
+(e^{at}y)&rsquo; = e^{at}f(t)
+\end{equation}</p><p>meaning:</p><p>\begin{equation}
+e^{at}y(t) = \int_{0}^{t} e^{ax} f(x) \dd{x}
+\end{equation}</p><p>which gives:</p><p>\begin{equation}
+y(t) = e^{-at} \int_{0}^{t}e^{ax} f(x) \dd{x}
+\end{equation}</p><p>Tacking on the homogeneous solution :</p><p>\begin{equation}
+y(t) = e^{-at} \int_{0}^{t}e^{ax} f(x) \dd{x} + Ce^{-at}
+\end{equation}</p><p>note! the first term doesn&rsquo;t have a scaler in front of it. Otherwise, the derivative will give you \(nf(x)\) instead of \(f(x)\).</p><p>This actually doesn&rsquo;t matter what \(a\) is. In a sense, if we swap \(a\) for \(a(t)\), we simply have to write \(a = \int a(x) \dd{x}\).So, most generally:</p><p>\begin{equation}
+y&rsquo; + a(t)y = f(t)
+\end{equation}</p><p>yields (CHECK THIS FACT&lt; IT MAY BE WRONG)</p><p>\begin{equation}
+y(t) = e^{-\qty(\int a(t) \dd{t})} \int_{0}^{t}e^{\qty(\int a(x) \dd{x})} f(x) \dd{x} + Ce^{-\qty(\int a(t) \dd{t})}
+\end{equation}</p><p>for constant solutions, we get:</p><p>\begin{equation}
+y(t) = C e^{-a(t-t_0)} + e^{-at} \int_{t_0}^{t} e^{as} f(s) \dd{s}
+\end{equation}</p><p>for</p><p>\begin{equation}
+y&rsquo; + ay = f(t)
+\end{equation}</p><h2 id=method-of-undetermined-coefficients--kbhsecond-order-linear-differential-equation-dot-md><a href=/posts/kbhsecond_order_linear_differential_equation/#method-of-undetermined-coefficients>method of undetermined coefficients</a></h2><p>Good guesses for the structure of:</p><p>\begin{equation}
+y&rsquo; + ay = f(t)
+\end{equation}</p><ul><li>for \(f(t) = C\) , guess \(y = C&rsquo;\)</li><li>for \(f(t) = x^{n}\), guess \(y = x^{n}\) (with all subsequent terms)</li><li>for \(f(t) = \sin (t)\) or \(f(t)=\cos (t)\), guess \(y=A \sin (t) + B \cos (t)\)</li><li>for \(f(t) = e^{\lambda t}\), guess \(y = Ce^{\lambda t}\)</li></ul><h3 id=example>example</h3><p>say:</p><p>\begin{equation}
+y&rsquo; + ky = 70k + 10k \sin (t)
+\end{equation}</p><p>let&rsquo;s break it up into three pieces:</p><p>\begin{equation}
+\begin{cases}
+y_1&rsquo; + ky_{1} = 70 k\\
+y_2&rsquo; + k y_2 = 10k \sin (t) \\
+y_3&rsquo; + k y_{3} = 0
+\end{cases}
+\end{equation}</p><p>you will note that adding up all three of these yields a value for \(y\) that satisfy the overall expression.</p><ul><li>first one: we can just guess \(y = 70\), which evidently works</li><li>second one: we want the sin and cos to cancel out, so we can guess \(A \sin t + B \cos t\), whose derivative is \(-B \sin t + A \cos t\), plugging that in, we get: \((-B+kA) \sin t + (A+kB) \cos t\), which we can use our coefficients to solve</li><li>third one: that&rsquo;s the homogeneous solution \(Ce^{-kt}\)</li></ul><p>and we can finally add it all up.</p><h3 id=concern>concern</h3><p>at some points, there is a case where&mdash;at certain choices of constants, you may obtain a homogeneous solution when you are trying to get the particular solution. that&rsquo;s bad. Consider:</p><p>\begin{equation}
+y&rsquo;&rsquo; - y = e^{mt}
+\end{equation}</p><p>and the particular solution you&rsquo;d get is something like:</p><p>\begin{equation}
+y_{p}(t) = \frac{1}{m^{2}-1} e^{mt}
+\end{equation}</p><p>this makes sense for all cases except where \(m = \pm 1\), because that gives a homogeneous solution, and the bottom of that fraction will blow up. To fix this, we can engineer a specific solution for which the limit towards \(1\) exists. Recall that, in general, we have:</p><p>\begin{equation}
+y(t) = \frac{1}{m^{2}-1} e^{mt} + c_1 e^{t} + c_2 e^{-t}
+\end{equation}</p><p>if we choose \(c_2=0\), \(c_1= \frac{1}{m^{2}-1}\), we can see that the limit exists through l&rsquo;hospitals:</p><p>\begin{equation}
+y_{p}(t) = \frac{1}{m^{2}-1} \qty( e^{mt}-e^{t})
+\end{equation}</p><p>we can evaluate this at \(m=1\) by using l&rsquo;hospitals rule.</p><p>At this point, we essentially end up with two distinct solutions, given a choice of \(m\).</p><h2 id=variation-of-parameters-method>variation of parameters method</h2><p>Take an independent set of homogeneous solutions which tells you what the general solution is, then modifying to modify the \(f\).</p><p>The general solution is irrespective of \(f\).</p><p>Now, consider:</p><p>\begin{equation}
+y&rsquo;&rsquo; - y = f(t)
+\end{equation}</p><p>Because the homogeneous solution \(y_1\) and \(y_2\) gives two independent solutions, we obtain:</p><p>\begin{equation}
+y_{p} = c_1(t) y_1(t) + c_2(t) y_2(t)
+\end{equation}</p><p>we can take the derivative of this to obtain:</p><p>\begin{equation}
+y&rsquo;_{p} = c_1(t) y_1(t)&rsquo; + c_2(t) y_2(t)&rsquo; + c_1(t)&rsquo; y_1(t) + c_2(t)&rsquo; y_2(t)
+\end{equation}</p><p>we are going to guess the right two terms are zero (assume \(c_1 &rsquo; y_1 + c_2 &rsquo; y_2 = 0\)) and repeat this procedure:</p><p>\begin{equation}
+y&rsquo;&rsquo;_{p} = c_1(t) y_1(t)&rsquo;&rsquo; + c_2(t) y_2(t)&rsquo;&rsquo; + c_1(t)&rsquo; y_1(t)&rsquo; + c_2(t)&rsquo; y_2(t)'
+\end{equation}</p><p>now, plugging this into our original equation, we obtain:</p><p>\begin{align}
+y_{p}&rsquo;&rsquo; - y_{p} &= c_1(y_1 &rsquo;&rsquo; - y_{1}) + c_2 (y_{2}&rsquo;&rsquo; - y_2) + c_1 &rsquo; y_1 &rsquo; + c_2 &rsquo; y_2 &rsquo; \\
+&= c_1(0) + c_2 (0) + c_1 &rsquo; y_1 &rsquo; + c_2 &rsquo; y_2 &rsquo; \\
+&= c_1 &rsquo; y_1 &rsquo; + c_2 &rsquo; y_2 &rsquo; \\
+&= f(t)
+\end{align}</p><p>So, combining what we just got and our simplifying assumption, we obtain:</p><p>\begin{equation}
+\begin{cases}
+c_1 &rsquo; y_1 + c_2 &rsquo; y_2 = 0 \\
+c_1 &rsquo; y_1 &rsquo; + c_2 &rsquo; y_2 &rsquo; = f(t)
+\end{cases}
+\end{equation}</p><p>This is now a matrix expression:</p><p>\begin{equation}
+\mqty(y_1 & y_2 \\ y_1 &rsquo; & y_2 &lsquo;) \mqty(c_1 &rsquo; \\ c_2 &lsquo;) = \mqty( 0 \\ f(t))
+\end{equation}</p><p>that matrix on the left side is called the <a href=#variation-of-parameters-method>Wronshian</a> matrix, and if \(y_1\) and \(y_2\) the homogeneous solutions are independent, we know that this is going to be invertible. Then, we can just solve and integrate to obtain \(c_1, c_2\).</p><h2 id=why-do-we-tack-on-the-homogeneous-solution-again>why do we tack on the homogeneous solution again?</h2><p>What if we have a plane specified:</p><p>\begin{equation}
+a x_1 + b x_2 + c x_3 = K
+\end{equation}</p><p>we want to solve \(x_{j}\) as a vector which lives on this plane.</p><p>Let&rsquo;s begin by shifting this plane down to the origin:</p><p>\begin{equation}
+a x_1 + b x_2 + c x_3 + 0
+\end{equation}</p><p>Which says the same thing as:</p><p>\begin{equation}
+\mqty(a & b & c) \mqty(x_1 \\ x_2 \\ x_3) = 0
+\end{equation}</p><p>meaning:</p><p>\begin{equation}
+A x = 0
+\end{equation}</p><p>where \(A \in \mathcal{L}(m,n)\), where \(m &lt; n\). To solve for \(x\), we desire \(\text{null}\ A\), and given we are a map into a bigger space, we should have non-trivial null space.</p><ol><li>find a particular solution \(x_{p}\) to the non-shifted version</li><li>the general solution should live in \(x_{p} + \text{null}\ A\), the <a href=/posts/kbhparallel_linear_algebra/>affine subset</a></li><li>meaning all solutions should live on \(x = x_{p} + c_1 v_1 + c_2 v_2\)</li></ol></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

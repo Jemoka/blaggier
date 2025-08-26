@@ -1,0 +1,89 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>turing machine</title>
+<meta name=description content="constituents
+
+\(Q\) is a finite set of states
+\(\Sigma\) is the input alphabet, where \(\square \not \in \Sigma\)
+\(\Gamma\) is the tape alphabet, where \(\square \in \Gamma\), and \(\Sigma \subseteq \Gamma\) (because we can write empty cells)
+\(\delta: Q \times \Gamma \to Q \times \Gamma \times \qty {L, R}\)
+\(q_0 \in Q\), the start state
+\(q_{a} \in Q\), the accept state
+\(q_{r} \neq q_{a}\in Q\), the reject state (because a Turing Machine may not terminate at end of input)
+
+requirements
+additional information
+why TM is awesome
+
+a Turing Machine \(M = \qty(\Gamma, Q, S)\) should be ready for inputs of any length \(n\) (in particular, when designing \(M\), we don&rsquo;t know what \(n\) will be)
+a Turing machine&rsquo;s computation is &ldquo;local&rdquo;&mdash;you can&rsquo;t look at the whole input, and the composition of these many local steps
+No ambiguity as to runtime: how many times you apply \(\delta\) before you get to Qaccept or Qreject
+
+Church-Turing thesis as local steps
+&ldquo;computation is any process that takes place in a sequence of simple, local steps.&rdquo;"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>turing machine</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=constituents>constituents</h2><ul><li>\(Q\) is a finite set of states</li><li>\(\Sigma\) is the input alphabet, where \(\square \not \in \Sigma\)</li><li>\(\Gamma\) is the tape alphabet, where \(\square \in \Gamma\), and \(\Sigma \subseteq \Gamma\) (because we can write empty cells)</li><li>\(\delta: Q \times \Gamma \to Q \times \Gamma \times \qty {L, R}\)</li><li>\(q_0 \in Q\), the start state</li><li>\(q_{a} \in Q\), the accept state</li><li>\(q_{r} \neq q_{a}\in Q\), the reject state (because a Turing Machine may not terminate at end of input)</li></ul><h2 id=requirements>requirements</h2><h2 id=additional-information>additional information</h2><h3 id=why-tm-is-awesome>why TM is awesome</h3><ol><li>a Turing Machine \(M = \qty(\Gamma, Q, S)\) should be ready for inputs of any length \(n\) (in particular, when designing \(M\), we don&rsquo;t know what \(n\) will be)</li><li>a Turing machine&rsquo;s computation is &ldquo;local&rdquo;&mdash;you can&rsquo;t look at the whole input, and the composition of these many local steps</li><li>No ambiguity as to <strong>runtime</strong>: how many times you apply \(\delta\) before you get to Qaccept or Qreject</li></ol><h4 id=church-turing-thesis-as-local-steps>Church-Turing thesis as local steps</h4><p>&ldquo;computation is any process that takes place in a sequence of simple, local steps.&rdquo;</p><h3 id=configuration>configuration</h3><p>the <a href=#configuration>configuration</a> of a Turing Machine contains its entire state:</p><ol><li>the content of the tape</li><li>the current state of the controller</li><li>the position of the writer</li></ol><p>we write this by putting the state right before the position of the write head:</p><p>this means that our write head is at the bit that says 1, at state q7.</p><h3 id=yield>yield</h3><p>Let \(C_1\) and \(C_2\) be configurations of a TM \(M\); let us call \(C_1\) <strong>yields</strong> \(C_2\) if \(M\) is in configuration \(C_2\) after running \(M\) in configuration \(C_1\) for one step.</p><p>Suppose \(\delta(q_1, b) = (q_2, c, L)\); then \(aa (q_{1}) bb\) yields \(a (q_{2}) a c b\).</p><h3 id=accept>accept</h3><p>A TM \(M\) accepts \(w\) if there are configs \(C_0, &mldr;, C_{k}\) for which:</p><ul><li>\(C_0 = q_0w\)</li><li>\(C_i\) yields \(C_{i+1}\) for \(i=0 &mldr; k-1\) and</li><li>\(C_{k}\) contains \(q_{accept}\)</li></ul><h3 id=recognize-vs-decide>recognize vs decide</h3><ul><li><strong>recognize</strong> \(L\): the TM will accept strings \(l \in L\) (a string outside may loop or reject)</li><li><strong>decide</strong> \(L\): the TM will accept strings \(l \in L\), and reject all strings \(l&rsquo; \not \in L\)</li></ul><h3 id=recognizable>recognizable</h3><p>A language \(L\) is <strong>recognizable</strong> (&ldquo;recursively enumerable&rdquo;) if some TM recognizes \(L\)</p><h3 id=decidable>decidable</h3><p>A language \(L\) is <strong>recursive</strong> if some TM decides \(L\)</p><h4 id=l-is-decidable-iff-l-and-not-l-are-both-recognizable>L is decidable IFF L and not L are both recognizable</h4><p>given a \(M_1\) that recognizes \(L\), a \(M_{2}\) that recognizes \(\neg L\), we want to build a machine \(M\) that decides \(L\).</p><p>(this is easy; just run both machines at once on two tapes and then just check which one gets recognized first; accept if \(M_1\) accepts and reject if \(M_2\) accepts)</p><hr><p>if \(L\) is decidable, \(\neg L\) is also decidable (because we just run \(L\) and return the opposite)</p><h3 id=intuition>intuition</h3><h4 id=structure>structure</h4><ol><li>finite state controller (with a write head)</li><li>infinite, writable tape (whenever the machine goes to the right, we get a new cell, if we go left, we hit a wall and stay put)</li><li>we lay our input onto the tape</li></ol><h4 id=capability>capability</h4><ul><li>they can write to and read from the tape</li><li>the head can move left and right</li><li>the input doesn&rsquo;t have to be read entirely: we can bail at any moment, or not stop at all</li></ul><p>Accept and Reject take immediate effect.</p><h3 id=graph-based-turing-machine-representation>Graph-based Turing Machine Representation</h3><ul><li>nodes are the finite control states</li><li>each edge has a three-tuple: \((read, write, move)\) which is what we are going to read, what we are going to write, and where we move on the tape (left or right)<ul><li>the empty cell is a valid read or write (i.e. we can read nothing, meaning our input has ended, and we can write nothing)</li></ul></li></ul><p>notation: read -> write, move</p><h3 id=examples>examples</h3><h4 id=two-of-the-same-string>two of the same string</h4><p>\begin{equation}
+L = \qty {w \# w \mid w \in {0,1}^{*}}
+\end{equation}</p><ol><li>if there is no # on the tape (or more than one, #), <strong>reject</strong><ol><li>while you do this, copy the entire string to the right (we do this because otherwise we wouldn&rsquo;t know if moving to the left actually did something (i.e. the first symbol is duplicated) or we were just hitting the wall and bouncing)</li></ol></li><li>while there is a bit to the left of #<ol><li>replace the first bit with X, and check the first bit to the right of the # and x is the same one</li><li>if not, reject; if so, replace the right bit with an X too</li></ol></li><li>if there is a bit to the right of # that&rsquo;s not X, then reject; otherwise, accept</li></ol><h3 id=recognizability>Recognizability</h3><h4 id=decidable-predicate>decidable predicate</h4><p>A decidable predicate \(R(x,y)\) is a proposition about the input strings \(x\), \(y\), such that some Turing machine \(M\) will implement \(R\).</p><p>That is, for all \(x, y\), we have \(R(x,y)\) is true means \(M(x,y)\) accepts, and \(R(x,y)\) is false means \(M(x,y)\) rejects.</p><p>That is: \(R: \Sigma^{*} \times \Sigma^{*} \to \qty {T,f}\)</p><h4 id=predicate-recognizability>predicate recognizability</h4><p>a particular language \(A\) is <strong>recognizable</strong> IFF there is a <strong><a href=#decidable>decidable</a></strong> (note the upgrade in strength) <a href=/posts/kbhpredicates/>predicate</a> \(R(x,y)\) such that \(A = \qty {x \mid \exists y, R(x,y)}\).</p><p>Proof:</p><p>\(\Rightarrow\) assume \(A = \qty {x \mid \exists y, R(x,y)}\), we want to show that \(A\) is <a href=#recognizable>recognizable</a></p><p>Create a Turing machine which: enumerate all finite-length strings \(y\); if \(R(x,y)\) is true, accept it.</p><p>\(\Leftarrow\) if \(A\) is recognizable, there is some decidable predicate \(R(x,y)\) such that \(A = \qty {x \mid \exists y, R(x,y)}\).</p><p>By definition \(A\) is recognizable, so there&rsquo;s an \(M\) which recognizes \(A\). Define a predicate \(R(x,y)\) be TRUE IFF \(M\) accepts \(x\) in \(|y|\) steps.</p><p>We now want to show that \(R(x,y)\) is decidable. If \(M\) accepts \(x\); it would have done so in some finite \(y\) steps. Hence, \(R(x,y) = TRUE\). If there is some \(y\) for which \(R(x,y)\) is true, we can see that we can run \(M\) on \(x\) for \(y\) steps and see that by definition \(M\) have just accepted the string. This is <em>decidable</em> because we can check for \(y\) steps exactly, so we will always terminate.</p><h3 id=turing-machine-as-a-universal-algorithm>Turing Machine as a universal algorithm</h3><p>why do we focus on a <a href=/posts/kbhturing_machinea/>turing machine</a>?</p><ol><li>its extremely simple to analyze (its possible to formalize and reason about it)</li><li><a href=/posts/kbhextended_church_turing_thesis/>Extended Church-Turing Thesis</a>&mdash;every &ldquo;real-world&rdquo; efficiently computable algorithm can be &ldquo;compiled to&rdquo; efficiently computable Turing Machine with only poly-slowdown</li></ol></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

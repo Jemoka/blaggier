@@ -1,0 +1,113 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS361 APR092024</title>
+<meta name=description content="More Bracketing Methods
+Quadratic search
+if your function is unimodal&mldr;
+
+Pick three points that gets &ldquo;high, low, high&rdquo;
+Fit a quadratic to it, evaluate its minima and add it to the point set
+Now, drop any of the four resulting point
+
+Shubert-Piyavskill Method
+This is a Bracketing approach which grantees optimality WITHOUT unimodality by using the Lipschitz Constant. But, this only works in one dimension.
+Consider a Lipschitz continuous function with Lipschitz Constant \(L\). We can get our two initial points \(a\) and \(b\). First, we arbitrarily pick a point in the middle to evaluate; this will give us a cone (see Lipschitz Condition) which bounds the function."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS361 APR092024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=more-bracketing-methods>More Bracketing Methods</h2><h3 id=quadratic-search>Quadratic search</h3><p>if your function is <a href=/posts/kbhunimodal/>unimodal</a>&mldr;</p><ul><li>Pick three points that gets &ldquo;high, low, high&rdquo;</li><li>Fit a quadratic to it, evaluate its minima and add it to the point set</li><li>Now, drop any of the four resulting point</li></ul><h3 id=shubert-piyavskill-method>Shubert-Piyavskill Method</h3><p>This is a <a href=/posts/kbhsu_cs361_apr042024/#bracketing>Bracketing</a> approach which grantees optimality <strong>WITHOUT unimodality</strong> by using the <a href=/posts/kbhuniqueness_and_existance/#lipschitz-condition>Lipschitz Constant</a>. But, this only works in <strong>one dimension</strong>.</p><p>Consider a <a href=/posts/kbhuniqueness_and_existance/#lipschitz-condition>Lipschitz continuous</a> function with <a href=/posts/kbhuniqueness_and_existance/#lipschitz-condition>Lipschitz Constant</a> \(L\). We can get our two initial points \(a\) and \(b\). First, we arbitrarily pick a point in the middle to evaluate; this will give us a cone (see <a href=/posts/kbhuniqueness_and_existance/#lipschitz-condition>Lipschitz Condition</a>) which bounds the function.</p><p>We will then evaluate the function + draw a new cone at each of our ed points \(a, b\). By piecing together the cones, we now obtain a sawtooth which lower bounds our function. We will continue this by choosing the lowest point on our lower bound, reevaluating, raising it to the new sawtooth.</p><p>For instance, in maximization, we can end up with sawtooths like:</p><figure><img src=/ox-hugo/2024-04-09_09-29-57_screenshot.png></figure><h3 id=bisection-method>Bisection Method</h3><p>like <a href=/posts/kbhnewton_s_method/>Newton&rsquo;s Method</a>, this is a ROOT FINDING METHOD which we are coopting to find the minima by solving for <a href=/posts/kbhsu_cs361_apr042024/#first-order-necessary-condition>FONC</a> within an interval.</p><p>bisect \(f&rsquo;(x)\) by sampling points in the middle of the &ldquo;valid interval&rdquo; until you find the point which gives \(f&rsquo;(x) = 0\).</p><p>You do this by sampling points on each edge ensuring that there is a sign switch between each edge (i.e. there is a root between the edge points), and then sampling the middle of the interval. You know that there is a sign switch somewhere by the intermediate value theorem.</p><h2 id=local-descent>Local Descent</h2><h3 id=descent-direction-iteration>Descent Direction Iteration</h3><p><a href=#descent-direction-iteration>Descent Direction Iteration</a> is a class of method that uses a &ldquo;local model&rdquo; to improve the design point until we converge.</p><ol><li>check whether our current \(\bold{x}\) meets our termination conditions; if not&mldr;</li><li>calculate some descent direction \(\bold{d}\) to update our \(\bold{x}\); sometimes, people say it has to be normalized</li><li>decide some step size \(\alpha\)</li><li>have fun: \(\bold{x} \leftarrow \bold{x} + \alpha \bold{d}\)</li></ol><h3 id=line-search>Line Search</h3><p>We can choose the step size \(\alpha\) to perform using line search; i.e., figure out our \(\bold{d}\) somehow, and then use any of the <a href=/posts/kbhsu_cs361_apr042024/#bracketing>Bracketing</a> methods (or grid it up) to solve:</p><p>\begin{equation}
+\min_{\alpha} f(\bold{x} + \alpha \bold{d})
+\end{equation}</p><h4 id=decaying-alpha>Decaying \(\alpha\)</h4><p>We can also give up solving for the greatest \(\alpha\), fix a learning rate, and then decay it using \(\alpha \gamma^{n}\) where \(n\) is the number of iterations and \(\gamma\) is the decay rate.</p><h4 id=approximate-line-search>Approximate Line Search</h4><p>Instead of continuously evaluating the function \(f\), we use a first order approximation on our directional derivative (plus some acceptability factor \(\beta \in [0,1]\), usually \(\beta=1 \times 10^{-4}\)).</p><p>We will then choose the largest \(\alpha\) that satisfies</p><ul><li><p>Sufficient Decrease Condition</p><p>\begin{equation}
+f(x_{t+1}) \leq f(x_{t}) + \beta \alpha \nabla_{d} f(x_{t})
+\end{equation}</p></li></ul><ul><li><p>Curvature Condition</p><figure><img src=/ox-hugo/2024-04-09_10-01-52_screenshot.png></figure><p>which bounds the &ldquo;shallowness&rdquo; of the directional derivatives.</p></li></ul><h3 id=trust-region-methods>Trust Region Methods</h3><p>We often want to bound our change in \(x\) by some region \(\delta\) in our steps; so, we really want to&mldr;</p><p>\begin{align}
+\min_{x&rsquo;}\ &amp;f(x&rsquo;) \\
+s.t.\ & \mid x-x&rsquo; \mid \leq \delta
+\end{align}</p><p>To figure \(\delta\), we shrink our region of trust based on the quality of our function estimate (if we used a first-order local model to figure our descent direction, we will use our first order estimate for \(\hat{f}\)):</p><p>\begin{align}
+\eta = \frac{f(x)-f(x&rsquo;)}{f(x)-\hat{f}(x&rsquo;)}
+\end{align}</p><p>if \(\eta &lt; \eta_{1}\), we would scale down \(\delta\) by some amount as evidently our actual improvement is smaller than expected and reject our new point; if \(\eta > \eta_{2}\), we will accept our new point and scale up \(\delta\) by some amount as our improvement is better than expected. Otherwise, we will accept the new point an do not nothing to the trust region.</p><h2 id=termination-conditions>Termination Conditions</h2><h3 id=maximum-iterations>Maximum Iterations</h3><p>\begin{equation}
+k > k_{\max }
+\end{equation}</p><p>termination condition for those on a deadline</p><h3 id=absolute-improvement>Absolute Improvement</h3><p>\begin{equation}
+|f(x_{t}) - f(x_{t+1})| &lt; \epsilon
+\end{equation}</p><h3 id=relative-improvement>Relative Improvement</h3><p>\begin{equation}
+f(x_{t}) - f(x_{t+1}) &lt; \epsilon | f(x)|
+\end{equation}</p><p>Some range of acceptability.</p><h3 id=gradient>Gradient</h3><p>\begin{equation}
+|\nabla f(x_{t})| &lt; \epsilon
+\end{equation}</p><h2 id=first-order-methods>First-Order Methods</h2><h3 id=gradient-descent--kbhgradient-descent-dot-md><a href=/posts/kbhgradient_descent/>gradient descent</a></h3><p>see <a href=/posts/kbhgradient_descent/>gradient descent</a></p><p>\begin{equation}
+\bold{d} = \nabla f(x)
+\end{equation}</p><h3 id=conjugate-gradient>Conjugate Gradient</h3><p>Motivation: steepest-design, but choose search directions that is orthogonal to \(A\)! Suppose \(A\) is symmetric, positive-definite. Choosing orthogonal search directions helps us preclude searching in overlapping directions (and wasting time).</p><p>Essentially, we choose: \(\langle s^{^{(q)}}, s^{^{(\hat{q})}} \rangle_{A}\) with \(A\) weighted <a href=/posts/kbhinner_product/#matrix-scaled-inner-product>Matrix-scaled inner product</a>. (&ldquo;Orthogonality carries regardless of weighting&rdquo;).</p><p>We optimize the function as if its a gradratic function:</p><p>\begin{equation}
+\min_{x} f(x) = \frac{1}{2} \bold{x}^{\top} \bold{A}\bold{x} + \bold{b}^{\top} \bold{x} + c
+\end{equation}</p><p>where \(A\) is a positive, definite matrix. Under this assumption, we consider that this function would behave like a bowl.</p><p>We can then formulate:</p><p>\begin{equation}
+\bold{d}_{t+1} = -\nabla_{t+1} f + \beta \bold{d}_{t}
+\end{equation}</p><p>where \(\bold{d}_{t+1}\) is the step direction we are going to use at <strong><strong>t+2</strong></strong>!! So we are essentially averaging the direction from two steps before.</p><p>We usually set \(\beta\) to be the <strong>Fletcher-Reeves</strong> or <strong>Polak-Ribere</strong> approaches.</p><p>All descent direction are <a href=#mutually-conjugate>Mutually Conjugate</a>.</p><h4 id=mutually-conjugate>Mutually Conjugate</h4><p>if \(x_{i} \neq x_{j}\) are <a href=#mutually-conjugate>Mutually Conjugate</a>, we have:</p><p>\begin{equation}
+x_{i} A x_{j} = 0
+\end{equation}</p><h4 id=error-analysis-for-conjugate-gradient--org697e027>Error-Analysis for <a href=#conjugate-gradient>Conjugate Gradient</a></h4><p>&ldquo;Steepest Descent/gradient descent, but choose step directions to be \(A\) orthogonal instead&rdquo;</p><p>Initial error \(e^{(1)} = \sum_{\hat{q} = 1}^{n} \beta^{\hat{(q)}} s^{\hat{(q)}}\) (\(\beta\) is the coefficients that we don&rsquo;t know, which are the things we want to solve for which gives us the error.)</p><p>\begin{equation}
+e^{(q)} = e^{(1)} + \sum_{\hat{q} = 1}^{q-1} \alpha^{(\hat{q})} s^{(\hat{q})}
+\end{equation}</p><p>this implies that:</p><p>\begin{equation}
+\langle s^{(q)}, e^{(q)} \rangle_{A} = \langle s^{(q)}, e^{(1)} \rangle_{A}
+\end{equation}</p><p>this gives:</p><p>\begin{equation}
+\alpha^{(q)} = \frac{s^{(q)}r^{(q)}}{s^{(q)} A s^{(q)}} = - \frac{\langle s^{(q)}, e^{(q)} \rangle}{\langle s^{(q)},s^{(q)} \rangle_{A}} = -\beta^{(q)}
+\end{equation}</p><p>meaning: if all \(s\) are \(A\) orthogonal, the \(\alpha\) choices will result in convergence in \(n\) steps. Note that if residuals \(\tilde{q} &lt; q\), then \(s^{\tilde{q}} \cdot r^{q} = -\langle s^{\tilde{q}}, e^{q} \rangle_{A} = 0\). Meaning, residuals are orthogonal to all previous search directions.</p><h3 id=momentum>Momentum</h3><p>We descent by calculating a &ldquo;position&rdquo; and a &ldquo;velocity&rdquo;</p><p>\begin{equation}
+v_{t+1} = \beta v_{t} - \alpha \nabla_{x_{t}} f
+\end{equation}</p><p>\begin{equation}
+x_{t+1} = x_{t} + v_{t+1}
+\end{equation}</p><p>if \(\beta\), the momentum is set to \(0\), we just get normal <a href=/posts/kbhgradient_descent/>gradient descent</a>. If there is a positive \(\beta\), your update vector will take on some of the previous update direction values.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,108 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Stanford UG Courses Index</title>
+<meta name=description content="Stanford UG Y1, Aut
+
+Decision Making Index
+Computer Systems Index
+CS Probability Index
+Speech Processing Index
+
+Stanford UG Y1, Win
+
+ODEs Index
+OS Index
+POMDPs Index
+Language Information Index
+
+Stanford UG Y1, Spr
+
+Optimization Index
+Rust Systems Index
+Signal Processing Index
+NLP Index
+Democracy Index
+
+Stanford UG Y2, Aut
+
+PL Index
+Theory of Computing Index
+
+Stanford UG Y2, Win
+
+Complexity Theory Index
+ML Math Index
+Validation Index
+
+Stanford UG Y2, Spr
+
+Complexity Theory Index
+Compilers Index
+Moral Philosophy Index
+
+UG Other Duties
+Here are a list of random indicies which may end up being helpful!"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Stanford UG Courses Index</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=stanford-ug-y1-aut>Stanford UG Y1, Aut</h2><ul><li><a href=/posts/kbhdecision_making_index/>Decision Making Index</a></li><li><a href=/posts/kbhcomputer_systems_index/>Computer Systems Index</a></li><li><a href=/posts/kbhcs_probability_index/>CS Probability Index</a></li><li><a href=/posts/kbhspeech_processing_index/>Speech Processing Index</a></li></ul><h2 id=stanford-ug-y1-win>Stanford UG Y1, Win</h2><ul><li><a href=/posts/kbhodes_index/>ODEs Index</a></li><li><a href=/posts/kbhos_index/>OS Index</a></li><li><a href=/posts/kbhpomdps_index/>POMDPs Index</a></li><li><a href=/posts/kbhlanguage_information_index/>Language Information Index</a></li></ul><h2 id=stanford-ug-y1-spr>Stanford UG Y1, Spr</h2><ul><li><a href=/posts/kbhoptimization_index/>Optimization Index</a></li><li><a href=/posts/kbhrust_systems_index/>Rust Systems Index</a></li><li><a href=/posts/kbhsignal_processing_index/>Signal Processing Index</a></li><li><a href=/posts/kbhnlp_index/>NLP Index</a></li><li><a href=/posts/kbhdemocracy_index/>Democracy Index</a></li></ul><h2 id=stanford-ug-y2-aut>Stanford UG Y2, Aut</h2><ul><li><a href=/posts/kbhsu_cs242/>PL Index</a></li><li><a href=/posts/kbhsu_cs154/>Theory of Computing Index</a></li></ul><h2 id=stanford-ug-y2-win>Stanford UG Y2, Win</h2><ul><li><a href=/posts/kbhcomplexity_theory_index/>Complexity Theory Index</a></li><li><a href=/posts/kbhml_math_index/>ML Math Index</a></li><li><a href=/posts/kbhvalidation_index/>Validation Index</a></li></ul><h2 id=stanford-ug-y2-spr>Stanford UG Y2, Spr</h2><ul><li><a href=/posts/kbhcomplexity_theory_index/>Complexity Theory Index</a></li><li><a href=/posts/kbhcompilers_index/>Compilers Index</a></li><li><a href=/posts/kbhsu_phil2/>Moral Philosophy Index</a></li></ul><h2 id=ug-other-duties>UG Other Duties</h2><p>Here are a list of random indicies which may end up being helpful!</p><ul><li><a href=/posts/kbhclrs_index/>CLRS Index</a></li><li><a href=/posts/kbhai_master_class/>AI Master Class</a></li><li><a href=/posts/kbhsoftware_engineering/>Software Engineering</a></li></ul><h2 id=stanford-ug-talks>Stanford UG Talks</h2><table><thead><tr><th>Date</th><th>Topic</th><th>Presenter</th><th>Link</th></tr></thead><tbody><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2023-09-20 Wed></span></span></td><td>UG Research Program</td><td>Brian Thomas</td><td><a href=/posts/kbhstanford_ug_research_program/>Stanford UG Research Program</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2023-09-28 Thu></span></span></td><td>Bld an Ecosystem, Not Monolith</td><td>Colin Raffel</td><td><a href=/posts/kbhbuild_a_system_not_a_monolyth/>Build a System</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2023-10-05 Thu></span></span></td><td>Training Helpful CHatbots</td><td>Nazeen Rajani</td><td><a href=/posts/kbhtraining_helpful_chatbots/>Training Helpful Chatbots</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2023-10-26 Thu></span></span></td><td>AI Intepretability for Bio</td><td>Gasper Begus</td><td><a href=/posts/kbhai_intepretability/>AI Intepretability</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2023-11-02 Thu></span></span></td><td>PT Transformers on Long Seqs</td><td>Mike Lewis</td><td><a href=/posts/kbhpretraining_long_transformers/>Pretraining Long Transformers</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2023-11-07 Tue></span></span></td><td>Transformers!</td><td>A. Vaswani</td><td><a href=/posts/kbhtransformers/>Transformers</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2023-11-09 Thu></span></span></td><td>Towards Interactive Agents</td><td>Jessy Lin</td><td><a href=/posts/kbhinteractive_agent/>Interactive Agent</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2023-11-16 Thu></span></span></td><td>Dissociating Language and Thought</td><td>Anna Ivanova</td><td><a href=/posts/kbhdissociating_language_and_thought/>Dissociating Language and Thought</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2024-01-11 Thu></span></span></td><td>Language Agents</td><td>Karthik Narasimhan</td><td><a href=/posts/kbhlanguage_agents/>Language Agents with Karthik</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2024-02-01 Thu></span></span></td><td></td><td></td><td><a href=/posts/kbhpretraining_data/>Pretraining Data</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2024-02-08 Thu></span></span></td><td>value alignment</td><td>Been Kim</td><td><a href=/posts/kbhlm_alignment/>LM Alignment</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2024-02-15 Thu></span></span></td><td>model editing</td><td>Peter Hase</td><td><a href=/posts/kbhknowledge_editing/>Knowledge Editing</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2024-07-18 Thu></span></span></td><td></td><td></td><td><a href=/posts/kbhknowledge_localization/>Knowledge Localization</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2024-11-11 Mon></span></span></td><td>Presentations</td><td>Sydney Katz</td><td><a href=/posts/kbhpresentations/>Presentations</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-01-06 Mon></span></span></td><td>Video Generation with Learned Prior</td><td>Meenakshi Sarkar</td><td><a href=/posts/kbhpriors/>Priors</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-01-06 Mon></span></span></td><td>Theoretical Drone Control</td><td></td><td><a href=/posts/kbhsliding_mode_uav_control/>Sliding Mode UAV Control</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-01-09 Thu></span></span></td><td>VLM to Agents</td><td>Tao Yu</td><td><a href=/posts/kbhvlm_to_agents/>VLM to Agents</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-01-13 Mon></span></span></td><td>Social RL</td><td>Natasha Jaques</td><td><a href=/posts/kbhlearning/>Social Reinforcement Learning</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-02-10 Mon></span></span></td><td>Model Predictive Control + Prompting</td><td>Gabriel Maher</td><td><a href=/posts/kbhllm_mpc/>LLM MPC</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-03-03 Mon></span></span></td><td></td><td></td><td><a href=/posts/kbhplanning_for_learning/>Planning for Learning</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-03-06 Thu></span></span></td><td>Theorem Proving</td><td></td><td><a href=/posts/kbhself_play_conjection_generalization/>Self-Play Conjection Generalization</a></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-04-10 Thu></span></span></td><td>Safety for Trucks</td><td><a href=/posts/kbhsafety_for_autonomous_trucking/>Safety for Autonomous Trucking</a></td><td></td></tr><tr><td><span class=timestamp-wrapper><span class=timestamp>&lt;2025-08-04 Mon></span></span></td><td>Collaborate Multiagent DM</td><td><a href=/posts/kbhcollaborative_multiagent_dm/>Collaborative Multiagent DM</a></td><td></td></tr></tbody></table><h2 id=contacts>Contacts</h2><p><a href=/posts/kbhtalk_contacts/>Talk Contacts</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

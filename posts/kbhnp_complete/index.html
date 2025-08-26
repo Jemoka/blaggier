@@ -1,0 +1,83 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NP-Complete</title>
+<meta name=description content="A language \(B\) is NP-Complete if \(B \in NP\) and we have that every \(A \in NP\) has \(A \leq_{P} B\) with a polynomial time mapping reduction. We say \(B\) is NP-Hard if the reduction exists, and NP-Complete if \(B \in NP\) too.
+Suppose a language \(L\) is NP-Complete, we have that every other language in \(NP\) is mapping reducable to \(L\). So, if \(L \in P\), then \(P= NP\), if \(L \not\in P\), then \(P \neq NP\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NP-Complete</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A language \(B\) is <a href=/posts/kbhnp_complete/>NP-Complete</a> if \(B \in NP\) and we have that every \(A \in NP\) has \(A \leq_{P} B\) with a <a href=/posts/kbhmapping_reduction/#polynomial-time-mapping-reduction>polynomial time mapping reduction</a>. We say \(B\) is <a href=/posts/kbhnp_complete/>NP-Hard</a> if the reduction exists, and <a href=/posts/kbhnp_complete/>NP-Complete</a> if \(B \in NP\) too.</p><p>Suppose a language \(L\) is <a href=/posts/kbhnp_complete/>NP-Complete</a>, we have that every other language in \(NP\) is mapping reducable to \(L\). So, if \(L \in P\), then \(P= NP\), if \(L \not\in P\), then \(P \neq NP\).</p><p>There are thousands of NP-complete problems, most areas of science has NP-complete problems.</p><h2 id=corollaries>Corollaries</h2><p>Suppose \(L\) is NP-complete; then, assuming \(P \neq NP\), then \(L\) is not decidable in any polynomial time \(n^{k}\) time for every \(k\).</p><h2 id=show-something-is-np-complete--kbhnp-complete-dot-md>Show something is <a href=/posts/kbhnp_complete/>NP-Complete</a></h2><ul><li>Show that something is <a href=/posts/kbhnp_complete/>NP-Hard</a></li><li>Show that it is in NP</li></ul><p>for a particular problem \(\Pi \in NP\), we want to find some known <a href=/posts/kbhnp_complete/>NP-Hard</a> thing named \(\Sigma\) like <a href=/posts/kbhnon_deterministic_turing_machines/#3cnf-formula>3SAT</a> and show that \(\Sigma \leq_{p} \Pi\).</p><h2 id=many-many-np-complete-things>many, many NP-Complete things</h2><h3 id=clique-problem--kbhnon-deterministic-turing-machines-dot-md><a href=/posts/kbhnon_deterministic_turing_machines/#clique-problem>clique problem</a></h3><p>Given a graph \(G\) and positive \(k\), does \(G\) contain a complete subgraph on \(k\) nodes.</p><p>\begin{equation}
+\text{CLIQUE} = \qty {\qty(G,k) \mid \text{$G$ is an undirected grauph with a $k$ clique}}
+\end{equation}</p><p>where clique is a subgraph where all possible edges are connected.</p><p>Proof:</p><p>We want to transform a <a href=/posts/kbhnon_deterministic_turing_machines/#3cnf-formula>3cnf-formula</a> \(\phi\) into \((G,k)\). Let \(C_1, &mldr;, C_{m}\) be the clauses of \(\phi\); we want to assign \(k=m\); we make a graph \(G\) with \(m\) groups of \(3\) nodes each (i.e. 3 variables).</p><hr><p>Construction:</p><p>Each group \(i\) corresponds to clause \(C_{i}\) of \(\phi\), and each node in group \(i\) is labeled with a literal of \(C_{i}\).</p><p>We will then put edges between all pairs of nodes in <strong>different</strong> groups, except pairs of nodes with labels \(x_{i}\) and \(\neg x_{i}\) (that is, we connect groups unless they form a contradiction; meaning if there is an edge that means there is an assignment that satisfies both literals.) We put no edges between nodes in the same group.</p><p>Now, notice that since there no edges within a group, any cliques will be of maximally size 3. Any clique of size three will represent a satisfying assignment across the clauses since each 3cnf clause only requires one member of each group to be satisfied (within the groups, we have or statements).</p><p>A similar argument can be shown by the opposite side as well.</p><hr><p>Actual proof:</p><p>\(\Rightarrow\)</p><p>Given a satisfiable assignment \(A\) of \(\phi\), for every clause \(C\) there is at least one literal in \(C\) that is set true by \(A\).</p><p>For each clause \(C\), let \(v_{c}\) from group \(C\) whose label is a literal is set true by \(A\). The claim here is that \(S = \qty {v_{C} \mid C \in \phi, v_{C}=1}\) is an \(m\) clique.</p><p>This is because if \(\qty(v_{c}, v_{c&rsquo;}) \not\in E\), when \(v_{c}\) and \(v_{c&rsquo;}\) are inconsistent. But then, since they are in different groups, we know that assignment \(A\) can&rsquo;t satisfy both. So there must be an edge between \(\qty(v_{c}, v_{c&rsquo;})\).</p><p>\(\Leftarrow\)</p><p>Suppose \(S\) is a set of nodes which forms a \(m\) clique of \(G\). Let us assign some variable \(x \in \phi\) to \(1\) IFF there is a vertex \(v \in S\) with label \(x\).</p><p>For all \(i = 1&mldr; m\), at least one vertex from the group \(i\) is in \(S\) because we have \(m\) different nodes connected together by this clique, and we are not allowed to connect two nodes in the same group together.</p><h3 id=independent-set>independent set</h3><p>Given a graph \(G= \qty(V,E)\) and integer \(k\), is there a \(S \subseteq V\) such that \(|S| = k\) and no two vertices in \(S\) have an edge?</p><p>Recall that CLIQUE is that all edges in the verticies \(S\) exists; we want to show the dual whereby no edges in \(S\) exists.</p><p>We want to build this reduction</p><p>\begin{equation}
+CLIQUE \leq_{p} IS
+\end{equation}</p><p>We do this by reverse the edge/non-edge (where there is an edge, get rid of it; where there is no edge, add it).</p><h3 id=vertex-cover>vertex cover</h3><p>A &ldquo;vertex cover&rdquo; is the set of nodes \(C\) that cover all edges; that is, for all edges, at least one endpoint is in \(C\).</p><p>\begin{equation}
+VC = \qty {(G,k) \mid G \text{ is a graph with a vertex cover of size at most $k$ }}
+\end{equation}</p><p>we can check if something is a vertex cover within \(P\) time by checking all the vertices, and that means that \(VC \in NP\).</p><p>We now want to write a reduction:</p><p>\begin{equation}
+IS \leq_{p} VC
+\end{equation}</p><p>The insight: \(S\) is an independent set IFF \(V-S\) is a vertex cover (because the verticies have to be connected everywhere else for the set \(S\) to be independent).</p><h3 id=subset-sum>subset sum</h3><p>Given a <strong>sequence</strong> (i.e. stuff can repeat):</p><p>\begin{equation}
+S = \qty {a_1, \dots, a_{n}}
+\end{equation}</p><p>of positive integers and a positive \(t\), is there an \(A \subseteq \qty {1, \dots, n}\) such that \(t = \Sum_{i \in A} a_{i}\).</p><p>(i.e. does any subset sum up to \(t\))</p><p>We now want to reduce this problem to a <a href=#vertex-cover>vertex cover</a> problem.</p><hr><p>Given a graph \((G,k)\), let&rsquo;s define some set \(E = \qty {e_0, \dots, e_{m-1}}\) and \(V = \qty {1, \dots n}\) representing edges and nodes.</p><p>We now label the edges and nodes with the following numbers:</p><ul><li><strong>edge labels</strong>: for \(e_{j} \in E\), label \(b_{j} = 4^{j}\)</li><li><strong>node labels</strong>: for every \(i \in V\), label \(a_{i} = 4^{m} + \sum_{j \in e_{j}}^{4^{j}}\)</li><li><strong>target</strong> \(t\) for subset sum: \(t = k \cdot 4^{m} + \sum_{j=0}^{m-1}\qty(2 \cdot 4^{j})\)</li></ul><hr><p>Note that there&rsquo;s an algorithm for this in \(O\qty(nt)\), which isn&rsquo;t showing \(P=NP\) because we need it to be polynomial in input which is \(n+t\).</p><p>This is \(NP\) itself because the witness to success is just the set of numbers that correctly match; and now, we want to show that this is NP hard through another reduction.</p><figure><img src=/ox-hugo/2024-11-11_23-03-42_screenshot.png></figure><h3 id=hamiltonian-path-problem--kbhnon-deterministic-turing-machines-dot-md><a href=/posts/kbhnon_deterministic_turing_machines/#hamiltonian-path-problem>Hamiltonian path problem</a></h3><p><a href=/posts/kbhnon_deterministic_turing_machines/#hamiltonian-path-problem>Hamiltonian path problem</a> is NP complete through 3SAT</p><h3 id=shortest-path>shortest path</h3><p>where simple path is a path going through each node at most once:</p><p>SHORTEST (this is in polynomial time):</p><p>\begin{equation}
+\qty {\qty(G, s,t,k) \mid G\text{ has a simple path of length $&lt;k$ from $s$ to $t$}}
+\end{equation}</p><p>LONGEST (this is NP-complete):</p><p>\begin{equation}
+\qty {\qty(G, s,t,k) \mid G\text{ has a simple path of length $&lt;k$ from $s$ to $t$}}
+\end{equation}</p><p>HAMPATH &lt;= LONGEST-PATH (because (gst) in HAMPATH = (gst |V|) in LONGEST) &mdash; getting a simple path of length |v| which is all verticies can only happen if you touch each vertex exactly once.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

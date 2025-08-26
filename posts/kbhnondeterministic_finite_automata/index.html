@@ -1,0 +1,72 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Non-deterministic Finite Automata</title>
+<meta name=description content="NFA is a relaxation of DFA, but which is allowed to make non-deterministic &ldquo;verified guesses&rdquo;.
+this is basically a DFA, but our new machine accepts a string if there exists some path that reaches some accept state from some start state.
+at each state, we can have any number of out arrows for some letter \(\sigma \in \Sigma\), including for the empty string \(\varepsilon\). meaning we can move between states without doing anything."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Non-deterministic Finite Automata</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> is a relaxation of <a href=/posts/kbhdeterministic_finite_automata/>DFA</a>, but which is allowed to make non-deterministic &ldquo;verified guesses&rdquo;.</p><p>this is basically a <a href=/posts/kbhdeterministic_finite_automata/>DFA</a>, but our new machine accepts a string if there exists <em>some path</em> that reaches <em>some accept state</em> from <em>some start state</em>.</p><p>at each state, we can have any number of out arrows for some letter \(\sigma \in \Sigma\), <strong>including</strong> for the empty string \(\varepsilon\). meaning we can move between states without doing anything.</p><p>we (Omer) allows <strong>multiple <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> start states</strong> (Spiser only allows one). we can convert between these easily just by having an epsilon (empty string) transition stuck between the &ldquo;single&rdquo; start state and the multiple start states.</p><h2 id=constituents>constituents</h2><p>A NFA is a five-tuple \(N = (Q, \Sigma, \delta, Q_{0}, F)\), whereby:</p><ul><li>\(Q\) is the finite set of all states</li><li>\(\Sigma\) is the <a href=/posts/kbhalphabet/>alphabet</a></li><li>\(\delta: Q \times \Sigma_{\varepsilon} \to 2^{Q}\) (where \(\Sigma_{\varepsilon} = (\Sigma \cup \{\varepsilon\})\), with \(\varepsilon\) being the empty string); the output is a boolean assignment of whether or not we can reach each state, because note you are now allowed multiple edges between states</li><li>\(Q_0 \subseteq Q\) which is the set of start states</li><li>\(F \subseteq Q\) remains the set of accept states</li></ul><h2 id=requirements>requirements</h2><h3 id=accept>accept</h3><p>Let \(w_1, &mldr;, w_{n} \in \Sigma\), and \(w = w_1 &mldr; w_{n} \in \Sigma^{*}\), \(M\) <strong>accepts</strong> \(w\) if there exists \(r_0, &mldr;, r_{n} \in Q\) such that:</p><ul><li>\(r_{0} \in Q_{0}\)</li><li>\(r_{i+1} \in \delta(r_{i}, w_{i+1})\) for all \(i=0, &mldr;, n-{1}\), and</li><li>\(r_{n} \in F\)</li></ul><h2 id=additional-information>additional information</h2><h3 id=nfas-are-usually-simpler-than-dfas>NFAs are usually simpler than DFAs</h3><p>&mldr;because you don&rsquo;t have to specify all edges; non-specified transitions means the can be automatically rejected</p><h3 id=dfa--kbhdeterministic-finite-automata-dot-md--s-are-equivalent-to-nfa--kbhnondeterministic-finite-automata-dot-md--s><a href=/posts/kbhdeterministic_finite_automata/>DFA</a>s are equivalent to <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a>s</h3><p>we want to show that <a href=/posts/kbhdeterministic_finite_automata/>DFA</a>s recognize the same set of languages as <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a>s. in other words, does not add power for finite automata&mldr; &ldquo;finite memory is very robust&rdquo;.</p><hr><p>we want to define the <a href=#dfa--kbhdeterministic-finite-automata-dot-md--s-are-equivalent-to-nfa--kbhnondeterministic-finite-automata-dot-md--s>subset construction</a>; tho goal here is that given a particular <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> named \(N\), we desire to find a particular <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> named \(M\) which recognizes the same <a href=/posts/kbhalphabet/>language</a>.</p><p>insight: <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> and <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a>s are markovian! instead of monitoring all the different paths you take, we only monitor all the possible states you could have reached&mdash;this is, then, only exponential in the number of states.</p><p>we therefore do computation in parallel on the set of all possible states that could be reached thus far. at each step, then, a <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> you defined from an <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> has a state space of \(Q&rsquo; = 2^{Q}\). Each of your states, then, is some subset of possible states in the original <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a>.</p><hr><h4 id=epsilon-closure>epsilon closure</h4><p>to deal with epsilon steps (i.e. steps where you do nothing and advance), you have to first define the <a href=#dfa--kbhdeterministic-finite-automata-dot-md--s-are-equivalent-to-nfa--kbhnondeterministic-finite-automata-dot-md--s>epsilon closure</a>:</p><p>for a subset of states \(S \subseteq Q\), the \(\varepsilon\) closure of \(S\) is:</p><p>\begin{equation}
+\varepsilon (S) = \qty {q | q\ \text{reachable from some}\ s \in S\ \text{by taking one or more $\varepsilon$ transitions}}
+\end{equation}</p><p>and now, onto the construction that <a href=#dfa--kbhdeterministic-finite-automata-dot-md--s-are-equivalent-to-nfa--kbhnondeterministic-finite-automata-dot-md--s>DFAs are equivalent to NFAs</a></p><h4 id=proof>proof</h4><ul><li>\(Q&rsquo;=2^{Q}\)</li><li>\(\delta&rsquo;: Q&rsquo; \times \Sigma \to Q&rsquo;\), specifically \(\bigcup \varepsilon \qty(\delta\qty(r, \sigma)), r\in R\), where \(R \in Q&rsquo;\) is one of our conjoined-states<ul><li>that is, we apply every transition we can on the states that we have, and union all of their results together</li></ul></li><li>\(F&rsquo; = \qty {R \in Q&rsquo; | f \in R\ \text{for some}\ f \in F}\), that is, the subset of the conjoined states for which there is a single member in the conjoined state that&rsquo;s active that is also an accept state</li><li>\(q_0&rsquo; = \varepsilon (q_0)\)</li></ul><h2 id=nfa--kbhnondeterministic-finite-automata-dot-md--also-recognizes-exactly-regular-languages><a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> also recognizes exactly regular languages</h2><p>that is, <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> and <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> recognizes the same types of languages</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

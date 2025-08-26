@@ -1,0 +1,101 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS224N APR252024</title>
+<meta name=description content="Transformers
+Motivation
+Lower Sequence-Length Time Complexity
+Minimize Linear Interaction Distance
+The interaction distances scale by \(O(l)\) with \(l\) sequence length&mdash;gradient is affected by linear interaction distance: linear order is baked in.
+Maximize Parallelization
+Forward and backward passes require waiting (waiting for it to roll from left to right)&mdash;-instead, you can compute attention in parallel.
+Key Advantage
+
+Maximum interaction distance is \(O(1)\) &mdash; each word is connected to each other word
+Unparallizable operation does not increase by sequence length
+
+Self-Attention
+Self-attention is formulated as each word in a sequence attending to each word in the same sequence."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS224N APR252024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=transformers--kbhtransformers-dot-md><a href=/posts/kbhtransformers/>Transformers</a></h2><h3 id=motivation>Motivation</h3><h4 id=lower-sequence-length-time-complexity>Lower Sequence-Length Time Complexity</h4><h4 id=minimize-linear-interaction-distance>Minimize Linear Interaction Distance</h4><p>The interaction distances scale by \(O(l)\) with \(l\) sequence length&mdash;gradient is affected by linear interaction distance: linear order is baked in.</p><h4 id=maximize-parallelization>Maximize Parallelization</h4><p>Forward and backward passes require waiting (waiting for it to roll from left to right)&mdash;-instead, you can compute attention in parallel.</p><h3 id=key-advantage>Key Advantage</h3><ol><li>Maximum interaction distance is \(O(1)\) &mdash; each word is connected to each other word</li><li>Unparallizable operation does not increase by sequence length</li></ol><h3 id=self-attention>Self-Attention</h3><p>Self-attention is formulated as each word in a sequence attending to each word in the same sequence.</p><h4 id=calculating-qkv>Calculating QKV</h4><p>\begin{equation}
+\begin{cases}
+q_{i} = W^{(Q)} x_{i}\\
+k_{i} = W^{(K)} x_{i}\\
+v_{i} = W^{(V)} x_{i}\\
+\end{cases}
+\end{equation}</p><p>and then you have a standard good time using <a href=/posts/kbhsu_cs224n_apr232024/#reduced-rank-multiplicative-attention>reduced-rank multiplicative attention</a>:</p><p>\begin{equation}
+e_{ij} = q_{i} \cdot k_{j}
+\end{equation}</p><p>and normalize:</p><p>\begin{equation}
+a_{ij} = \text{softmax} (e_{ij})
+\end{equation}</p><p>to obtain:</p><p>\begin{equation}
+O_{i} = \sum_{j}^{} a_{ij} v_{j}
+\end{equation}</p><hr><p>Vectorized:</p><p>\begin{equation}
+\begin{cases}
+Q = W^{(Q)} x\\
+K = W^{(K)} x\\
+V = W^{(V)} x\\
+\end{cases}
+\end{equation}</p><p>and</p><ul><li><p>scale dot-product attention</p><p>\begin{equation}
+Out = \text{softmax} \qty(\frac{QK^{\top}}{\sqrt{d_{k}}}) V
+\end{equation}</p><p>why divide by \(\sqrt{d_{k}}\)? see <a href=#tricks-in-training>Tricks in Training</a>.</p></li></ul><h3 id=transformer-block>Transformer Block</h3><p>Naively having <a href=#self-attention>Self-Attention</a> can be described as simply a rolling average. To introduce nonlinearity, we apply a linear layer with a ReLU after.</p><h3 id=tricks-in-training>Tricks in Training</h3><ol><li>skip connections \(x_{l} = F(x_{l-1})+x_{l-1}\)</li><li>layernorm (normalize each layer to mean zero and standard deviation of one, so we protect against lower layer&rsquo;s distribution shifts) \(x^{(l&rsquo;)} = \frac{x^{(l)}- \mu^{(l)}}{\sigma^{(l)} + \epsilon}\) we use <strong>population mean and population standard deviation</strong><ol><li>mean of sum is sum of means, meaning after this the input would have mean \(0\) which is good</li><li>yet, the mean of variance is sum of variance, so for dimension \(d\), the resulting one-variant layer becomes d-variant. so, we normalize our attention by \(d_{k}\)</li></ol></li></ol><h3 id=word-order>Word Order</h3><h4 id=sinusoidal-position-embeddings>Sinusoidal Position Embeddings</h4><p>No one uses it lol. ABSOLUTE position doesn&rsquo;t really matter. See <a href=#relative-position-embeddings>Relative Position Embeddings</a>.</p><h4 id=relative-position-embeddings>Relative Position Embeddings</h4><p>Relative positions are LEARNED and added to the self-attention outputs.</p><p>so we learn embeddings</p><h3 id=multi-head-attention>Multi-Head Attention</h3><p>Perform attention multiple times, get a series of SA embeddings and concatenate. For each single head, divide by number of heads (so you end up doing the same amonut of computation)</p><h2 id=transformer-drawbacks>Transformer Drawbacks</h2><ol><li>quadratic compute of self-attention (computing pairs of interaction means that the computation grows <strong>quadratic</strong>) &mdash; linformer, attempts to solve this</li></ol></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

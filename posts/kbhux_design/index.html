@@ -1,0 +1,82 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>User Experience</title>
+<meta name=description content="The User Experience design sprung out of WWII&mdash;in Aerospace engineering.
+The Design Process
+The &ldquo;Double Diamond&rdquo; Process
+First Round of Going Broad
+
+Explore the problem space (what are you users trying to do? why? why is it hard?)
+Decide what to fix (what is the most high impact problem?)
+
+Second Round of Going Broad
+
+Test potential solutions (does this fix the problem?)
+Refine final solution (do all users understand this? can they use them?)
+
+Usability Heuristics
+Usability Heuristics is a set of principles used in User Experience design to identify problems and potential solutions."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>User Experience</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>The <a href=/posts/kbhux_design/>User Experience</a> design sprung out of WWII&mdash;in Aerospace engineering.</p><h2 id=the-design-process>The Design Process</h2><p>The &ldquo;Double Diamond&rdquo; Process</p><h3 id=first-round-of-going-broad>First Round of Going Broad</h3><ul><li>Explore the problem space (what are you users trying to do? why? why is it hard?)</li><li>Decide what to fix (what is the most high impact problem?)</li></ul><h3 id=second-round-of-going-broad>Second Round of Going Broad</h3><ul><li>Test potential solutions (does this fix the problem?)</li><li>Refine final solution (do all users understand this? can they use them?)</li></ul><h2 id=usability-heuristics>Usability Heuristics</h2><p><a href=#usability-heuristics>Usability Heuristics</a> is a set of principles used in <a href=/posts/kbhux_design/>User Experience</a> design to identify problems and potential solutions.</p><h3 id=visibility-of-system-status>Visibility of System Status</h3><p>Keep the users informed about what&rsquo;s actively going on, through appropriate visual feedback placed at an appropriate amount of time.</p><h3 id=match-between-system-and-the-real-world>Match Between System and the Real World</h3><p>Use language that&rsquo;s familiar to the user, using words, phrases, concepts familiar to the users rather than internal jargon.</p><h3 id=balance-user-control-and-freedom>Balance User Control and Freedom</h3><p>User often perform actions by mistake; mark &ldquo;emergency exits&rdquo; to leave unwanted pathways/actions without causing side effects.</p><h3 id=consistency-and-standards>Consistency and Standards</h3><p>Having consistency between different versions/family of products: putting buttons that do the same thing to the same place across the app, at the same region.</p><h3 id=error-prevention>Error Prevention</h3><p>Eliminate error-prone conditions (prevent the users from doing it), or present users with a confirmation before they commit to an erroneous action</p><h3 id=recognition-vs-dot-recall>Recognition vs. Recall</h3><p>Users should&rsquo;t need to remember when they are going through an UI; instead they should be able to recognize the intended behavior from the UI</p><h3 id=flexibility-and-efficiency-of-user>Flexibility and Efficiency of User</h3><p>Catering functionality to both novice and advanced users. Make advanced actions hidden to novice users, but easily accessible for advanced users.</p><h3 id=minimalism>Minimalism</h3><p>Keep the UI focused on essential actions and information&mdash;maintaining an aesthetic and minimalist design</p><h3 id=help-users-recognize-diagnoses-and-recover-from-errors>Help Users Recognize, Diagnoses, and Recover from Errors</h3><p>Errors should&mldr;</p><ol><li>give context for what the problem is</li><li>instruct the user for possible next actions</li></ol><h3 id=help>Help</h3><p>It maybe necessary to provide documentation to help users understand how to complete their tasks; the documentation should be clear</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

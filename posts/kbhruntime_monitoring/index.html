@@ -1,0 +1,80 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>runtime monitoring</title>
+<meta name=description content="Goal: flags situations that might be hazardous when they occur to trigger some fallback mechanism.
+Three steps:
+
+check if you are even in the design: operational design domain monitoring
+even if you are, check how certain you are: uncertainty quantification
+once you know what your model is going to do: failure monitoring
+
+operational design domain monitoring
+&ldquo;Out of distribution detection.&rdquo; Insight: if we operate outside of the ODD, our validation results may no longer be valid, so we should monitor whether or not we are in the operational design monitor whether or not we are in the operational design domain."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>runtime monitoring</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><strong>Goal</strong>: flags situations that might be hazardous when they occur to trigger some fallback mechanism.</p><p>Three steps:</p><ol><li>check if you are even in the design: <a href=#operational-design-domain-monitoring>operational design domain monitoring</a></li><li>even if you are, check how certain you are: <a href=#uncertainty-quantification>uncertainty quantification</a></li><li>once you know what your model is going to do: <a href=#failure-monitoring>failure monitoring</a></li></ol><h2 id=operational-design-domain-monitoring>operational design domain monitoring</h2><p>&ldquo;Out of distribution detection.&rdquo; Insight: if we operate outside of the ODD, our validation results may no longer be valid, so we should monitor whether or not we are in the operational design monitor whether or not we are in the operational design domain.</p><h3 id=step-1-represent-the-design-domain>Step 1: represent the design domain</h3><ul><li>requires domain knowledge: hand-design some constraints</li><li>requires data: take a data driven approach to interpolate one</li></ul><h4 id=data-driven-approach>data driven approach</h4><p>Take all of the states we saw during validation / in data, and call that &ldquo;in domain.&rdquo;</p><p>We can do some extra interpolation: the set of states that are <em>near</em> our collected states is also in domain&mdash;set ODD as the set of the point <em>near</em> in the data set within a certain distance.</p><ul><li><p>nearest neighbor approach</p><p>Two parameters:</p><ul><li>threshold&mdash;how close does a region has to be to a point to be within domain?</li><li>k&mdash;we have to be near how many neighbors to be in domain?</li></ul></li></ul><ul><li><p>bounding set</p><p>We can take a convex hull of the data, but it may be way too conservative. So, we can our data into a few bits (or perhaps cluster them), and then take a convex hull of each bit, and then union them all together.</p></li></ul><ul><li><p>superlevel set</p><p>we partition our dataset into pieces, and the fit a function for whether or not things are in and out of the operational domain.</p><p>drawback: we need to have data for out of the domain, which is hard. also, we will have to fit distributions, meaning distances needs to be good&mdash;often we need to run a PCA to reduce distances being wonky in large dimensions.</p><ul><li><p>feature collapse</p><p>You maybe tempted to use some kind of a projection, but then may get <a href=#feature-collapse>feature collapse</a> whereby stuff that are out of the domain is squished down to something in domain.</p></li></ul></li></ul><h2 id=uncertainty-quantification>uncertainty quantification</h2><ul><li>output uncertainty: <strong>single input, multiple different possible output</strong> (aleatoric uncertainty / irreducable uncertainty)</li><li>model uncertainty: <strong>model used to predict system behavior is bad</strong> (epistemic uncertainty / educable uncertainty)</li></ul><p>We can cast model uncertainty into output uncertainty by making hte model predict its own variance:</p><h3 id=bayesian-model-averaging>Bayesian Model Averaging</h3><p>Take a Baysian approach averaging over all parameters</p><p>\begin{equation}
+p\qty(y|x, D) = \int p\qty(y | x, \theta) p\qty(\theta | D) \dd{\theta}
+\end{equation}</p><p>Say you have a discrete set of models:</p><p>\begin{equation}
+p \qty(y | x, D) \approx \frac{1}{|\mathcal{M}|} \sum_{\theta \in \mathcal{M}}^{} p\qty(y | x, \theta)
+\end{equation}</p><h2 id=failure-monitoring>failure monitoring</h2><p>just run a bunch of calculations; or perhaps just compute states where we may have a higher probability of failure.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

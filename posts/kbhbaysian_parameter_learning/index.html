@@ -1,0 +1,121 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Baysian Parameter Learning</title>
+<meta name=description content="We treat this as an inference problem in Naive Bayes: observations are independent from each other.
+Instead of trying to compute a \(\theta\) that works for Maximum Likelihood Parameter Learning, what we instead do is try to understand what \(\theta\) can be in terms of a distribution.
+That is, we want to get some:
+
+
+
+&ldquo;for each value of \(\theta\), what&rsquo;s the chance that that is the actual value&rdquo;
+To do this, we desire:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Baysian Parameter Learning</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>We treat this as an inference problem in <a href=/posts/kbhnaive_bayes/>Naive Bayes</a>: <strong>observations are independent from each other</strong>.</p><p>Instead of trying to compute a \(\theta\) that works for <a href=/posts/kbhmaximum_likelihood_parameter_learning/>Maximum Likelihood Parameter Learning</a>, what we instead do is try to understand what \(\theta\) can be in terms of a distribution.</p><p>That is, we want to get some:</p><figure><img src=/ox-hugo/2023-10-05_10-22-12_screenshot.png></figure><p>&ldquo;for each value of \(\theta\), what&rsquo;s the chance that that is the actual value&rdquo;</p><p>To do this, we desire:</p><p>\begin{equation}
+p(\theta | D)
+\end{equation}</p><p>&ldquo;what&rsquo;s the probability of theta being at a certain value given the observations we had.&rdquo;</p><p>And to obtain the actual the actual value, we calculate the <a href=/posts/kbhexpectation/>expectation</a> of this distribution:</p><p>\begin{equation}
+\hat{\theta} = \mathbb{E}[\theta] = \int \theta p(\theta | D) \dd{\theta}
+\end{equation}</p><p>If its not possible to obtain such an expected value, we then calculate just the mode of the distribution (like where the peak probability of \(\theta\) is) by:</p><p>\begin{equation}
+\hat{\theta} = \arg\max_{\theta} p(\theta | D)
+\end{equation}</p><h2 id=bayesian-parameter-learning-on-binary-distributions>Bayesian Parameter Learning on Binary Distributions</h2><p>We are working in a <a href=/posts/kbhnaive_bayes/>Naive Bayes</a> environment, where we assume that \(o_{1:m}\) are <a href=/posts/kbhbaysian_network/#conditional-independence>conditionally independent</a>. Then, we essentially consider each class as carrying some parameter \(\theta\) which contains the possibility of that class happening.</p><figure><img src=/ox-hugo/2023-10-05_14-55-41_screenshot.png></figure><p>Using the same steps as <a href=/posts/kbhnaive_bayes/#id-76165699-9f9a-4b7e-a081-c8462cece2ee-inference-with-id-6cdf74a2-2451-47d1-8a62-62aa6dff62c6-naive-bayes>inference with Naive Bayes</a> and some algebra:</p><p>\begin{equation}
+p(\theta | o_{1:m}) \propto p(\theta, o_{1:m})
+\end{equation}</p><figure><img src=/ox-hugo/2023-10-05_17-20-53_screenshot.png></figure><p>Now, we would like to normalize this function for \(\theta \in [0,1]\), so, we get:</p><p>\begin{equation}
+\int_{0}^{1} \theta^{n}(1-\theta)^{m-n}\dd{\theta} = \frac{\Gamma(n+1) \Gamma(m-n+1)}{\Gamma(m+2)}
+\end{equation}</p><p>where, \(\Gamma\) is a real valued factorial generalization, and this entire integral is often called the &ldquo;<a href=/posts/kbhbaysian_parameter_learning/>Beta Function</a>&rdquo;</p><p>Normalizing the output, we have that:</p><p>\begin{align}
+p(\theta | o_{1:m}) &\propto p(\theta, o_{1:m}) \\
+&= \frac{\Gamma(m+2)}{\Gamma(n+1) \Gamma(m-n+1)} \theta^{n} (1-\theta)^{m-n} \\
+&= Beta(\theta | n+1, m-n +1)
+\end{align}</p><p>where \(m\) is the sample size and \(n\) is the number of events in the sample space.</p><h3 id=beta-distribution>Beta Distribution</h3><p>Suppose you had a non-uniform prior:</p><ul><li>Prior: \(Beta(\alpha, \beta)\)</li><li>Observe: \(m_1\) positive outcomes, \(m_2\) negative outcomes</li><li>Posterior: \(Beta(\alpha+m_1, \beta+m_2)\)</li></ul><p>That is: for binary outcomes, the beta distribution can be updated without doing any math.</p><p>For instance, say we had:</p><p>\begin{equation}
+\theta_{t} = Beta(\alpha, \beta)
+\end{equation}</p><p>and we observed that \(o_{i} = 1\), then:</p><p>\begin{equation}
+\theta_{t+1} = Beta(\alpha+1, \beta)
+\end{equation}</p><p>instead, if we observed that \(o_{i} = 0\), then:</p><p>\begin{equation}
+\theta_{t+1} = Beta(\alpha, \beta+1)
+\end{equation}</p><p>Essentially: MAGNITUDE of beta distribution governs how small the spread is (higher magnitude smaller spread), and the balance between the two values represents how much skew there is.</p><p>Beta is a special distribution which takes parameters \(\alpha, \beta\),and has mean:</p><p>\begin{equation}
+\frac{\alpha}{\alpha + \beta}
+\end{equation}</p><p>and variance:</p><p>\begin{equation}
+\frac{ab}{(a+b)^{2}(a+b+1)}
+\end{equation}</p><p>and has mode:</p><p>\begin{equation}
+\frac{\alpha -1 }{\alpha + \beta -2}
+\end{equation}</p><p>when \(\alpha > 1\) and \(\beta > 1\).</p><p>This means that, at \(beta(1,1)\), we have a inform distribution</p><figure><img src=/ox-hugo/2023-10-05_21-32-18_screenshot.png></figure><h4 id=laplace-smoothing>Laplace Smoothing</h4><p><a href=#laplace-smoothing>Laplace Smoothing</a> is a prior where:</p><p>\begin{equation}
+prior\ X \sim Beta(2,2)
+\end{equation}</p><p>so you just add \(2\) to each of our output pseudo counts.</p><p>see also <a href=/posts/kbhmaximum_a_posteriori_estimate/#map-for-bernoulli-and-binomial-p>Laplace prior</a>, where you use <a href=#laplace-smoothing>Laplace Smoothing</a> for your prior</p><h3 id=total-probability-in-beta-distributions>Total Probability in beta distributions</h3><p>Recall, for total probability, beta is a special distribution which takes parameters \(\alpha, \beta\),and has <a href=/posts/kbhexpectation/>expectation</a>:</p><p>\begin{equation}
+\frac{\alpha}{\alpha + \beta}
+\end{equation}</p><p>and has mode:</p><p>\begin{equation}
+\frac{\alpha -1 }{\alpha + \beta -2}
+\end{equation}</p><h3 id=choosing-a-prior>Choosing a prior</h3><ul><li>do it with only the problem and no knowledge of the data</li><li>uniform typically works well, but if you have any reason why it won&rsquo;t be uniform (say coin flip), you should count accordingly such as making the distribution more normal with \(Beta(1,1)\)</li></ul><h2 id=dirichlet-distribution>Dirichlet Distribution</h2><p>We can generalize the <a href=#bayesian-parameter-learning-on-binary-distributions>Bayesian Parameter Learning on Binary Distributions</a> with the <a href=#dirichlet-distribution>Dirichlet Distribution</a>.</p><p>For \(n\) parameters \(\theta_{1:n}\) (\(n-1\) of which independent, because we know that \(\sum \theta_{i} = 1\)), where \(\theta_{j}\) is the probability that the \(j\) th case of the categorical distribution happening.</p><p>Now:</p><p>\begin{equation}
+Dir(\theta_{1:n} | \alpha) = \frac{\Gamma(\alpha_{0})}{\prod_{i=1}^{n} \Gamma(\alpha_{i})} \prod_{i=1}^{n} \theta_{i}^{\alpha_{i}-1}
+\end{equation}</p><p>whereby:</p><p>\begin{equation}
+\alpha_{j} = prior + count
+\end{equation}</p><p>for \(j \geq 1\), and</p><p>\begin{equation}
+\alpha_{0} = prior + total_{}count
+\end{equation}</p><p>whereby prior is your initial distribution. If its uniform, then all prior equals one.</p><p>The <a href=/posts/kbhexpectation/>expectation</a> for each \(\theta_{i}\) happening is:</p><p>\begin{equation}
+\mathbb{E}[\theta_{i}] = \frac{a_{i}}{\sum_{j=1}^{n} \alpha_{j}}
+\end{equation}</p><p>and, with \(a_{i} > 1\), the $i$th mode is:</p><p>\begin{equation}
+\frac{a_{i}-1 }{\sum_{j=1}^{n} a_{j}-n}
+\end{equation}</p><h2 id=expectation--kbhexpectation-dot-md--of-a-distribution><a href=/posts/kbhexpectation/>expectation</a> of a distribution</h2><p>For <a href=#beta-distribution>Beta Distribution</a> and <a href=#dirichlet-distribution>Dirichlet Distribution</a>, the <a href=/posts/kbhexpectation/>expectation</a> of their distribution is simply their mean.</p><p>if you say want to know what the probability of \(P(thing|D)\), you can integrate over all \(P(thing|\theta)\):</p><p>\begin{equation}
+\int^{1}_{0} P(thing|\theta)P(\theta)d\theta
+\end{equation}</p><p>The first thing is just the actual value of \(\theta\) (because \(\theta\) is literally the <a href=/posts/kbhprobability/>probability</a> of \(thing\) happening). The second thing is the probability of that \(\theta\) actually happening.</p><p>This, of course, just add up to the expected value of \(\theta\), which is given above:</p><p>\begin{equation}
+\frac{\alpha}{\alpha + \beta}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

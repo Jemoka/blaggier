@@ -1,0 +1,120 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS143 MAY202025</title>
+<meta name=description content="Its optimization time!!
+Program Optimization
+&ldquo;maximum benefit for minimal cost&rdquo;
+When should optimization happen?
+AST?
+
+pro: machine independent
+con: no notion registers, not language dependent
+
+Assembly?
+
+pro: many optimization opportunities
+con: machine dependent
+
+And so, we really should be doing this with some IR.
+Three-address intermediate code
+Each instruction is of the form:
+x := y op z
+x := op z
+where x, z are registers, constants, etc.
+basic block
+A basic block is a sequence with no labels (except in the first point) an no jumps (except in the last point). So when we are inside a basic block, we can optimize the code inside sans worry about control flow."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS143 MAY202025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Its optimization time!!</p><h2 id=program-optimization>Program Optimization</h2><p>&ldquo;maximum benefit for minimal cost&rdquo;</p><h3 id=when-should-optimization-happen>When should optimization happen?</h3><p><strong>AST</strong>?</p><ul><li>pro: machine independent</li><li>con: no notion registers, not language dependent</li></ul><p><strong>Assembly</strong>?</p><ul><li>pro: many optimization opportunities</li><li>con: machine dependent</li></ul><p>And so, we really should be doing this with some IR.</p><h3 id=three-address-intermediate-code>Three-address intermediate code</h3><p>Each instruction is of the form:</p><pre tabindex=0><code class=language-nil data-lang=nil>x := y op z
+x := op z
+</code></pre><p>where <code>x</code>, <code>z</code> are registers, constants, etc.</p><h4 id=basic-block>basic block</h4><p>A <a href=#basic-block>basic block</a> is a sequence with no labels (except in the first point) an no jumps (except in the last point). So when we are inside a basic block, we can optimize the code inside sans worry about control flow.</p><h4 id=control-flow-graph>control-flow graph</h4><p>a <a href=#control-flow-graph>control-flow graph</a> is a directed graph with&mldr;.</p><ul><li>basic blocks as nodes</li><li>as edge from \(A\) to \(B\) if an execution can pass from the last instruction in \(A\) to first instruction in \(B\)</li></ul><h3 id=three-levels-of-optimizations>Three Levels of Optimizations</h3><ul><li><strong>local optimizations</strong>: apply to a basic block in isolation</li><li><strong>global optimizations</strong>: apply to a control-flow graph</li><li><strong>inter-procedural optimizations</strong>: optimizations between graphs, such as inclining</li></ul><h3 id=some-stuff-you-should-run>some stuff you should run</h3><ul><li>basic block</li><li>dataflow</li><li>loop</li><li>instruction optimization / peephole</li><li>register</li></ul><h4 id=some-special-oop-stuff>some special oop stuff</h4><ul><li>function inclining</li><li>method call targets</li><li>class unboxing</li></ul><h4 id=some-functional-stuff>some functional stuff</h4><ul><li>tail recursion</li><li>deforestation</li></ul><h3 id=basic-block-optimizations>basic block optimizations</h3><h4 id=algebraic-simplification>algebraic simplification</h4><pre tabindex=0><code class=language-nil data-lang=nil>x := x + 0  =&gt; x := x
+x := x * 1 =&gt; x := x
+y := y ** 2 =&gt; y := y*y
+x := x * 8 =&gt; x := x &lt;&lt; 3
+</code></pre><p>on <code>--ffast-math</code></p><pre tabindex=0><code class=language-nil data-lang=nil>-- only works on ints (since nan * 0 = nan)
+x := x * 0 =&gt; x := 0
+</code></pre><h4 id=constant-folding>constant folding</h4><pre tabindex=0><code class=language-nil data-lang=nil>x := y op z
+</code></pre><p>with constant <code>y</code> and <code>z</code>, we can just fold it. so</p><pre tabindex=0><code class=language-nil data-lang=nil>x := 2+2 =&gt; x := 4
+</code></pre><h4 id=static-single-assignment-form>static single-assignment form</h4><p>rewrite intermediate code in SSA form &lt;= never reassign variables. Meaning, if two assignments end up with the same rhs, they compute the same value. Namely:</p><p>So in SSA,</p><pre tabindex=0><code class=language-nil data-lang=nil>x := y + z
+...
+w := y + z
+</code></pre><p>we know that <code>x</code> and <code>w</code> can&rsquo;t be redefined in SSA; this means that we cloud write:</p><pre tabindex=0><code class=language-nil data-lang=nil>x := y + z
+...
+w := x
+</code></pre><h4 id=copy-propagation>copy propagation</h4><p>so we can keep writing using <a href=#static-single-assignment-form>static single-assignment form</a> replacements. In particular note that once we are just assigning a variable to another, the first variable can just be replaced with the second everywhere.</p><pre tabindex=0><code class=language-nil data-lang=nil>b := z + y
+a := b
+x := 2 * a
+</code></pre><p>we can stick b into a</p><pre tabindex=0><code class=language-nil data-lang=nil>b := z + y
+a := b
+x := 2 * b
+</code></pre><p>and then we see that `a := b` is deadcode.</p><pre tabindex=0><code class=language-nil data-lang=nil>b := z + y
+x := 2 * b
+</code></pre><h4 id=dead-code-elimination>dead code elimination</h4><p>within a basic block, only one type of dead code</p><p>Suppose &ldquo;w := rhs&rdquo; appears in a basic block, but &ldquo;w&rdquo; doesn&rsquo;t appear anywhere else in the program. We can say &ldquo;w := rhs&rdquo; is dead and can be eliminated.</p><h4 id=peephole-optimization>peephole optimization</h4><p>a &ldquo;peephole&rdquo; is a sequence of contiguous instructions; the optimizer replaces the sequence with another equivalent one, but faster.</p><h3 id=global-optimizations>global optimizations</h3><p>How do we apply <a href=#basic-block-optimizations>local optimizations</a> to a global scope?</p><p>Generally, to prove postulate <code>P</code> at any point requires knowing the entire function; so we either know <code>X</code> is definitely true, or we say &ldquo;we don&rsquo;t know.&rdquo;</p><h4 id=example>example</h4><p>Consider the branching order:</p><pre tabindex=0><code class=language-nil data-lang=nil>(X := 3, B &gt; 0) =&gt; {(Y := Z + W), (Y := 0)} =&gt; (A := 2*x)
+</code></pre><p>in this control flow graph, we never touch <code>x</code> in the middle, therefore we can just propagate <code>x</code> forward by replace it.</p><h4 id=program-point>program point</h4><p>every statement is associated with 2 <a href=#program-point>program point</a>s:</p><ol><li>right before a statement</li><li>right after a statement</li></ol><h4 id=global-constant-propagation>global constant propagation</h4><p>Let&rsquo;s consider three states <code>x</code> can be:</p><table><thead><tr><th>value</th><th>interpretation</th></tr></thead><tbody><tr><td>\(\top\)</td><td>not constant</td></tr><tr><td>\(c\)</td><td>constant, on every path</td></tr><tr><td>\(\bot\)</td><td>unreachable code</td></tr></tbody></table><p>so by the time you hit a <a href=#program-point>program point</a>, if \(x=c\), then its constant. To perform this labeling, we must&mldr;</p><ul><li><p>transfer function</p><p>for &ldquo;in&rdquo;(to a statement) and &ldquo;out&rdquo; (of a statement), we have, slides 21 and more <a href=https://web.stanford.edu/class/cs143/lectures/lecture15.pdf>https://web.stanford.edu/class/cs143/lectures/lecture15.pdf</a>.</p></li></ul><ul><li><p>an algorithm</p><p>For every entry \(s_{0}\) to the program, we set:</p><p>\begin{equation}
+C\qty(s_{0},x,\text{in}) = \top
+\end{equation}</p><p>and set:</p><p>\begin{equation}
+C\qty(s \neq s_{0},x,\text{in}) = C\qty(s \neq s_{0},x,\text{out}) = \bot
+\end{equation}</p><p>everywhere else. An then we just apply the rules above.</p><ul><li><p>convergence</p><p>This system converges because the rules have it such that \(\bot &lt; c &lt; \top\) (once something is top, it can&rsquo;t go back.) So, \(\top\) is the &ldquo;greatest&rdquo; value, and \(\bot\) the &ldquo;least&rdquo;.</p><p>We can then lub the rules 1-4 from above into on rule:</p><p>\begin{equation}
+C\qty(s,x,\text{in}) = \text{lub} \qty {C\qty(p,x,\text{out}) | p\text{ predecessor } s}
+\end{equation}</p><p>So you can just see the lub of predecessor hierarchy of each statement.</p></li></ul></li></ul><h4 id=dead-code-elimination>dead code elimination</h4><p>a variable \(x\) is &ldquo;live&rdquo; at statement \(s\) if&mldr;</p><ul><li>there&rsquo;s a statement \(s&rsquo;\) that uses \(x\)</li><li>there&rsquo;s a path from \(s\) to \(s&rsquo;\)</li><li>that path has no intervening assignment to \(x\)</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

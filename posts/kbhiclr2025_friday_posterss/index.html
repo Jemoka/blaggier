@@ -1,0 +1,75 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>ICLR2025 Friday Posters</title>
+<meta name=description content="ICLR2025 Morris: contextual document embeddings
+Take a bunch of sentence embeddings as input to produce a new sentence embedding that is now contextual
+ICLR2025 Noukhovich: asynchronous reinforcement learning for language models
+Rollout and tune concurrently
+ICLR2025 Yao: CR-CTC CONSISTENCY REGULATION
+CTC LOSS CAN BE MADE MORE ROBUST IF YOU REGULARIZE TO HAVE MINIMAL DIFFERENCE BETWEEN TWO AUGMENTED VIEWS OF THE SAME MEL SPECTRUM
+ICLR2025 Sun: ReDeEP detecting hallucination using mechanistic interpretability
+Find layers most prone to insert information, measure the information insertion using logit lens before and after passing through FFN, strong change after hallucination prone FFN means hallucination"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>ICLR2025 Friday Posters</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=iclr2025-morris-contextual-document-embeddings>ICLR2025 Morris: contextual document embeddings</h2><p>Take a bunch of sentence embeddings as input to produce a new sentence embedding that is now contextual</p><h2 id=iclr2025-noukhovich-asynchronous-reinforcement-learning-for-language-models>ICLR2025 Noukhovich: asynchronous reinforcement learning for language models</h2><p>Rollout and tune concurrently</p><h2 id=iclr2025-yao-cr-ctc-consistency-regulation>ICLR2025 Yao: CR-CTC CONSISTENCY REGULATION</h2><p>CTC LOSS CAN BE MADE MORE ROBUST IF YOU REGULARIZE TO HAVE MINIMAL DIFFERENCE BETWEEN TWO AUGMENTED VIEWS OF THE SAME MEL SPECTRUM</p><h2 id=iclr2025-sun-redeep-detecting-hallucination-using-mechanistic-interpretability>ICLR2025 Sun: ReDeEP detecting hallucination using mechanistic interpretability</h2><p>Find layers most prone to insert information, measure the information insertion using logit lens before and after passing through FFN, strong change after hallucination prone FFN means hallucination</p><h2 id=iclr2025-fu-chip>ICLR2025 Fu: CHiP</h2><p>For multi model preference optimization, combine four different loss terms together a varying types of preference loss to get best results</p><h2 id=iclr2025-faysse-colpali>ICLR2025 Faysse: ColPali</h2><p>Embed images of text instead of text itself during rag</p><h2 id=iclr2025-liu-dellma>ICLR2025 Liu: DeLLMa</h2><p>Key insight; make a language model of POMDP by asking the language model to produce value judgments and normalizing them and doing standard value iteration</p><h2 id=iclr2025-wijmans-cut-your-losses-in-large-vocabulary-language-model>ICLR2025 Wijmans: cut your losses in large vocabulary language model</h2><p>Instead of decoding directly into logits, which is memory intensive, there is a trick to allow us to not have to store the entire out projection in memory</p><h2 id=iclr2025-gao-progressing-the-relative-future>ICLR2025 Gao: progressing the relative future</h2><p>Solve multiturn RLHF by writing the policy Q value and optimizing it over discounted features</p><h2 id=iclr2025-xiao-simper-preference-alignment-by-removing-hyper-parameters>ICLR2025 Xiao: SimPER preference alignment by removing hyper parameters</h2><p>Remove the log term of DPO and remove thereby the hyper parameter beta that is needed</p><h2 id=iclr2025-xiong-from-tokens-to-lattices>ICLR2025 Xiong: from tokens to lattices</h2><p>Mask language models learn conditional relationships between tokens of the same entity thereby implicitly creating a graph</p><h2 id=iclr2025-pagliardini-ademamix>ICLR2025 Pagliardini: AdEMAMix</h2><p>Key insight: Adam with two different betas and also use gradient information from multiple steps for stabler and faster convergence</p><h2 id=iclr2025-fan-loop-transformers-for-length-generalization>ICLR2025 Fan: loop transformers for length generalization</h2><p>Key insight: UT like approaches with loops generalize better for tasks of a specific kind</p><h2 id=iclr2025-lee-multiple-non-asymptotic-rates-for-value-iteration>ICLR2025 Lee: multiple non-asymptotic rates for value iteration</h2><p>Key insight: anchoring using the original policy speed up average value value iteration</p><p>That is: Vt = a*V0 + b*T*Vt-1</p><h2 id=iclr2025-liu-linear-combination-of-saves-checkpoints-makes-diffusion-and-consistency-models-better>ICLR2025 Liu: linear combination of saves checkpoints makes diffusion and consistency models better</h2><p>Key insight: as titled, use evolutionary research to figure out the best mixture of weights to select</p><h2 id=iclr2025-ramapuram-theory-analysis-and-best-practices-for-sigmoid-self-attention>ICLR2025 Ramapuram: theory analysis and best practices for sigmoid self attention</h2><p>Key insight: sigmoid self attention reduces all gather costs and they have a bunch of tricks to make it work</p><h2 id=iclr2025-sun-block-verification-accelerate-speculative-decoding>ICLR2025 Sun: block verification accelerate speculative decoding</h2><p>Key insight: when using a small language model to speculatively decode a large language model, evaluate likelihood blocks at a time</p><h2 id=iclr2025-chang-skiable-influence-a-fact-tracing>ICLR2025 Chang: skiable influence a fact tracing</h2><p>Key insight: using a normalized gradient dot product between training examples and outputs, do attribution</p><h2 id=iclr2025-hu-how-to-visualize-training-dynamics>ICLR2025 Hu: how to visualize training dynamics</h2><p>Key insight: take whatever summary statistics you have for each checkpoint, run classical low dimensional work on it such as PCA</p><h2 id=iclr2025-addepali-safety-training-of-lm-s-generalized-to-semantically-related-prompts>ICLR2025 Addepali: safety training of LM&rsquo;s generalized to semantically related prompts</h2><p>Key insight: take some jailbreak that doesn&rsquo;t work anymore, make semantic pururbation o it, check if it still works. Often, it does.</p><h2 id=iclr2025-georgiev-attribute-to-delete>ICLR2025 Georgiev: attribute to delete</h2><p>Key; learn a data model which then allows you to perturb what pieces of input pre-training data is relevant to the actual output, using this,, with counterfactual for what the correct unlearned outcome is, and then tune against that.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,91 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>(NOTES COPY) Relativization Barrier to P vs. NP</title>
+<meta name=description content="Key Takeaway: a powerful technique, diagonalization, is doomed to fail at resolving P vs. NP.
+Context
+Complexity theory is generally the study of impossibilities. This is also an impossibility result. Here are some impossibility results!
+
+The reals are uncountable [Cantor 1874]
+Godel&rsquo;s incompleteness theorem [Godel 1931]
+halting problem is undecidable [Turing 1936]
+time hierarchy theorem [Hartmanis-Stearns 1965] &mdash; \(\text{P}\) is a strict subset of \(\text{EXP}\)
+
+Notice! All of these theorems uses a single technique&mdash;diagonalization."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>(NOTES COPY) Relativization Barrier to P vs. NP</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Key Takeaway: a powerful technique, diagonalization, is doomed to fail at resolving P vs. NP.</p><h2 id=context>Context</h2><p>Complexity theory is generally the study of impossibilities. This is also an impossibility result. Here are some impossibility results!</p><ol><li>The reals are uncountable [Cantor 1874]</li><li><a href=/posts/kbhmathematics/#godel-s-incompleteness>Godel&rsquo;s incompleteness</a> theorem [Godel 1931]</li><li><a href=/posts/kbhmapping_reduction/#halting-problem>halting problem</a> is <a href=/posts/kbhturing_machinea/#decidable>undecidable</a> [Turing 1936]</li><li><a href=/posts/kbhtime_complexity/#time-hierarchy-theorem>time hierarchy theorem</a> [Hartmanis-Stearns 1965] &mdash; \(\text{P}\) is a strict subset of \(\text{EXP}\)</li></ol><p>Notice! All of these theorems uses a <strong>single technique</strong>&mdash;diagonalization.</p><h2 id=diagonalization>diagonalization</h2><p>tl;dr: &ldquo;simulate, and then, at the last minute, flip! and do the opposite.&rdquo; Notice that all diagonalization problems are <a href=#simulation-result>simulation result</a>s&mdash;you have a Turing Machine for the thing and you watch it do something / you modify it and give an algorithm.</p><h3 id=simulation-result>simulation result</h3><p>A hallmark of simulation results is that they continue to hold if both machines get access to the same oracle. All simulation results <a href=#relativization>relativize</a>s.</p><h4 id=relativization>relativization</h4><p>When a result continue to hold when both sides get access to the same oracle, we call these proves that &ldquo;<a href=#relativization>relativize</a>&rdquo;. Everything is a <a href=#simulation-result>simulation result</a> relatives (just re-simulate with oracles).</p><h2 id=here-we-go>Here we go!</h2><p>Strangely enough, these are both true facts:</p><div class=theorem><span><p>\begin{equation}
+\exists \text{A}, \text{P}^{A} = \text{NP}^{A}
+\end{equation}</p><p></span></div></p><div class=theorem><span><p>\begin{equation}
+\exists \text{B}, \text{P}^{B} \neq \text{NP}^{B}
+\end{equation}</p><p></span></div></p><p>The philosophical takeaway is that, regardless of what your proof of \(\text{P} =^{?} \text{NP}\) relationship is, your proof better break when an arbitrary oracle is added. That is, its proof has to be &ldquo;sensitive&rdquo; to additional oracles. That is, it&rsquo;s proof better <strong>not</strong> <a href=#relativization>relativize</a>. That is, they better <strong>not</strong> be <a href=#diagonalization>diagonalization</a>.</p><p>(fun fact/drama: \(\exists \text{B}, \text{P}^{B} \neq \text{NP}^{B}\) is true for random oracle \(B\), which gives us evidence that \(\text{P} \neq \text{NP}\)).</p><h3 id=review-oracle-turing-machine>Review: Oracle Turing Machine</h3><p>An oracle TM is a TM \(M\) with an extra &ldquo;oracle tape&rdquo; that it can read-write to. \(M\) has extra <strong>unit-time</strong> operation &ldquo;ORACLE&rdquo;.</p><p>If \(z \in \qty {0,1}^{*}\), denotes the contents of the oracle tape, the entire string is erased and replaced with \(1\) or \(0\).</p><div class=definition><span><p>For language \(A \in \qty {0,1}^{*}\), $A$-oracle TM is an oracle Turing machine where its oracle queries are answered according to whether \(z \in A\).</p><p></span></div></p><h3 id=equality-under-a>Equality under A</h3><p>Let&rsquo;s first tackle:</p><div class=theorem><span><p>\begin{equation}
+\exists A, \text{P}^{A} = \text{NP}^{A}
+\end{equation}</p><p></span></div></p><p>Sketch: we want to design an \(\text{A}\) a lot more useful for \(\text{P}\) than to \(\text{NP}\)</p><p>Answer: \(A\) is any P-SPACE complete language.</p><h4 id=strategy>strategy</h4><ul><li>\(P \subseteq NP \subseteq PSPACE\) &mdash; <a href=/posts/kbhpolynomial_hierarchy/>polynomial hierarchy</a></li><li>Show: (i) \(\text{NP}^{A} \subseteq \text{PSPACE}\), (ii) \(\text{PSPACE} \subseteq \text{P}^{A}\)</li><li>Then notice: \(\text{P} \subseteq \text{NP}\) <a href=#relativization>relativize</a>s (TODO show this)</li></ul><p>Finally, double containment!</p><h4 id=i>i</h4><div class=lemma><span><p>Let \(\text{L} \in \text{NP}^{A}\), we desire that \(\text{L} \in \text{PSPACE}\)</p><p></span></div></p><div class=proof><span><p>Let \(\text{L} \in \text{NP}^{A}\). So \(\exists\) an NTM \(N\) that decides \(L\).</p><p>On input \(x\), you as a PSPACE machine simulate all possible computation branches up to \(\text{N}\qty(x)\) Whenever it queries \(A\), since \(A\) is in PSACE, you as a PSPACE machine can also do it.</p><p>Equivalently, \(\text{NP} \subseteq \text{PSPACE}\) relativizes, and \(\text{PSPACE}^{A} = \text{PSPACE}\) if \(A \in \text{PSPACE}\)</p><p></span></div></p><h4 id=ii>ii</h4><div class=lemma><span><p>Let \(\text{L} \in \text{PSPACE}\), we desire that \(\text{L} \in P^{\text{A}}\)</p><p></span></div></p><div class=proof><span><p>Recall that \(A\) is PSPACE-complete. So then by definition we can just pipe \(L\) through the poly-time reduction to the \(A\) problem using \(\text{P}^{A}\), and then call the oracle once.</p><p></span></div></p><h3 id=inequality-under-b>Inequality under B</h3><p>Let&rsquo;s now find:</p><div class=theorem><span><p>\begin{equation}
+\exists B, \text{P}^{B} \neq \text{NP}^{B}
+\end{equation}</p><p></span></div></p><h4 id=seperating-language>Seperating Language</h4><p>The separating language \(L_{B} \in NP^{B} \backslash P^{B}\) (i.e. which shows the oracle \(B\) causes inequality)</p><p>\begin{equation}
+\text{L}_{B} = \qty {1^{n} : B\text{ contains } \geq 1 \text{ length n strings }}
+\end{equation}</p><p>that is:</p><p>\begin{equation}
+\text{B} = \bigcup_{n=0}^{\infty} B_{n}
+\end{equation}</p><p>where</p><p>\begin{equation}
+B_{n} = \qty {y \in B : |y| = n}
+\end{equation}</p><p>That is, \(1^{n} \in L_{B} \Leftrightarrow B_{n} \neq \emptyset\)</p><h4 id=the-oracle>The Oracle</h4><p>Our \(B\) will be such that \(|B_{n}| \in \qty { 0, 1}\), for all \(n\). That is, for a given distinct length, we either have one string of that length or no strings of that length in \(B\).</p><h4 id=part-1>Part 1</h4><p>First, we want to show that no matter choice of \(B\), \(L_{B} \in NP^{B}\).</p><div class=lemma><span><p>\(\forall B, L_{B} \in NP^{B}\), in particular \(\exists\) B oracle TM \(M^{B}\) such that \(x \in L_{B} \Leftrightarrow \exists y, M\qty(x,y)\) accepts.</p><p></span></div></p><div class=proof><span><p>Given \(1^{n}\), we want to determine if \(1^{n} \in L_{B}\) using an \(NP^{B}\) machine. \(1^{N} \in L_{B}\) if and only if we can find \(\qty {y \in B : |y| = n} \neq \emptyset\).</p><p>So our oracle can just be \(y \in B_{n}\).</p><p></span></div></p><p>All that&rsquo;s left is to show that \(L_{B} \not \in P^{B}\).</p><h4 id=part-2>Part 2</h4><p>We now want to show that \(L_{B} \not \in P^{B}\)</p><p>Let \(M_1, M_{2} \ldots\) be the enumeration of all polytime oracle Turing machines.</p><p>Initially, \(B = \emptyset\).</p><p>Construct \(B\) in stages \(i = 1, 2, \ldots\) where \(i\) stage ensures that \(M_{i}\) does not decide \(L_{B}\). At stage \(i \in \mathbb{N}\), there exists \(n\) that is large enough 1) \(2^{n} > \text{poly}\qty(n)\), so that we have space to &ldquo;sneak a string&rdquo;, see below and 2) also such that no length \(n\) string has been included in \(B\) yet. That is, we desire, \(B_{n} = \emptyset\) for now.</p><p>Now let&rsquo;s run \(M_{i}\) on \(1^{n}\), at some point it makes it first query \(y_{1} \in^{?} \qty {0,1}^{*}\) to \(B\) oracle. This is where we commit that \(y_{1} \not \in B\). After \(y_1, &mldr;, y_{j}\) (poly many, since \(P^{B}\) can only make poly oracle calls), our machine will say a judgment about \(B\).</p><p>Suppose \(M_{i}\qty(1^{n})\) accepts; then it thinks \(B_{n} \neq \emptyset\). We will actually keep \(B_{n} = \emptyset\) (notice our oracle didn&rsquo;t lie).</p><p>Suppose \(M_{i}\qty(1^{n})\) rejects; then we can just add a string to make \(B_{n} = 1\) that our \(P^{B}\) haven&rsquo;t asked yet. Here we need \(n\) is large enough (\(2^{n} > \text{poly}\qty(n)\)).</p><p>Since our machine made \(\leq \text{poly}\qty(n)\) many queries, and \(|\qty {0,1}^{n}| = 2^{n}\), we can add a string to make \(B_{n} = 1\) if we want to and we won&rsquo;t run out.</p><p>(TODO this requires a bunch of faff to be formal, such as keep around the largest next value).</p><h2 id=fun-other-barriers>Fun: other barriers</h2><ul><li>algebrization barrier</li><li>natural proof barrier</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

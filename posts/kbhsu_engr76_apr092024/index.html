@@ -1,0 +1,98 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-ENGR76 APR092024</title>
+<meta name=description content="joint entropy
+Suppose we have two information sources; joint entropy is the measure of joint surprise when we are defined over more than one information source.
+For a pair of random variables, \(X, Y\), their joint entropy is defined over a new random variable of \(X \cup Y\).
+\begin{equation}
+H(x,y) = \sum_{i \in X}^{} \sum_{j \in Y}^{} P(X=i, Y=j) \log_{2} \qty(\frac{1}{P(X=i, Y=j)})
+\end{equation}
+If \(X \perp Y\), we can write \(H(x,y) = H(x)+H(y)\) (shown below.) Further, we have for all \(X\) and \(Y\), \(H(x,y) \leq  H(x) + H(y)\) because you can never be more surprised than if you got two completely independent pieces of information."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-ENGR76 APR092024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=joint-entropy>joint entropy</h2><p>Suppose we have two <a href=/posts/kbhsu_engr76_apr042024/#information-source>information source</a>s; <a href=#joint-entropy>joint entropy</a> is the measure of joint surprise when we are defined over more than one <a href=/posts/kbhsu_engr76_apr042024/#information-source>information source</a>.</p><p>For a pair of random variables, \(X, Y\), their <a href=#joint-entropy>joint entropy</a> is defined over a new random variable of \(X \cup Y\).</p><p>\begin{equation}
+H(x,y) = \sum_{i \in X}^{} \sum_{j \in Y}^{} P(X=i, Y=j) \log_{2} \qty(\frac{1}{P(X=i, Y=j)})
+\end{equation}</p><p>If \(X \perp Y\), we can write \(H(x,y) = H(x)+H(y)\) (shown below.) Further, we have for all \(X\) and \(Y\), \(H(x,y) \leq H(x) + H(y)\) because you can never be more surprised than if you got two completely independent pieces of information.</p><h3 id=joint-entropy-of-independent-events>joint entropy of independent events</h3><p>Recall <a href=/posts/kbhprobability/#independence>independence</a>; so if \(X \perp Y\), we can write \(P(X=i, Y=j) = P(X=i) \cdot P(Y=j)\) and plug in and chug.</p><p>Now, plugging that in and applying <a href=/posts/kbhlog_laws/>log laws</a>:</p><p>\begin{align}
+H(x,y) &= \sum_{i \in X}^{} \sum_{j \in Y}^{} P(X=i)P(Y=j) \qty(\log_{2} \frac{1}{P(X=i)}+\log_{2} \frac{1}{P(Y=j)}) \\
+&= \sum_{i \in X}^{} \sum_{j \in Y}^{} P(X=i)P(Y=j) \log_{2} \frac{1}{P(X=i)}+ \sum_{i \in X}^{} \sum_{j \in Y}^{} P(X=i)P(Y=j) \log_{2} \frac{1}{P(Y=j)} \\
+&= \sum_{i \in X}^{} P(X=i)\log_{2}\frac{1}{P(X=i)}\sum_{j \in Y}^{} P(Y=j) + \sum_{i \in X}^{}P(X=i) \sum_{j \in Y}^{} P(Y=j) \log_{2} \frac{1}{P(Y=j)} \\
+&= \sum_{i \in X}^{} P(X=i)\log_{2}\frac{1}{P(X=i)} 1 + 1 \sum_{j \in Y}^{} P(Y=j) \log_{2} \frac{1}{P(Y=j)} \\
+&= H(X) + H(Y)
+\end{align}</p><p>Where we can factor the \(P(Y=j)\) out and the \(P(X=j)\) out on the left and right sides because they don&rsquo;t depend on the other argument in the summation. After which, recall \(\sum_{k}^{}P(K=k)=1\), so each factored out term reduces to \(1\); multiplying in, we result in the <a href=/posts/kbhsu_engr76_apr042024/#information-value>entropy</a> expressions for each random variable.</p><h2 id=source-coding>Source Coding</h2><p>A (source) code is a mapping from symbol set \(X\) to the set of binary sequence \(c(x)\) which corresponds to each \(x \in X\).</p><p>For <a href=/posts/kbhlossless_compression/>lossless compression</a>, we need a <a href=#uniquely-decodeable>uniquely decodeable</a> encoding.</p><h3 id=non-singular-code>non-singular code</h3><p>for all \(x, x&rsquo; \in X\) where \(x \neq x&rsquo;\), a <a href=#non-singular-code>non-singular code</a> assigns \(c(x) \neq c(x&rsquo;)\).</p><p>Though <a href=/posts/kbhlossless_compression/>lossless compression</a> requires <a href=#non-singular-code>non-singular code</a>, having it alone does <strong>NOT</strong> guarantee lossless encoding. You will want an <a href=#uniquely-decodeable>uniquely decodeable</a> encoding instead. For instance:</p><table><thead><tr><th>X</th><th>Encoding</th></tr></thead><tbody><tr><td>A</td><td>0</td></tr><tr><td>T</td><td>1</td></tr><tr><td>C</td><td>10</td></tr><tr><td>G</td><td>11</td></tr></tbody></table><p>Is a <a href=#non-singular-code>non-singular code</a>, but 0110 could be ATTA or AGA or &mldr;</p><h3 id=uniquely-decodeable>uniquely decodeable</h3><p>a sequence being <a href=#uniquely-decodeable>uniquely decodeable</a> means that any possible source <strong>sequence</strong> \(x_1, &mldr;, x_{n}\) is mapped into a unique binary representation.</p><p>One simple scheme would be the <a href=#prefix-free>Prefix-Free</a> scheme, which is <a href=#uniquely-decodeable>uniquely decodeable</a> and <a href=#instantaneously-decodable>instantaneously decodable</a>. Not all <a href=#uniquely-decodeable>uniquely decodeable</a> codes need to be <a href=#prefix-free>Prefix-Free</a>.</p><h4 id=every-uniquely-decodeable--orgdd46e21--sequence-is-a-non-singular-code--org803d6f6>every <a href=#uniquely-decodeable>uniquely decodeable</a> sequence is a <a href=#non-singular-code>non-singular code</a></h4><p>Suppose an encoding is <a href=#uniquely-decodeable>uniquely decodeable</a>. We desire that it is also <a href=#non-singular-code>non-singular code</a>. Consider sequences of length 1, each with one symbol in it. Because the encoding is <a href=#uniquely-decodeable>uniquely decodeable</a>, each encoding of these sequences is unique. Now we can assign that sequence encoding to the corresponding symbol.</p><h3 id=instantaneously-decodable>instantaneously decodable</h3><p>We do not need to perform lookaheads to decode the sequence; once we see a valid code we can decode it without lookahead.</p><h3 id=prefix-free>Prefix-Free</h3><p>A <a href=#prefix-free>Prefix-Free</a> codes is a coding scheme for which no codeword is a prefix of another codeword.</p><h4 id=any-prefix-free-code-for-a-source-has-at-least-entropy-length>any prefix free code for a source has at least entropy length</h4><p>any <a href=#prefix-free>Prefix-Free</a> code for some source \(X\) satisfies that \(\bar{l} \geq H(x)\), where \(\bar{l}\) is the <a href=#average-codeword-length>Average Codeword Length</a> of the resulting code and \(H(x)\) is the entropy of the source \(X\).</p><h4 id=prefix-free-code-has-the-same-codeword-lengths-as-any-code>prefix-free code has the same codeword lengths as any code</h4><p>If there exists a <a href=#uniquely-decodeable>uniquely decodeable</a> code with codeword lengths \(\{l_1, &mldr;, l_{n}\}\) from some source \(X\); then there exists a <a href=#prefix-free>Prefix-Free</a> version of this code which has exactly the same codeword lengths \(\{l_1, &mldr;, l_{n}\}\) &mdash; so really we only need to generate the most optimal <a href=#prefix-free>Prefix-Free</a> code for us to generate a good code.</p><h3 id=average-codeword-length>Average Codeword Length</h3><p>For a specific code, we have a quality \(\bar{\ell}\). This is a quantity which is a probability-scaled average number of bits to encode each source symbol.</p><p>Consider, then, this code:</p><table><thead><tr><th>X</th><th>Probability</th><th>Code</th></tr></thead><tbody><tr><td>A</td><td>1/2</td><td>0</td></tr><tr><td>T</td><td>1/4</td><td>10</td></tr><tr><td>C</td><td>1/8</td><td>110</td></tr><tr><td>G</td><td>1/8</td><td>111</td></tr></tbody></table><p>Our average codeword length her, then is:</p><p>\begin{equation}
+\frac{1}{2} + \frac{1}{4} \cdot 2 + \frac{1}{8} \cdot 3 + \frac{1}{8} \cdot 3 = 1.75
+\end{equation}</p><p>which would be a bit better than using 2 bits to encode everything.</p><h3 id=motivation>Motivation</h3><p>&ldquo;communication&rdquo; needs to happen by formalizing your data into a sequence of symbols \(x_1, x_2, \dots\), where \(x \in X\) in some symbol set. For instance, an image is a long sequence of pixels; words is a long sequence of letters, etc.</p><p>After which, we will need to convert our sequence of symbols into bits using some encoder; then, we will need some decoder to convert it back.</p><h3 id=example>Example</h3><p>A DNA is a piece of information with four symbols: \(X \in \{A, T, C, G\}\).</p><p>The most trivial encoding could just be assign a 2-bit sequence to each symbol:</p><table><thead><tr><th>X</th><th>Encoding (&ldquo;Code Words&rdquo;)</th></tr></thead><tbody><tr><td>A</td><td>00</td></tr><tr><td>T</td><td>01</td></tr><tr><td>C</td><td>10</td></tr><tr><td>G</td><td>11</td></tr></tbody></table><p>Our symbol/encoding mapping has to be non-singular; otherwise, we will be very sad.</p><p>How do we improve this code?</p><h4 id=counting-by-frequency>Counting by Frequency</h4><p>Suppose we got some empirical frequencies of the occurances:</p><table><thead><tr><th>X</th><th>Probability</th></tr></thead><tbody><tr><td>A</td><td>1/2</td></tr><tr><td>T</td><td>1/4</td></tr><tr><td>C</td><td>1/8</td></tr><tr><td>G</td><td>1/8</td></tr></tbody></table><p>We will encode each symbol by a number of bits inversely proportional to the frequency of its occurrence. So:</p><table><thead><tr><th>X</th><th>Probability</th><th>Code</th></tr></thead><tbody><tr><td>A</td><td>1/2</td><td>0</td></tr><tr><td>T</td><td>1/4</td><td>10</td></tr><tr><td>C</td><td>1/8</td><td>110</td></tr><tr><td>G</td><td>1/8</td><td>111</td></tr></tbody></table><p>This is actually <a href=#uniquely-decodeable>uniquely decodeable</a> because its <a href=#prefix-free>Prefix-Free</a>.</p><h2 id=block-coding>Block Coding</h2><p>Let&rsquo;s encode a block of symbols together!</p><p>Say we have a sequence:</p><p>\begin{equation}
+X_1, \dots, X_{n}
+\end{equation}</p><p>assuming all \(X_{j}\) are independent of each other. We can devise a block code by coming with a code to encode pair of symbols together.</p><p>To calculate the <a href=#average-codeword-length>Average Codeword Length</a>, we have to now <strong>divide</strong> by the number of symbols each block includes.</p><h3 id=shannon-s-source-coding-theorem>Shannon&rsquo;s Source-Coding Theorem</h3><p>the <a href=/posts/kbhsu_engr76_apr042024/#information-value>entropy</a> \(H(X)\) of an <a href=/posts/kbhsu_engr76_apr042024/#information-source>information source</a> \(X\) equals the minimum number of bits per source symbol necessary to encode <a href=/posts/kbhindependently_and_identically_distributed/>IID</a> sequences from that source.</p><p>Meaning: therefore, <a href=/posts/kbhsu_engr76_apr042024/#information-value>entropy</a> is the <strong>limit</strong>&mdash;the minimum <a href=#average-codeword-length>Average Codeword Length</a>&mdash;of lossless information communication.</p><p>For a <a href=#block-coding>Block Coding</a> scheme with block size \(n\), we have:</p><p>\begin{equation}
+H(X_j) \leq \frac{\bar{\ell}}{n} \leq H(X_j) + \frac{1}{n}
+\end{equation}</p><h4 id=entropy-rate-of-the-source>Entropy Rate of the Source</h4><p>An alternate formulation, whenever we are not drawing IID \(X_{j}\), is that:</p><p>\begin{equation}
+\lim_{n \to \infty} \frac{H(X_1, \dots, X_{n})}{n} = \frac{\bar{\ell}_{n}}{n}
+\end{equation}</p><p>which is the average number of bits per symbol. This is call the &ldquo;<a href=#entropy-rate-of-the-source>Entropy Rate of the Source</a>&rdquo;. Most things in the world is not an <a href=/posts/kbhindependently_and_identically_distributed/>IID</a> sequence, so this makes sense.</p><h4 id=proof-sketch>Proof Sketch</h4><p>Assuming we have <a href=/posts/kbhindependently_and_identically_distributed/>IID</a> sequence of symbols \(x_1, x_2, \ldots\), suppose we applied the <a href=/posts/kbhhuffman_coding/>Huffman Coding</a> scheme with <a href=#block-coding>Block Coding</a> block size \(n\). Recall that <a href=/posts/kbhhuffman_coding/#huffman-coding-is-bounded>Huffman Coding is Bounded</a>, so our new bound for a block would be:</p><p>\begin{equation}
+H(X_1, \dots, X_{n}) \leq \bar{\ell} \leq H(X_1, \dots, X_{n}) +1
+\end{equation}</p><p>Recall now that <a href=#joint-entropy-of-independent-events>joint entropy of independent events</a> is the sum, so we get:</p><p>\begin{equation}
+\sum_{j} H(X_j) \leq \bar{\ell} \leq 1+ \sum_{j} H(X_j)
+\end{equation}</p><p>For <a href=/posts/kbhindependently_and_identically_distributed/>IID</a> sequences, then, the sum is just multiplication by \(n\):</p><p>\begin{equation}
+n H(X_j) \leq \bar{\ell} \leq 1+ n H(X_j)
+\end{equation}</p><p>dividing by \(n\):</p><p>\begin{equation}
+H(X_j) \leq \frac{\bar{\ell}}{n} \leq H(X_j) + \frac{1}{n}
+\end{equation}</p><p>(now we are tracking per symbol because we average our large blocked codeword length over the block size number of symbols)</p><p>Now, this says that <a href=#block-coding>Block Coding</a> gets more efficient with larger block size. HOWEVER! this is impractical because the number of blocks scales exponentially based on \(M^{n}\) for \(M\) instantiations of each symbol.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Register Allocation</title>
+<meta name=description content="Intermediate code uses &ldquo;unlimited&rdquo; temporaries. We have more temporaries than there are registers. Key: assign multiple temporaries to each register
+example
+Consider:
+a := c + d
+e := a + b
+f := e - 1
+notice how a and e are both dead after use, we can then allocate:
+r1 := r2 + r3
+r1 := r1 + r4
+r1 := r1 - r1
+key: *you can share a register between \(t_{1}\) and \(t_{2}\) if at any point at most one of \(t_1\) and \(t_2\) are alive.
+algorithm
+liveness check
+go through liveness analysis to see what&rsquo;s live or not at any particular moment."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Register Allocation</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Intermediate code uses &ldquo;unlimited&rdquo; temporaries. We have more temporaries than there are registers. Key: <strong>assign multiple temporaries to each register</strong></p><h2 id=example>example</h2><p>Consider:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#75af00>a</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>c</span> <span style=color:#f92672>+</span> <span style=color:#111>d</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>e</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>a</span> <span style=color:#f92672>+</span> <span style=color:#111>b</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>f</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>e</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>
+</span></span></code></pre></div><p>notice how <code>a</code> and <code>e</code> are both dead after use, we can then allocate:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#75af00>r1</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>r2</span> <span style=color:#f92672>+</span> <span style=color:#111>r3</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>r1</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>r1</span> <span style=color:#f92672>+</span> <span style=color:#111>r4</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>r1</span> <span style=color:#00a8c8>:=</span> <span style=color:#111>r1</span> <span style=color:#f92672>-</span> <span style=color:#111>r1</span>
+</span></span></code></pre></div><p>key: *you can share a register between \(t_{1}\) and \(t_{2}\) if at any point at most one of \(t_1\) and \(t_2\) are alive.</p><h2 id=algorithm>algorithm</h2><h3 id=liveness-check>liveness check</h3><p>go through liveness analysis to see what&rsquo;s live or not at any particular moment.</p><h3 id=register-inference-graph>register inference graph</h3><p>construct an undirected graph where:</p><ol><li>a node for each temporary</li><li>an edge between \(t_1\), \(t_2\) if they are live at the same time</li></ol><p>two temporaries can&rsquo;t be at the same register if there&rsquo;s an edge between them. Think of this as a <a href=/posts/kbhnon_deterministic_turing_machines/#clique-problem>clique problem</a> for every group of live variables from the step above.</p><h3 id=coloring>coloring</h3><p>Notice that the graph above is \(k\) colorable iff all variables can fit in \(k\) registers as no two adjacent nodes will share the same color as they occur simultaneously.</p><p>This is naively an NP hard problem. And a coloring also may not exist.</p><h4 id=observation>observation</h4><ul><li>pick a node \(t\) with fewer than \(k\) neighbors in the RIG</li><li>eliminate \(t\) and its edges from RIG</li><li>if the result is \(k\) colorable, then so is the original graph</li></ul><p>since \(t\) has fewer than \(k\) neighbors, and then coloring it will just allow us to use the remaining color for \(t\)</p><h4 id=algorithm>algorithm</h4><p>to k_color:</p><ol><li>remove a node with less than \(k\) neighbors; stick it on a stack</li><li>repeat step 1 until graph is empty</li><li>while stack is not empty<ol><li>pop</li><li>assign a color; since at every state here the thing we popped has less than \(k\), we can find a distinct color under \(k\)</li></ol></li></ol><p>we have a failure case when we are unable to peel the graph until empty in step 2.</p><p>if so, peel as much as you can, and then&mldr;</p><ol><li>pick a node (following some heuristics, see below)</li><li>remove it and stick it somewhere else</li><li>keep going to previous algorithm&rsquo;s step 2</li></ol><p>when we put the node you evicted back in, there&rsquo;s a <em>chance</em> that you can still color it.</p><p>if a variable is not colorable, we stick it into the stack.</p><p>We now make a control flow graph where we load the variable and write to the variable. This allows us to recompute liveness since the liveness is reduced to right before load and uses.</p><p>also each &ldquo;live&rdquo; of \(f\) is independent, and so we will have more nodes on the graph, etc.</p><h4 id=who-do-we-spill>who do we spill?</h4><p>if we have a case where everybody&rsquo;s edges is above \(k-1\), who do we spill?</p><p><strong>general goals</strong>: &ldquo;reduce number of loads&rdquo;</p><ul><li>spill with the most conflicts</li><li>spill with few definition and uses</li><li><em>avoid spilling in inner loops</em></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

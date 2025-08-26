@@ -1,0 +1,130 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 OCT242024</title>
+<meta name=description content="Object
+The functional core still stays:
+\begin{equation}
+e \to x | \lambda  x. e | e e
+\end{equation}
+Records
+Named fields with values:
+\begin{equation}
+[flag = False, value = 42]
+\end{equation}
+&ldquo;each element of the tuple has a name, and order is unimportant&rdquo;
+If the fields are fixed, they are basically just ADTs.
+Record Type
+All functions are types, and so are the methods; so we can just add more types for the methods as well. So here&rsquo;s two properties and a method:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 OCT242024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=object>Object</h2><p>The functional core still stays:</p><p>\begin{equation}
+e \to x | \lambda x. e | e e
+\end{equation}</p><h3 id=records>Records</h3><p>Named fields with values:</p><p>\begin{equation}
+[flag = False, value = 42]
+\end{equation}</p><p>&ldquo;each element of the tuple has a name, and order is unimportant&rdquo;</p><p>If the fields are fixed, they are basically just ADTs.</p><h3 id=record-type>Record Type</h3><p>All functions are types, and so are the methods; so we can just add more types for the methods as well. So here&rsquo;s two properties and a method:</p><p>\begin{equation}
+[flag = False, value = 42, add: Int \to Int]
+\end{equation}</p><h4 id=self>&ldquo;self&rdquo;</h4><p>We will have something that&rsquo;s a recursive data type:</p><p>\begin{equation}
+X = [flag = False, value = 42, first: X \to Bool, first: X \to Int]
+\end{equation}</p><p>All methods will always take the self parameter first, and then take anything else after as needed.</p><h3 id=objects>Objects</h3><p>Objects is a collection of fields and methods on those methods</p><h2 id=object-calculus>Object Calculus</h2><p>\begin{equation}
+o = [\dots, l_{i} = \zeta (x) b_{i}, \dots]
+\end{equation}</p><p>object calculus is a map between field names and object producers.</p><ul><li><strong>selection</strong>: \(o. l_{i} \to bi [ x := o]\) (i.e. invoke with self)</li><li><strong>override</strong>: \(o.l_{i} \Leftarrow \zeta (y) b \to o\) with \(l_{i} = \zeta (y) b\) (i.e. set new method value)</li></ul><h3 id=wait-what-about-fields>wait what about fields!</h3><p>Well, we just have a method that returns a contsant, such as:</p><p>\begin{equation}
+o = [l = \zeta(x) 3]
+\end{equation}</p><p>Look, when we ask for \(o.l\) we will just get \(3\) because \(3[x := o] = 3\).</p><h3 id=recursion>recursion</h3><p>\begin{equation}
+o = [l = \zeta(x) x . l]
+\end{equation}</p><p>or</p><p>\begin{equation}
+o = [l = \zeta(x) x]
+\end{equation}</p><p>invoking \(o.l\) will either get you back \(o.l\) or \(o\) in these things, enabling recursion.</p><h3 id=programing-with-overrides>programing with overrides</h3><p>For instance, we can get a thing to rewrite itself!</p><p>\begin{equation}
+o = [I = \zeta(y) (y.l \leq \zeta (x) x )]
+\end{equation}</p><p>Meaning:</p><p>\begin{equation}
+o.l \to o.l \Leftarrow \epsilon (x) x \to [I = \zeta(x) x]
+\end{equation}</p><h4 id=numbers>numbers</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>zero</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span> <span style=color:#111>iszero</span> <span style=color:#f92672>=</span> <span style=color:#111>s</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#111>true</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>         <span style=color:#111>pred</span> <span style=color:#f92672>=</span> <span style=color:#111>s</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#111>x</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>         <span style=color:#111>succ</span> <span style=color:#f92672>=</span> <span style=color:#111>s</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>.</span><span style=color:#111>iszero</span> <span style=color:#f92672>&lt;=</span> <span style=color:#111>s</span><span style=color:#111>(</span><span style=color:#111>y</span><span style=color:#111>)</span> <span style=color:#111>false</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>pred</span> <span style=color:#f92672>&lt;=</span> <span style=color:#111>s</span><span style=color:#111>(</span><span style=color:#111>y</span><span style=color:#111>)</span> <span style=color:#111>x</span><span style=color:#111>]</span>
+</span></span></code></pre></div><p>that is, in successor, we can keep rolling the number back</p><h3 id=transforming-lambda-calculus-into-object-calculus>transforming lambda calculus into object calculus</h3><ul><li>\(T(x) = x\)</li><li>\(T(e_1 e_2) = \qty(T(e_1) . arg \Leftarrow \zeta(y) T (e_2)).val\)</li><li>\(T(\lambda x . e) = [arg = \zeta(x) x. arg, val = \zeta(x) T (e) [x := x.arg]]\)</li></ul><p>Key idea: a function is an object of two fields, an argument and a body.</p><p><strong>note that the default argument field for a non-invoked lambda is just an infinite loop, its only a dummy value</strong></p><h3 id=transforming-object-calculus-into-lambda-calculus>transforming object calculus into lambda calculus</h3><p>We will represent objects as lists of pairs: the first component is a label (an integer); the second component is the value of the methods/field&mdash;if there are more than one object with a particular value, we pick the first one (&mldr;which is how we do overrides).</p><p>Select a field:</p><p>\begin{equation}
+o.i = \qty(o \qty(\lambda h. \lambda t. \text{ if } \qty(h.1) == 1 \text{ then } (h.2) \text{ else } t) \lambda x. x)
+\end{equation}</p><p>And override (we just tack things up front):</p><p>\begin{equation}
+o.i \Leftarrow f = cons(i,f) o
+\end{equation}</p><p><strong>LIMITATION</strong>: this can&rsquo;t work for types, because general overrides can&rsquo;t really work since the target of the override could be literally any types.</p><h2 id=subtyping>subtyping</h2><p>\(A &lt; B\) if an object with type \(A\) can be used in any context where something of type \(B\) is required.</p><p>\begin{equation}
+\frac{E \vdash o: [l_1 : B_1, \dots, l_{n}: B_{n}], m &lt; n}{E \vdash o: [l_1 : B_1, \dots, l_{m}, B_{n}]}
+\end{equation}</p><p>that is, we can forget some fields and we can get a good type still.</p><h2 id=key-tension-dot-dot-dot>key tension&mldr;</h2><p>If you want a typed object language, object method definition</p><h3 id=mainstream-oo>mainstream OO</h3><p>Java, C++</p><h4 id=properties>properties</h4><ul><li><strong>happens before type checking</strong>: inheritance, static overrides, restrictions on superclass modification,, dynamic updates&mldr;</li><li>meaning, typing is <strong>independent</strong> of program evaluation</li><li>type checking after method assembly; each class is fully resolved</li></ul><h4 id=type-checking>type checking</h4><ul><li>inherentance is a static property</li><li>method override is resolved at compile time&mdash;before type checking</li></ul><h3 id=functional-oo>functional -> OO</h3><p>OCaml, Haskell</p><p>We want to add some object orientation to a functional language&mdash;OO is a thin wrapper; to work around rough edges, we use higher order functions.</p><h4 id=ocaml-example>OCaml example</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ocaml data-lang=ocaml><span style=display:flex><span><span style=color:#00a8c8>let</span> <span style=color:#111>counter</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#00a8c8>object</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>var</span> <span style=color:#00a8c8>mutable</span> <span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>method</span> <span style=color:#111>get</span> <span style=color:#f92672>=</span> <span style=color:#111>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>method</span> <span style=color:#111>inc</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>x</span> <span style=color:#f92672>+</span> <span style=color:#111>1</span>
+</span></span><span style=display:flex><span>  <span style=color:#00a8c8>end</span><span style=color:#f92672>;</span>
+</span></span></code></pre></div><p>This will give you a record type <code>val counter: &lt;get: int, inc: unit ></code>&mdash;which is computed dynamically.</p><p>Unlike intermediate objects like the above, classes defined as a global scope <em>can</em> be inherited.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-ocaml data-lang=ocaml><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#111>counter</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>  <span style=color:#00a8c8>object</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>var</span> <span style=color:#00a8c8>mutable</span> <span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>method</span> <span style=color:#111>get</span> <span style=color:#f92672>=</span> <span style=color:#111>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>method</span> <span style=color:#111>inc</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>x</span> <span style=color:#f92672>+</span> <span style=color:#111>1</span>
+</span></span><span style=display:flex><span>  <span style=color:#00a8c8>end</span><span style=color:#f92672>;</span>
+</span></span></code></pre></div><h3 id=oo-functional>OO -> functional</h3><p>Java, C++</p><p>We want to add some functionalish components (higher order functions, parametric polymorphism) to our OO language:~:W</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>(</span><span style=color:#111>arg</span><span style=color:#111>)</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>{</span> <span style=color:#111>body</span> <span style=color:#111>}</span>
+</span></span></code></pre></div><p>like <a href=/posts/kbhsu_cs242_oct032024/#lambda-calculus>Lambda Calculus</a>&mdash;-</p><ol><li>functions are anonymous</li><li>take one argument</li></ol><p>parametric polymorphism = C++ templates:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#00a8c8>template</span> <span style=color:#f92672>&lt;</span><span style=color:#00a8c8>class</span> <span style=color:#75af00>T</span><span style=color:#f92672>&gt;</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>Test</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>private</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>      <span style=color:#111>T</span> <span style=color:#111>val</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>public</span><span style=color:#f92672>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>MyNum</span><span style=color:#111>(</span><span style=color:#111>T</span> <span style=color:#111>n</span><span style=color:#111>)</span> <span style=color:#111>(</span><span style=color:#111>val</span> <span style=color:#111>T</span><span style=color:#111>)</span> <span style=color:#111>{};</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div><h3 id=dynamically-typed>Dynamically Typed</h3><p>&ldquo;Give up&rdquo;</p><p>Python, Javascript, LISP</p><p>noticeably more popular in the OO world (because static typing in OO is really hard)</p><h4 id=prototypes>prototypes</h4><p>Prototype-based systems are the analogies to type systems. New objects are created by copying the prototypes around.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

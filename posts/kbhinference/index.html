@@ -1,0 +1,94 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>inference</title>
+<meta name=description content="inference is the act of updating the distribution of a random variable based on distribution of actually observed variables:
+\begin{equation}
+P(X|Y)
+\end{equation}
+where \(Y\) is observed, and we want to know how likely \(X\) would therefore be.
+We call the set \(X\) the &ldquo;query variables&rdquo;, \(Y\) as &ldquo;evidence varibales&rdquo;, and anything that we didn&rsquo;t use which connects the two variables as &ldquo;hidden variables&rdquo;.
+If things are not in the right order of \(X\) and \(Y\), consider the Bayes rule."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>inference</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhinference/>inference</a> is the act of updating the distribution of a <a href=/posts/kbhrandom_variables/>random variable</a> based on distribution of actually observed variables:</p><p>\begin{equation}
+P(X|Y)
+\end{equation}</p><p>where \(Y\) is observed, and we want to know how likely \(X\) would therefore be.</p><p>We call the set \(X\) the &ldquo;query variables&rdquo;, \(Y\) as &ldquo;evidence varibales&rdquo;, and anything that we didn&rsquo;t use which connects the two variables as &ldquo;hidden variables&rdquo;.</p><p>If things are not in the right order of \(X\) and \(Y\), consider the <a href=/posts/kbhbayes_theorem/>Bayes rule</a>.</p><h2 id=inference-is-hard>Inference is Hard</h2><ul><li>mix of <a href=/posts/kbhuniqueness_and_existance/#continuity>continuous</a> and <a href=/posts/kbhdiscrete_distribution/>discrete distribution</a></li><li>results could be either a <a href=/posts/kbhprobability_mass_function/>PMF</a> or a <a href=/posts/kbhprobability_distributions/#probability-density-function>PDF</a></li></ul><h2 id=example>Example</h2><figure><img src=/ox-hugo/2023-10-03_09-52-18_screenshot.png></figure><p>Suppose we&rsquo;d like to know \(P(b^{1} | d^{1}, c^{1})\), where \(b^{1}\) is considered a query variable, and \(c^{1}\) is considered evidence varibales. The definition of the <a href=/posts/kbhprobability/#conditional-probability>conditional probability</a> gives us:</p><p>\begin{equation}
+p(b^{1} | d^{1}, c^{1}) = \frac{p(b^{1}, d^{1}, c^{1})}{p(d^{1}, c^{1})}
+\end{equation}</p><p>To compute \(p(b^{1}d^{1}c^{1})\), we first compute:</p><p>\begin{equation}
+p(b^{1}, d^{1}, c^{1}, E, S)
+\end{equation}</p><p>and then, use the <a href=/posts/kbhprobability/#law-of-total-probability>law of total probability</a> to get:</p><p>\begin{equation}
+p(b^{1}, d^{1}, c^{1}) = \sum_{e=E} \sum_{s=S} p(b^{1}, d^{1}, c^{1}, E, S)
+\end{equation}</p><p>you will note this is very expensive computationally O(es) &mdash; and if you have like a 1000 hidden variables you will die.</p><p>We therefore introduce <a href=#sum-product-elimination>sum-product elimination</a>.</p><h2 id=sum-product-elimination>sum-product elimination</h2><p>You will note the summation in the example above has a lot of interlocking for loops. You can &ldquo;factor them out&rdquo; via the <a href=#sum-product-elimination>sum-product elimination</a> algorithm.</p><p>Suppose you are interested in:</p><p>\begin{equation}
+P(b | d&rsquo;, c&rsquo;)
+\end{equation}</p><h3 id=step-1-write-down-factors>Step 1: write down factors</h3><p>Write down all <a href=/posts/kbhfactor/>factor</a>s associated with this computation:</p><p>\begin{equation}
+\phi_{1}(B), \phi_{2}(S), \phi_{3}(E,B,S), \phi_{4}(D,E), \phi_{5}(C,E)
+\end{equation}</p><p>we have evidence at two variables: \(D, C\).</p><h3 id=step-2-performing-factor-conditioning--kbhfactor-dot-md--for-all-evidence-variables>Step 2: performing <a href=/posts/kbhfactor/#factor-conditioning>factor conditioning</a> for all evidence variables</h3><p>Therefore, \(\phi_{4}\) and \(\phi_{5}\) can be replaced by the <a href=/posts/kbhfactor/#factor-conditioning>factor conditioning</a> as we observed \(d, c\), so we no longer need \(d, c\) as input because we know them:</p><p>now we have, to replace \(\phi_{4}, \phi_{5}\):</p><p>\begin{equation}
+\phi_{6}(E), \phi_{7}(E)
+\end{equation}</p><h3 id=step-3-using-the-law-of-total-probability--kbhprobability-dot-md--and-factor-product--kbhfactor-dot-md--get-rid-of-hidden-variables>Step 3: using the <a href=/posts/kbhprobability/#law-of-total-probability>law of total probability</a> and <a href=/posts/kbhfactor/#factor-product>factor product</a>, get rid of hidden variables</h3><p>We then choose an ordering of the <a href=/posts/kbhinference/>hidden variables</a> and apply a <a href=/posts/kbhfactor/#factor-product>factor product</a> using the <a href=/posts/kbhprobability/#law-of-total-probability>law of total probability</a> to get rid of them:</p><ul><li>First get rid of any hidden variables</li><li>Then use <a href=/posts/kbhfactor/#factor-product>factor product</a> to combine results</li></ul><p>\begin{equation}
+\phi_{8}(B,S) = \sum_{E=e} \phi_{3}(E,B,S) \phi_{6}(e) \phi_{7}(e)
+\end{equation}</p><p>\begin{equation}
+\phi_{9}(B) = \sum_{S=s} \phi_{2}(s) \cdot \phi_{8}(B,S)
+\end{equation}</p><p>We now only have two <a href=/posts/kbhfactor/>factor</a>s left: \(\phi_{1}(B)\phi_{9}(B)\). We finally apply <a href=/posts/kbhfactor/#factor-product>factor product</a> again:</p><p>\begin{equation}
+\phi_{10} (B) = \phi_{9}(B) \cdot \phi_{1}(B)
+\end{equation}</p><h2 id=approximate-inference>Approximate Inference</h2><p>See <a href=/posts/kbhapproximate_inference/>Approximate Inference</a></p><h2 id=gaussian-inference>Gaussian Inference</h2><p>See <a href=/posts/kbhinference_for_gaussian_models/>Inference for Gaussian Models</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

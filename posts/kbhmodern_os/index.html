@@ -1,0 +1,93 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>modern OS</title>
+<meta name=description content="multi-core CPUs
+Finally, actually multitasking: starting in mid 2000s, multiple cores are finally more common. management between cores is crucial
+Moors Law Break Down
+
+we have reached much of the limits of the speed of a single core
+instead, we have to have more cores&mdash;which requires more management to take advantage of
+
+More kinds of Cores
+
+&ldquo;performance&rdquo; vs &ldquo;efficiency&rdquo; cores
+needs to schedule for different tasks: not just who on what core, but who on what TYPE of core
+
+Other Hardware
+Specialized hardware in these chips, which is required for scheduling."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>modern OS</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=multi-core-cpus>multi-core CPUs</h2><p>Finally, actually multitasking: starting in mid 2000s, multiple cores are finally more common. <strong>management between cores is crucial</strong></p><h3 id=moors-law-break-down>Moors Law Break Down</h3><ul><li>we have reached much of the limits of the speed of a single core</li><li>instead, we have to have more cores&mdash;which requires more management to take advantage of</li></ul><h3 id=more-kinds-of-cores>More kinds of Cores</h3><ul><li>&ldquo;performance&rdquo; vs &ldquo;efficiency&rdquo; cores</li><li>needs to schedule for different tasks: not just who on what core, but who on what TYPE of core</li></ul><h2 id=other-hardware>Other Hardware</h2><p>Specialized hardware in these chips, which is required for scheduling.</p><h3 id=gpu>GPU</h3><p>In change of graphics and some ML applications</p><h3 id=npu-tpu>NPU/TPU</h3><p>Machine learning specialization.</p><h2 id=scheduling-multi-core-cpus>Scheduling Multi-Core CPUs</h2><h3 id=most-basic-idea>Most Basic Idea</h3><ol><li>share ready queue shared across cores</li><li>lock to sync access to the ready queue</li><li>one dispatcher</li><li>separate interrupts for each core</li></ol><p>Run \(k\) highest priority threads on the \(k\) cores.</p><h4 id=issue>Issue</h4><ul><li>need to figure out what is the priority of each core run if we want preemption, so its an \(O(n)\) check for free + priority</li><li>the shared ready queue needs to be locked, so as core increases they need to be synchronized which causes slowdown</li></ul><h3 id=one-ready-queue-per-core>One Ready Queue per Core</h3><p>Big problems:</p><ol><li>where do we put a given thread?</li><li>moving core between threads is expensive</li></ol><p>Big tension: <strong><a href=#work-stealing>Work Stealing</a></strong> and <strong><a href=#core-affinity>Core Affinity</a></strong></p><h4 id=work-stealing>Work Stealing</h4><p>If one core is free (even if there is things in the ready queue), check other cores&rsquo; ready queues and try to do thread communism.</p><h4 id=core-affinity>Core Affinity</h4><p>Ideally, because moving threads between cores is expensive (need to rebuild cache), we keep each thread running on the same core.</p><h3 id=gang-scheduling>Gang Scheduling</h3><p>When you have a thread you are trying to schedule, try to see if there are other threads from the same process in the ready queue and schedule all of them on various cores.</p><h2 id=locking-multi-core-cpus>Locking Multi-Core CPUs</h2><p><strong>Main problem</strong>: disable interrupts doesn&rsquo;t stop race conditions.</p><p>So we turn to <a href=/posts/kbhpermits_model/>busy waiting</a> with a hardware atomic operation <code>exchange</code>, which reads, returns, and swaps the value of some memory in a single atomic operation AND which is never ran in parallel; it returns the previous value of the memory before it was set:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>Lock</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>std</span><span style=color:#f92672>::</span><span style=color:#111>automic</span><span style=color:#f92672>&lt;</span><span style=color:#00a8c8>int</span><span style=color:#f92672>&gt;</span> <span style=color:#111>sync</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>void</span> <span style=color:#111>Lock</span><span style=color:#f92672>::</span><span style=color:#111>lock</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>while</span> <span style=color:#111>(</span><span style=color:#111>sync</span><span style=color:#111>.</span><span style=color:#111>exchange</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>))</span> <span style=color:#111>{}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// we are now the only one using it
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// do work ....
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>    <span style=color:#111>sync</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div><p>The exchange function returns the old value.</p><p>The <a href=/posts/kbhpermits_model/>busy waiting</a> here isn&rsquo;t too bad, because you only need to busy wait for the lock itself to be locked, and then the lock will handle sync from there.</p><h2 id=flash-storage>Flash Storage</h2><p>They are faster:</p><ol><li>no moving parts (no spinny)</li><li>smaller, faster, lots of data</li><li>mobile devices especially</li></ol><p>Typically, we fix these quirky issues with the <a href=#flash-storage>Flash Translation Layer</a> (<a href=#flash-storage>FTL</a>), which provides block, sector, and read/write interfaces like spinning harddrives without the OS noticing.</p><p>Minimizing seeks isn&rsquo;t too necessary now, but, writing SSD is very weird:</p><h3 id=writing>writing</h3><p>You have two operation.</p><h4 id=erase>erase</h4><p>You can set <strong>ALL SEGMENT</strong> of an &ldquo;erase unit&rdquo; to \(1\)</p><p>&ldquo;erase unit&rdquo; size is usually 256k</p><h4 id=write>write</h4><p>You can modify one &ldquo;page&rdquo; at a time (which is smaller than a erase unit)&mdash;but you can ONLY set individual bits in the page into 0 (and not 1, which you have to do by erasing larger erasing chunks).</p><p>&ldquo;page&rdquo; size is usually 512 bytes or 4k bytes</p><h3 id=wear-out>wear-out</h3><p><strong>wear leveling</strong>: make sure that the drive wears out at roughly the same rate as other parts of the drive. Moving commonly written data (&ldquo;hot&rdquo; data) around</p><h3 id=ftl--org19007d5--limitations><a href=#flash-storage>FTL</a> limitations</h3><ul><li>no hardware access (can&rsquo;t optimize around flash storage)</li><li>sacrifices performances for performance</li><li>wasts capacity (to look like hard drive)</li><li>many layers</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

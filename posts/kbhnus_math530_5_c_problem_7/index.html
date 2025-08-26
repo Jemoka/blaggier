@@ -1,0 +1,73 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-MATH530 5.C Problem 7</title>
+<meta name=description content="
+Suppose \(T \in \mathcal{L}(V)\) has a diagonal matrix \(A\) w.r.t. some basis of \(V\), and that \(\lambda \in \mathbb{F}\). Prove that \(\lambda\) appears on the diagonal of \(A\) precisely \(\dim E(\lambda, T)\) times.
+
+Aside: &ldquo;to appear on the diagonal \(n\) times&rdquo;
+We want to begin by giving a description for what &ldquo;appearing on the diagonal&rdquo; of a diagonal matrix implies.
+A diagonal matrix is a special-case upper-triangular matrix, so a value being on its diagonal implies it to be an eigenvalue."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-MATH530 5.C Problem 7</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><hr><p>Suppose \(T \in \mathcal{L}(V)\) has a diagonal matrix \(A\) w.r.t. some basis of \(V\), and that \(\lambda \in \mathbb{F}\). Prove that \(\lambda\) appears on the diagonal of \(A\) precisely \(\dim E(\lambda, T)\) times.</p><hr><h2 id=aside-to-appear-on-the-diagonal-n-times>Aside: &ldquo;to appear on the diagonal \(n\) times&rdquo;</h2><p>We want to begin by giving a description for what &ldquo;appearing on the diagonal&rdquo; of a diagonal matrix implies.</p><p>A diagonal matrix is a special-case upper-triangular matrix, so a value being on its diagonal implies it to be an eigenvalue.</p><p>Furthermore, let \(v_1, &mldr; v_{n}\) be the eigenvector-basis which gives the diagonal matrix aforementioned for \(A\). By calculation (i.e. properties of multiplying some all-but-one-zero &ldquo;one hot&rdquo; vector to the diagonal representation of \(A\)), if \(\lambda\) appears \(j\) times on the diagonal representation of \(A\), \(j\) basis vectors of \(V\) will belong to the same eigenvector \(j\) as they all will produce \(Tv = \lambda v\) when applied to the diagonal representation of \(A\)).</p><p>And finally, because basis vectors are linearly independent, we have that if a value \(\lambda\) appears on the diagonal of a diagonal matrix of \(A\) \(n\) times, it implies that \(A\) has \(n\) linearly independent eigenvectors all belonging to \(\lambda\) which forms the basis for which the diagonal matrix is built.</p><h2 id=proof>Proof</h2><p>To complete the proof, we now perform casework.</p><h3 id=lambda-appears-0-times>\(\lambda\) appears \(0\) times</h3><p>Per our discussion above, this implies that there are \(0\) (trivially linearly independent) eigenvectors for which \(\lambda\) serves as its eigenvalue. Namely, that means \(\lambda\) is not an eigenvalue of \(A\). And therefore, we have that \(T - \lambda I\) is injective, and hence \(null (T - \lambda I) = {0}\). Recall that \(E(\lambda, T) = null(T-\lambda I)\). We now have \(\dim\ E(\lambda, T) = 0\), as desired.</p><h3 id=lambda-appears-n-times>\(\lambda\) appears \(n\) times</h3><p>Again from above, we have \(n\) linearly-independent eigenvectors belonging to the same eigenvalue \(\lambda\) which forms the basis out of which the diagonal matrix is built. Therefore, one can take at least \(n\) linearly independent vectors from \(E(\lambda, T)\) as \(null(T- \lambda I)\) is the space of all eigenvectors belonging to \(\lambda\) and the zero vector. This makes \(\dim E(\lambda, T)\) at least \(n\).</p><p>To show that \(\dim E(\lambda, T)\) to be exactly \(n\), let&rsquo;s suppose the contrary. Let \(v\) be another eigenvector belonging to \(\lambda\) linearly independent to the previous \(n\) already discussed. \(v\) would be linearly independent to all other members of the eigenvector-basis of \(V\): as eigenvectors from distinct eigenvalues are linearly independent and we hypothesized that \(v\) is linearly independent to the other eigenvectors belonging to \(\lambda\).</p><p>Yet, this is not possible: \(v \in V\) cannot create a linearly independent list conjoined to a basis of \(V\). Reaching contraction, we see that \(\dim E(\lambda, T) = n\) as desired. \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

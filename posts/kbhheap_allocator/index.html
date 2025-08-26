@@ -1,0 +1,76 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Heap allocator</title>
+<meta name=description content="Upon initialization, a large contiguous block of memory is initialized as a whole and called the &ldquo;heap&rdquo;. If we run out of it, we double the amount of memory being allocated.
+
+handling arbitrary requests of mallocs/realloc and frees
+keep track of what&rsquo;s been allocated and what&rsquo;s free
+decide which segment of memory to use when fulfilling an allocating request
+respond quickly
+Return addresses that are 8-byte aligned (native types must be stored at a memory location which is a multiple of its size; otherwise bus error)
+
+Two main goals:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Heap allocator</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Upon initialization, a large contiguous block of memory is initialized as a whole and called the &ldquo;heap&rdquo;. If we run out of it, we double the amount of memory being allocated.</p><ol><li>handling arbitrary requests of mallocs/realloc and frees</li><li>keep track of what&rsquo;s been allocated and what&rsquo;s free</li><li>decide which segment of memory to use when fulfilling an allocating request</li><li>respond quickly</li><li>Return addresses that are 8-byte aligned (native types must be stored at a memory location which is a multiple of its size; otherwise bus error)</li></ol><p>Two main goals:</p><ul><li>maximize throughput: we want to make number of requests per unit of time large (&ldquo;we want the largest address in use to be as low as possible&rdquo;)</li><li>maximize utilization: we want to use memory economically without fragmenting it</li></ul><p>These two goals seems to be conflicting: it may take longer to plan out heap memory use for each request if we want to have perfect.</p><h2 id=design-questions>Design Questions</h2><ol><li><p>how do we keep track of blocks that are freed</p></li><li><p>how do we choose which free block to satisfy an allocation request</p></li><li><p>after we choose a free block, how do we deal with the excess</p></li><li><p>can we avoid searching all blocks for the free blocks to reuse?</p></li><li><p>can we merge adjacent free blocks to keep large space available?</p></li><li><p>Can we avoid always coping/moving data?</p></li></ol><h2 id=bump-allocator>Bump Allocator</h2><p>Silliest <a href=/posts/kbhheap_allocator/>Heap allocator</a>. You maintain a pointer that&rsquo;s the root of the memory being used, and each time you get memory we bump that pointer forward. Free does nothing.</p><p>Maximum throughput (you like, just allocate heap, and free is very easy), but bad utilization.</p><h2 id=implicit-free-list-allocator>Implicit Free List Allocator</h2><p>In this implementation, the block structure implies what has been freed. We used to store this into a global data structure, but that&rsquo;s bad because there is too much memory overhead. Instead, we place a 8-byte &ldquo;header&rdquo; in front of each block of memory containing whether its free or in use + its payload size. Through reading all the headers, we essentially maintain an implicit list of free nodes.</p><p>Now, the 8 byte system for memory + free status doesn&rsquo;t sound right. Recall memory addresses themselves are 8-bytes; however, all of our memory is 8-byte aligned. So, the first three bits should be 0.</p><p>Therefore, we pack free status in the firs tbit, ignore the next two, do store the memory in the rest</p><h3 id=which-one-do-you-alloc>&ldquo;which one do you alloc&rdquo;</h3><ul><li><strong>First fit</strong>: start from the beginning, and search for the first free block you come across to serve the request</li><li><strong>Next fit</strong>: continuing search starting at the end point of your last malloc until you get the first free block, when you hit the end, go back around</li><li><strong>Best fit</strong>: examine every free block and find the one with the smallest size that fits</li></ul><p>Best fit minimizes fragmentation; next fit optimizes speed</p><h3 id=edge-case>edge case</h3><p>if you run out of space in the end, with an awkward 8 byte in the end, you can either make a 0-byte block or just give the last bit of memory to the previous one.</p><h3 id=explicit-free-list-allocator>Explicit Free List Allocator</h3><p>Can we design an allocator to jump between free blocks. Naively doing this is bad.</p><p>Instead, we can constrain each block to be at least size 16. And then, we will put the pointers to the prev/next free nodes in the next two 8-byte payload.</p><p>Finally, we will keep track of a head node as a global variable</p><h2 id=memory-coalescing>Memory Coalescing</h2><p>During frees, we should try to eat the adjacent <strong>right</strong> free memory to create one large free block in order to coalescing free blocks together</p><p>During <a href=/posts/kbhheap/#realloc>realloc</a>, there are three conditions by which you can retrun the same address:</p><ol><li>size is growing, there&rsquo;s free space to the right</li><li>size is growing, but we added padding so we can use that</li><li>size is shrinking (we have to ensure that we have at least 16 bytes in the shrink space, which means we need to be shrink by at least 24 bytes to actually do any shrinking)</li></ol><h2 id=memory-providing-rules>Memory providing rules</h2><ol><li>at least 16 bytes (only if <a href=#explicit-free-list-allocator>Explicit Free List Allocator</a>)</li><li>has to be multiple of 8</li></ol><h2 id=explicit-allocator-requirements>Explicit allocator Requirements</h2><ul><li>must have headers to track information in implicit</li><li>must have an explicit free list managed as a doubly linked list using the first 16 bytes of the free block</li><li>must have a malloc implementation that searches the free block</li><li>must coallesce the immediate right free blocks</li><li>must do in-place realloc when possible; even if its not possible, we should still absorb adjacent right blocks or no longer absorb and must realloc</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

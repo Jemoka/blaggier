@@ -1,0 +1,105 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>word2vec</title>
+<meta name=description content="we will train a classifier on a binary prediction task: &ldquo;is context words \(c_{1:L}\) likely to show up near some target word \(W_0\)?&rdquo;
+We estimate the probability that \(w_{0}\) occurs within this window based on the product of the probabilities of the similarity of the embeddings between each context word and the target word.
+
+we have a corpus of text
+each word is represented by a vector
+go through each position \(t\) in the text, which has a center word \(c\) and set of context words \(o \in O\)
+use similarity of word vectors \(c\) and \(o\) to calculate \(P(o|c)\)
+
+Meaning, we want to devise a model which can predict high probabilities \(P(w_{t-n}|w_{t})\) for small \(n\) and low probabilities for large \(n\)"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>word2vec</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>we will train a classifier on a binary prediction task: &ldquo;is context words \(c_{1:L}\) likely to show up near some target word \(W_0\)?&rdquo;</p><p>We estimate the probability that \(w_{0}\) occurs within this window based on the product of the probabilities of the similarity of the embeddings between each context word and the target word.</p><ul><li>we have a corpus of text</li><li>each word is represented by a <a href=/posts/kbhvector/>vector</a></li><li>go through each position \(t\) in the text, which has a center word \(c\) and set of context words \(o \in O\)</li><li>use similarity of word vectors \(c\) and \(o\) to calculate \(P(o|c)\)</li></ul><p>Meaning, we want to devise a model which can predict high probabilities \(P(w_{t-n}|w_{t})\) for small \(n\) and low probabilities for large \(n\)</p><h2 id=word2vec-is-a-bag-of-words--kbhbag-of-words-dot-md--model>Word2Vec is a <a href=/posts/kbhbag_of_words/>Bag of Words</a> model!</h2><p>This is a <a href=/posts/kbhbag_of_words/>Bag of Words</a> model as our training does <strong>not</strong> learn any information relating to the ordering and structure between words.</p><h2 id=likelihood>Likelihood</h2><p>If we wrote the above out:</p><p>\begin{equation}
+L(\theta) = \prod_{t=1}^{T} \prod_{-m \leq j \leq m, j\neq 0}^{} p_{\theta}(w_{t+j} | w_{t})
+\end{equation}</p><h3 id=calculating-p-theta>Calculating \(p_{\theta}\)</h3><p>We are going to use <strong>TWO VECTORS</strong> for each word:</p><ul><li>\(v_{w}\) when \(w\) is the center word</li><li>and \(u_{w}\) when \(w\) is a context words</li></ul><p>These vectors are the <strong>only parameters</strong> of our system. We actually do this only to make the math easy; to get the &ldquo;word vector&rdquo; for a word by averaging.</p><p>Therefore:</p><p>\begin{equation}
+p(o|c) = \frac{\exp\qty(u_{o} \cdot v_{c})}{ \sum_{w \in V}^{} \exp \qty(u_{w} \cdot v_{c})}
+\end{equation}</p><ul><li>exponentiation makes anything positive</li><li>normalize over the entire vocabulary</li></ul><p>this is a <a href=/posts/kbhsoftmax/>softmax</a> operation.</p><h2 id=objective-function>Objective Function</h2><p>But we perform:</p><ol><li>descent</li><li>and log on each value to prevent underflow</li><li>and average why not</li></ol><p>\begin{equation}
+J(\theta) = \frac{1}{T} \log L(\theta) = -\frac{1}{T} \sum_{t=1}^{T} \sum_{-m \leq j \leq m, j\neq 0}^{} \log p_{\theta}\qty(w_{t+j} | w_{t})
+\end{equation}</p><p>Recall that:</p><p>\begin{equation}
+p(o|c) = \frac{\exp\qty(u_{o} \cdot v_{c})}{ \sum_{w \in V}^{} \exp \qty(u_{w} \cdot v_{c})}
+\end{equation}</p><p>Because we need to minimize this, we need the derivative of it by the parameter:</p><p>\begin{align}
+\pdv{J}{w_{t}} &= -\frac{1}{T} \sum_{t=1}^{T} \sum_{-m \leq j \leq m, j\neq 0}^{} \pdv w_{t} \log p_{\theta}\qty(w_{t+j} | w_{t})
+\end{align}</p><p>meaning, we now can just calculate the inner part:</p><p>\begin{equation}
+\pdv{\log p(o|c)}{v_{c}} = \pdv v_{c} \log \exp u_{o} \cdot v_{c} - \pdv v_{c} \log \sum_{w_{j}}^{} \exp \qty(u_{w} \cdot v_{c})
+\end{equation}</p><p>Look! The first part is a log of an exp, which cancels out, so the derivative is just \(u_{0}\).</p><p>For the right part, by the chain rule:</p><p>\begin{align}
+\pdv v_{c} \log \sum_{w_{j}}^{} \exp \qty(u_{w} \cdot v_{c}) &= \frac{\sum_{x_{j}}^{} \pdv v_{c}\exp \qty(u_{x} \cdot v_{c}) }{\sum_{w_{j}}^{} \exp \qty(u_{w} \cdot v_{c})} \\
+&= \frac{\sum_{x_{j}}^{}\exp \qty(u_{x} \cdot v_{c}) u_{x}}{\sum_{w_{j}}^{} \exp \qty(u_{w} \cdot v_{c})}
+\end{align}</p><p>Combining this whole thing, we have:</p><p>\begin{equation}
+\pdv{\log p(o|c)}{v_{c}} = u_{0} - \frac{\sum_{x_{j}}^{}\exp \qty(u_{x} \cdot v_{c}) u_{x}}{\sum_{w_{j}}^{} \exp \qty(u_{w} \cdot v_{c})}
+\end{equation}</p><p>Rewriting this slightly:</p><p>\begin{equation}
+\pdv{\log p(o|c)}{v_{c}} = u_{0} - \sum_{x_{j}}^{}\frac{\exp \qty(u_{x} \cdot v_{c}) }{\sum_{w_{j}}^{} \exp \qty(u_{w} \cdot v_{c})} u_{x}
+\end{equation}</p><p>Meaning:</p><p>\begin{equation}
+\pdv{\log p(o|c)}{v_{c}} = u_{0} - \sum_{x_{j}}^{}\frac{\exp \qty(u_{x} \cdot v_{c}) }{\sum_{w_{j}}^{} \exp \qty(u_{w} \cdot v_{c})} u_{x}
+\end{equation}</p><p>The right side is just the softmax probabilty of each \(u_{x}\) times \(u_{x}\), meaning its \(\mathbb{E}[u_{x}]\); so, this loss just minimizes &ldquo;error between output and expectation&rdquo;.</p><h2 id=word2vec-variants>Word2Vec Variants</h2><h3 id=model>Model</h3><ul><li><a href=#skip-gram-with-negative-sampling>skip-gram</a>&mdash;predict probability of being side words \(P(o|c)\)</li><li>CBOW&mdash;predict probability of being center word given side words</li></ul><h3 id=objective>Objective</h3><ul><li>naive softmax (above)</li><li>hierachichar softmax</li><li><a href=/posts/kbhnegative_sampling/>negative sampling</a> (see also <a href=#skip-gram-with-negative-sampling>skip-gram with negative sampling</a>)</li></ul><h2 id=properties>properties</h2><h3 id=window-size>window size</h3><ul><li><strong>smaller windows</strong>: captures more syntax level information</li><li><strong>large windows</strong>: capture more semantic field information</li></ul><h3 id=parallelogram-model>parallelogram model</h3><p>simple way to solve analogies problems with vector semantics: get the difference between two word vectors, and add it somewhere else to get an analogous transformation.</p><ul><li>only words for frequent words</li><li>small distances</li><li>but not quite for large systems</li></ul><h4 id=allocational-harm>allocational harm</h4><p>embeddings bake in existing biases, which leads to bias in hiring practices, etc.</p><h2 id=skip-gram-with-negative-sampling>skip-gram with negative sampling</h2><p><a href=#skip-gram-with-negative-sampling>skip-gram</a> trains vectors separately for word being used as target and word being used as context.</p><p>the mechanism for training the embedding:</p><ul><li>select some \(k\), which is the count of negative examples (if \(k=2\), every one positive example will be matched with 2 negative examples)</li><li>sample a target word, and generate positive samples paired by words in its immediate window</li><li>sample window size times \(k\) negative examples, where the noise words are chosen explicitly as not being near our target word, and weighted based on unigram frequency</li></ul><p>for each paired training sample, we minimize the loss via binary <a href=/posts/kbhcross_entropy_loss/>cross entropy loss</a>:</p><p>\begin{equation}
+L_{CE} = -\qty[ \log (\sigma(c_{pos} \cdot w)) + \sum_{i=1}^{k} \log \sigma\qty(-c_{neg} \cdot w)]
+\end{equation}</p><p>recall that:</p><p>\begin{equation}
+\pdv{L_{CE}}{w} = \qty[\sigma(c_{pos} \cdot w) -1]c_{pos} + \sum_{i=1}^{k} \qty[\sigma(c_{neg_{i}}\cdot w)]c_{neg_{i}}
+\end{equation}</p><p>Importantly, because the <a href=/posts/kbhsoftmax/>softmax</a> function is symmetric \(\sigma(-x) = -\sigma(x)\). So really our objective is:</p><p>\begin{equation}
+L_{CE} = -\qty[ \log (\sigma(c_{pos} \cdot w)) - \sum_{i=1}^{k} \log \sigma\qty(c_{neg} \cdot w)]
+\end{equation}</p><h3 id=how-to-sample-k>how to sample \(k\)</h3><p>We actually sample from:</p><p>\begin{equation}
+P(w) \sim U(w)^{3/4}/Z
+\end{equation}</p><p>to give the less common words slightly higher probability.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

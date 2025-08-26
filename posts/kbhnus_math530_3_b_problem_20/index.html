@@ -1,0 +1,85 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-MATH530 3.B Problem 20</title>
+<meta name=description content="Statement
+Support \(W\) is finite-dimensional, and \(T \in \mathcal{L}(V,W)\). Prove that \(T\) is injective IFF \(\exists S \in \mathcal{L}(W,V)\) such that \(ST = I \in \mathcal{L}(V,V)\).
+Proof
+Given injectivity
+Given an injective \(T \in \mathcal{L}(V,W)\), we desire that \(\exists S \in \mathcal{L}(W,V)\) such that \(ST = I \in \mathcal{L}(V,V)\).
+Creating \(S\)
+Define a relation \(S:range\ T\to V\) in the following manner:
+\begin{equation}
+S(v) = a \mid Ta = v
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-MATH530 3.B Problem 20</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=statement>Statement</h2><p>Support \(W\) is finite-dimensional, and \(T \in \mathcal{L}(V,W)\). Prove that \(T\) is injective IFF \(\exists S \in \mathcal{L}(W,V)\) such that \(ST = I \in \mathcal{L}(V,V)\).</p><h2 id=proof>Proof</h2><h3 id=given-injectivity>Given injectivity</h3><p>Given an injective \(T \in \mathcal{L}(V,W)\), we desire that \(\exists S \in \mathcal{L}(W,V)\) such that \(ST = I \in \mathcal{L}(V,V)\).</p><h4 id=creating-s>Creating \(S\)</h4><p>Define a relation \(S:range\ T\to V\) in the following manner:</p><p>\begin{equation}
+S(v) = a \mid Ta = v
+\end{equation}</p><h4 id=demonstrating-that-s-is-a-function>Demonstrating that \(S\) is a function</h4><p>We show that there are no two possible choices for \(a\), and therefore that \(S\) is a function, by the injectivity of \(T\). Recall a function is a map has the property that \(v=u \implies Fv=Fu\).</p><p>So, given \(v, u \in W\) and \(v=u\), we have:</p><ul><li>\(Sv = a \mid Ta=v\)</li><li>\(Su = b \mid Tb=u\)</li></ul><p>If \(Sv=Su\), then \(a=b\). To demonstrate that \(S\) is a function, we now desire that \(a=b\).</p><ul><li>From the above, we have that \(Ta=v\), \(Tb=u\).</li><li>From prior, we have \(v=u\)</li><li>From the two statements above, we have \(v=u \implies Ta=Tb\)</li></ul><p>Recall now that a linear map called injective when \(Tv=Tu \implies v=u\).</p><p>Therefore, from the injectivity of \(T\), we have that \(Ta=Tb \implies a=b\). Hence demonstrating the desired quality that shows \(S\) as a function.</p><h4 id=demonstrating-that-s-is-a-linear-map>Demonstrating that \(S\) is a linear map</h4><p>The linearity \(S\) actually simply inherits the linearity of \(T\), which is defined to be a linear map.</p><p>Additivity:</p><p>\begin{align}
+Sv+Su &= (a \mid Ta =v) + (b \mid Tb =u) \\
+&= (a+b) \mid Ta+Tb = (v+u) \\
+&= (a+b) \mid T(a+b) = (v+u) \\
+&= x \mid Tx = (v+u) \\
+&= S(v+u)
+\end{align}</p><p>Homogenity is shown in a similar fashion. We can therefore conclude that \(S \in \mathcal{L}(range\ T, V)\).</p><h4 id=note-on-the-codomain-of-s>Note on the codomain of \(S\)</h4><p>Note that we desire \(S \in \mathcal{L}(W,V),\ i.e.\ S:W\to V\), And yet, as it stands, \(S: range\ T \to W\). Fortunately, as \(range\ T\) is a subspace of \(W\) (as ranges are subspaces of the codomain), we can leverage Axler 3.A-E11 (Sasha&rsquo;s Proof, &ldquo;maps to subspaces can be extended to the whole space&rdquo;) to arbitrary extend \(S\) to \(S:W\to V\).</p><p>It turns out that where the &ldquo;extended&rdquo; basis vectors gets mapped doesn&rsquo;t matter. We only care about \(S\) insofar as its compositional behavior with \(T\).</p><h4 id=demonstrating-that-s-has-the-properties-we-desire>Demonstrating that \(S\) has the properties we desire</h4><p>We desire that \(ST = I \in \mathcal{L}(V,V)\).</p><p>Recall that the &ldquo;identity map&rdquo; on \(V\) is a map \(I \in \mathcal{L}(V,V)\) such that \(Iv = v, \forall v \in V\). We now show that \(ST\) acts like the identity map.</p><p>WLOG take \(v \in V\).</p><ul><li>Let \(Tv=a\).</li><li>Let \(Sa = u\). Based on the definition of \(S\) (that \(Sx = y \mid Ty=x\), &ldquo;\(S\) is the inverse map&rdquo;), we have that \(Tu=a\).</li></ul><p>Recall once again that a linear map called injective when \(Tv=Tu \implies v=u\).</p><p>We now have that \(Tu=a=Tv\), therefore, because \(T\) is given injective, \(u=v\).</p><p>We have show WLOG that \((ST)v = S(Tv) =Sa = u=v\). Therefore \((ST)v=v\), making \(ST\) an identity map \(ST:V\to V\). Lastly, as the product of linear maps are themselves a linear map, \(ST=I\in \mathcal{L}(V,V)\)</p><h4 id=conclusion>Conclusion</h4><p>Having constructed the existence of \(S\) based on the required properties of \(T\), we show that given an injective \(T \in \mathcal{L}(V,W)\), have an \(S \in \mathcal{L}(W,V)\) such that \(ST = I \in \mathcal{L}(V,V)\), as desired.</p><h3 id=given-s>Given \(S\)</h3><p>Given some \(T \in \mathcal{L}(V,W)\) and that \(\exists S \in \mathcal{L}(W,V): ST=I \in \mathcal{L}(V,V)\), we desire that \(T\) is injective. Fortunately, we essentially just reverse the logic of the last section in the last part of the proof.</p><p>Recall that a linear map called injective when \(Tv=Tu \implies v=u\). Suppose for the sake of contradiction that \(\exists u,v: Tv=Tu\) but \(u\neq v\).</p><ul><li>Let \(Tv=Tu=a\)</li><li>Let \(Sa=b\)</li></ul><p>Therefore: \((ST)v=(ST)u=S(a)=b\). Just to reiterate, this means that we have:</p><ul><li>\((ST)v=b\implies Iv=b\)</li><li>\((ST)u=b \implies Iu=b\)</li></ul><p>Therefore, we have that \(Iv=Iu\) for distinct \(v,u\), which is absurd. Having reached contradiction, we have that \(Tu=Tv\implies u=v\), reaching the definition of injectivity for \(T\). \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

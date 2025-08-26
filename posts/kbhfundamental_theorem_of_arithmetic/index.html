@@ -1,0 +1,102 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>fundamental theorem of arithmetic</title>
+<meta name=description content="factorization motivator
+If \(p\) is prime and \(p | ab\), then \(p|a\) or \(p|b\).
+If \(p|a\), we are done.
+Consider the case where \(p|ab\) yet \(a\) is not divisible by \(p\). Then, \(a\) and \(p\) are coprime. This means that, we have:
+\begin{equation}
+\gcd (a,p) = 1 = s a + tp
+\end{equation}
+We note that:
+\begin{align}
+b &= 1 \cdot b  \\
+&= (sa+tp) b  \\
+&= sab + tpb  \\
+&= s(ab) + tb(p)
+\end{align}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>fundamental theorem of arithmetic</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=factorization-motivator>factorization motivator</h2><p>If \(p\) is <a href=/posts/kbhprime/>prime</a> and \(p | ab\), then \(p|a\) or \(p|b\).</p><p>If \(p|a\), we are done.</p><p>Consider the case where \(p|ab\) yet \(a\) is not divisible by \(p\). Then, \(a\) and \(p\) are <a href=/posts/kbhprime/#coprime>coprime</a>. This means that, we have:</p><p>\begin{equation}
+\gcd (a,p) = 1 = s a + tp
+\end{equation}</p><p>We note that:</p><p>\begin{align}
+b &= 1 \cdot b \\
+&= (sa+tp) b \\
+&= sab + tpb \\
+&= s(ab) + tb(p)
+\end{align}</p><p>Notice that both of these elements are <a href=/posts/kbhdivide/>divisible</a> by \(p\) (\(p|ab\) and of course \(p|p\)). Therefore, \(p|b\) as desired.</p><h2 id=statement-of-the-theorem>statement of the theorem</h2><p>Every integer greater than \(1\) is a <a href=/posts/kbhprime/>prime</a> or a product of primes. This factorization is unique.</p><h2 id=proof>Proof</h2><h3 id=existence>Existence</h3><p>Let \(S\) be the list of <a href=/posts/kbhinteger/>integer</a>s bigger than \(1\) which are <a href=/posts/kbhprime/>prime</a> or are products of primes. Consider the set \(T\) which is all <a href=/posts/kbhinteger/>integer</a>s bigger than \(1\) which isn&rsquo;t <a href=/posts/kbhprime/>prime</a> or are products of primes:</p><p>\begin{equation}
+T = \{2, 3, \dots, \} \setminus S
+\end{equation}</p><p>We desire \(T\) to be empty.</p><p>Assume for the sake of contradiction that \(T\) isn&rsquo;t empty. By <a href=/posts/kbhprinciple_of_induction/#well-ordering-principle>WOP</a>, take some smallest element of \(t \in T\).</p><p>\(t\) is not in \(S\), so it mustn&rsquo;t be <a href=/posts/kbhprime/>prime</a>. This means:</p><p>\begin{equation}
+t = ab
+\end{equation}</p><p>Though&mldr;. \(a\) and \(b\) must be smaller than \(t\) (otherwise their product wouldn&rsquo;t make \(t\), as we are working with only positive numbers (<a href=/posts/kbhinteger/>integer</a>s greater than \(1\)) here). So \(a\) and \(b\) must be in $S$&mdash;meaning they are <a href=/posts/kbhprime/>prime</a>s or product of primes. This makes \(t\) a prime or product of primes, reaching contradiction.</p><h3 id=uniqueness>Uniqueness</h3><p>We show this by induction. We see that: \(2 = 2\). Now, suppose a unique prime factorization holds for all integers smaller than \(n\). Let:</p><p>\begin{equation}
+n = p_1 \dots p_{r} = q_1 \dots q_{s}
+\end{equation}</p><p>Let us order it such that \(p_1 \leq &mldr; \leq p_{r}\), \(q_1 \leq &mldr; \leq q_{s}\).</p><p>By the <a href=#factorization-motivator>factorization motivator</a>, each \(p_{j}|n\) implies that \(p_{j}|q_{i}\) (you can see this by treating \(n = q_1 &mldr; q_{s}\), so \(p_{j}|n \implies p_{j}|(q_1 \cdot \dots \cdot q_{s})\) so \(p_{j}\) should be divisible by some \(q_{j}\).)</p><p>Now, this condition implies \(p_{j} = q_{i}\), because primes are not divisible by anything except themselves and \(1\) (and \(1\) is not considered <a href=/posts/kbhprime/>prime</a>).</p><p>Consider, then, two such equivalences:</p><p>\begin{equation}
+p_{1} = q_{j}
+\end{equation}</p><p>\begin{equation}
+q_{1} = p_{k}
+\end{equation}</p><p>Now, this means that:</p><p>\begin{equation}
+p_{1} \leq p_{k} = q_{1} \leq q_{j} = p_{1}
+\end{equation}</p><p>Therefore, the only way this can work (the fact that \(q_1\) is sandwiched on both ends &mdash; by \(p_1\leq q_1 \leq p_1\)) is that \(p_1 = q_1\).</p><p>Therefore, we now have:</p><p>\begin{equation}
+\frac{n}{p_1} = p_{2} \cdot \dots \cdot p_{n} = q_{2} \cdot \dots \cdot q_{n}
+\end{equation}</p><p>You will note \(\frac{n}{p_1} &lt; n\). Now, we can invoke induction. \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

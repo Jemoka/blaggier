@@ -1,0 +1,84 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>structure learning</title>
+<meta name=description content="We learn a Bayes Net grphical structure by following Bayes rule:
+\begin{align}
+P(G|D) &\propto P(D|G) P(G)   \\
+&= P(G) \int P(D | \theta, G) P(\theta|G) d\theta  \\
+&= P(G) \prod_{i=1}^{n} \prod_{j=1}^{q_{i}} \frac{\Gamma(\alpha_{i,j,0})}{\Gamma(\alpha_{i,j,0} + m_{i,j,0})} \prod_{k=1}^{r_{i}} \frac{\Gamma(\alpha_{i,j,k} + m_{i,j,k})}{\Gamma(\alpha_{i,j,k})}
+\end{align}
+where, we define: \(\alpha_{i,j,0} = \sum_{k} \alpha_{i,j,k}\).
+The actual integration process is not provided, but mostly uninteresting. See Beta Distribution for a flavour of how it came about.
+This is hard. We are multiply many gammas together, which is computationally lame. So instead, we use"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>structure learning</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>We learn a <a href=/posts/kbhbaysian_network/>Bayes Net</a> grphical structure by following <a href=/posts/kbhbayes_theorem/>Bayes rule</a>:</p><p>\begin{align}
+P(G|D) &\propto P(D|G) P(G) \\
+&= P(G) \int P(D | \theta, G) P(\theta|G) d\theta \\
+&= P(G) \prod_{i=1}^{n} \prod_{j=1}^{q_{i}} \frac{\Gamma(\alpha_{i,j,0})}{\Gamma(\alpha_{i,j,0} + m_{i,j,0})} \prod_{k=1}^{r_{i}} \frac{\Gamma(\alpha_{i,j,k} + m_{i,j,k})}{\Gamma(\alpha_{i,j,k})}
+\end{align}</p><p>where, we define: \(\alpha_{i,j,0} = \sum_{k} \alpha_{i,j,k}\).</p><p>The actual integration process is not provided, but mostly uninteresting. See <a href=/posts/kbhbaysian_parameter_learning/#beta-distribution>Beta Distribution</a> for a flavour of how it came about.</p><p>This is hard. We are multiply many gammas together, which is computationally lame. So instead, we use</p><h2 id=baysian-network-scoring>Baysian Network Scoring</h2><p><a href=#baysian-network-scoring>Log Bayesian Score</a> is a score for measure of well-fittingness of a <a href=/posts/kbhbaysian_network/>Baysian Network</a> against some data. We sometimes call this the <a href=#baysian-network-scoring>Baysian Score</a>.</p><p>Let:</p><ul><li>\(x_{1:n}\) be variables</li><li>\(o_1, &mldr;, o_{m}\) be the \(m\) observations we took</li><li>\(G\) is the graph</li><li>\(r_{i}\) is the number of instantiations in \(X_{i}\) (for boolean variables, this would be \(2\))</li><li>\(q_{i}\) is the number of parental instantiations of \(X_{i}\) (if parent 1 can take on 10 values, parent 2 can take 3 values, then child&rsquo;s \(q_{i}=10\cdot 3=30\)) &mdash; if a node has no parents it has a \(q_{i}\) is \(1\)</li><li>\(\pi_{i,j}\) is \(j\) instantiation of parents of \(x_{i}\) (the \(j\) th combinator)</li></ul><p>Let us first make some observations. We use \(m_{i,j,k}\) to denote the COUNT of the number of times \(x_{i}\) took a value \(k\) when \(x_{i}\) parents took instantiation \(j\).</p><p>We aim to compute:</p><p>\begin{equation}
+\log P(G|D) = \log P(G) + \sum_{i=1}^{n} \sum_{j=1}^{q_{i}} \qty[\qty(\log \frac{\Gamma(\alpha_{i,j,0})}{\Gamma(\alpha_{i,j,0}+ m_{i,j,0})}) + \sum_{k=1}^{r_{i}} \log \frac{\Gamma(\alpha_{i,j,k} + m_{i,j,k})}{\Gamma(\alpha_{i,j,k})}]
+\end{equation}</p><p>In practice, uniform prior of the graph is mostly used always. Assuming uniform priors, so \(P(G)=1\) and therefore we can drop the first term. Recall that \(\alpha_{i,j,0} = \sum_{k} \alpha_{i,j,k}\).</p><p>We can effectively take a prior structure, and blindly compute the <a href=#baysian-network-scoring>Baysian Score</a> vis a vi your data, and you will get an answer which whether or not something is the simplest model.</p><p>Of course, we can&rsquo;t just try all graphs to get a graph structure. Instead, we use some search algorithm:</p><h2 id=k2-algorithm>K2 Algorithm</h2><p>Runs in polynomial time, but doesn&rsquo;t grantee an optimal structure. Let us create a network with a sequence of variables with some ordering:</p><p>\begin{equation}
+x_1, x_2, x_3, x_4
+\end{equation}</p><p>For <a href=#k2-algorithm>K2 Algorithm</a>, we assume a <a href=/posts/kbhprobability_distributions/#uniform-distribution>uniform distribution</a> initially before the graph is learned.</p><ol><li>we lay down \(x_1\) onto the graph</li><li>we then try to lay down \(x_{2}\): compute the <a href=#baysian-network-scoring>Baysian Score</a>s of two networks: \(x_1 \to x_2\) OR \(x_1\ x_2\) (see if connecting \(x_2\) to \(x_1\) helps). keep the structure with the maximum score</li><li>we then try to lay down \(x_{3}\): compute the <a href=#baysian-network-scoring>Baysian Score</a> of \(x_1 \to x_3\) (plus whatever decision you made about \(x_2\)) OR \(x_1, x_3\); keep the one that works the best. Then, try the same to decide whether to connect \(x_2\) to \(x_3\) as well</li><li>Repeat until you considered all nodes</li></ol><p>After you try out one ordering, you should try out another one. Because you can only add parents from elements before you in the list, you will never get a cycle.</p><h2 id=local-graph-search>Local Graph Search</h2><p>Start with an uncorrected graph. Search on the following actions:</p><p><a href=#local-graph-search>basic graph operation</a>s:</p><ul><li>add edge</li><li>remove edge</li><li>flip edge</li></ul><p>A graph&rsquo;s <a href=#local-graph-search>neighborhood</a> is the graphs for whicthey are one basic graph operation away.</p><p>Create a cycle detection scheme.</p><p>Now, just try crap. Keep computing a <a href=#baysian-network-scoring>Baysian Score</a> after you tried something, if its good, keep it. If its not, don&rsquo;t.</p><p>To prevent you from being stuck in a local minimum:</p><ul><li>perform random restarts</li><li>perform <a href=#k2-algorithm>K2 Algorithm</a>, and then try things out</li><li><a href=/posts/kbhsimulated_annealing/>simulated annealing</a>: take a step that&rsquo;s worse for optimizing <a href=#baysian-network-scoring>Baysian Score</a>s</li><li>genetic algorithms: random population which reproduces at a rate proportional to their score</li></ul><h2 id=partially-directed-graph-search>Partially Directed Graph Search</h2><p>We first formulate a partially-directed graph, which is a graph which has some edges, but some edges left to be decided:</p><figure><img src=/ox-hugo/2023-10-12_11-09-18_screenshot.png></figure><p>In this case, edges \(C \to D\) and \(D \leftarrow E\) are both defined. \(A,B,C\) are left as undirected nodes available to be searched on.</p><p>We now try out all combinations of arrows that may fit between \(A,B,C\), with the constraint of all objects you search on being <a href=/posts/kbhmarkov_equivalence_classes/>Markov Equivalent</a> (so, you can&rsquo;t remove or introduce new <a href=/posts/kbhimmoral_v_structure/>immoral v-structure</a>s).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,90 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Language Model</title>
+<meta name=description content="A machine learning model: input &mdash; last n words, output &mdash; probabilist distribution over the next word. An LM predicts this distribution (&ldquo;what&rsquo;s the distribution of next word given the previous words):
+\begin{equation}
+W_{n} \sim P(\cdot | w^{(t-1)}, w^{(t-2)}, \dots, w^{(1)})
+\end{equation}
+By applying the chain rule, we can also think of the language model as assigning a probability to a sequence of words:
+\begin{align}
+P(S) &= P(w^{(t)} | w^{(t-1)}, w^{(t-2)}, \dots, w^{(1)}) \cdot P(w^{(t-1)} | w^{(t-2)}, \dots, w^{(1)}) \dots  \\
+&= P(w^{(t)}, w^{(t-1)}, w^{(t-2)}, \dots, w^{(1)})
+\end{align}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Language Model</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhmachine_learning/>machine learning</a> model: <strong>input</strong> &mdash; last n words, <strong>output</strong> &mdash; probabilist distribution over the next word. An LM predicts this distribution (&ldquo;what&rsquo;s the distribution of next word given the previous words):</p><p>\begin{equation}
+W_{n} \sim P(\cdot | w^{(t-1)}, w^{(t-2)}, \dots, w^{(1)})
+\end{equation}</p><p>By applying the chain rule, we can also think of the language model as assigning a probability to a sequence of words:</p><p>\begin{align}
+P(S) &= P(w^{(t)} | w^{(t-1)}, w^{(t-2)}, \dots, w^{(1)}) \cdot P(w^{(t-1)} | w^{(t-2)}, \dots, w^{(1)}) \dots \\
+&= P(w^{(t)}, w^{(t-1)}, w^{(t-2)}, \dots, w^{(1)})
+\end{align}</p><h2 id=philosophizing>philosophizing</h2><p>A striking example for the <strong>generality of prediction</strong>.</p><h2 id=n-gram-lm>N-Gram LM</h2><p>We can use the Markov assumption: that a word only dependents on the last \(n-1\) terms.</p><p>By doing this, we can write:</p><p>\begin{align}
+P(x_{t} | x_{t-1}, .. x_{0}) &\approx P(x_{t} | x_{t-1}, .. x_{t-n-1}) \\
+&= \frac{P(x_{t}, x_{t-1}, .. x_{t-n-1})}{P(x_{t-1}, .. x_{t-n-1})}
+\end{align}</p><p>and we can then just use the counts to make this prediction.</p><h3 id=problems>Problems</h3><p>Key idea: <strong>language is extremely sparse</strong></p><ul><li>any <a href=/posts/kbhn_grams/#oov-words>OOV Words</a> has the probability of zero, making it sad; we can kinda solve this by <a href=/posts/kbhbaysian_parameter_learning/#laplace-smoothing>Laplace Smoothing</a> but not really.</li><li>any given condition is hard to find; we can kinda solve this by <a href=/posts/kbhn_grams/#stupid-backoff>Stupid Backoff</a></li></ul><p>Conflicting demands: more context is better, but with more context had more sparseness problems.</p><h2 id=neural-lm>Neural LM</h2><p>Same task; we want a model for</p><p>\begin{equation}
+W_{n} \sim P(\cdot | w^{(t-1)}, w^{(t-2)}, \dots, w^{(1)})
+\end{equation}</p><p>We use the same Markov assumption, and then use a fixed local window of text to try to predict the next word.</p><p>Naively learning from concatenated word vectors is bad, because that&rsquo;s weight are not length agnostic&mdash;that is, the <strong>position</strong> in the context in which a word occurs is very sensitive.</p><h3 id=recurrent-neural-network>Recurrent Neural Network</h3><p>Key <a href=#recurrent-neural-network>RNN</a> idea &mdash; apply the same weights \(W\) repeatedly. Each of our hidden state would be the sum of the previous hidden state by a matrix, and multiply the new word by a matrix. So each step:</p><p>\begin{equation}
+h_{t} = \sigma \qty( W_{h}h_{t-1} + W_{e} e_{t} + b)
+\end{equation}</p><p>Our LM input uses &ldquo;Teacher Forcing&rdquo;: i.e. we only generate a single input.</p><p>Usually we define our loss as a multilpying the loss with \(\frac{1}{T}\) where \(T\) is the token count per doc.</p><h4 id=problems>Problems</h4><ul><li>slow</li><li>hard to look into the past dramatically</li></ul><h4 id=gradient>Gradient</h4><p>&ldquo;gradient w.r.t. a repeated weight is the sum of the gradient for each time where it appears&rdquo;</p><p>Recall that gradient sum at outer branches, so calculate gradient at each step.</p><p>Sometimes you would give up after backdropping \(n\) steps (not all the way into history.</p><p>\begin{equation}
+\pdv{J}{W_{h}} = \sum_{i=1}^{t} \pdv{J^{(t)}}{W_{h}}
+\end{equation}</p><h2 id=making-a-lm>Making a LM</h2><ol><li>collect a large training set from web, books, etc.</li><li>prepare data is next-word prediction examples</li><li>train as large as a neural network as you can</li></ol><p>Seminal paper: (<a href=#citeproc_bib_item_1>Radford et al., n.d.</a>), established SOTA results on known benchmarks.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

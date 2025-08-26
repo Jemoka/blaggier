@@ -1,0 +1,113 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-MATH53 FEB052024</title>
+<meta name=description content="Sensitivity to Initial Conditions + Parameters.
+ODE Existence and Uniqueness
+We can recast all high order systems into a first-order vector-valued system. So, for any system:
+\begin{equation}
+x&rsquo; = g(t,x, a)
+\end{equation}
+if \(g\) is differentiable across \(t,x\) and \(a\), the IVP given by \(x&rsquo; = g(t,x,a)\) and \(x(0) = x_0\), has the property has that:
+
+the ODE has a solution \(x(t_0) = x_0\) for any \(t_0\), and any two solutions on the interval coincide as the same solution
+The only way for a solution to fail to extend temporally is due to the bounds&rsquo; \(||x(t)||\) becomes unbounded as \(t\) approaches the endpoints
+On any interval \(t_0 \leq t \leq T\) the solution \(y_{a,y_0}\) depends continuously on \(a, y_0\), &ldquo;if I look at my solution sometime later, it would be a non-discontinuous change on the choice of initial condition&rdquo;
+
+Example
+Let&rsquo;s consider:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-MATH53 FEB052024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Sensitivity to Initial Conditions + Parameters.</p><h2 id=ode-existence-and-uniqueness>ODE Existence and Uniqueness</h2><p>We can recast all high order systems into a first-order vector-valued system. So, for any system:</p><p>\begin{equation}
+x&rsquo; = g(t,x, a)
+\end{equation}</p><p>if \(g\) is differentiable across \(t,x\) and \(a\), the <a href=/posts/kbhinitial_value_problems/>IVP</a> given by \(x&rsquo; = g(t,x,a)\) and \(x(0) = x_0\), has the property has that:</p><ol><li>the ODE has a solution \(x(t_0) = x_0\) for any \(t_0\), and any two solutions on the interval coincide as the same solution</li><li>The only way for a solution to fail to extend temporally is due to the bounds&rsquo; \(||x(t)||\) becomes unbounded as \(t\) approaches the endpoints</li><li>On any interval \(t_0 \leq t \leq T\) the solution \(y_{a,y_0}\) depends continuously on \(a, y_0\), &ldquo;if I look at my solution sometime later, it would be a non-discontinuous change on the choice of initial condition&rdquo;</li></ol><h3 id=example>Example</h3><p>Let&rsquo;s consider:</p><p>\begin{equation}
+y&rsquo; = -y
+\end{equation}</p><p>and take the initial value at:</p><p>\begin{equation}
+y(0) = y_0
+\end{equation}</p><p>we have a solution such that:</p><p>\begin{equation}
+y(t) = y_0e^{-t}
+\end{equation}</p><p>which, at \(y(10)\), we obtain:</p><p>\begin{equation}
+y(10) = y_0e^{-10}
+\end{equation}</p><p>Which brings the question: &ldquo;how close should \(y_0&rsquo;\) be such that \(|y&rsquo;(10) - y(10)| \leq 10^{-5}\)?&rdquo;</p><p>We can recast this as:</p><p>\begin{equation}
+|y_0&rsquo; e^{-10} - y_0 e^{-10} | &lt; 10^{-5}
+\end{equation}</p><p>meaning:</p><p>\begin{equation}
+|y_0&rsquo; - y_0| &lt; \frac{10^{-5}}{e^{-10}} \approx \frac{1}{4}
+\end{equation}</p><p>If you flip it over, you will have extreme instability.</p><h3 id=example>Example</h3><p>\begin{equation}
+\begin{cases}
+\dv{x}{t} = a(y-x) \\
+\dv{y}{t} = (b-z)x-y \\
+\dv{z}{t} = xy-cz
+\end{cases}
+\end{equation}</p><p>this seems innocuous, but no. If we set our parameters to be weirdly specific values:</p><p>\begin{equation}
+\begin{cases}
+a \approx 10 \\
+b \approx 28 \\
+c \approx \frac{8}{3}
+\end{cases}
+\end{equation}</p><p>These attractors spins across two separate spheres, and the number of times the system spins around a particular area is unknown. It is called&mldr;</p><h4 id=deterministic-chaos>Deterministic Chaos</h4><p><a href=#deterministic-chaos>Deterministic Chaos</a> is a hard problems which there is a bounded region in which the behavior happens, but the system is bounded.</p><h3 id=another-example>Another Example</h3><p>Logistic expression:</p><p>\begin{equation}
+y&rsquo; = ry\qty(1-\frac{y}{k}) -h
+\end{equation}</p><p>You can get solutions of this form for some carrying capacity \(k\) and a constant rate of removal \(h\). You can observe that we can build a <a href=/posts/kbhphase_line/>phase line</a> of this system, and observe. This behavior is called <a href=#ode-existence-and-uniqueness>bifurcation</a>: when some \(h\) is high enough, our whole system dies out.</p><p>&ldquo;if the finish rate is too high over other parameters, you just die out.&rdquo;</p><p>You can also draw a plot, where the \(x\) axis is some parameter \(p\), and phase plot can be drawn sideways.</p><h2 id=cauchy-stability>Cauchy Stability</h2><p>Suppose \(x(t)\) satisfies:</p><p>\begin{equation}
+x&rsquo;(t) = g(t,x(t)), x(t_0) = x_0
+\end{equation}</p><p>For some interval \(t \in I\) where the IVP is satisfied; for any time interval \([t_1, t_2]\) inside \(I\) and any \(x_0&rsquo;\) near to \(x_0\), the associated \(x(t_0) = x_0&rsquo;\) should exist for the same interval \([t_1, t_2]\) and \(|| x&rsquo;(t) - x(t) ||\) is small for \(t\).</p><p>This extends for not just initial conditions, but also parameters as well. For function parameters \(a_0\) and \(a_0&rsquo;\).</p><h2 id=newtonian-3-body-problem>Newtonian 3-body problem</h2><p>\begin{equation}
+m_1 x_1&rsquo;&rsquo; = \frac{-Gm_{1}m_2}{|x_1-x_2|^{2}}- \frac{Gm_{1}m_3}{|x_1-x_3|^{2}}
+\end{equation}</p><p>you will note that this expression has no close form solution, so you can&rsquo;t do the <a href=#cauchy-stability>Cauchy Stability</a> thing to it.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

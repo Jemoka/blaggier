@@ -1,0 +1,136 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>two-dimensional heat equation</title>
+<meta name=description content="what if heat, but plate
+\begin{equation}
+\pdv{u}{t} =  \pdv[2]{u}{x} + \pdv[2]{u}{y}
+\end{equation}
+For some heat distribution that has arbitrary shape, on some domain \(\Omega \times [0, \infty]_{t}\) (i.e. argumentation of some space dimensions by time).
+
+Dirichlet Conditions: edges have heat \(0\)
+OR Neumann Conditions: normal derivative (flux) is \(0\) at the edge
+
+If \(\Omega\) is a general blob, you are actually kinda fucked. Because the bounds on \(x\) depend on \(y\), and \(y\) on \(x\), so you can&rsquo;t just separate them into a product."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>two-dimensional heat equation</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>what if heat, but plate</p><p>\begin{equation}
+\pdv{u}{t} = \pdv[2]{u}{x} + \pdv[2]{u}{y}
+\end{equation}</p><p>For some heat distribution that has arbitrary shape, on some domain \(\Omega \times [0, \infty]_{t}\) (i.e. argumentation of some space dimensions by time).</p><ul><li><a href=/posts/kbhsu_math53_feb232024/#dirichlet-conditions>Dirichlet Conditions</a>: edges have heat \(0\)</li><li>OR <a href=/posts/kbhsu_math53_feb232024/#neumann-conditions>Neumann Conditions</a>: normal derivative (flux) is \(0\) at the edge</li></ul><p>If \(\Omega\) is a general blob, you are actually kinda fucked. Because the bounds on \(x\) depend on \(y\), and \(y\) on \(x\), so you can&rsquo;t just separate them into a product.</p><p>However, if we cut a rectangle, life is better.</p><hr><figure><img src=/ox-hugo/2024-02-28_22-57-25_screenshot.png></figure><p>where:</p><p>\begin{equation}
+0 \leq x \leq l_1
+\end{equation}</p><p>\begin{equation}
+0 \leq y \leq l_2
+\end{equation}</p><p>where the Dirichlet condition is now described as the four line segments along the curve at \(l_1\) and \(l_2\) having constant (or vanishing) temperature.</p><p>Its general solution is:</p><p>\begin{equation}
+u(t,x,y) = \sum_{n_1=1}^{\infty}\sum_{n_2=1}^{\infty} A_{n_1, n_2} e^{-\qty(\qty( \frac{{n_{1}}^{2}}{{l_{1}}^{2}}) + ( \frac{{n_{2}}^{2}}{{l_{2}}^{2}})) \pi^{2}t} \sin \qty(\qty(n_1 \frac{\pi}{l_{1}})x )\sin \qty(\qty(n_2 \frac{\pi}{l_{2}})y )
+\end{equation}</p><p>where:</p><p>\begin{equation}
+\lambda = \lambda_{1} + \lambda_{2} = - \qty( \frac{{n_{1}}^{2}}{{l_1}^{2}} + \frac{{n_{2}}^{2}}{{l_2}^{2}}) \pi^{2}
+\end{equation}</p><h2 id=solving>solving</h2><p>\begin{equation}
+U(t,x,y) = A(t)B(x)C(y)
+\end{equation}</p><p>So now with much prayer and plugging:</p><p>\begin{equation}
+A&rsquo;(t) B(x) C(y) = A(t) B&rsquo;&rsquo;(X)C(y) + A(t)B(x)C&rsquo;&rsquo;(y)
+\end{equation}</p><p>which gives:</p><p>\begin{equation}
+\frac{A&rsquo;(t)}{A(t)} = \frac{B&rsquo;&rsquo;(x)}{B(x)} + \frac{C&rsquo;&rsquo;(y)}{C(y)} = \lambda
+\end{equation}</p><p>Which causes two problems to arise:</p><p>\begin{equation}
+\begin{cases}
+A&rsquo;(t) = \lambda A(t) = 0 \\
+\frac{B&rsquo;&rsquo;(x)}{B(x)} + \frac{C&rsquo;&rsquo;(y)}{C(y)} = \lambda
+\end{cases}
+\end{equation}</p><p>the second expression gives:</p><p>\begin{equation}
+\frac{B&rsquo;&rsquo;(X)}{B(X)} = \lambda - \frac{C&rsquo;&rsquo;(y)}{C(y)}
+\end{equation}</p><p>Meaning:</p><p>\begin{equation}
+\frac{B&rsquo;&rsquo;(X)}{B(X)} = \lambda - \frac{C&rsquo;&rsquo;(y)}{C(y)} = \lambda_{1}
+\end{equation}</p><p>Meaning:</p><p>\begin{equation}
+B&rsquo;&rsquo;(x) - \lambda_{1} B(x) = 0
+\end{equation}</p><p>and:</p><p>\begin{equation}
+C&rsquo;&rsquo;(y) - \lambda_{2} C = 0
+\end{equation}</p><p>where \(\lambda - \lambda_{1} = \lambda_{2}\).</p><p>Now, recall our boundary conditions:</p><p>\begin{equation}
+B(0) = B(l_1) = 0
+\end{equation}</p><p>and</p><p>\begin{equation}
+C(0) = C(\lambda_{2}) = 0
+\end{equation}</p><p>So, for the expression in \(B\), we obtain:</p><p>\begin{equation}
+\lambda_{1} = \frac{-k_{1}^{2}\pi^{2}}{l_{1}^{2}}}
+\end{equation}</p><p>\begin{equation}
+\lambda_{2} = \frac{-k_{2}^{2}\pi^{2}}{l_{2}^{2}}}
+\end{equation}</p><p>so:</p><p>\begin{equation}
+\lambda = \lambda_{1} + \lambda_{2}
+\end{equation}</p><p>All together, we obtain:</p><p>\begin{equation}
+B(x) = \sin \qty( \frac{k_{1} \pi x}{l_{1}})
+\end{equation}</p><p>and:</p><p>\begin{equation}
+C(y) = \sin \qty( \frac{k_{2} \pi y}{l_{2}})
+\end{equation}</p><p>finally, where:</p><p>\begin{equation}
+A&rsquo; + \qty( \frac{k_{1}^{2} \pi^{2}}{ l_1^{2}} + \frac{k_{2}^{2} \pi^{2}}{ l_2^{2}})A = 0
+\end{equation}</p><p>which gives us:</p><p>\begin{equation}
+A(t) = e^{-\qty( \frac{k_{1}^{2} \pi^{2}}{ l_1^{2}} + \frac{k_{2}^{2} \pi^{2}}{ l_2^{2}})t}
+\end{equation}</p><p>so then multiply them together:</p><p>\begin{equation}
+\sum_{k_1}^{} \sum_{k_2}^{}E_{k_1, k_2} e^{-\qty( \frac{k_{1}^{2} \pi^{2}}{ l_1^{2}} + \frac{k_{2}^{2} \pi^{2}}{ l_2^{2}})t} \sin \qty( \frac{k_{2} \pi y}{l_{2}}) \sin \qty( \frac{k_{1} \pi x}{l_{1}})
+\end{equation}</p><p>at \(u(0,x,y)\), we obtain:</p><p>\begin{equation}
+u(0,x,y) = \sum_{k_1}^{} \sum_{k_2}^{}E_{k_1, k_2} \sin \qty( \frac{k_{2} \pi y}{l_{2}}) \sin \qty( \frac{k_{1} \pi x}{l_{1}})
+\end{equation}</p><p>for every \(f(x,y)\), we can solve for \(E_{k_1, k_2}\) by fixing \(y\), for instance, then writing a Fourier series as a function that depends on the coefficients you left out. This gives:</p><p>\begin{equation}
+f(x,y) = \sum a_{k_1}(y) \sin \qty( \frac{k_1 \pi x}{l_1})
+\end{equation}</p><p>and then, each of <strong>THESE</strong> internal functions a function \(a_{k_1}(y)\) , which you can obtain over \(y\) and expand as a fourier series.</p><p>To solve for each, you do the susual:</p><p>\begin{equation}
+a_{k_1}(y) = \frac{2}{l_1} \int_{0}^{l_1} f(x,y) \sin \qty( \frac{k_1 \pi x}{l_1}) \dd{x}
+\end{equation}</p><p>which you can expand:</p><p>\begin{equation}
+E_{k_1, k_2} = \frac{2}{l_2} \int_{0}^{l_2} a_{k_1}(y) \sin \qty( \frac{k_1 \pi y}{l_2}) \dd{y}
+\end{equation}</p><p>which means that, substituting it in, the whole thing can be written together as:</p><p>\begin{equation}
+E_{k_1, k_2} = \frac{2}{l_2} \int_{0}^{l_2} \frac{2}{l_1} \int_{0}^{l_1} f(x,y) \sin \qty( \frac{k_1 \pi x}{l_1}) \dd{x} \sin \qty( \frac{k_1 \pi y}{l_2}) \dd{y}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

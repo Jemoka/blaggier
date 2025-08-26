@@ -1,0 +1,58 @@
+<html style="overflow:hidden">
+    <head>
+        <title>Scheduling</title>
+    </head>
+
+    <!-- Cal element-click embed code begins -->
+<script type="text/javascript">
+      (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; typeof namespace === "string" ? (cal.ns[namespace] = api) && p(api, ar) : p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
+
+      Cal("init", "dinner", {origin:"https://cal.com"});
+
+Cal("ui", {"styles":{"branding":{"brandColor":"#000000"}},"hideEventTypeDetails":false,"layout":"month_view"});
+  
+  // Important: Please add the following attributes to the element that should trigger the calendar to open upon clicking.
+  // `data-cal-link="houjun/dinner"`
+  // data-cal-namespace="dinner"
+  // `data-cal-config='{"layout":"month_view"}'`
+  
+  Cal.ns.dinner("ui", {"styles":{"branding":{"brandColor":"#000000"}},"hideEventTypeDetails":false,"layout":"month_view"});
+  </script>
+<!-- Cal element-click embed code ends -->
+
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <body style="width:100vw;height:100vh;display:flex;align-items:center;justify-content:center">
+<pre style="display:inline-block">
+Hello,
+
+Thanks so much for taking the time to meet,
+let's <b><a style="cursor:pointer" data-cal-link="houjun/chat" data-cal-config='{"layout":"month_view"}' href="javascript:void(0);">find time together</a></b> on Zoom.
+
+Thanks in advance for your flexibility,
+looking forward to chatting!
+
+Sincerely,
+Houjun "Jack" Liu
+
+</pre></body>
+
+    <style>
+a:not(.header-social):not(#TableOfContents *):not(.csl-entry:first-child):not(.page-link) {
+    text-decoration: none;
+    color: inherit;
+    border-bottom: solid 1.25px #dade8a;
+    transition: border-width 0.3s;
+}
+
+a:not(.header-social):not(#TableOfContents *):not(.noannot):not(.page-link):hover {
+    border-bottom: solid 4px #dade8a !important;
+}
+
+.my-backdrop {
+    background-color: transparent !important;
+}
+
+    </style>
+
+</html>

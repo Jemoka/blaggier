@@ -1,0 +1,75 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>subspace</title>
+<meta name=description content="A subspace is a vector space which is a subset of a vector space, using the same addition and scalar multiplication operations. Intuitively, a subspace of \(\mathbb{R}^{2}\) are all the lines through the origin as well as \(\{0\}\); a subspace of \(\mathbb{R}^{3}\) are all the planes through the origin as well as \(\{0\}\), etc. etc.
+constituents
+
+vector space \(V\)
+A subset \(U \subset V\) which is itself a vector space
+
+requirements
+You check if \(U\) is a subspace of \(V\) by checking IFF the following three conditions:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>subspace</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhsubspace/>subspace</a> is a <a href=/posts/kbhvector_space/>vector space</a> which is a subset of a <a href=/posts/kbhvector_space/>vector space</a>, using the same <a href=/posts/kbhadding/>addition</a> and <a href=/posts/kbhscalar_multiplication/>scalar multiplication</a> operations. Intuitively, a <a href=/posts/kbhsubspace/>subspace</a> of \(\mathbb{R}^{2}\) are all the lines through the origin as well as \(\{0\}\); a <a href=/posts/kbhsubspace/>subspace</a> of \(\mathbb{R}^{3}\) are all the planes through the origin as well as \(\{0\}\), etc. etc.</p><h2 id=constituents>constituents</h2><ul><li><a href=/posts/kbhvector_space/>vector space</a> \(V\)</li><li>A subset \(U \subset V\) which is itself a <a href=/posts/kbhvector_space/>vector space</a></li></ul><h2 id=requirements>requirements</h2><p>You check if \(U\) is a <a href=/posts/kbhsubspace/>subspace</a> of \(V\) by checking <a href=/posts/kbhequivalence/>IFF</a> the following three conditions:</p><ul><li><a href=/posts/kbhadditive_identity/>additive identity</a>: \(0 \in U\)</li><li><a href=/posts/kbhclosed/>closed</a> under the same <a href=/posts/kbhadding/>addition</a> as in \(V\): \(u,w \in U: u+w \in U\)</li><li><a href=/posts/kbhclosed/>closed</a> under <a href=/posts/kbhscalar_multiplication/>scalar multiplication</a> as in \(V\): \(a \in \mathbb{F}\) and \(u \in U\) means \(au \in U\)</li></ul><p>Yes, by only checking three you can prove everything else.</p><h2 id=additional-information>additional information</h2><h3 id=simplified-check-for-subspace>simplified check for subspace</h3><h4 id=commutativity--kbhcommutivity-dot-md--associativity--kbhassociative-dot-md--distributivity--kbhdistributivity-dot-md><a href=/posts/kbhcommutivity/>commutativity</a>, <a href=/posts/kbhassociative/>associativity</a>, <a href=/posts/kbhdistributivity/>distributivity</a></h4><p>These properties are inherited from \(V\) as they hold for every element in \(V\) so they will hold for \(U \subset V\).</p><h4 id=additive-inverse--kbhinverses-dot-md><a href=/posts/kbhinverses/>additive inverse</a></h4><p>Because <a href=/posts/kbhscalar_multiplication/>scalar multiplication</a> is defined, and we proved in <a href=/posts/kbhaxler_1_b/>Axler 1.B</a> that \(-1v=-v\) (proof: \(v+(-1)v = (1+(-1))v = 0v = 0\)).</p><h4 id=multiplicative-identity--kbhmultiplicative-identity-dot-md><a href=/posts/kbhmultiplicative_identity/>multiplicative identity</a></h4><p>Its still \(1\).</p><p>\(\blacksquare\)</p><h3 id=finite-dimensional-subspaces>finite-dimensional subspaces</h3><p>Every <a href=/posts/kbhsubspace/>subspace</a> of a <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional vector space</a> is a <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional vector space</a>.</p><p>We prove this result again via induction.</p><h4 id=base-case>base case</h4><p>If \(U=\{0\}\), we know \(U\) is <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional</a> and are done. If not, take some \(v_1 \in U\) and create a list with only \(v_1\) thus far; the invariant here is that the list is <a href=/posts/kbhlinear_independence/>linearly independent</a> as we see that a list containing this one element as indeed <a href=/posts/kbhlinear_independence/>linearly independent</a>.</p><h4 id=case-j>case \(j\)</h4><p>If the <a href=/posts/kbhlinear_independence/>linearly independent</a> list we created \(v_1, \dots v_{j-1}\) <a href=/posts/kbhspan/#spans>spans</a> \(U\), we are done. We have created a finite list which <a href=/posts/kbhspan/#spans>spans</a> \(U\), making \(U\) <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional</a>.</p><p>If not, that means that we can pick some \(u \in U\) that cannot be written as a <a href=/posts/kbhlinear_combination/>linear combination</a> of the invariantly <a href=/posts/kbhlinear_independence/>linearly independent</a> vectors \(v_1, \dots v_{j-1}\). We append \(u\) to the list, naming it \(v_{j}\). As \(v_{j}\) cannot be written as a <a href=/posts/kbhlinear_combination/>linear combination</a> of the original list, appending it to the list doesn&rsquo;t make the list dependent. This means that the list is still <a href=/posts/kbhlinear_independence/>linearly independent</a>.</p><h4 id=induction>induction</h4><p>Therefore, we have constructed a list of increasing length that is <a href=/posts/kbhlinear_independence/>linearly independent</a>. By the fact that <a href=/posts/kbhlinear_independence/#length-of-linearly-independent-list-leq-length-of-spanning-list>length of linearly-independent list \(\leq\) length of spanning list</a>, and the fact that the <a href=/posts/kbhspan/#spans>spanning</a> list of \(V\) has finite length (it is given that \(V\) is a <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional vector space</a>), the increasingly longer <a href=/posts/kbhlinear_independence/>linearly independent</a> list&mdash;building upwards to eventually <a href=/posts/kbhspan/>span</a> \(U\) in finite length.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

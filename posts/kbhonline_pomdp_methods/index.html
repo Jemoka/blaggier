@@ -1,0 +1,89 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Online POMDP Methods</title>
+<meta name=description content="These are basically MDP methods but tweaked. We make some changes:
+
+for everywhere that we need a state, we use a belief
+to sample the next state given an action (random next step), we call our generative model to get a new observation, and call update(b,a,o) with our filter to propegate our belief forward
+if we need an action-value, we use the one-step lookahead in POMDP:
+
+\begin{equation}
+Q(b,a) = R(b,a)+\gamma \qty(\sum_{o}^{}P(o|b,a) U^{\Gamma}(update(b,a,o)))
+\end{equation}
+where,
+\begin{equation}
+R(b,a) = \sum_{s}^{} R(s,a)b(s)
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Online POMDP Methods</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><main><article><div style=max-width:700px><p>These are basically <a href=/posts/kbhmarkov_decision_process/>MDP</a> methods but tweaked. We make some changes:</p><ol><li>for everywhere that we need a state, we use a <a href=/posts/kbhbelief/>belief</a></li><li>to sample the next state given an action (random next step), we call our generative model to get a new observation, and call <code>update(b,a,o)</code> with our <a href=/posts/kbhfilters/>filter</a> to propegate our <a href=/posts/kbhbelief/>belief</a> forward</li><li>if we need an <a href=/posts/kbhaction_value_function/>action-value</a>, we use the <a href=/posts/kbhalpha_vector/#one-step-lookahead-in-pomdp>one-step lookahead in POMDP</a>:</li></ol><p>\begin{equation}
+Q(b,a) = R(b,a)+\gamma \qty(\sum_{o}^{}P(o|b,a) U^{\Gamma}(update(b,a,o)))
+\end{equation}</p><p>where,</p><p>\begin{equation}
+R(b,a) = \sum_{s}^{} R(s,a)b(s)
+\end{equation}</p><p>\begin{align}
+P(o|b,a) &= \sum_{s}^{} p(o|s,a) b(s) \\
+&= \sum_{s}^{} \sum_{s&rsquo;}^{} T(s&rsquo;|s,a) O(o|s&rsquo;,a) b(s)
+\end{align}</p><p>and where, if needed (i.e. most algorithms estimate this):</p><p>\begin{equation}
+U^{\Gamma}(b) = \max_{\alpha \in \Gamma} \alpha^{\top} b
+\end{equation}</p><p>we also revise our <a href=/posts/kbhonline_planning/#generative-model>generative model</a>:</p><p>each step requires belief and action, and we sample from our belief a next state, propegate <a href=/posts/kbhbelief/>belief</a> forward, and use a traditional <a href=/posts/kbhonline_planning/#generative-model>generative model</a> to get the rewards and next states (which we don&rsquo;t use).</p><ul><li><a href=/posts/kbhreceeding_horizon/>Receeding Horizon</a>: plan to a depth \(d\), select action, replan</li><li><a href=/posts/kbhrollout_with_lookahead/>Rollout with Lookahead</a>: simple to implement, no grantees of optimality or even boundedness</li><li><a href=/posts/kbhforward_search/>Forward Search</a>: quite expensive&mdash;exponential given the size of horizon</li><li><a href=/posts/kbhmonte_carlo_tree_search/>monte-carlo tree search</a>, but instead our counts are stored not in terms of states (which we don&rsquo;t know), but sequences of action observations: \(h = a_1o_2a_2o_1a_2o_1\) etc. Then, the counter takes \(N(h,a)\) as input: will head towards optimality and it requires a <a href=/posts/kbhonline_planning/#generative-model>generative model</a> to sample tracks</li><li><a href=/posts/kbhbranch_and_bound/>Branch and Bound</a>, but you use the <a href=/posts/kbhpomdp_approximation/>POMDP Approximation</a> methods to estimate the upper and lower bounds of your utility: its <a href=/posts/kbhforward_search/>Forward Search</a> with pruning</li><li><a href=/posts/kbhsparse_sampling/>Sparse Sampling</a>: its <a href=/posts/kbhforward_search/>Forward Search</a>, but the next <a href=/posts/kbhaction_value_function/>action-value</a> is determined by a finite sampling of next observations and rewards and you average their future utility. that is, the action-value before depth \(d\) is obtained by: \(Q(b,a) = \frac{1}{m} \sum_{i=1}^{m} \qty(r_{a}^{(i)}+\gammaU_{d-1}(Update(b,a,o_{a}^{(i)})))\)</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

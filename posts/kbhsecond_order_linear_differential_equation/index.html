@@ -1,0 +1,210 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Second-Order Linear Differential Equations</title>
+<meta name=description content="Here&rsquo;s a general form:
+\begin{equation}
+a\dv[2]{x}{t} + b \dv{x}{t} + cx = f(t)
+\end{equation}
+see:
+
+solving homogeneous constant coefficient higher-order differential equations
+and more generally, using matrix exponentiation, solving homogeneous higher-order differential equations
+
+solving homogeneous higher-order differential equations
+This problem because easier if the right side is \(0\).
+\begin{equation}
+a\dv[2]{x}{t} + b \dv{x}{t} + cx = 0
+\end{equation}
+The general goal to solve in this case is to make this a system of First-Order Differential Equations."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Second-Order Linear Differential Equations</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Here&rsquo;s a general form:</p><p>\begin{equation}
+a\dv[2]{x}{t} + b \dv{x}{t} + cx = f(t)
+\end{equation}</p><p>see:</p><ul><li><a href=#solving-homogeneous-constant-coefficient-higher-order-differential-equations>solving homogeneous constant coefficient higher-order differential equations</a></li><li>and more generally, using <a href=/posts/kbhmatrix_exponentiation/>matrix exponentiation</a>, <a href=#solving-homogeneous-higher-order-differential-equations>solving homogeneous higher-order differential equations</a></li></ul><h2 id=solving-homogeneous-higher-order-differential-equations>solving homogeneous higher-order differential equations</h2><p>This problem because easier if the right side is \(0\).</p><p>\begin{equation}
+a\dv[2]{x}{t} + b \dv{x}{t} + cx = 0
+\end{equation}</p><p>The general goal to solve in this case is to make this a system of <a href=/posts/kbhlinear_non_seperable_equation/#solving-differential-equations>First-Order Differential Equations</a>.</p><p>To do this, we begin by making:</p><p>\begin{equation}
+y = \dv{x}{t}
+\end{equation}</p><p>Therefore, we can change the first equation:</p><p>\begin{equation}
+a \dv{y}{t} + by + cx = 0
+\end{equation}</p><p>Solving both of these conditions, we form a system of linear equations:</p><p>\begin{align}
+&\dv{x}{t}=y \\
+&\dv{y}{t} = \frac{-c}{a}x-\frac{b}{a}y
+\end{align}</p><p>We are now first-order, so we can put this into a matrix equation:</p><p>\begin{equation}
+\dv t \begin{pmatrix}
+x \\ y
+\end{pmatrix} = \begin{pmatrix}
+0 & 1 \\ -\frac{c}{a} & \frac{-b}{a}
+\end{pmatrix} \begin{pmatrix}
+x \\ y
+\end{pmatrix}
+\end{equation}</p><p>Now! We have an equation:</p><p>\begin{equation}
+\dv{t}v = Av
+\end{equation}</p><p>The result above shows that the transformations \(\dv{t}\) and \(A\) are isomorphic. Therefore, we now attempt to characterize \(A\) to solve this expression.</p><p>Let&rsquo;s begin. We will first shove that \(v\) on top of the differential for aesthetics:</p><p>\begin{equation}
+\dv{v}{t} = Av
+\end{equation}</p><p>This expression is actually nicely <a href=/posts/kbhlinear_constant_coefficient_equation/#solving-separable-differential-equations>seperable</a>, so we shall endeavor to separate it:</p><p>\begin{equation}
+\dd{v} = Av\dd{t}
+\end{equation}</p><p>Of course, \(v\) is a function of \(t\). Therefore, the right side would be woefully complicated. Therefore, we shall do this handwavy thing where we go:</p><p>\begin{equation}
+\frac{1}{v}\dd{v} = A\dd{t}
+\end{equation}</p><p>Now, \(A\) is not a function in \(t\) &mdash; its just some constants! So, we can integrate this safely without much trouble:</p><p>\begin{equation}
+\int \frac{1}{v}\dd{v} =\int A\dd{t}
+\end{equation}</p><p>To get:</p><p>\begin{equation}
+\ln v = t A + C
+\end{equation}</p><p>Note the order as \(t\) is a constant. Finally, we will invert the natural log and get \(v\) back:</p><p>\begin{equation}
+v = e^{tA+C}
+\end{equation}</p><p>Excellent. We will now apply some <a href=/posts/kbhlog_laws/>log/exponent laws</a>:</p><p>\begin{equation}
+v = e^{tA}e^{C} = e^{tA}C
+\end{equation}</p><p><del>this is so very handwavy. \(C\) is technically a vector here&mldr; long story and iffy understanding</del></p><p>Ok, how do we go about solving \(x\)?</p><p>Note now that \(v=(x\ y)\), so we will expand that:</p><p>\begin{equation}
+\begin{pmatrix}
+x \\ y
+\end{pmatrix} = e^{tA}\begin{pmatrix}
+x_0 \\ y_0
+\end{pmatrix}
+\end{equation}</p><p>where, as we defined above \(y=\dv{x}{t}\) (each integral needing a different constant.)</p><p>Now. remember that \(A\) is diagonalizable; and so will \(tA\) (citation needed, but intuition is that scaling eigenvalues do nothing anyways). So, to make this exponentiation easier, we will diagonalize it.</p><p>We now have that</p><p>\begin{equation}
+e^{tA} = \mqty(v_1& \dots& v_{m})\mqty(\dmat{e^{t\lambda_{1}}, \dots, e^{t\lambda_{m}}})\mqty(v_1& \dots& v_{m})^{-1}
+\end{equation}</p><p>(<a href=/posts/kbhraising_e_to_a_matrix/>how?</a>)</p><p>Ok. Finally, we will take the binroller that is &ldquo;constancy&rdquo; and apply it to \(e^{tA}\). This took quite a bit of time for me to get, so feel free to take some time to get it too.</p><p>This all hinges upon the fact that \(C\) is a constant, so multiplying any constant to it still makes it \(C\).</p><p>So far, we have that:</p><p>\begin{equation}
+\begin{pmatrix}
+x \\ y
+\end{pmatrix} = e^{tA}\begin{pmatrix}
+x_0 \\ y_0
+\end{pmatrix} = \qty(\mqty(v_1& \dots& v_{m})\mqty(\dmat{e^{t\lambda_{1}}, \dots, e^{t\lambda_{m}}})\mqty(v_1& \dots& v_{m})^{-1} )\begin{pmatrix}
+x_0 \\ y_0
+\end{pmatrix}
+\end{equation}</p><p>Remember, now, that \(v_1\dots v_{}\) and its inverses are nothing but vectors filled with a lot of scalars. And any scalar \(\alpha\) times a constant still results in the (a new) constant: \(\alpha C =C\). So, we will steamroll \(\mqty(x_0&amp;y_0)\) over the right side eigenbases matrix (multiplying a constant vector to any&rsquo;ol matrix will just get a new set of constants back) to get:</p><p>\begin{align}
+\begin{pmatrix}
+x \\ y
+\end{pmatrix} &= \qty(\mqty(v_1& \dots& v_{m})\mqty(\dmat{e^{t\lambda_{1}}, \dots, e^{t\lambda_{m}}})\mqty(v_1& \dots& v_{m})^{-1} )\begin{pmatrix}
+x_0 \\ y_0
+\end{pmatrix} \\
+&= \mqty(v_1& \dots& v_{m})\mqty(\dmat{e^{t\lambda_{1}}, \dots, e^{t\lambda_{m}}}) \begin{pmatrix}
+C_1 \\ C_2
+\end{pmatrix}
+\end{align}</p><p>Now, the middle thing has \(t\) in it! (the input!) So, we can&rsquo;t just steamroll now. We have to preserve the middle part.</p><p>\begin{align}
+\begin{pmatrix}
+x \\ y
+\end{pmatrix} &= \mqty(v_1& \dots& v_{m})\mqty(\dmat{e^{t\lambda_{1}}, \dots, e^{t\lambda_{m}}}) \begin{pmatrix}
+C_1 \\ C_2
+\end{pmatrix} \\
+&= \mqty(v_1& \dots& v_{m}) \begin{pmatrix}
+C_1 e^{t\lambda_{1}} \\ C_2 e^{t\lambda_{2}}
+\end{pmatrix}
+\end{align}</p><p>And finally, we keep steamrolling:</p><p>\begin{align}
+\begin{pmatrix}
+x \\ y
+\end{pmatrix} &= \mqty(v_1& \dots& v_{m}) \begin{pmatrix}
+C_1 e^{t\lambda_{1}} \\ C_2 e^{t\lambda_{2}} \end{pmatrix}\\
+&= \mqty({C_{1_{x}} e^{t\lambda_{1}} + C_{2_{x}} e^{t\lambda_{2}}} \\ {C_{1_{y}} e^{t\lambda_{1}} + C_{2_{y}} e^{t\lambda_{2}}})
+\end{align}</p><p>There is absolutely no difference in nature between \(C_{j_{x}}\) and \(C_{j_{y}}\) except for the fact that they are <em>different</em> constants (which we got by multiplying \(v_1 \dots v_{m}\)) to it.</p><p>Ok so:</p><p>\begin{equation}
+\begin{cases}
+x = C_{1_{x}} e^{t\lambda_{1}} + C_{2_{x}} e^{t\lambda_{2}}\\
+y = C_{1_{y}} e^{t\lambda_{1}} + C_{2_{y}} e^{t\lambda_{2}}\\
+\end{cases}
+\end{equation}</p><p>constructing the characteristic equation, as desired.</p><h2 id=solving-homogeneous-constant-coefficient-higher-order-differential-equations>solving homogeneous constant coefficient higher-order differential equations</h2><p>in the homogeneous case, we have some:</p><p>\begin{equation}
+y&rsquo;&rsquo; + ay&rsquo; + by = 0
+\end{equation}</p><p>and it arises that there&rsquo;s a pair of solutions \(y_1(t)\) and \(y_2(t)\) whose linear combinations span the entire space of solutions. in fact, it arises as a solution to some functional quadratic equation \(\lambda^{2} + a\lambda + b = 0\).</p><p>The specific coefficients \(c_1\) and \(c_2\) of the linear combination arises out of the initial conditons, which is the same measurement given at the initial time and its derivative: \(y(t_0)\) and \(y&rsquo;(t_0)\). It comes out of <a href=/posts/kbhlinear_algebra_errors/>Linear Algebra</a> why there is exactly two initial values.</p><p>Specifically, it arises out of solutions of the shape:</p><p>\begin{equation}
+y(t) = c_1 e^{\lambda_{1}t} + c_2e^{\lambda_{2}t}
+\end{equation}</p><p>where \(\lambda_{1}\) and \(\lambda_{2}\) are solutions to the characteristic polynomial above. For why exactly this is, see <a href=#method-of-undetermined-coefficients>method of undetermined coefficients</a>.</p><h3 id=finding-independent--kbhprobability-dot-md--solutions-of-second-order-constant-coefficient-linear-odes>finding <a href=/posts/kbhprobability/#independence>independent</a> solutions of second-order constant-coefficient linear ODEs</h3><p>Given some:</p><p>\begin{equation}
+y&rsquo;&rsquo; + ay&rsquo; + by = 0
+\end{equation}</p><p>we desire to find two <a href=/posts/kbhprobability/#independence>independent</a> solutions. After which, by <a href=/posts/kbhordinary_differential_equations/#superposition-principle>superposition principle</a>, we know that any <a href=/posts/kbhlinear_combination/>linear combination</a>s will yield a solution.</p><hr><p>Aside, consider:</p><p>\begin{equation}
+y&rsquo;&rsquo; = y
+\end{equation}</p><p>we see that both \(y=e^{t}\) and \(y=e^{-t}\) are solutions. We can see that this is independent by setting up:</p><p>\begin{equation}
+c_1 e^{t} + c_2 e^{-t} = 0
+\end{equation}</p><p>which, multiplying through by \(e^{t}\) and dividing, we obtain:</p><p>\begin{equation}
+e^{2t} = -\frac{c_2}{c_1}
+\end{equation}</p><p>Now, the right side is constant, and the left is not. So the only way this can be true is if the right side is identically zero.</p><h4 id=linear-shifts>Linear Shifts</h4><p>Consider the case where you are given initial conditions:</p><p>\begin{equation}
+\begin{cases}
+y&rsquo;&rsquo; - y = 0 \\
+y(5) = -2 \\
+y&rsquo;(5) = 5
+\end{cases}
+\end{equation}</p><p>instead of bothering to solve this, we define:</p><p>\begin{equation}
+Y(t) = y(t+5)
+\end{equation}</p><p>and it still hold that:</p><p>\begin{equation}
+Y&rsquo;&rsquo; - Y = 0
+\end{equation}</p><p>because the derivatives don&rsquo;t actually change.</p><p>Then, after solving, we can just translate it back:</p><p>\begin{equation}
+y(t) = Y(t-5)
+\end{equation}</p><h4 id=solution-more-generally>Solution, more generally</h4><p>Consider:</p><p>\begin{equation}
+y&rsquo;&rsquo; + ay&rsquo; + by = 0
+\end{equation}</p><p>let us guess that \(y = e^{\lambda t}\)</p><p>recall that, in that case:</p><p>\begin{equation}
+\begin{cases}
+y&rsquo; = \lambda e^{\lambda t} \\
+y&rsquo;&rsquo; = \lambda^{2} e^{\lambda t}
+\end{cases}
+\end{equation}</p><p>plugging this back in:</p><p>\begin{equation}
+\lambda^{2} e^{\lambda t} + a \lambda e^{\lambda t} + b e^{\lambda t} = 0
+\end{equation}</p><p>which is:</p><p>\begin{equation}
+(\lambda^{2} + a\lambda +b ) e^{\lambda t} = 0
+\end{equation}</p><p>because the right side is never zero, we need the left side \((\lambda^{2} + a\lambda +b )\) is zero.</p><p>Note that there exists three separate cases:</p><ul><li>\(a^{2}-4b > 0\), two exact solutions: \(e^{\lambda_{1}t}\) and \(e^{\lambda_{2} t}\), these two are independent functions as long as \(\lambda_{1} \neq \lambda_{2}\)</li><li>\(a^{2}-4b &lt; 0\), which will yield imaginary solutions, recall <a href=/posts/kbheuler_s_equation/>Euler&rsquo;s Equation</a>, you can split \(e^{ikx}\) into a superposition of \(\cos (x) + i\sin (x)\), each of which individually is a solution. You can break this up into the case of some real \(e^{-at}\) multiplied by sinusoldial functions.&mdash; whereby \(e^{at} (\cos(bt) \pm i\sin(bt))\), we can break into two functions \(y_1 = e^{at}\cos (bt), y_2= e^{at}i \sin (bt)\).</li><li>for \(a^{2}-4b = 0\), we yield some solution \(e^{-\frac{a}{2} t}\), and the solution is \(t e^{-\frac{a}{2}t}\). because this is the limit of the first solution \(\lim_{\lambda_{2} \to \lambda_{1}}\frac{e^{\lambda_{2}t} - e^{\lambda_{1}t}}{\lambda_{2} - \lambda_{2}}\)</li></ul><ul><li><p>All 2nd order solution is a linear combination</p><p>In fact, all solutions carry the form of the two solutions:</p><p>\begin{equation}
+c_1 y_1(t) + c_2 y_2(t) = y(t)
+\end{equation}</p><p>This is because, consider the initial form \(y_1(t_0)\), and \(y_2(t_0)\):</p><p>\begin{equation}
+\begin{cases}
+y_1(t_0) c_1 + y_2(t_0) c_2 = y(t_0) \\
+y_1&rsquo;(t_0) c_1 + y_2&rsquo;(t_0) c_2 = y&rsquo;(t_0) \\
+\end{cases}
+\end{equation}</p><p>This is the same as the matrix equation:</p><p>\begin{equation}
+\mqty(y_1(t_0) & y_2(t_0) \\ y_1&rsquo;(t_0) & y_2&rsquo;(t_0)) \mqty(c_1 \\ c_2) = \mqty(y(t_0) \\ y&rsquo;(t_0))
+\end{equation}</p><p>So, this map is surjective.</p></li></ul><h4 id=uniqueness-and-existance--kbhuniqueness-and-existance-dot-md--of-second-order><a href=/posts/kbhuniqueness_and_existance/>Uniqueness and Existance</a> of second order</h4><p>The uniqueness is also guaranteed with <a href=/posts/kbhinitial_value_problems/#one-and-exactly-one-solution-exist-for-every-initial-condition-of-an-ivp>one and exactly one solution exist for every initial condition of an IVP</a>. Unlike first order ODE, solutions can cross: because the uniq and exi. is only guaranteed for the same <strong>point</strong> AND <strong>slope</strong> (i.e. the initial condition).</p><p>So solutions can cross, they just can&rsquo;t be tangent.</p><h2 id=method-of-undetermined-coefficients>method of undetermined coefficients</h2><p>Ok. This mechanism hinges upon the fact that <strong>linear combinations of differential equation solutions are solutions themselves</strong>. You can show this to yourself by illustrating diffeq solutions as <a href=/posts/kbhsubspace/>subspace</a>s of <a href=/posts/kbhfs_is_a_vector_space/>F^S</a>, which are linear objects.</p><p>Therefore, for a non-homogeneous second-order linear equation, we attempt to find two sets of solutions&mdash;</p><p>namely, the general solution to the homogeneous case (using method above):</p><p>\begin{equation}
+a\dv[2]{x}{t} + b \dv{x}{t} + cx = 0
+\end{equation}</p><p>as well attempting to fit <strong>particular</strong> solutions to the general case:</p><p>\begin{equation}
+a\dv[2]{x}{t} + b \dv{x}{t} + cx = f(t)
+\end{equation}</p><p>the linear combination of both solutions would construct the final solution space.</p><p>We already know how to do step 1&mdash;<a href=#solving-homogeneous-higher-order-differential-equations>solve homogeneous higher-order differential equations</a>&mdash;so we won&rsquo;t harp on it here. However, how do we find <em>particular</em> solutions to the general equations?</p><p>Well, we guess! Here&rsquo;s a general table to help illustrate how:</p><table><thead><tr><th>\(f(t)\)</th><th>\(x(t)\)</th></tr></thead><tbody><tr><td>\(ae^{bt}\)</td><td>\(Ae^{bt}\)</td></tr><tr><td>\(a \cos (ct) + b\sin (ct)\)</td><td>\(A\cos(ct) + B\sin (ct)\)</td></tr><tr><td>\(kt^{n}\)</td><td>\(A_{n}t^{n} + A_{n-1}x^{n-1} \dots + A_{0}\)</td></tr></tbody></table><p>you can show these to yourself by taking derivatives. \(a,b,c, k,A,B\) are distinct constants.</p><p>Now, once you make an educated guess for what \(x(t)\) is, perhaps aided by the homogeneous solution, you would take the number of derivatives needed to plug it back to the original expression. Then, equate the left expression and right \(f(t)\) and match <a href=/posts/kbhpolynomial/>coefficient</a>s of equal-degree terms to solve for the final constants \(A\), \(B\), etc.</p><p>After you finally got the specific solution for \(A\) and \(B\) , we add the degree of freedom back by adding the homogenous solution in.</p><p>Look for &ldquo;Example 1 (again)&rdquo; on <a href=https://www.mathsisfun.com/calculus/differential-equations-undetermined-coefficients.html>this page</a> (silly, I know, but worth it) to see end-to-end such a solution.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

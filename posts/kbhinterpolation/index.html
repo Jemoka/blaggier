@@ -1,0 +1,97 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>interpolation</title>
+<meta name=description content="nyquist limit is great and all, but I really don&rsquo;t want to wait for all \(T\) to be able to sample all the necessary terms to solve for every \(a_{j},b_{j}\) before we can reconstruct our signal.
+So, even if we got our sequence of \(\frac{1}{2B}\) length of points, we need an alternative way to reconstruct the signal as we go.
+One way to reconstruction via interpolation is just to connect the dots; however, this is bad because it creates sharp corners."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>interpolation</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhsu_engr76_apr302024/#lossless-sampling>nyquist limit</a> is great and all, but I really don&rsquo;t want to wait for all \(T\) to be able to sample all the necessary terms to solve for every \(a_{j},b_{j}\) before we can reconstruct our signal.</p><p>So, even if we got our sequence of \(\frac{1}{2B}\) length of points, we need an alternative way to reconstruct the signal as we go.</p><p>One way to reconstruction via interpolation is just to connect the dots; however, this is bad because it creates sharp corners.</p><h2 id=in-general>In General</h2><p>Suppose you have a sampling period length \(T_{s}\):</p><p>\begin{equation}
+\hat{x}(t) = \sum_{m=0}^{\infty} X\qty(mT_{s}) F\qty( \frac{t-mT_{s}}{T_{s}}) = x(0) F \qty(\frac{t}{T_{s}}) + x(T_{s}) f\qty(\frac{t-T_{s}}{T_{s}}) + \dots
+\end{equation}</p><p>where \(F(t)\) is some interpolation function such that:</p><p>\begin{equation}
+\begin{cases}
+F(0) = 1 \\
+F(k) = 0, k \in \mathbb{Z} \backslash \{0\}
+\end{cases}
+\end{equation}</p><p>Notice the above is a <a href=/posts/kbhconvolution/>convolution</a> between \(X\) and \(F\), where \(y\) is fixed as a multiple \(m\) around \(mT_{s}\) and the convolution is centered at \(\frac{t}{T_{s}}\).</p><p>However, because we are finite valued, we just slide a window around and skip around.</p><h3 id=consider-now-hat-x-at-kt-s>Consider now \(\hat{x}\) at \(kT_{s}\)</h3><p>\begin{align}
+\hat{x}(kT_{s}) &= \sum_{m=0}^{\infty} X(mT_{s}) F \qty(\frac{kT_{s}- mT_{s}}{T_{s}}) \\
+&= \sum_{m=0}^{\infty} X(mT_{s}) F \qty(k-m)
+\end{align}</p><p>now, recall that \(F\) is \(0\) for all non-zero integers, so each term will only be preserved once, precisely at \(m = k\). Meaning:</p><p>\begin{align}
+\hat{x}(kT_{s}) &= \sum_{m=0}^{\infty} X(mT_{s}) F \qty(k-m) \\
+&= X(kT_{s}) 1 \\
+&= X(kT_{s})
+\end{align}</p><p>so this is why we need \(F(k) = 0, k \in \mathbb{Z} \backslash \{0\}\)</p><h2 id=zero-hold-interpolation>Zero-Hold Interpolation</h2><p>Choose \(F\) such that:</p><p>\begin{equation}
+F = \begin{cases}
+1, \text{if}\ |x| &lt; \frac{1}{2} \\
+0
+\end{cases}
+\end{equation}</p><h2 id=infinite-degree-polynomial-interpolation>Infinite-Degree Polynomial Interpolation</h2><p>\begin{equation}
+F(t) = (1-t) (1+t) \qty(1- \frac{t}{2}) \qty(1+ \frac{t}{2}) \dots = \text{sinc}(t) = \frac{\sin(\pi t)}{\pi t}
+\end{equation}</p><p>This is the BEST interpolation; this is because it will be stretched such that every zero crossing matches eat \(mT_{s}\), meaning we will recover a sum of sinusoids.</p><p>This gives a <strong>smooth signal</strong>; and if sampling was done correctly with the <a href=/posts/kbhsu_engr76_apr302024/#lossless-sampling>nyquist limit</a>, interpolating with <a href=#infinite-degree-polynomial-interpolation>sinc interpolation</a> will give you your original signal.</p><h3 id=shannon-s-nyquist-theorem>Shannon&rsquo;s Nyquist Theorem</h3><p>Let \(X\) be a <a href=/posts/kbhsu_engr76_apr252024/#finite-bandwidth-signal>Finite-Bandwidth Signal</a> where \([0, B]\) Hz.</p><p>if:</p><p>\begin{equation}
+\hat{X}(t) = \sum_{m=0}^{\infty} X(mTs) \text{sinc} \qty( \frac{t-mTs}{Ts})
+\end{equation}</p><p>where:</p><p>\begin{equation}
+\text{sinc}(t) = \frac{\sin \qty(\pi t)}{\pi t}
+\end{equation}</p><ul><li>if \(Ts &lt; \frac{1}{2B}\), that is, \(fs > 2B\), then \(\hat{X}(t) = X(t)\) (this is a STRICT inequality!)</li><li>otherwise, if \(Ts > \frac{1}{2B}\), then \(\hat{X}(t) \neq X(t)\), yet \(\hat{X}(mTs) = X(mTs)\), and \(\hat{X}\) will be bandwidth limited to \([0, \frac{fs}{2}]\).</li></ul><p>This second case is callled &ldquo;aliasing&rdquo;, or &ldquo;strocoscopic effect&rdquo;.</p><hr><p>Alternate way of presenting the same info:</p><p>\begin{equation}
+\hat{X}(t) = \sum_{m=0}^{\infty} X(mTs) \text{sinc} \qty( \frac{t-mT_{s}}{T_{s}})
+\end{equation}</p><p>Let \(X(t)\), as before, be a continuous-time, bandwidth limited, signal with <a href=/posts/kbhsu_engr76_apr252024/#bandwidth>Bandwidth</a> \(B\); let \(\hat{X}(t)\) be the reconstruction of this signal with samples taken apart by \(T_{s} &lt; \frac{1}{2B}\); then \(\hat{X}(t) = X(t)\). Otherwise, if \(T_{s} > \frac{1}{2B}\), then the reconstruction \(\hat{X}(t) \neq X(t)\), but the samples at \(mT_{s}\) will still match (that is, \(X(m T_{s}) = \hat{X}(m T_{s})\)) and \(\hat{X}(t)\) will be a <a href=/posts/kbhsu_engr76_may022024/#passband-signal>Baseband Signal</a> whose spectrum is limited by \([0, \frac{\frac{1}{T_{s}}}{2}] = [0, \frac{F_{s}}{2}]\). This second case is callled &ldquo;aliasing&rdquo;, or &ldquo;strocoscopic effect&rdquo;.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

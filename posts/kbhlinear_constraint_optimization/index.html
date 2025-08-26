@@ -1,0 +1,353 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Linear Constraint Optimization</title>
+<meta name=description content="\begin{align}
+\min_{x}\ &amp;c^{\top} x \\
+s.t.\ &amp;Ax \leq b \\
+& x \geq 0
+\end{align}
+
+linear objective function
+linear constraints
+
+single our inequality forms a half-space; the entire feasible set is denoted by a series of linear functions&mdash;-these linear equalities are each CONVEX. The resulting feasible set, then, is ALSO convex&mdash;-meaning any line within the set remains within the set. So, any local minimum is a global minimum.
+3 cases of design points
+
+points on the interior of feasible set is always non-optimal, because we can always move along \(c\) gradient
+points on the faces could be optimal IFF the face is perpendicular to \(c\), the gradient of our objective function&mdash;but you can always slide along the face, making there be infinite solutions if its on a face (because \(c\) doesn&rsquo;t change along that face)
+points on vertex could be optimal
+unclosed feasible set&mdash;possibly unbounded solution
+
+linear program equality form
+\begin{align}
+\min_{x}\ &amp;c^{\top} x \\
+s.t.\ &amp;Ax = b \\
+& x \geq 0
+\end{align}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Linear Constraint Optimization</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>\begin{align}
+\min_{x}\ &amp;c^{\top} x \\
+s.t.\ &amp;Ax \leq b \\
+& x \geq 0
+\end{align}</p><ul><li>linear objective function</li><li>linear constraints</li></ul><p>single our inequality forms a half-space; the entire <a href=/posts/kbhsu_cs361_apr022024/#formal-formulation-of-optimization>feasible set</a> is denoted by a series of linear functions&mdash;-these linear equalities are each <strong>CONVEX</strong>. The resulting <a href=/posts/kbhsu_cs361_apr022024/#formal-formulation-of-optimization>feasible set</a>, then, is ALSO convex&mdash;-meaning any line within the set remains within the set. So, any local minimum is a global minimum.</p><h2 id=3-cases-of-design-points>3 cases of design points</h2><ol><li><strong>points on the interior of feasible set</strong> is always non-optimal, because we can always move along \(c\) gradient</li><li><strong>points on the faces</strong> could be optimal IFF the face is perpendicular to \(c\), the gradient of our objective function&mdash;but you can always slide along the face, making there be <em>infinite solutions</em> if its on a face (because \(c\) doesn&rsquo;t change along that face)</li><li><strong>points on vertex</strong> could be optimal</li><li><strong>unclosed feasible set</strong>&mdash;possibly unbounded solution</li></ol><h2 id=linear-program-equality-form>linear program equality form</h2><p>\begin{align}
+\min_{x}\ &amp;c^{\top} x \\
+s.t.\ &amp;Ax = b \\
+& x \geq 0
+\end{align}</p><p>We can transpose our standard-form expression into an equality form above by introducing another &ldquo;slack variable&rdquo; \(s\), such that we write:</p><p>\begin{equation}
+Ax \leq b \implies Ax + s = b
+\end{equation}</p><p>and introducing \(s > 0\) as another constraint.</p><h2 id=fonc--kbhsu-cs361-apr042024-dot-md--for-linear-program><a href=/posts/kbhsu_cs361_apr042024/#first-order-necessary-condition>FONC</a> for linear program</h2><p>To convert a linear program into a unconstrained program&mdash;</p><p>Our <a href=/posts/kbhlagrangian_mechanics/>Lagrangian</a>:</p><p>\begin{align}
+\mathcal{L} = c^{\top} x - \mu^{\top} - \lambda^{\top} (Ax - b)
+\end{align}</p><p>Recall our <a href=/posts/kbhsu_cs361_apr182024/#kkt-conditions>KKT Conditions</a>:</p><ul><li>feasibility: \(Ax = b, x \geq 0\) (satisfies our constraints)</li><li>dual feasibility: \(\mu \geq 0\)</li><li>complementary slackness: \(u \odot x = 0\)</li><li>stationarity: \(A^{\top}\lambda + \mu = c\) (because <a href=/posts/kbhsu_cs361_apr042024/#first-order-necessary-condition>FONC</a>: we want \(\nabla_{x}\mathcal{L} = 0\)</li></ul><p>Recall:</p><p>\begin{equation}
+\min_{x} \max_{\mu \geq 0, \lambda} \mathcal{L}(x,\mu)
+\end{equation}</p><p>For linear programs, is that <a href=/posts/kbhsu_cs361_apr042024/#first-order-necessary-condition>FONC</a> are sufficient by themselves!</p><h2 id=dual-certificates>Dual Certificates</h2><p><a href=#dual-certificates>Dual Certificates</a> is a method of, given some proposed solution \(x^{*}\) of the <a href=/posts/kbhsu_cs361_apr182024/#primal-problem>primal problem</a> for a <a href=/posts/kbhlinear_constraint_optimization/>Linear Program</a>, we can verify the solution with the dual solution.</p><hr><p>Recall the <a href=/posts/kbhsu_cs361_apr182024/#dual-form-of-the-primal-problem>dual form of the primal problem</a>:</p><p>\begin{align}
+\max_{\lambda}\ &amp;b^{\top}\lambda\\
+s.t.\ &amp;A^{\top} \lambda \leq c
+\end{align}</p><p>Typically, this would give us an <strong>lower bound</strong> to the primal solution. However, for <a href=/posts/kbhlinear_constraint_optimization/>Linear Program</a>s, they are <strong>equal</strong>.</p><hr><p>So, given some \((x^{*}, \lambda^{*})\), we can verify it by checking:</p><ol><li>primal feasible: \(Ax \leq b\), \(x \geq 0\)</li><li>dual feasible: \(A^{\transpose} \lambda \leq c\)</li><li>dual certificate: \(c^{\top} x^{*} = b^{\top} \lambda^{*}\)</li></ol><p>This allows us to check, for a given solution, whether or not it is actually the correct solution.</p><h2 id=simplex-algorithm>simplex algorithm</h2><ol><li>find feasible sets</li><li>check for <a href=/posts/kbhsu_cs361_apr182024/#kkt-conditions>KKT Conditions</a> in <a href=#fonc--kbhsu-cs361-apr042024-dot-md--for-linear-program>FONC for linear program</a></li><li>if done, return</li><li>if not, try to swap possible vertices while maintaining optimality</li></ol><p>recall that feasible solution essentially only exist on verticies. so this algorithm is a way of systematically checking verticies.</p><h3 id=vertex-partitioning>Vertex Partitioning</h3><p>We need to define the act of partitioning before we can perform the <a href=#simplex-algorithm>simplex algorithm</a>.</p><p>We have two sets \(\mathcal{B}, \mathcal{V}\) which contains <strong>indicies</strong> in \(x\). For \(\mathcal{B}\), if \(i \in \mathcal{B}\), then \(x_{i} \geq 0\). If \(i \in \mathcal{V}\), \(x_{i} = 0\). Consider \(n\), the number of design variables in \(x\); and \(m\), the number of equality constraints in <a href=#linear-program-equality-form>linear program equality form</a>; vertices is defined the number of ways you can zero-out \(n-m\) of the values of \(x\). This means that a valid vertex would need \(n-m\) elements in \(\mathcal{V}\), and \(m\) elements in \(\mathcal{B}\) (because that&rsquo;s just \(n-(n-m) = m\)).</p><p>Recall:</p><p>\begin{align}
+\min_{x}\ &amp;c^{\top} x \\
+s.t.\ &amp;Ax = b \\
+& x \geq 0
+\end{align}</p><p>Because \(\mathcal{B}\) are the only sets for which non-negative vertices&rsquo;s exist (that is, \(x_{\mathcal{V}} = 0\)), we can write:</p><p>\begin{equation}
+Ax = A_{\mathcal{B}} x_{\mathcal{B}} = b
+\end{equation}</p><p>meaning, we can solve for the correct basis by writing:</p><p>\begin{equation}
+x_{\mathcal{B}} = A_{\mathcal{B}}^{-1} b
+\end{equation}</p><p>this will have a unique solution, then, when \(A_{\mathcal{B}}\) is an <a href=/posts/kbhisomorphism/>isomorphism</a>. Importantly, \(A_{\mathcal{B}}\) is not going to be invertible for all choices of set \(\mathcal{B}\), so <strong>not all partitions are valid verticies</strong>.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75af00>@dataclass</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>LinearProgram</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>A</span><span style=color:#111>:</span> <span style=color:#111>Matrix</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>b</span><span style=color:#111>:</span> <span style=color:#111>Vector</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>c</span><span style=color:#111>:</span> <span style=color:#111>Vector</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>def</span> <span style=color:#75af00>get_valid_vertex</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>,</span> <span style=color:#111>basis</span><span style=color:#111>:</span> <span style=color:#111>List</span><span style=color:#111>[</span><span style=color:#111>int</span><span style=color:#111>]):</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># because we want to index wile reserving the</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># original order, we sort</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>basis</span> <span style=color:#f92672>=</span> <span style=color:#111>sorted</span><span style=color:#111>(</span><span style=color:#111>basis</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># then, we want to get our A basis and try to</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># get x basis</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>A_basis</span> <span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#111>[:,</span> <span style=color:#111>basis</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>x_basis</span> <span style=color:#f92672>=</span> <span style=color:#111>A_basis</span><span style=color:#f92672>.</span><span style=color:#111>invert</span><span style=color:#111>()</span> <span style=color:#f92672>@</span> <span style=color:#111>b</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>print</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Can&#39;t invert! Not a valid basis.&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># we want to set the rest of it as 0</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x_new</span> <span style=color:#f92672>=</span> <span style=color:#111>zeros_like</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>c</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x_new</span><span style=color:#111>[</span><span style=color:#111>basis</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>x_basis</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#111>x_new</span>
+</span></span></code></pre></div><h3 id=partitioning-fonc>Partitioning FONC</h3><p>Recall our <a href=/posts/kbhsu_cs361_apr182024/#kkt-conditions>KKT Conditions</a>:</p><ul><li>feasibility: \(Ax = b, x \geq 0\) (satisfies our constraints)</li><li>dual feasibility: \(\mu \geq 0\)</li><li>complementary slackness: \(u \odot x = 0\)</li><li>stationarity: \(A^{\top}\lambda + \mu = c\)</li></ul><p>We want to re-write this in terms of our basis. We can write \(A^{\top}\lambda + \mu = c\) as:</p><p>\begin{equation}
+\begin{cases}
+A_{\mathcal{B}}^{\top} \lambda + \mu_{\mathcal{B}} = c_{\mathcal{B}} \\
+A_{\mathcal{V}}^{\top} \lambda + \mu_{\mathcal{V}} = c_{\mathcal{V}}
+\end{cases}
+\end{equation}</p><p>And our complementary slackness tells us that either \(\mu\) or \(x\) is zero. If \(x_{\mathcal{B}}\) is non-zero, then \(\mu\) needs to be zero. If \(\mu\) is non-zero, then all \(x\) would need to be zero. Either way:</p><p>\begin{equation}
+\mu_{\mathcal{B}} = 0
+\end{equation}</p><p>Therefore, let&rsquo;s consider the previous statement:</p><p>\begin{equation}
+A_{\mathcal{B}}^{\top} \lambda + \mu_{\mathcal{B}} = c_{\mathcal{B}}
+\end{equation}</p><p>plugging in the \(\mu_{\mathcal{B}}\) from above, we obtain:</p><p>\begin{align}
+&amp;A_{\mathcal{B}}^{\top} \lambda + \mu_{\mathcal{B}} = c_{\mathcal{B}} \\
+\Rightarrow\ & A_{\mathcal{B}}^{\top} \lambda + 0 = c_{\mathcal{B}} \\
+\Rightarrow\ & \lambda = A^{-\top}_{\mathcal{B}} c_{\mathcal{B}}
+\end{align}</p><p>this allows us to check the <a href=#fonc--kbhsu-cs361-apr042024-dot-md--for-linear-program>FONC for linear program</a> directly as we can compute \(\lambda\) for a given problem and basis.</p><h3 id=phase-1-initialize-with-a-valid-partition>Phase 1: Initialize with a Valid Partition</h3><p>We need to first choose an initial partition which gives an initial feasible vertex. Recall our normal LP:</p><p>\begin{align}
+\min_{x}\ &amp;c^{\top} x \\
+s.t.\ &amp;Ax = b \\
+& x \geq 0
+\end{align}</p><p>Let&rsquo;s change this problem by simply asking for constraint satisfaction and NOT minimality (i.e. set \(c = 0\)), AND let us introduce a helper variable \(z\):</p><p>\begin{align}
+\min_{x,z}\ &\mqty[0^{\top}, 1^{\top}] \mqty[x \\ z] \\
+s.t.\ &\mqty[A, Z] \mqty[x \\ z] = b \\
+& \mqty[x \\ z] \geq 0
+\end{align}</p><p>where \(Z\) is a diagonal square matrix of size of b:</p><p>\begin{equation}
+Z_{ii} = \begin{cases}
+1, \text{if}\ b_{i} \geq 0 \\
+-1
+\end{cases}
+\end{equation}</p><p>(we do this because without this we can&rsquo;t support negative \(b\)).</p><p>Notice! For \(A \in \mathcal{L}(n,m)\), the partition \(\mathcal{B} = \{n+1, &mldr;, n+m\}\) satisfies our constraints! We can see this by seting all \(x = 0\), and initialize \(z_{j} = |b_{j}|\).</p><p>If the original LP is feasible, the optimal solution to this LP should result in all of the \(z = 0\). So, if we solved the above and yet \(z \neq 0\) to satisfy the constraint \(Ax + Zz = b\), our original LP is infeasible.</p><p>Once we obtain the \(\mathcal{B}\) from the setup above, we can use that set as the initial partition to solve (because constraints are the same, and \(z=0\), our partitions can be recycled):</p><p>\begin{align}
+\min_{x,z}\ &\mqty[c^{\top} & 0^{\top}] \mqty[x \\ z] \\
+s.t.\ &\mqty[A & I \\ 0 & I] \mqty[x \\ z] = \mqty[b \\ 0] \\
+& \mqty[x \\ z] \geq 0
+\end{align}</p><p>(we keep \(z\) around because our initial partition may include \(z\)).</p><h3 id=phase-2-bounce-between-valid-partitions-until-we-are-optimal>Phase 2: Bounce Between Valid Partitions Until We Are Optimal</h3><p>Consider an initial partition \(\mathcal{B}\); choose an entering index \(q \in \mathcal{V}\), and a leaving index \(p \in \mathcal{B}\). This results in a vertex transition \(x \to x&rsquo;\).</p><p>Let&rsquo;s now define this thing \(x_{\mathcal{B}}&rsquo;\), which is the elements that <strong>survived the transition</strong>. Formally, this is the slice of the next vertex, projected onto the previous basis. Since \(p\) left (i.e. the <a href=/posts/kbhsubspace/>subspace</a> formed by new \(\mathcal{B}\), of which \(x&rsquo;\) belongs, does not include index \(p\)), we expect that \((x&rsquo;_{\mathcal{B}})_{p} = 0\).</p><p>So then, the middle parts of deriving phase 2 essentially involves &ldquo;how do we grantee constraint satisfaction?&rdquo; Recall Linear Program KKT, and recall:</p><p>\begin{align}
+\min_{x}\ &amp;c^{\top} x \\
+s.t.\ &amp;Ax = b \\
+& x \geq 0
+\end{align}</p><h4 id=feasibility-ax-b-x-geq-0--satisfies-our-constraints>feasibility: \(Ax = b, x \geq 0\) (satisfies our constraints)</h4><p>So we need first:</p><p>\begin{equation}
+Ax = b = Ax'
+\end{equation}</p><p>specifically, then:</p><p>\begin{equation}
+A_{\mathcal{B}} + x_\mathcal{B} = b = A_{\mathcal{B}} x&rsquo;_{\mathcal{B}} + A_{\{q\}} x_{\{q\}}'
+\end{equation}</p><p>(the right side makes sense because, as with the remark above, the leaving index would have a value of \(0\), meaning it won&rsquo;t change our computation).</p><p>Using the equality above, we can write:</p><p>\begin{equation}
+x_{\mathcal{B}}&rsquo; = x_{\mathcal{B}} - A^{-1}_{\mathcal{B}} A_{\{q\}} x&rsquo;_{\{q\}}
+\end{equation}</p><h4 id=objective-optimality-c-top-x>objective optimality: \(c^{\top} x&rsquo;\)</h4><p>We can re-write our objective in terms of the old basis</p><p>\begin{align}
+c^{\top} x&rsquo; &= c_{\mathcal{B}}^{\top} x&rsquo;_{\mathcal{B}} + c_{q} x&rsquo;_{q}
+\end{align}</p><p>Plugging in our value for \(x&rsquo;_{\mathcal{B}}\) from above, we obtain:</p><p>\begin{align}
+c^{\top} x&rsquo; &= c_{\mathcal{B}}^{\top} \qty(x_{\mathcal{B}} - A^{-1}_{\mathcal{B}} A_{\{q\}} x&rsquo;_{\{q\}}) + c_{q} x&rsquo;_{q}
+\end{align}</p><p>Simplifying, we will obtain a \(c_{\mathcal{B}}^{\top} A^{-1}_{\mathcal{B}}\), which, recall from above that \(\lambda = A^{-\top}_{\mathcal{B}} c_{\mathcal{B}} \implies \lambda^{\top} = c_{\mathcal{B}}^{\top} A^{-1}_{\mathcal{B}}\), so we can write this into:</p><p>\begin{align}
+c^{\top} x&rsquo; &= c_{\mathcal{B}}^{\top} x_{\mathcal{B}} - \lambda^{\top} A_{\{q\}} x&rsquo;_{q} + c_{q} x&rsquo;_{q}
+\end{align}</p><p>Plugging in our value from stationarity above (\(A_{\mathcal{V}}^{\top} \lambda + \mu_{\mathcal{V}} = c_{\mathcal{V}}\)), but specifically constraining to a single set \(\{q\}\) instead of \(\mathcal{V}\), and simplifying, we also have:</p><p>\begin{align}
+c^{\top} x&rsquo; &= c^{\top} x + \mu_{q} x&rsquo;_{q}
+\end{align}</p><h4 id=conditions-for-optimality>conditions for optimality</h4><p>The top two steps gives:</p><p>\begin{equation}
+x_{\mathcal{B}}&rsquo; = x_{\mathcal{B}} - A^{-1}_{\mathcal{B}} A_{\{q\}} x_{q}'
+\end{equation}</p><p>and:</p><p>\begin{equation}
+c^{\top} x&rsquo; - c^{\top} x = \mu_{q} x_{q}'
+\end{equation}</p><p><strong>key idea</strong>: the second expression tells that our objective will only decrease if \(\mu_{q}\) is negative (recall that correctly constrained \(x\) is non negative). So, to progress towards optimality, we need to find some \(q\) which makes \(\mu_{q}\) negative. If all of \(\mu_{\mathcal{V}}\) is non-negative, we know we can&rsquo;t find a better \(\mu\) anymore so we found the optimum.</p><h4 id=finishing-up>finishing up</h4><p>Finally, we need to 1) choose the entering index \(q\) and 2) solve for the corresponding leaving index \(p\).</p><ul><li><p>Possible Heuristics for choosing \(q\)</p><ul><li>choose \(q\) which reduces \(c^{\top} x\) maximally</li><li>Danzig: choose \(q\) with the most negative \(\mu_{\{q\}}\)</li><li>Bland: choose first \(q\) with negative \(\mu_{\{q\}}\)</li></ul><p>we will use the first one.</p></li></ul><ul><li><p>Solving for \(p\)</p><p>First choose an <em>entering</em> index \(q\), then solve for leaving index \(p\). Given a choice of \(q\), a correctly chosen \(p\) would give \((x&rsquo;_{\mathcal{B}})_{p} = 0\). Using this fact and substituting it into the definition of \(x_{\mathcal{B}}&rsquo;\) gives:</p><p>\begin{equation}
+\qty(x&rsquo;_{\mathcal{B}})_{p} = 0 = \qty(x_{\mathcal{B}})_{p} - \qty(A^{-1}_{\mathcal{B}} A_{\{q\}})_{p} x&rsquo;_{q}
+\end{equation}</p><p>the right hand side, then gives the following expression we call <a href=#solving-for-p>minimum ratio test</a>:</p><p>\begin{equation}
+x_{q}&rsquo; = \frac{(x_{\mathcal{B}})_{p}}{(A_{\mathcal{B}}^{-1} A_{\{q\}})_{p}}
+\end{equation}</p><p>This computation, then, allows us to check the value of \(\mu_{q} x&rsquo;_{q}\), which we want to make as small as possible. For a possibly-valid of choice of \(q\), we will have negative \(\mu_{q}\) (see above in <a href=#conditions-for-optimality>conditions for optimality</a>); therefore, to minimize \(\mu_{q}x&rsquo;_{q}\), we need to make \(x&rsquo;_{q}\) as large as we can through our choice of \(p\).</p><p>Hence, to choose \(p\), we just want to iteratively select the best \(p\) to minimize the above ratio.</p></li></ul><h3 id=putting-it-all-together>putting it all together</h3><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75af00>@dataclass</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>LinearProgram</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>A</span><span style=color:#111>:</span> <span style=color:#111>Matrix</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>b</span><span style=color:#111>:</span> <span style=color:#111>Vector</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>c</span><span style=color:#111>:</span> <span style=color:#111>Vector</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>def</span> <span style=color:#75af00>solve</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>row</span><span style=color:#111>,</span><span style=color:#111>col</span> <span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#f92672>.</span><span style=color:#111>shape</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>### initialize components of basis problem ###</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># recall we want Z to be an identity</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># matrix, but sign match b to maintain</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># positivity</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>z</span> <span style=color:#f92672>=</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>Z</span> <span style=color:#f92672>=</span> <span style=color:#111>diag</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>b</span><span style=color:#f92672>/</span><span style=color:#111>abs</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>b</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>### set up basis problem ###</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>A_p</span> <span style=color:#f92672>=</span> <span style=color:#111>cat</span><span style=color:#111>([</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#111>,</span> <span style=color:#111>Z</span><span style=color:#111>])</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>b_p</span> <span style=color:#f92672>=</span> <span style=color:#111>b</span>
+</span></span><span style=display:flex><span>                  <span style=color:#75715e># x          # z</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>c_p</span> <span style=color:#f92672>=</span> <span style=color:#111>cat</span><span style=color:#111>([</span><span style=color:#111>zeros</span><span style=color:#111>(</span><span style=color:#111>col</span><span style=color:#111>),</span> <span style=color:#111>zeros</span><span style=color:#111>(</span><span style=color:#111>row</span><span style=color:#111>)])</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># initial basis is n+1 ... n+m</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>initial_basis</span> <span style=color:#f92672>=</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>col</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#111>col</span><span style=color:#f92672>+</span><span style=color:#111>row</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># create problem</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>lp</span> <span style=color:#f92672>=</span> <span style=color:#111>LinearProgram</span><span style=color:#111>(</span><span style=color:#111>A_p</span><span style=color:#111>,</span> <span style=color:#111>b_p</span><span style=color:#111>,</span> <span style=color:#111>c_p</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>solver</span> <span style=color:#f92672>=</span> <span style=color:#111>LPSolver</span><span style=color:#111>(</span><span style=color:#111>lp</span><span style=color:#111>,</span> <span style=color:#111>initial_basis</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x_opt</span><span style=color:#111>,</span> <span style=color:#111>basis</span> <span style=color:#f92672>=</span> <span style=color:#111>solver</span><span style=color:#f92672>.</span><span style=color:#111>solve</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>### check feasibility ###</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># if any z results are non-zero, bad an stop</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>if</span> <span style=color:#111>any</span><span style=color:#111>(</span><span style=color:#111>x_opt</span><span style=color:#111>[</span><span style=color:#111>col</span><span style=color:#111>:]</span> <span style=color:#f92672>!=</span> <span style=color:#ae81ff>0</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>            <span style=color:#00a8c8>raise</span> <span style=color:#75af00>Exception</span><span style=color:#111>(</span><span style=color:#d88200>&#34;LP constraints not feasible&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>### solve surrogate problem ###</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>A_p</span> <span style=color:#f92672>=</span> <span style=color:#111>block_matrix</span><span style=color:#111>([[</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#111>,</span>             <span style=color:#111>identity</span><span style=color:#111>(</span><span style=color:#111>row</span><span style=color:#111>,</span> <span style=color:#111>row</span><span style=color:#111>)],</span>
+</span></span><span style=display:flex><span>                             <span style=color:#111>[</span><span style=color:#111>zeros</span><span style=color:#111>((</span><span style=color:#111>row</span><span style=color:#111>,</span> <span style=color:#111>col</span><span style=color:#111>)),</span> <span style=color:#111>identity</span><span style=color:#111>(</span><span style=color:#111>row</span><span style=color:#111>,</span> <span style=color:#111>row</span><span style=color:#111>)]])</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>b_p</span> <span style=color:#f92672>=</span> <span style=color:#111>cat</span><span style=color:#111>([</span><span style=color:#111>b</span><span style=color:#111>,</span> <span style=color:#111>zeros</span><span style=color:#111>(</span><span style=color:#111>row</span><span style=color:#111>)])</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>c_p</span> <span style=color:#f92672>=</span> <span style=color:#111>cat</span><span style=color:#111>([</span><span style=color:#111>c</span><span style=color:#111>,</span> <span style=color:#111>zeros</span><span style=color:#111>(</span><span style=color:#111>row</span><span style=color:#111>)])</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># create actual problem</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>lp</span> <span style=color:#f92672>=</span> <span style=color:#111>LinearProgram</span><span style=color:#111>(</span><span style=color:#111>A_p</span><span style=color:#111>,</span> <span style=color:#111>b_p</span><span style=color:#111>,</span> <span style=color:#111>c_p</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>solver</span> <span style=color:#f92672>=</span> <span style=color:#111>LPSolver</span><span style=color:#111>(</span><span style=color:#111>lp</span><span style=color:#111>,</span> <span style=color:#111>initial_basis</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x_final</span><span style=color:#111>,</span> <span style=color:#111>_</span> <span style=color:#f92672>=</span> <span style=color:#111>solver</span><span style=color:#f92672>.</span><span style=color:#111>solve</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># return only the x part, and not z</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#111>x_final</span><span style=color:#111>[:</span><span style=color:#111>col</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75af00>@dataclass</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>LPSolver</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>LP</span><span style=color:#111>:</span> <span style=color:#111>LinearProgram</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>basis</span><span style=color:#111>:</span> <span style=color:#111>List</span><span style=color:#111>[</span><span style=color:#111>int</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># we solve by iterating upon the basis until</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># we find which which satisfies optimality (no swaps are possible)</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>def</span> <span style=color:#75af00>solve</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># step returns True when optimal</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>while</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>step</span><span style=color:#111>()</span> <span style=color:#f92672>==</span> <span style=color:#00a8c8>False</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>            <span style=color:#00a8c8>continue</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># solve for our Xb (recall Ax = b)</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>Ab</span> <span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#111>[:,</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>basis</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># we assume that basis_indicies is a valid basis, so Ab is invertable</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x_basis</span> <span style=color:#f92672>=</span> <span style=color:#111>Ab</span><span style=color:#f92672>.</span><span style=color:#111>invert</span><span style=color:#111>()</span> <span style=color:#f92672>@</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>b</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># fill that in</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>zeros_like</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>c</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x</span><span style=color:#111>[</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>basis</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>x_basis</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#111>x</span><span style=color:#111>,</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>basis</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># greedily select the q that minimizes the system</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>def</span> <span style=color:#75af00>step</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>basis_indicies</span> <span style=color:#f92672>=</span> <span style=color:#111>sorted</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>basis</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># free indicies are the indicies that are not in the basis</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>free_indicies</span> <span style=color:#f92672>=</span> <span style=color:#111>sorted</span><span style=color:#111>(</span><span style=color:#111>set</span><span style=color:#111>(</span><span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>c</span><span style=color:#111>)</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>))</span> <span style=color:#f92672>-</span>
+</span></span><span style=display:flex><span>                               <span style=color:#111>set</span><span style=color:#111>(</span><span style=color:#111>basis_indicies</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># partition our program into free and unfree sections</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>Ab</span><span style=color:#111>,</span> <span style=color:#111>Av</span> <span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#111>[:,</span> <span style=color:#111>basis_indicies</span><span style=color:#111>],</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#111>[:,</span> <span style=color:#111>free_indicies</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>cb</span><span style=color:#111>,</span> <span style=color:#111>cv</span> <span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>c</span><span style=color:#111>[</span><span style=color:#111>basis_indicies</span><span style=color:#111>],</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>c</span><span style=color:#111>[</span><span style=color:#111>free_indicies</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>#####</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># solve for our new Xb (recall Ax = b)</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># we assume that basis_indicies is a valid basis, so Ab is invertable</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x_basis</span> <span style=color:#f92672>=</span> <span style=color:#111>Ab</span><span style=color:#f92672>.</span><span style=color:#111>invert</span><span style=color:#111>()</span> <span style=color:#f92672>@</span> <span style=color:#111>b</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># solve for our lagrange multipliers, which is derived in &#34;partitioning FONC&#34; section</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>lmbda</span> <span style=color:#f92672>=</span> <span style=color:#111>Ab</span><span style=color:#f92672>.</span><span style=color:#111>invert</span><span style=color:#111>()</span><span style=color:#f92672>.</span><span style=color:#111>T</span><span style=color:#111>()</span> <span style=color:#f92672>@</span> <span style=color:#111>cb</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>mu_v</span> <span style=color:#f92672>=</span> <span style=color:#111>cv</span> <span style=color:#f92672>-</span> <span style=color:#111>Av</span><span style=color:#f92672>.</span><span style=color:#111>T</span><span style=color:#111>()</span> <span style=color:#f92672>@</span> <span style=color:#111>lmbda</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>######</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># where best_delta is c^top x&#39; - c^\top x</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>(</span><span style=color:#111>q_indx_best</span><span style=color:#111>,</span> <span style=color:#111>p_indx_best</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>         <span style=color:#111>xq_prime_best</span><span style=color:#111>,</span> <span style=color:#111>best_delta</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#00a8c8>None</span><span style=color:#111>,</span> <span style=color:#00a8c8>None</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>                                       <span style=color:#111>float</span><span style=color:#111>(</span><span style=color:#d88200>&#34;inf&#34;</span><span style=color:#111>),</span> <span style=color:#111>float</span><span style=color:#111>(</span><span style=color:#d88200>&#34;inf&#34;</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># now, we need to use the greedy heuristic to choose q, meaning</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># we need to find our most negative mu_q x&#39;q decrement out of v</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># recall q in V</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>for</span> <span style=color:#111>q_indx</span><span style=color:#111>,</span> <span style=color:#111>mu_q</span> <span style=color:#f92672>in</span> <span style=color:#111>enumerate</span><span style=color:#111>(</span><span style=color:#111>mu_v</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>            <span style=color:#00a8c8>if</span> <span style=color:#111>mu_q</span> <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span><span style=color:#111>:</span> <span style=color:#75715e># otherwise it will literally be an increase because mu_v[indx] &gt; 0,</span>
+</span></span><span style=display:flex><span>                      <span style=color:#75715e># and we want the most negative mu_q</span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e># we want to find the best p given this q</span>
+</span></span><span style=display:flex><span>                <span style=color:#111>p_indx</span><span style=color:#111>,</span> <span style=color:#111>xq_prime</span> <span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>solve_for_p_given_q</span><span style=color:#111>(</span><span style=color:#111>q_indx</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e># apply greedy heuristic</span>
+</span></span><span style=display:flex><span>                <span style=color:#00a8c8>if</span> <span style=color:#111>mu_q</span> <span style=color:#f92672>*</span> <span style=color:#111>xq_prime</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>best_delta</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>                    <span style=color:#111>q_indx_best</span><span style=color:#111>,</span> <span style=color:#111>p_indx_best</span><span style=color:#111>,</span> <span style=color:#111>xq_prime_best</span><span style=color:#111>,</span> <span style=color:#111>best_delta</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span>
+</span></span><span style=display:flex><span>                        <span style=color:#111>q_indx</span><span style=color:#111>,</span> <span style=color:#111>p_indx</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>                        <span style=color:#111>xq_prime</span><span style=color:#111>,</span> <span style=color:#111>mu_q</span> <span style=color:#f92672>*</span> <span style=color:#111>xq_prime</span>
+</span></span><span style=display:flex><span>                    <span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># if q is still None, this means that we are at optimiality (i.e. all</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># choices of mu_q results in a higher error</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>if</span> <span style=color:#111>q</span> <span style=color:#f92672>==</span> <span style=color:#00a8c8>None</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e># satisfies dual feasibility, this is global optimum</span>
+</span></span><span style=display:flex><span>            <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>True</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># otherwise, this means that our problem is likely unbounded</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># that is, no smaller xq&#39; exists as the minimum raito</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>if</span> <span style=color:#111>xq_prime_best</span> <span style=color:#f92672>==</span> <span style=color:#111>float</span><span style=color:#111>(</span><span style=color:#d88200>&#34;inf&#34;</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>            <span style=color:#00a8c8>raise</span> <span style=color:#75af00>Exception</span><span style=color:#111>(</span><span style=color:#d88200>&#34;unbounded LP&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># swap p and q</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>basis_indicies</span><span style=color:#111>[</span><span style=color:#111>basis_indicies</span><span style=color:#f92672>.</span><span style=color:#111>index</span><span style=color:#111>(</span><span style=color:#111>p_indx_best</span><span style=color:#111>)]</span> <span style=color:#f92672>=</span> <span style=color:#111>q_indx_best</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># cache our new basis</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>basis</span> <span style=color:#f92672>=</span> <span style=color:#111>basis_indicies</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># and then tell the system we haven&#39;t optimality</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#00a8c8>False</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># use the minimum ratio test</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>def</span> <span style=color:#75af00>solve_for_p_given_q</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#111>,</span> <span style=color:#111>q_cand_indx</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>basis_indicies</span> <span style=color:#f92672>=</span> <span style=color:#111>sorted</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>basis</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># free indicies are the indicies that are not in the basis</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>free_indicies</span> <span style=color:#f92672>=</span> <span style=color:#111>sorted</span><span style=color:#111>(</span><span style=color:#111>set</span><span style=color:#111>(</span><span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>c</span><span style=color:#111>)</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>))</span> <span style=color:#f92672>-</span>
+</span></span><span style=display:flex><span>                               <span style=color:#111>set</span><span style=color:#111>(</span><span style=color:#111>basis_indicies</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># partition our program into free and unfree sections</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>Ab</span> <span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#111>[:,</span> <span style=color:#111>basis_indicies</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># this is A_{q}, which only has our one q candidate</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>Aq</span> <span style=color:#f92672>=</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>A</span><span style=color:#111>[:,</span> <span style=color:#111>free_indicies</span><span style=color:#111>[</span><span style=color:#111>q_cand_indx</span><span style=color:#111>]]</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># solve for our new Xb (recall Ax = b)</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># we assume that basis_indicies is a valid basis, so Ab is invertable</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x_basis</span> <span style=color:#f92672>=</span> <span style=color:#111>Ab</span><span style=color:#f92672>.</span><span style=color:#111>invert</span><span style=color:#111>()</span> <span style=color:#f92672>@</span> <span style=color:#111>self</span><span style=color:#f92672>.</span><span style=color:#111>LP</span><span style=color:#f92672>.</span><span style=color:#111>b</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>#####</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># solve for our minimum ratio</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># first, we can cache all possible denomitanor</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># values for x_q&#39; given each index of p</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>xq_prime_denominator_cache</span> <span style=color:#f92672>=</span> <span style=color:#111>Ab</span><span style=color:#f92672>.</span><span style=color:#111>inverse</span><span style=color:#111>()</span> <span style=color:#f92672>@</span> <span style=color:#111>Aq</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># cache the smallest ratio we have see</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>p_indx_best</span><span style=color:#111>,</span> <span style=color:#111>xq_prime_best</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#111>float</span><span style=color:#111>(</span><span style=color:#d88200>&#34;inf&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># now iteratively find a p that will work</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>for</span> <span style=color:#111>p_indx</span><span style=color:#111>,</span> <span style=color:#111>d</span> <span style=color:#f92672>in</span> <span style=color:#111>enumerate</span><span style=color:#111>(</span><span style=color:#111>xq_prime_denominator_cache</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>            <span style=color:#75715e># it could be zero, and we don&#39;t want a divide by zero</span>
+</span></span><span style=display:flex><span>            <span style=color:#00a8c8>if</span> <span style=color:#111>d</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>                <span style=color:#75715e># see if we got a better minimum ratio as what we had</span>
+</span></span><span style=display:flex><span>                <span style=color:#111>min_ratio</span> <span style=color:#f92672>=</span> <span style=color:#111>x_basis</span><span style=color:#111>[</span><span style=color:#111>p_indx</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>                <span style=color:#00a8c8>if</span> <span style=color:#111>min_ratio</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>xq_prime_best</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>                    <span style=color:#111>p_indx_best</span><span style=color:#111>,</span> <span style=color:#111>xq_prime_best</span> <span style=color:#f92672>=</span> <span style=color:#111>p_indx</span><span style=color:#111>,</span> <span style=color:#111>min</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># return the best we have</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#111>p_indx_best</span><span style=color:#111>,</span> <span style=color:#111>xq_prime_best</span>
+</span></span></code></pre></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

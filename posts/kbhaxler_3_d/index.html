@@ -1,0 +1,117 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Axler 3.D</title>
+<meta name=description content="isomorphisms. Somebody&rsquo;s new favourite word since last year.
+Key Sequence
+
+we showed that a linear map&rsquo;s inverse is unique, and so named the inverse \(T^{-1}\)
+we then showed an important result, that injectivity and surjectivity implies invertability
+this property allowed us to use invertable maps to define isomorphic spaces, naming the invertable map between them as the isomorphism
+
+we see that having the same dimension is enough to show invertability (IFF), because we can use basis of domain to map the basis of one space to another
+we then use that property to establish that matricies and linear maps have an isomorphism between them: namely, the matrixify operator \(\mathcal{M}\).
+this isomorphism allow us to show that the dimension of a set of Linear Maps is the product of the dimensions of their domain and codomain (that \(\dim \mathcal{L}(V,W) = (\dim V)(\dim W)\))
+
+
+We then, for some unknown reason, decided that right this second we gotta define matrix of a vector, and that linear map applications are like matrix multiplication because of it. Not sure how this relates
+finally, we defined a Linear Map from a space to itself as an operator
+
+we finally show an important result that, despite not being true for infinite-demensional vector space, injectivity is surjectivity in finite-dimensional operators
+
+
+
+New Definitions
+
+invertability
+isomorphism + isomorphic vector spaces
+matrix of a vector
+operator
+
+Results and Their Proofs
+
+linear map inverse is unique
+injectivity and surjectivity implies invertability
+two vector spaces are isomorphic IFF they have the same dimension
+matricies and Linear Maps from the right dimensions are isomorphic
+\(\dim \mathcal{L}(V,W) = (\dim V)(\dim W)\)
+\(\mathcal{M}(T)_{.,k} = \mathcal{M}(Tv_{k})\), a result of how everything is defined (see matrix of a vector)
+
+&ldquo;each column of a matrix represents where each of the basis of the input gets taken to&rdquo;
+So applying a vector to a matrix shows the linear combination of what where the basis sent
+
+
+linear maps are like matrix multiplication
+injectivity is surjectivity in finite-dimensional operators
+
+Questions for Jana
+
+why doesn&rsquo;t axler just say the &ldquo;basis of domain&rdquo; directly (i.e. he did a lin comb instead) for the second direction for the two vector spaces are isomorphic IFF they have the same dimension proof? because the next steps for spanning (surjectivity) and linear independence (injectivity) is made more obvious
+clarify the matricies and Linear Maps from the right dimensions are isomorphic proof
+what is the &ldquo;multiplication by \(x^{2}\)&rdquo; operator? literally multiplying by \(x^{2}\)
+how does the matrix of a vector detour relate to the content before and after? I suppose an isomorphism exists but it isn&rsquo;t explicitly used in the linear maps are like matrix multiplication proof, which is the whole point because we needed to close the loop of being able to linear algebra with matricies completely, which we didn&rsquo;t know without the isomorphism between matricies and maps
+
+Interesting Factoids"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Axler 3.D</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhisomorphism/>isomorphism</a>s. Somebody&rsquo;s new favourite word since last year.</p><h2 id=key-sequence>Key Sequence</h2><ul><li>we showed that a <a href=/posts/kbhinvertability/#linear-map-inverse-is-unique>linear map&rsquo;s inverse is unique</a>, and so named the inverse \(T^{-1}\)</li><li>we then showed an important result, that <a href=/posts/kbhinvertability/#id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injectivity-and-id-1af529ce-e2fb-43a4-8f13-aee1dc743b5f-surjectivity-implies-id-ff05739c-6e70-46ba-9d56-0958ef847f57-invertability>injectivity and surjectivity implies invertability</a></li><li>this property allowed us to use <a href=/posts/kbhinvertability/>invertable</a> maps to define <a href=/posts/kbhisomorphism/>isomorphic</a> spaces, naming the <a href=/posts/kbhinvertability/>invertable</a> map between them as the <a href=/posts/kbhisomorphism/>isomorphism</a><ul><li>we see that <a href=/posts/kbhisomorphism/#two-vector-spaces-are-isomorphic-iff-they-have-the-same-dimension>having the same dimension is enough to show invertability (IFF)</a>, because we can use <a href=/posts/kbhbasis_of_domain/>basis of domain</a> to map the <a href=/posts/kbhbasis/>basis</a> of one space to another</li><li>we then use that property to establish that <a href=/posts/kbhisomorphism/#id-7a09bc5f-6de2-485f-8c29-b94999299cc6-matricies-and-id-17f3b01c-4945-4268-8da4-9887d960596b-linear-map-s-from-the-right-id-07b04334-5ae7-457c-bc3e-92feed8fc2cc-dimension-s-are-id-3f5ba3a5-15d4-4b58-99de-09eb1e4713cb-isomorphic>matricies and linear maps have an isomorphism between them</a>: namely, the matrixify operator \(\mathcal{M}\).</li><li>this <a href=/posts/kbhisomorphism/>isomorphism</a> allow us to show that the <a href=/posts/kbhdimension/>dimension</a> of a set of <a href=/posts/kbhlinear_map/>Linear Map</a>s is the product of the <a href=/posts/kbhdimension/>dimension</a>s of their domain and codomain (that <a href=/posts/kbhisomorphism/#dim-mathcal-l--v-w----dim-v----dim-w>\(\dim \mathcal{L}(V,W) = (\dim V)(\dim W)\)</a>)</li></ul></li><li>We then, for some unknown reason, decided that right this second we gotta define <a href=/posts/kbhmatricies/#id-7a09bc5f-6de2-485f-8c29-b94999299cc6-matrix-of-a-vector>matrix of a vector</a>, and that <a href=/posts/kbhmatrix_multiplication/#linear-maps-are-like-matrix-multiplication>linear map applications are like matrix multiplication</a> because of it. Not sure how this relates</li><li>finally, we defined a <a href=/posts/kbhlinear_map/>Linear Map</a> from a space to itself as an <a href=/posts/kbhoperator/>operator</a><ul><li>we finally show an important result that, despite not being true for <a href=/posts/kbhfinite_dimensional_vector_space/>infinite-demensional vector space</a>, <a href=/posts/kbhoperator/#id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injectivity-is-id-1af529ce-e2fb-43a4-8f13-aee1dc743b5f-surjectivity-in-id-4ed27ed5-4edc-4ef4-afd7-9b8e3bcd9b96-finite-dimensional-id-36e84a46-76f1-481e-b031-8ab2f0da0aa8-operator-s>injectivity is surjectivity in finite-dimensional operators</a></li></ul></li></ul><h2 id=new-definitions>New Definitions</h2><ul><li><a href=/posts/kbhinvertability/>invertability</a></li><li><a href=/posts/kbhisomorphism/>isomorphism</a> + <a href=/posts/kbhisomorphism/>isomorphic</a> <a href=/posts/kbhvector_space/>vector space</a>s</li><li><a href=/posts/kbhmatricies/#id-7a09bc5f-6de2-485f-8c29-b94999299cc6-matrix-of-a-vector>matrix of a vector</a></li><li><a href=/posts/kbhoperator/>operator</a></li></ul><h2 id=results-and-their-proofs>Results and Their Proofs</h2><ul><li><a href=/posts/kbhinvertability/#linear-map-inverse-is-unique>linear map inverse is unique</a></li><li><a href=/posts/kbhinvertability/#id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injectivity-and-id-1af529ce-e2fb-43a4-8f13-aee1dc743b5f-surjectivity-implies-id-ff05739c-6e70-46ba-9d56-0958ef847f57-invertability>injectivity and surjectivity implies invertability</a></li><li><a href=/posts/kbhisomorphism/#two-vector-spaces-are-isomorphic-iff-they-have-the-same-dimension>two vector spaces are isomorphic IFF they have the same dimension</a></li><li><a href=/posts/kbhisomorphism/#id-7a09bc5f-6de2-485f-8c29-b94999299cc6-matricies-and-id-17f3b01c-4945-4268-8da4-9887d960596b-linear-map-s-from-the-right-id-07b04334-5ae7-457c-bc3e-92feed8fc2cc-dimension-s-are-id-3f5ba3a5-15d4-4b58-99de-09eb1e4713cb-isomorphic>matricies and Linear Maps from the right dimensions are isomorphic</a></li><li><a href=/posts/kbhisomorphism/#dim-mathcal-l--v-w----dim-v----dim-w>\(\dim \mathcal{L}(V,W) = (\dim V)(\dim W)\)</a></li><li>\(\mathcal{M}(T)_{.,k} = \mathcal{M}(Tv_{k})\), a result of how everything is defined (see <a href=/posts/kbhmatricies/#id-7a09bc5f-6de2-485f-8c29-b94999299cc6-matrix-of-a-vector>matrix of a vector</a>)<ul><li>&ldquo;each column of a <a href=/posts/kbhmatricies/>matrix</a> represents where each of the <a href=/posts/kbhbasis/>basis</a> of the input gets taken to&rdquo;</li><li>So applying a vector to a matrix shows the linear combination of what where the basis sent</li></ul></li><li><a href=/posts/kbhmatrix_multiplication/#linear-maps-are-like-matrix-multiplication>linear maps are like matrix multiplication</a></li><li><a href=/posts/kbhoperator/#id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injectivity-is-id-1af529ce-e2fb-43a4-8f13-aee1dc743b5f-surjectivity-in-id-4ed27ed5-4edc-4ef4-afd7-9b8e3bcd9b96-finite-dimensional-id-36e84a46-76f1-481e-b031-8ab2f0da0aa8-operator-s>injectivity is surjectivity in finite-dimensional operators</a></li></ul><h2 id=questions-for-jana>Questions for Jana</h2><ul><li><del>why doesn&rsquo;t axler just say the &ldquo;<a href=/posts/kbhbasis_of_domain/>basis of domain</a>&rdquo; directly (i.e. he did a lin comb instead) for the second direction for the <a href=/posts/kbhisomorphism/#two-vector-spaces-are-isomorphic-iff-they-have-the-same-dimension>two vector spaces are isomorphic IFF they have the same dimension</a> proof?</del> because the next steps for <a href=/posts/kbhspan/#spans>spanning</a> (<a href=/posts/kbhsurjectivity/>surjectivity</a>) and <a href=/posts/kbhlinear_independence/>linear independence</a> (<a href=/posts/kbhinjectivity/>injectivity</a>) is made more obvious</li><li><del>clarify the <a href=/posts/kbhisomorphism/#id-7a09bc5f-6de2-485f-8c29-b94999299cc6-matricies-and-id-17f3b01c-4945-4268-8da4-9887d960596b-linear-map-s-from-the-right-id-07b04334-5ae7-457c-bc3e-92feed8fc2cc-dimension-s-are-id-3f5ba3a5-15d4-4b58-99de-09eb1e4713cb-isomorphic>matricies and Linear Maps from the right dimensions are isomorphic</a> proof</del></li><li><del>what is the &ldquo;multiplication by \(x^{2}\)&rdquo; <a href=/posts/kbhoperator/>operator</a>?</del> literally multiplying by \(x^{2}\)</li><li><del>how does the <a href=/posts/kbhmatricies/#id-7a09bc5f-6de2-485f-8c29-b94999299cc6-matrix-of-a-vector>matrix of a vector</a> detour relate to the content before and after? I suppose an <a href=/posts/kbhisomorphism/>isomorphism</a> exists but it isn&rsquo;t explicitly used in the <a href=/posts/kbhmatrix_multiplication/#linear-maps-are-like-matrix-multiplication>linear maps are like matrix multiplication</a> proof, which is the whole point</del> because we needed to close the loop of being able to linear algebra with <a href=/posts/kbhmatricies/>matricies</a> completely, which we didn&rsquo;t know without the <a href=/posts/kbhisomorphism/>isomorphism</a> between matricies and maps</li></ul><h2 id=interesting-factoids>Interesting Factoids</h2></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

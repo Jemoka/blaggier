@@ -1,0 +1,148 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Linear Algebra Errors</title>
+<meta name=description content="Gaussian Elimination Quiz
+
+Demonstrate that matrices&rsquo; multiplication are not commutative (error: didn&rsquo;t consider \(m\times m\))
+Which \(2\times 2\) matrices under multiplication form a group? (error: closure need to proved on invertable matrices under multiplication, not just \(2\times 2\))
+Deriving Rotation matrices (error: clockwise vs counter-clockwise)
+
+Linear Independence Quiz
+
+Connection between linear independence and systems equations (error: beated around the bush) &mdash; the matrix of an nxn system of equations has a solution if the matrix&rsquo;s column vectors is linearly independent
+
+Basis and Dimension Quiz
+
+put 0 into a basis AAAA not lin. indep; figure out what the basis for a polynomial with a certain root is: it is probably of dimension m (instead of m+1), because scalars doesn&rsquo;t work in the case of p(3)=0; so basis is just the scalars
+missing some inequality about basis? &mdash; its just that lin.idp sets is shorter or equal to basis and spanning sets is longer or equal to basis
+
+Final, part 1
+
+definition of vector space: scalar multiplication is not an operation
+straight forgot \(dim(U+V) = dim U + dim V - dim (U\cap V)\)
+plane containing \((1,0,2)\) and \((3,-1,1)\): math mistake
+proof: det A det B = det AB
+
+Final, part 2
+
+Counterproof: If \(v_1 \dots v_4\) is a basis of \(V\), and \(U\) is a subspace of \(V\) with \(v_1, v_2 \in U\) and \(v_3, v_4\) not in \(U\), \(v_1, v_2\) is a basis of \(U\)
+Counterproof: if \(T \in \mathcal{L}(V,V)\) and \(T^{2}=0\), then \(T=0\)
+Counterproof: if \(s,t \in \mathcal{L}(V,V)\), and \(ST=0\), then \(null\ s\) is contained in \(range\ T\)
+
+
+Product Spaces Quiz
+
+Need more specific description: explain why we use product and quotient to describe product and quotient spaces?
+Prove that \(\mathcal{L}(V_1 \times V_2 \times \dots \times V_{m}, W)\) and \(\mathcal{L}(V_1, W) \times  \dots \times \mathcal{L}(V_{m}, W)\) are isomorphic. Error: didn&rsquo;t do it correctly for infinite dimensional
+
+Quotient Spaces Quiz
+
+
+
+
+Couldn&rsquo;t prove that the list in linearly independent: the linear combinations is some \(c_1v_1 + \dots c_{m}v_{m} + U\); as \(v_1 \dots v_{m}\) is a basis of \(V / U\), \(c_1 \dots c_{m} = 0\), now the second part is also a basis so they are \(0\) too.
+
+The spanning proof: \(v + U =\) , rewrite as basis, etc.
+
+
+she graded wrong: what&rsquo;s the importance of \(\widetilde{T}\)?
+Give two statements equivalent to \(v+U = w+U\), prove equivalence betewen this statement and the others
+
+didn&rsquo;t prove both directions!
+
+
+
+Polynomials Quiz
+
+state the fundamental theorem of algebra; error: \(\mathcal{P}_{m}(\mathbb{F})\) is a vector space of polynomials with degree at most \(m\), and yet the FtOA requires exactly \(m\)
+
+Upper Triangular Quiz
+
+upper-triangular representation is findable when the space is 1) under complexes and 2) for finite-dimensional vector spaces; need BOTH conditions
+
+Upper Triangular Quiz
+
+UNCLEAR: Geometric Multipliicty is bounded by Algebric Multiplicity; Algebraic multiplicity (&ldquo;real estate&rdquo; taken on the upper-triangular diagonal) v. geometric multiplicity (amount of linearly independent eigenvectors included with that eigenvalue); so if geometric multiplicity < algebraic multiplicity, the map is not diagonalizable because its not bringing enough linearly independent eigenvectors
+
+Diagonalization Quiz
+
+enough eigenvalues go in only one direction: it existing means its diagonalizable, but the opposite isn&rsquo;t true
+the proof for \(T\) is diagonalizable IFF the matrix \(T\) is similar to a diagonal matrix: NUS-MATH530 Similar to Diagonal
+
+Final, part 1
+
+State the complex spectral theorem (error: the condition of normality is a PARALLEL result)
+
+Final, Part 2
+
+Said this was true, but its not; \(null\ T \bigoplus range\ T = V\), \(T\) is diagonalizable;
+Said this was true, but its false \(T^{2}= 0\) IFF \(null\ T = range\ T\)
+suppose \(T=0\), \(T^{2} = 0\). \(null\ T = V\), \(range\ T = 0\).
+Spectral theorem doesn&rsquo;t define diagonalizability, it defines diagonalibility for ORTHONORMAL
+missing derivation of the pseudoinverse
+"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Linear Algebra Errors</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=gaussian-elimination-quiz>Gaussian Elimination Quiz</h2><ul><li>Demonstrate that matrices&rsquo; multiplication are not commutative (error: didn&rsquo;t consider \(m\times m\))</li><li>Which \(2\times 2\) matrices under multiplication form a group? (error: closure need to proved on <strong>invertable</strong> matrices under multiplication, not just \(2\times 2\))</li><li>Deriving Rotation matrices (error: clockwise vs counter-clockwise)</li></ul><h2 id=linear-independence-quiz>Linear Independence Quiz</h2><ul><li>Connection between linear independence and systems equations (error: beated around the bush) &mdash; the matrix of an nxn system of equations has a solution if the matrix&rsquo;s column vectors is linearly independent</li></ul><h2 id=basis-and-dimension-quiz>Basis and Dimension Quiz</h2><ul><li>put 0 into a basis AAAA not lin. indep; figure out what the basis for a polynomial with a certain root is: it is probably of dimension m (instead of m+1), because scalars doesn&rsquo;t work in the case of p(3)=0; so basis is just the scalars</li><li>missing some inequality about basis? &mdash; its just that lin.idp sets is shorter or equal to basis and spanning sets is longer or equal to basis</li></ul><h2 id=final-part-1>Final, part 1</h2><ul><li>definition of vector space: scalar multiplication is not an operation</li><li>straight forgot \(dim(U+V) = dim U + dim V - dim (U\cap V)\)</li><li>plane containing \((1,0,2)\) and \((3,-1,1)\): math mistake</li><li>proof: det A det B = det AB</li></ul><h2 id=final-part-2>Final, part 2</h2><ul><li>Counterproof: If \(v_1 \dots v_4\) is a basis of \(V\), and \(U\) is a subspace of \(V\) with \(v_1, v_2 \in U\) and \(v_3, v_4\) not in \(U\), \(v_1, v_2\) is a basis of \(U\)</li><li>Counterproof: if \(T \in \mathcal{L}(V,V)\) and \(T^{2}=0\), then \(T=0\)</li><li>Counterproof: if \(s,t \in \mathcal{L}(V,V)\), and \(ST=0\), then \(null\ s\) is contained in \(range\ T\)</li></ul><hr><h2 id=product-spaces-quiz>Product Spaces Quiz</h2><ul><li>Need more specific description: explain why we use product and quotient to describe product and quotient spaces?</li><li>Prove that \(\mathcal{L}(V_1 \times V_2 \times \dots \times V_{m}, W)\) and \(\mathcal{L}(V_1, W) \times \dots \times \mathcal{L}(V_{m}, W)\) are <a href=/posts/kbhisomorphism/>isomorphic</a>. Error: didn&rsquo;t do it correctly for infinite dimensional</li></ul><h2 id=quotient-spaces-quiz>Quotient Spaces Quiz</h2><figure><img src=/ox-hugo/2023-02-09_10-24-09_screenshot.png></figure><ul><li>Couldn&rsquo;t prove that the list in linearly independent: the linear combinations is some \(c_1v_1 + \dots c_{m}v_{m} + U\); as \(v_1 \dots v_{m}\) is a basis of \(V / U\), \(c_1 \dots c_{m} = 0\), now the second part is also a basis so they are \(0\) too.<ul><li>The spanning proof: \(v + U =\) , rewrite as basis, etc.</li></ul></li><li>she graded wrong: what&rsquo;s the importance of \(\widetilde{T}\)?</li><li>Give two statements equivalent to \(v+U = w+U\), prove equivalence betewen this statement and the others<ul><li>didn&rsquo;t prove both directions!</li></ul></li></ul><h2 id=polynomials-quiz>Polynomials Quiz</h2><ul><li>state the fundamental theorem of algebra; error: \(\mathcal{P}_{m}(\mathbb{F})\) is a <a href=/posts/kbhvector_space/>vector space</a> of <a href=/posts/kbhpolynomial/>polynomial</a>s with degree <em>at most \(m\)</em>, and yet the FtOA requires <em>exactly \(m\)</em></li></ul><h2 id=upper-triangular-quiz>Upper Triangular Quiz</h2><ul><li>upper-triangular representation is findable when the space is 1) under complexes and 2) for finite-dimensional vector spaces; need BOTH conditions</li></ul><h2 id=upper-triangular-quiz>Upper Triangular Quiz</h2><ul><li>UNCLEAR: Geometric Multipliicty is bounded by Algebric Multiplicity; Algebraic multiplicity (&ldquo;real estate&rdquo; taken on the upper-triangular diagonal) v. geometric multiplicity (amount of linearly independent eigenvectors included with that eigenvalue); so if geometric multiplicity &lt; algebraic multiplicity, the map is not diagonalizable because its not bringing enough linearly independent eigenvectors</li></ul><h2 id=diagonalization-quiz>Diagonalization Quiz</h2><ul><li>enough eigenvalues go in only one direction: it existing means its diagonalizable, but the opposite isn&rsquo;t true</li><li>the proof for \(T\) is diagonalizable IFF the matrix \(T\) is similar to a diagonal matrix: <a href=/posts/kbhnus_math530_similar_to_diagonal/>NUS-MATH530 Similar to Diagonal</a></li></ul><h2 id=final-part-1>Final, part 1</h2><ul><li>State the complex spectral theorem (error: the condition of normality is a PARALLEL result)</li></ul><h2 id=final-part-2>Final, Part 2</h2><ul><li>Said this was true, but its not; \(null\ T \bigoplus range\ T = V\), \(T\) is diagonalizable;</li><li>Said this was true, but its false \(T^{2}= 0\) IFF \(null\ T = range\ T\)
+suppose \(T=0\), \(T^{2} = 0\). \(null\ T = V\), \(range\ T = 0\).</li><li>Spectral theorem doesn&rsquo;t define diagonalizability, it defines diagonalibility for ORTHONORMAL</li><li>missing derivation of the pseudoinverse</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

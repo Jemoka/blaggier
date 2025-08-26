@@ -1,0 +1,123 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>regular language</title>
+<meta name=description content="a language \(L&rsquo;\) is a regular language if there exists some DFA \(M\) such that \(L&rsquo; = L(M)\).
+additional information
+a proper subset
+a proper subset of a regular language isn&rsquo;t necessarily regular
+regular expressions are equivalent to regular languages
+see regular expressions are equivalent to regular languages
+properties of regular languages
+union
+union of two languages includes all strings in a or b:
+\begin{align}
+A \cup B = \qty {w | w \in A\ OR\ w \in B }
+\end{align}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>regular language</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>a language \(L&rsquo;\) is a <a href=/posts/kbhregular_language/>regular language</a> if there exists some DFA \(M\) such that \(L&rsquo; = L(M)\).</p><h2 id=additional-information>additional information</h2><h3 id=a-proper-subset>a proper subset</h3><p>a proper subset of a regular language isn&rsquo;t necessarily regular</p><h3 id=regular-expressions-are-equivalent-to-regular-languages--kbhregular-expression-complexity-dot-md><a href=/posts/kbhregular_expression_complexity/#regular-expressions-are-equivalent-to-regular-languages>regular expressions are equivalent to regular languages</a></h3><p>see <a href=/posts/kbhregular_expression_complexity/#regular-expressions-are-equivalent-to-regular-languages>regular expressions are equivalent to regular languages</a></p><h3 id=properties-of-regular-language--kbhregular-language-dot-md--s>properties of <a href=/posts/kbhregular_language/>regular language</a>s</h3><h4 id=union>union</h4><p>union of two <a href=/posts/kbhalphabet/>language</a>s includes all strings in a or b:</p><p>\begin{align}
+A \cup B = \qty {w | w \in A\ OR\ w \in B }
+\end{align}</p><h4 id=intersection>intersection</h4><p>union of two <a href=/posts/kbhalphabet/>language</a>s includes all strings in a and b:</p><p>\begin{align}
+A \cap B = \qty {w | w \in A\ AND\ w \in B }
+\end{align}</p><h4 id=complement>complement</h4><p>complement of two <a href=/posts/kbhalphabet/>language</a>s includes all strings which isn&rsquo;t in that language:</p><p>\begin{align}
+\neg A = \qty {w \in \Sigma^{*} | w \not \in A}
+\end{align}</p><h4 id=reverse>reverse</h4><p>stuff said backwards!</p><p>\begin{align}
+A^{R} = \qty {(w_{1} \dots w_{k}) | (w_{k} \dots w_{1}) \in A, w_{j} \in \Sigma }
+\end{align}</p><h4 id=concatenation>concatenation</h4><p>\begin{equation}
+A \cdot B = \{vw | v \in A, w \in B\}
+\end{equation}</p><h4 id=clean-star>clean star</h4><p>\begin{equation}
+A^{*} = \qty {s_1 \cdot \dots \cdot s_{k} | k \geq 0, s_{i} \in A}
+\end{equation}</p><p>note that, since \(k\) can \(=0\), \(A^{*}\) always includes the empty string as that&rsquo;s nothing concatenated</p><h3 id=operations-on-regular-language--kbhregular-language-dot-md--s-are-regular>operations on <a href=/posts/kbhregular_language/>regular language</a>s are regular</h3><p>if \(A, B\) are <a href=/posts/kbhregular_language/>regular language</a>s, their union, intersection, complement, reverse, concatenation, star are all <a href=/posts/kbhregular_language/>regular language</a>s.</p><p>proof</p><h4 id=union>union</h4><p>we have:</p><p>\begin{align}
+A \cup B = \qty {w | w \in A\ OR\ w \in B }
+\end{align}</p><p>we desire that \(A \cup B\) is regular. Let&rsquo;s create two <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> for which \(A\) and \(B\) are valid languages; that is, \(A \in L(M_1)\), \(B \in L(M_2)\). we want to create some \(M\) that would recognize \(A \cup B\).</p><hr><p>Idea: &ldquo;run \(M_1\) and \(M_2\) &lsquo;in parallel&rsquo;&rdquo;. For \(M = (Q, \Sigma, \delta, q_0, F)\), let&rsquo;s define&mldr;</p><p>\begin{equation}
+Q = Q_1 \times Q_2
+\end{equation}</p><p>whereby each state is a tuple of states from \(M_1\) and \(M_2\).</p><p>\begin{equation}
+q_0 = \qty(q_0^{(1)}, q_0^{(2)})
+\end{equation}</p><p>\begin{equation}
+F = \qty {(q_1, q_2) | q_1 \in F_2\ OR\ q_2 \in F_2}
+\end{equation}</p><p>for a new symbol in the alphabet \(\sigma\), we have:</p><p>\begin{equation}
+\delta((q_1,q_2), \sigma) = (\delta_{1}(q_1, \sigma), \delta_{2}(q_2, \sigma))
+\end{equation}</p><h4 id=intersection>intersection</h4><p>we have:</p><p>\begin{equation}
+\begin{align}
+A \cap B = \qty {w | w \in A\ AND\ w \in B }
+\end{align}
+\end{equation}</p><p>we desire \(A \cap B\) is regular.</p><hr><p>Its the same proof as the union theorem above, we just need to change our accepting states</p><p>\begin{equation}
+F = \qty {(q_1, q_2) | q_1 \in F_2\ AND\ q_2 \in F_2}
+\end{equation}</p><h4 id=complement>complement</h4><p>we have:</p><p>\begin{align}
+\neg A = \qty {w \in \Sigma^{*} | w \not \in A}
+\end{align}</p><p>we want to build an automata for which it will accept everything that&rsquo;s not in \(A\). We can do this by just flip accept and reject states: \(F&rsquo; = \{q | q \not \in F\}\).</p><h4 id=reverse>reverse</h4><p>this one will give us &ldquo;a little bit of trouble&rdquo;</p><p>\begin{align}
+A^{R} = \qty {(w_{1} \dots w_{k}) | (w_{k} \dots w_{1}) \in A, w_{j} \in \Sigma }
+\end{align}</p><p>we desire \(A^{R}\) is also regular.</p><hr><p>Insight: we need to build a <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> that reads its strings from right to left.</p><p>If \(M\) accepts some word \(w\), then \(w\) describes a directed path from start to accept state. How about we build a reverse path from the accept state to the start state? <strong>Problem: doing this may not necessarily be a DFA! It may have many start states which have different paths; also, some states may have more than one outgoing edge for a particular character, or none at all</strong></p><p>To fix this, we say our new machine accepts a string if there exists <em>some path</em> that reaches <em>some accept state</em> from <em>some start state</em>. This is a <a href=/posts/kbhnondeterministic_finite_automata/>Nondeterministic Finite Automata</a>!!</p><hr><p>Proof (by construction):</p><ol><li>reverse the arrows of your <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> that you want to reverse</li><li>flip the <a href=/posts/kbhdeterministic_finite_automata/>DFA</a>&rsquo;s start and accept states</li><li>you now have an <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a></li><li>use <a href=/posts/kbhnondeterministic_finite_automata/#id-4f5a240b-565b-4341-ab32-0b8b4540103f-dfa-s-are-equivalent-to-id-5520de84-0c82-4b31-97cb-51f7de4652dc-nfa-s>subset construction</a> to expand this <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> to a <a href=/posts/kbhdeterministic_finite_automata/>DFA</a></li></ol><h4 id=concatenation>concatenation</h4><p>\begin{equation}
+A \cdot B = \{vw | v \in A, w \in B\}
+\end{equation}</p><hr><p>Proof idea:</p><p>treat your <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> as a <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a>, then glue (&ldquo;add epsilon transitions between&rdquo;) the accept states from the first part to the start staates of the second part. then, turn the accept states in the first part into regular states.</p><p>then <a href=/posts/kbhnondeterministic_finite_automata/#id-4f5a240b-565b-4341-ab32-0b8b4540103f-dfa-s-are-equivalent-to-id-5520de84-0c82-4b31-97cb-51f7de4652dc-nfa-s>subset construction</a>.</p><h4 id=clean-star>clean star</h4><p>\begin{equation}
+A^{*} = \qty {s_1 \cdot \dots \cdot s_{k} | k \geq 0, s_{i} \in A}
+\end{equation}</p><p>proof idea:</p><p>stick epsilon transitions between your accept states and your original start state; and&mdash;to deal with the empty set&mdash;also add an accept state as your start state, and add an epsilon transition from that to your actual start state</p><figure><img src=/ox-hugo/2024-09-30_22-22-42_screenshot.png></figure><hr><p>proof (construction):</p><ul><li>\(Q&rsquo; = Q\cup \qty {q_0}\), where \(q_0\) is our new empty string acceptor; we relabel \(q_1\) as pour original start vertex</li><li>\(F&rsquo; = F \cup \qty {q_0}\)</li></ul><p>and transitions:</p><p>\begin{equation}
+\delta&rsquo;(q,a) =
+\begin{cases}
+\qty {\delta (q,a)}, q\in Q, a \neq \varepsilon \\
+\qty {q_1}, q \in F, a = \varepsilon \\
+\qty {q_1}, q &= q_0, a = \varepsilon \\
+\emptyset, q &= q_0, a \neq \varepsilon
+\end{cases}
+\end{equation}</p><p>we are going to show this in a standard double containment.</p><ul><li><p>\(L(N) \supseteq L^{*}\)</p><p>Assume you have \(w \in L^{*}\), by definition this means that \(w\) can be split into a series of \(w_1, &mldr;, w_{k}\) each of which is in \(L\).</p><p>we show that each \(w\) is accepted by induction; the base cases are \(k=0\), where its directly accepted, or \(k=1\), then since \(w_1 \in L\), we are done.</p><p>invariant is that our substring \(k\) so far is accepted.</p><p>the inductive step: to concatenate one more, since string up to \(k\) is accepted, we are at an accept state; we use the epsilon steps to get to the start of \(M\); by definiton \(w_{k+1}\) is also accepted, so we will end back at accept state, and we are done.</p></li></ul><ul><li><p>\(L(N) \subseteq L^{*}\)</p><p>assuming we have some string \(w\) accepted by \(N\); we desire that \(w \in L^{*}\). This means that we can break \(w\) into substrings in \(L\).</p><p>if \(w = \varepsilon\), then \(w \in L^{*}\).</p><p>induction again. IH: if \(N\) accepts \(u\) after at most \(k\) \(\varepsilon\) transitions, then \(u \in L^{*}\).</p><p>base: 0 epison transitions means you have the empty string, which is in the</p><p>induction: we divide \(w\) as \(uv\), where \(v\) is the substring after the last \(\varepsilon\) transition. we can see that \(u \in L(N)\) because episode transitions only happen in our construction at accept states&mdash;by the inductive hypothesis, we have that \(u \in L^{*}\). now, we have \(v\), which takes us from the last epsilon transition all they way to an accept state (because recall \(w\) is in \(N\)), meaning \(v \in L\) because by design we went from a start state to an accept state without taking any epsilon transitions. finally, since \(u \in L^{ *}\), concatenating another thing in \(L\) to it also gives a thing in \(L^{ *}\), so \(uv \in L^{ *}\).</p></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

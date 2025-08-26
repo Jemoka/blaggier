@@ -1,0 +1,93 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS224N APR182024</title>
+<meta name=description content="perplexity
+see perplexity
+Vanishing Gradients
+Consider how an RNN works: as your sequence gets longer, the earlier layers gets very little gradients because you have to multiply the gradient of each layer by the other.
+Alternatively, if the gradient is very large, the parameter updates can blow up exponentially as well if your weights are too large (its either exponentially small or exponentially huge).
+Why is this a problem?
+To some extent, you can consider that we should tune the nearby weights a lot more than stuff way earlier than the sequence. Ham-fisting, we roughly have 7 tokens worth of effective conditioning."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS224N APR182024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=perplexity--kbhperplexity-dot-md><a href=/posts/kbhperplexity/>perplexity</a></h2><p>see <a href=/posts/kbhperplexity/>perplexity</a></p><h2 id=vanishing-gradients>Vanishing Gradients</h2><p>Consider how an <a href=/posts/kbhlanguage_model/#recurrent-neural-network>RNN</a> works: as your sequence gets longer, the earlier layers gets very little gradients because you have to multiply the gradient of each layer by the other.</p><p>Alternatively, if the gradient is very large, the parameter updates can blow up exponentially as well if your weights are too large (its either exponentially small or exponentially huge).</p><h3 id=why-is-this-a-problem>Why is this a problem?</h3><p>To some extent, you can consider that we should tune the nearby weights a lot more than stuff way earlier than the sequence. Ham-fisting, we roughly have 7 tokens worth of effective conditioning.</p><p>However, this is <strong>EXPONENTIAL</strong> which is very bad, so we need to encode the gradient information into the nearby layers.</p><p>Also English has long-distance dependencies.</p><h3 id=solving-exploding-gradients>Solving Exploding Gradients</h3><p>You can&rsquo;t fix vanishing gradients, but fixing exploding gradient simply involves gradient clipping:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># rescale gradients to be at most `threshold` big</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>if</span> <span style=color:#111>gradients</span><span style=color:#f92672>.</span><span style=color:#111>norm</span><span style=color:#111>()</span> <span style=color:#f92672>&gt;</span> <span style=color:#111>threshold</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>gradients</span> <span style=color:#f92672>=</span> <span style=color:#111>gradients</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>gradients</span><span style=color:#f92672>.</span><span style=color:#111>norm</span><span style=color:#111>())</span> <span style=color:#f92672>*</span> <span style=color:#111>threshold</span>
+</span></span></code></pre></div><h3 id=solving-vanishing-gradients>Solving Vanishing Gradients</h3><ul><li><a href=#lstm>LSTM</a>s (additive accumulation)</li><li>residual connections (skipping connections, see ResNet)</li></ul><h2 id=lstm>LSTM</h2><p>This is actually proposed as a solution to <a href=/posts/kbhlanguage_model/#recurrent-neural-network>RNN</a> <a href=#vanishing-gradients>Vanishing Gradients</a>:</p><p>\begin{equation}
+\begin{cases}
+f^{(t)} = \sigma \qty(W_{f}h^{(t-1)} + U_{f} x^{(t)} + b_{f}) \\
+i^{(t)} = \sigma \qty(W_{i} h^{(t-1)} + U_{i} x^{(t)} + b_{i}) \\
+o^{(t)} = \sigma \qty(W_{o} h^{(t-1)} + U_{o} x^{(t)} + b_{o})
+\end{cases}
+\end{equation}</p><p>so for every single timestamps, we calculate <strong>three separate vector elements (one dimention per cell element)</strong> which controls how much you $f$orget, $i$nput to the memory cell, $o$utput to the current timestamp&rsquo;s hidden layer.</p><p>From there, at each we first calculate a new cell at the current timestamp:</p><p>\begin{equation}
+\tilde{c}^{(t)} = \text{tanh} \qty(W_{c} h^{(t-1)} + U_{c} x^{(t)} + b_{c})
+\end{equation}</p><p>and we actually put it into the cell by multiplying our gating values:</p><p>\begin{equation}
+c^{(t)} = f^{(t)} \odot c^{(t-1)} + i^{(t)} \odot \tilde{c}^{(t)}
+\end{equation}</p><p>and finally, we take a proportion:</p><p>\begin{equation}
+h^{(t)} = o^{(t)} \odot \text{tanh}\qty( c^{(t)})
+\end{equation}</p><p><strong>KEY SECRET</strong>: notice how the value of \(c^{(t)}\) is a PLUS SIGN between previous memory and current memory. At each point, our gradients are now ADDITIVE instead of multiplicative. LSTM architecture, therefore, allows you to preserve information across many timestamps.</p><h3 id=sentence-level-lstm-representation>Sentence Level LSTM Representation</h3><p>LSTMs output its hidden state at every point. Therefore, its usually the best to take element-wise mean/max and use that as the sentence encoding to capture information about the entire sequence.</p><h3 id=bi-lstm>Bi-LSTM</h3><p>To enable the understanding of both the information carried from both sides of the document, we can run a <a href=#bi-lstm>Bi-LSTM</a>: whereby, the forward RNN run normally, the backward RNN reads backwards, and at every timestamp both of their directions&rsquo; embeddings are contacted.</p><h2 id=machine-translation>Machine Translation</h2><h3 id=statistical-machine-translation>Statistical Machine Translation</h3><p>Old-school translations used Bayes rule:</p><p>we want the best target sentence \(y\) given \(x\) input sentence, meaning:</p><p>\begin{equation}
+\arg\max_{y} P(y|x)
+\end{equation}</p><p>Using Bayes&rsquo; rule, we break it down into two parts:</p><p>\begin{equation}
+\arg\max_{y} P(x|y) P(y)
+\end{equation}</p><p>where the left side is a simple mapping between source phrases given target phrases, and the right is a language model to score how likely that ordering of phrases could be.</p><h3 id=neural-machine-translation>Neural Machine Translation</h3><p>The above is bad. You can&rsquo;t just reorder translated phrases and call that&rsquo;s a good translation. So instead, we encoder-decoder:</p><figure><img src=/ox-hugo/2024-04-18_17-43-11_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,98 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS143 MAY152025</title>
+<meta name=description content="&ldquo;If \(B\) is a subclass of \(A\), then an object of \(B\) can be used wherever \(A\) is expected.&rdquo;
+To do this, we will lay out:
+the pointer * points to a method table
+Other Semantics than structural operational semantics
+
+denotational semantics
+axiomatic semantics
+
+Runtime Errors
+We have to catch some runtime errors:
+
+calling on voids
+method dispatch problems
+
+What to track in context?
+
+environment: where in memory a variable is stored? Map<Symbol, void *>
+store: what is in memory? Map<void *, Value>
+
+This means that a judgment is:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS143 MAY152025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>&ldquo;If \(B\) is a subclass of \(A\), then an object of \(B\) can be used wherever \(A\) is expected.&rdquo;</p><p>To do this, we will lay out:</p><p>the pointer <code>*</code> points to a method table</p><h2 id=other-semantics-than-structural-operational-semantics--kbhsu-cs242-oct152024-dot-md>Other Semantics than <a href=/posts/kbhsu_cs242_oct152024/#structural-operational-semantics>structural operational semantics</a></h2><ol><li><a href=/posts/kbhsu_cs224n_apr022024/#denotational-semantics>denotational semantics</a></li><li><a href=/posts/kbhaxiomatic_semantics/>axiomatic semantics</a></li></ol><h2 id=runtime-errors>Runtime Errors</h2><p>We have to catch some runtime errors:</p><ul><li>calling on voids</li><li>method dispatch problems</li></ul><h2 id=what-to-track-in-context>What to track in context?</h2><ul><li><strong>environment</strong>: where in memory a variable is stored? <code>Map&lt;Symbol, void *></code></li><li><strong>store</strong>: what is in memory? <code>Map&lt;void *, Value></code></li></ul><p>This means that a judgment is:</p><p>\begin{equation}
+\text{self}, E, S \vdash e: V, S'
+\end{equation}</p><p>that is, &ldquo;given environment \(E\), store \(S\), we have that \(e\) evaluates to \(V\), and \(S\) are side effects.&rdquo;</p><p>The reason why environments doesn&rsquo;t change is because we can&rsquo;t pass globals up, so scoping always travels down.</p><h3 id=assignments>assignments</h3><p>As you would expect:</p><p>\begin{equation}
+\frac{so,E, S \vdash e : v, S_1 | E\qty(id) = I_{id} | S_2=S_1[v / I_{id}]}{so, E, S \vdash id \leftarrow e: v, S_2}
+\end{equation}</p><p>Notice! we have side effects that are <strong>CHAINED</strong>; if evaluating \(e\) has side effects, we carry them into our evaluation in the side effects \(S \to S_1 \to S_2\).</p><h3 id=loops>loops</h3><p>We use recursion!</p><p>\begin{equation}
+\frac{\begin{align}&amp;so, E, S \vdash e_1: true, S_1 \\ &amp;so, E, S_1, \vdash S_2 : v, S_2 \\ &amp;so, E, S_2 \vdash \text{ while } e_1 \text{ loop } e_2 \text{ pool } : void, S_3\end{align}}{so, E, S \vdash \text{ while } e_1 \text{ loop } e_2 \text{ pool } : void, S_3}
+\end{equation}</p><h3 id=how-do-we-allocate-new-spaces>how do we allocate new spaces?</h3><p>We can use the syntax</p><p>\begin{align}
+&amp;l_{new} = \text{newloc}\qty(S_1) \\
+&amp;so, E[l_{new} / id], S_1[v_1 / l_{new}] \vdash \dots
+\end{align}</p><h3 id=how-do-we-allocate-new-objects>how do we allocate new objects?</h3><h3 id=dot-dot-dot-what-about-self>&mldr;what about <code>self</code>?</h3><p>\begin{equation}
+\frac{}{\text{so}, E, S \vdash \text{self}: \text{so}, S}
+\end{equation}</p><h2 id=errors-to-check>errors to check</h2><ul><li>dispatch on void</li><li>division by zero</li><li>substring out of range</li><li>heap overflow</li></ul><p>generally we need to exit gracefully</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,89 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS361 APR302024</title>
+<meta name=description content="Multi-Objective Optimization
+
+identify non-dominated individuals (individuals, for which in the multi-objective, is not dominated); this forms the &ldquo;pareto frontier&rdquo;
+create all combinations of input parameters, and create a pareto frontier for them
+identify a weighting between the variations you desire, and identify the elements which align with the Pareto frontier
+
+Pareto Optimality
+At a pareto optimal point, increasing one objective value decreases another. that is, a pareto optimal point is not dominated.
+dominate
+one point dominates another if:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS361 APR302024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=multi-objective-optimization>Multi-Objective Optimization</h2><ol><li>identify non-dominated individuals (individuals, for which in the multi-objective, is not <strong>dominated</strong>); this forms the &ldquo;pareto frontier&rdquo;</li><li>create all combinations of input parameters, and create a pareto frontier for them</li><li>identify a weighting between the variations you desire, and identify the elements which align with the Pareto frontier</li></ol><h3 id=pareto-optimality>Pareto Optimality</h3><p>At a <a href=#pareto-optimality>pareto optimal</a> point, increasing one objective value decreases another. that is, a <a href=#pareto-optimality>pareto optimal</a> point is not <a href=#dominate>dominate</a>d.</p><h4 id=dominate>dominate</h4><p>one point <a href=#dominate>dominate</a>s another if:</p><p>\begin{align}
+f_{i}(x) \leq f_{i}(x&rsquo;) \forall i \\
+f_{i}(x) &lt; f_{i}(x&rsquo;)\ \text{for some}\ i
+\end{align}</p><h3 id=pareto-frontier>Pareto Frontier</h3><p>A Pareto frontier is the entire set of <a href=#pareto-optimality>pareto optimal</a> points&mdash;i. the set that&rsquo;s not dominated.</p><h4 id=solving-for-pareto-frontier>Solving for Pareto Frontier</h4><ul><li><p>Constraint Method</p><p>We can convert this into a single-objective optimization problem; first, sort the constraints by order of importance:</p><p>\begin{align}
+\min_{x}&\ f_{1}(x) \\
+s.t.&\ f_2(x) \leq c_2 \\
+&\ f_3(x) \leq c_3 \\
+&\ \dots
+\end{align}</p><p>we can set \(c_{j}\) to calibrate which point we want on our <a href=#pareto-frontier>Pareto Frontier</a>. By setting \(c_{j}\) large, we identify that we don&rsquo;t care about that constraint as much; as we track \(c_{j}\) small, we start tracing out the Frontier along the \(j\) th direction. At some point, as you lower \(c_{j}\), we will run out of points because we would have left the criterion space.</p></li></ul><ul><li><p>Lexicographic Method</p><p>Iteratively perform optimization; again sort constraints in order of importance, then:</p><figure><img src=/ox-hugo/2024-04-30_10-05-13_screenshot.png></figure></li></ul><ul><li><p>Weight Method</p><p>see <a href=/posts/kbhproperty_specification/#weighted-sum-method>weighted sum method</a></p><p>you can use a linear weight to obtain <em>some</em> Pareto optimal answers:</p><p>\begin{equation}
+f = w^{\top}\mqty[f_1 \\ \dots\\f_{N}]
+\end{equation}</p><p>this fits a line against the Pareto region, which will miss some points but will give some Pareto optimal answers&mdash;there will not be any weighting which preserves points in the zone.</p><figure><img src=/ox-hugo/2024-04-30_10-08-25_screenshot.png></figure></li></ul><ul><li><p>Goal Programming</p><p>\begin{align}
+\min_{x \in \mathcal{X}} \mid f(x) - y^{goal} \mid_{p}
+\end{align}</p><p>just minimize some distance (L1, L2, L-inf norms are all good) to a &ldquo;good&rdquo; point, usually the <a href=#utopia-point>Utopia Point</a>.</p><p>L1 norms have the same problem as <a href=#weight-method>Weight Method</a> as it is a line.</p></li></ul><h3 id=utopia-point>Utopia Point</h3><p>The <a href=#utopia-point>Utopia Point</a> is the most optimal point, component wise.</p><h3 id=multi-objective-population-method>Multi-Objective Population Method</h3><h4 id=classic-population-method>Classic population method</h4><ul><li>create \(m\) subpopulations</li><li>optimize each population for one objective</li><li>shuffle them together after each cohort&rsquo;s optimization, create crossovers and mutations</li></ul><p>This method is good to get the pareto frontier, but often we get clumping at the extremas of each objective. Often, we try to encourage dispersion.</p><h4 id=non-dominating-ranking>Non-Dominating Ranking</h4><p>You can rank all points (including those not on the <a href=#pareto-frontier>Pareto Frontier</a>), with</p><ol><li>pareto-frontier</li><li>non-dominated except for 1)</li><li>non-dominated except 1) or 2)</li><li>&mldr;</li></ol><h4 id=pareto-filter>Pareto filter</h4><p>Identify points on the <a href=#pareto-frontier>Pareto Frontier</a>, and keep top k, perhaps with dispersion</p><h4 id=niche-technique>Niche Technique</h4><p>a <strong>niche</strong> disperses the design along the <a href=#pareto-frontier>Pareto Frontier</a></p><ul><li><a href=#niche-technique>fitness sharing</a>: penalize if neighbors are too close)</li><li><a href=#niche-technique>equivalence class sharing</a>: if two individuals are compared, their non-dominating ranks are compared first, then <a href=#niche-technique>fitness sharing</a> is used as a tie breaker</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

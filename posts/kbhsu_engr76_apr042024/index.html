@@ -1,0 +1,89 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-ENGR76 APR042024</title>
+<meta name=description content="information
+Information is the amount of surprise a message provides.
+Shannon (1948): a mathematical theory for communication.
+information value
+The information value, or entropy, of a information source is its probability-weighted average surprise of all possible outcomes:
+\begin{equation}
+H(X) = \sum_{x \in X}^{} s(P(X=x)) P(X=x)
+\end{equation}
+properties of entropy
+
+entropy is positive: \(H(x) \geq 0\)
+entropy of uniform: for \(M \sim CatUni[1, &mldr;, n]\), \(p_{i} = \frac{1}{|M|} = \frac{1}{n}\), and \(H(M) = \log_{2} |M| = \log_{2} n\)
+entropy is bounded: \(0 \leq H(X) \leq H(M)\) where \(|X| = |M|\) and \(M \sim CatUni[1 &mldr; n]\) (&ldquo;uniform distribution has the highest entropy&rdquo;); we will reach the upper bound IFF \(X\) is uniformly distributed.
+
+binary entropy function
+For some binary outcome \(X \in \{1,2\}\), where \(P(x=1) = p_1\), \(P(X_2 = 2) = 1-p_1\). We can write:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-ENGR76 APR042024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=information>information</h2><p><em>Information is the amount of surprise a message provides.</em></p><p>Shannon (1948): a mathematical theory for communication.</p><h3 id=information-value>information value</h3><p>The <a href=#information-value>information value</a>, or <a href=#information-value>entropy</a>, of a <a href=#information-source>information source</a> is its probability-weighted average <a href=#surprise>surprise</a> of all possible outcomes:</p><p>\begin{equation}
+H(X) = \sum_{x \in X}^{} s(P(X=x)) P(X=x)
+\end{equation}</p><h4 id=properties-of-entropy>properties of entropy</h4><ul><li><strong>entropy is positive</strong>: \(H(x) \geq 0\)</li><li><strong>entropy of uniform</strong>: for \(M \sim CatUni[1, &mldr;, n]\), \(p_{i} = \frac{1}{|M|} = \frac{1}{n}\), and \(H(M) = \log_{2} |M| = \log_{2} n\)</li><li><strong>entropy is bounded</strong>: \(0 \leq H(X) \leq H(M)\) where \(|X| = |M|\) and \(M \sim CatUni[1 &mldr; n]\) (&ldquo;uniform distribution has the highest entropy&rdquo;); we will reach the upper bound IFF \(X\) is uniformly distributed.</li></ul><h4 id=binary-entropy-function>binary entropy function</h4><p>For some binary outcome \(X \in \{1,2\}\), where \(P(x=1) = p_1\), \(P(X_2 = 2) = 1-p_1\). We can write:</p><p>\begin{equation}
+H_{2}(p_1) = p_1 \log_{2} \frac{1}{p_1} + (1-p_1) \log_{2} \frac{1}{1-p_1}
+\end{equation}</p><p>If you plot this out, we get a cap-like function, whereby at \(H(0) = 0\), \(H(1) = 0\), but \(H(0.5) = 1\) &mdash; information sources are most effective when what&rsquo;s communicated is ambiguous.</p><h3 id=information-source>information source</h3><p>We model an <a href=#information-source>information source</a> as an <a href=/posts/kbhrandom_variables/>random variable</a>. A <a href=/posts/kbhrandom_variables/>random variable</a> can take on any number of information, until you GET the information, and you will get an exact value. Each source has a range of possible values it can communicate (which is the <a href=/posts/kbhsupport/>support</a> of the <a href=/posts/kbhrandom_variables/>random variable</a> representing the information source).</p><p>We will then define the <a href=#surprise>surprise</a> of a piece of information as a (decreasing function? of) the probability corresponding to the event of receiving that information.</p><h3 id=surprise>surprise</h3><p>IMPORTANTLY: this class uses base \(2\), but the base is unimportant.</p><p>\begin{equation}
+s(p) = \log_{2} \frac{1}{p}
+\end{equation}</p><h4 id=properties-of-surprise>Properties of Surprise</h4><ul><li>log-base-2 <a href=#surprise>surprise</a> has units &ldquo;bits&rdquo;</li><li>\(s(1) = 0\)</li><li>\(p \to 0, s(p) \to \infty\)</li><li>\(s(p) \geq 0\)</li><li>&ldquo;joint surprise&rdquo; \(s(p,q) = s(p) + s(q)\)</li></ul><h4 id=facts-about-surprise>Facts about Surprise</h4><ol><li><a href=#surprise>surprise</a> should probably decrease with increasing \(p\)</li><li><a href=#surprise>surprise</a> should be continuous in \(p\)</li><li>for \(s(p_i), s(q_{j})\), for two events \(p_i\) and \(q_{j}\), the &ldquo;surprise&rdquo; of \(s(pi, q_{j})\) = \(s(p_{i}) + s(q_{j})\)</li><li><a href=#surprise>surprise</a> satisfies the fact that something with probably \(0\) happening, we should be infinitely surprises; if something happens with iincreasing higher probabiity, surprise would be low</li></ol><p>The surprise function is the <strong>unique</strong> function which satisfies all of the above property.</p><h3 id=additional-information>additional information</h3><p><strong>information is relative to the domain which is attempted to be communicated</strong></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

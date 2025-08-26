@@ -1,0 +1,81 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>belief</title>
+<meta name=description content="belief is a probability distribution over your states.
+&ldquo;an informational state decoupled from motivational states&rdquo;
+\begin{equation}
+b \leftarrow update(b,a,o)
+\end{equation}
+There are two main flavours of how to represent beliefs
+
+parametric: belief distribution is fully represented over all states by a set of parameters (categorical, gaussian, etc.)
+non-parametric: belief is represented by a non-weighted list of possible locations of where you are; such as a Particle Filter
+
+
+To update parametric beliefs, we can use a discrete state filter (for categorical belief distributions) or a Kalman Filter (for linear Gaussian). To update non-parametric beliefs, we can use a Particle Filter."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>belief</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhbelief/>belief</a> is a <a href=/posts/kbhprobability_distributions/>probability distribution</a> over your states.</p><p>&ldquo;an informational state decoupled from motivational states&rdquo;</p><p>\begin{equation}
+b \leftarrow update(b,a,o)
+\end{equation}</p><p>There are two main flavours of how to represent beliefs</p><ul><li><strong>parametric</strong>: belief distribution is fully represented over all states by a set of parameters (categorical, <a href=/posts/kbhgaussian_distribution/>gaussian</a>, etc.)</li><li><strong>non-parametric</strong>: belief is represented by a non-weighted list of possible locations of where you are; such as a <a href=/posts/kbhfilters/#particle-filter>Particle Filter</a></li></ul><hr><p>To update <strong>parametric</strong> beliefs, we can use a <a href=/posts/kbhfilters/#discrete-state-filter>discrete state filter</a> (for categorical belief distributions) or a <a href=/posts/kbhfilters/#kalman-filter>Kalman Filter</a> (for linear Gaussian). To update <strong>non-parametric</strong> beliefs, we can use a <a href=/posts/kbhfilters/#particle-filter>Particle Filter</a>.</p><p>If we have an <strong>parametric</strong> belief that&rsquo;s not categorical nor linear Gaussian, we can use <a href=/posts/kbhfilters/#extended-kalman-filter--kbhfilters-dot-md>Extended Kalman Filter</a> or <a href=/posts/kbhfilters/#unscented-id-6800e7a8-729c-4654-adcc-e0f877079b6a-kalman-filter>Unscented Kalman Filter</a> to approximate a belief update.</p><hr><h2 id=belief-update>belief update</h2><ul><li>To <a href=#belief-update>update belief</a>, we need to initialize it somehow.<ul><li>If you have no knowledge of the situation, you want to <strong>diffuse</strong> your initial distributions because you don&rsquo;t want to be overconfident</li><li>For non-parametric situations, this may cause logistical problems; so, you may need to make many observations before you can be confident enough to seed a belief</li></ul></li><li></li></ul><h2 id=observation-model>observation model</h2><p>\(O(o|a,s&rsquo;)\) is a model for what observations we may get if we are in a particular state/action.</p><h3 id=error-model>error model</h3><p>there is some model which is a probability distribution over the state given observation:</p><figure><img src=/ox-hugo/2023-11-09_10-01-10_screenshot.png></figure><p>let orange \(d\) be state, the green would be the <a href=#error-model>error model</a></p><h3 id=filters--kbhfilters-dot-md><a href=/posts/kbhfilters/>filters</a></h3><p><a href=/posts/kbhfilters/>filters</a> are how <a href=/posts/kbhbelief/>belief</a>s are updated from observation. &ldquo;we want to perform localization&rdquo;</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,86 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Random Walk Hypothesis</title>
+<meta name=description content="The Random Walk Hypothesis is a financial econometric hypothesis that stocks have the same distribution and independent of each other: that stocks are a random variable and not predictable in a macro space.
+To set up the random walk hypothesis, let&rsquo;s begin with some time \(t\), an asset return \(r_t\), some time elapsed \(k\), and some future asset return \(r_{t+k}\).
+We will create two random variables \(f(r_t)\) and \(g(r_{t+k})\), which \(f\) and \(g\) are arbitrary functions we applied to analyze the return at that time."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Random Walk Hypothesis</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>The <a href=/posts/kbhrandom_walk/>Random Walk Hypothesis</a> is a <a href=/posts/kbhfinancial_markets_intro/>financial econometric</a> hypothesis that stocks have the same distribution and independent of each other: that stocks are a random variable and not predictable in a macro space.</p><p>To set up the random walk hypothesis, let&rsquo;s begin with some time \(t\), an asset return \(r_t\), some time elapsed \(k\), and some future asset return \(r_{t+k}\).</p><p>We will create two random variables \(f(r_t)\) and \(g(r_{t+k})\), which \(f\) and \(g\) are arbitrary functions we applied to analyze the return at that time.</p><p>The <a href=/posts/kbhrandom_walk/>Random Walk Hypothesis</a> tells us that, at any two unrelated given time, you cannot use the behavior of \(r_t\) to predict anything about \(r_{t+k}\), under any kind of analysis \(f\) or \(g\), that:</p><p>\begin{equation}
+Cov[f(r_t), g(r_{t+k})] = 0
+\end{equation}</p><p>So, all of the <a href=/posts/kbhrandom_walk/>Random Walk Hypothesis</a> models would leverage the above result, that the two time info don&rsquo;t evolve together and they are independently, <a href=/posts/kbhrandom/>random</a>ly distributed: they are <a href=/posts/kbhrandom_variables/>random variable</a>s.</p><p>For the market to be a typical <a href=/posts/kbhrandom_walk/>Random Walk</a>, the <a href=/posts/kbhcentral_limit_theorem/>central limit theorem</a> has to hold on the value of <a href=#return--finmetrics>return</a>. This usually possible, but if the variance of the return is not finite, the <a href=#return--finmetrics>return</a> will not hold the <a href=/posts/kbhcentral_limit_theorem/>central limit theorem</a> which means that the <a href=#return--finmetrics>return</a> will not be <a href=/posts/kbhnormal_distribution/>normal</a>. Of course the <a href=#return--finmetrics>return</a> does not have to hold <a href=/posts/kbhcentral_limit_theorem/>central limit theorem</a>, then we use other convergence distributions but still model it in the <a href=/posts/kbhrandom_walk/>Random Walk Hypothesis</a> as a <a href=/posts/kbhrandom_variables/>random variable</a>.</p><h2 id=return--finmetrics>return (FinMetrics)</h2><p>Importantly: its not the <em>price</em> that follows the random walk; it is the <em>RETURN</em> that follows the walk; if it was the price, then its possible for price to become negative. Return, technically, is defined by:</p><p>\begin{equation}
+R_t = \frac{p_t-p_{t-1}}{p_{t-1}}
+\end{equation}</p><p>However, we really are interested in the natural log of the prices:</p><p>\begin{equation}
+r_t = log(p_t) - log(p_{t-1}) \approx R_t
+\end{equation}</p><p>We can do this is because, for small \(x\), \(log\ x \approx x-1\).</p><p>We do this is because, if we were wanting to add the returns over the last \(n\) days, in \(R_t\) you&rsquo;d have to multiply them:</p><p>\begin{equation}
+\frac{p_{t+1}}{p_t} \cdot \frac{p_t}{p_{t-1}} = \frac{p_{t+1}}{p_{t-1}}
+\end{equation}</p><p>This is bad, because of the <a href=/posts/kbhcentral_limit_theorem/>central limit theorem</a>. To make a random variable built of normalizing \(n\) items, you have to <em>add</em> and not <em>multiply</em> them together over a time range. We want to be able to add.</p><p>Therefore, \(r_t\) can achieve the same division by adding (see the <a href=/posts/kbhlog_laws/>log laws</a>).</p><p>But either way, with enough, we know that \(r_t\) is independently, identity distributed.</p><h2 id=time-series-analysis>time series analysis</h2><p>Over some days \(k\), we have:</p><p>\begin{equation}
+Y_{k} = \sum_{i=1}^{k} x_{i}
+\end{equation}</p><p>Given that \(x_{i}\) is distributed randomly: \(\{x_{i}\}_{i=1}^{N}\). This becomes the foundation of <a href=#time-series-analysis>time series analysis</a>. The problem of course becomes harder when the values drift against each other, is nonindependent, etc. We can use the <a href=/posts/kbhmartingale_model/>Martingale Model</a> to take generic <a href=/posts/kbhrandom_walk/>random walk</a> to a more dependent model.</p><h2 id=cj-test>CJ test</h2><p>If you have some amount of volacitity measurement, we first know that, by the <a href=/posts/kbhrandom_walk/>Random Walk Hypothesis</a>, we have:</p><p>\begin{equation}
+X_{k} \sim N(0,\sigma^{2})
+\end{equation}</p><p>Given some future return, you hope that:</p><p>\begin{equation}
+Y_{k}=\sum_{i=1}^{k}X_{k}\sim N(0,\sigma^{2})
+\end{equation}</p><p>If so, if you have like \(20\%\) of log returns, to have a statistically significant return, we have that:</p><p>\begin{equation}
+\sigma =\frac{0.2}{\sqrt{12}}
+\end{equation}</p><p>getting a statistically significant difference from it is <em>hard.</em></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

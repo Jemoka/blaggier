@@ -1,0 +1,171 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-MATH530 Geometric Intepretations</title>
+<meta name=description content="Dot product
+Calculations
+Let&rsquo;s calculate some dot products!
+\begin{equation}
+\begin{pmatrix}
+1 \\ 0
+\end{pmatrix} \cdot \begin{pmatrix}
+0 \\ 1
+\end{pmatrix} = 0
+\end{equation}
+\begin{equation}
+\begin{pmatrix}
+1 \\2
+\end{pmatrix} \cdot  \begin{pmatrix}
+2 \\1
+\end{pmatrix}  = 4
+\end{equation}
+\begin{equation}
+\begin{pmatrix}
+1 \\ 1
+\end{pmatrix} \cdot  \begin{pmatrix}
+-1 \\1
+\end{pmatrix}  = 0
+\end{equation}
+\begin{equation}
+\begin{pmatrix}
+1 \\1
+\end{pmatrix} \cdot  \begin{pmatrix}
+2 \\ 2
+\end{pmatrix}  = 4
+\end{equation}
+Interpretation
+Geometrically, the intepretation of the dot product is the magnitude that comes from scaling the bottom projected value by the top value. This is essentially multiplying the proportion of one vector that&rsquo;s parallel to the other by each other."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-MATH530 Geometric Intepretations</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=dot-product>Dot product</h2><h3 id=calculations>Calculations</h3><p>Let&rsquo;s calculate some dot products!</p><p>\begin{equation}
+\begin{pmatrix}
+1 \\ 0
+\end{pmatrix} \cdot \begin{pmatrix}
+0 \\ 1
+\end{pmatrix} = 0
+\end{equation}</p><p>\begin{equation}
+\begin{pmatrix}
+1 \\2
+\end{pmatrix} \cdot \begin{pmatrix}
+2 \\1
+\end{pmatrix} = 4
+\end{equation}</p><p>\begin{equation}
+\begin{pmatrix}
+1 \\ 1
+\end{pmatrix} \cdot \begin{pmatrix}
+-1 \\1
+\end{pmatrix} = 0
+\end{equation}</p><p>\begin{equation}
+\begin{pmatrix}
+1 \\1
+\end{pmatrix} \cdot \begin{pmatrix}
+2 \\ 2
+\end{pmatrix} = 4
+\end{equation}</p><h3 id=interpretation>Interpretation</h3><p>Geometrically, the intepretation of the dot product is the magnitude that comes from scaling the bottom projected value by the top value. This is essentially multiplying the proportion of one vector that&rsquo;s parallel to the other by each other.</p><h2 id=cross-product>Cross Product</h2><h3 id=calculations>Calculations</h3><p>Cross products!</p><p>\begin{equation}
+\begin{pmatrix}
+1 \\ 0 \\ 1
+\end{pmatrix} \times \begin{pmatrix}
+-1 \\ 0 \\ 1
+\end{pmatrix} = \begin{pmatrix}
+1 \\ -1 \\0
+\end{pmatrix}
+\end{equation}</p><p>\begin{equation}
+\begin{pmatrix}
+1 \\ 1 \\ -1
+\end{pmatrix} \times \begin{pmatrix}
+0 \\ 0 \\ 2
+\end{pmatrix} = \begin{pmatrix}
+2 \\ -2 \\0
+\end{pmatrix}
+\end{equation}</p><figure><img src=/ox-hugo/2022-09-06_22-09-06_screenshot.png></figure><p>The dot product is the point that is perpendicular to the other two input vectors.</p><h3 id=why-its-not-a-field>Why its not a field</h3><p>We want to check why the multiplication of vectors in \(\mathbb{F}^{3}\) via taking the cross product cannot form a <a href=/posts/kbhfield/>field</a>.</p><p>We can safely assume that the addition operation of the vectors derive their closure, <a href=/posts/kbhcommutivity/>commutativity</a>, <a href=/posts/kbhassociative/>associativity</a> from these properties in \(\mathbb{F}\).</p><p>Therefore, we will verify these properties with <a href=/posts/kbhmultiplying/>multiplication</a>. The only closed multiplication-like operation of vectors is the cross-product. Let&rsquo;s first define the cross-product.</p><p>Given two vectors in \(\mathbb{F}^{3}\):</p><p>\begin{equation}
+\begin{pmatrix}
+a \\b \\ c
+\end{pmatrix}, \begin{pmatrix}
+d \\ e\\f
+\end{pmatrix}
+\end{equation}</p><p>Their cross product is the vector in \(\mathbb{F}^{3}\) defined by:</p><p>\begin{equation}
+\begin{vmatrix}
+\hat{i} & \hat{j} & \hat{k} \\
+a & b & c \\
+d & e & f
+\end{vmatrix}
+\end{equation}</p><p>Taking the actual determinant, we have that:</p><p>\begin{equation}
+\begin{vmatrix}
+\hat{i} & \hat{j} & \hat{k} \\
+a & b & c \\
+d & e & f
+\end{vmatrix} = \begin{pmatrix}
+bf-ce \\
+dc-af \\
+ac-db
+\end{pmatrix}
+\end{equation}</p><h3 id=identity>Identity</h3><p>Let&rsquo;s first figure the <a href=/posts/kbhidentity/>identity</a> of this operation. We wish to figure some \((a,b,c)\) such that the result of the cross product would be \((d,e,f)\).</p><p>Geometrically, the perpendicularity of a vector is the resulting value of the cross product; however, no vector (apart from \(\vec{0}\)) can be perfectly perpendicular to itself exactly. This would indicate that no such identities exist.</p><p>We can also observe that there is no \(f\) term on the bottom of the cross product. This would indicate that no combination of \((a,b,c)\) can construct the needed \(f\) on the last entry.</p><p>Finally, for a more formal proof.</p><p>Proof: there can not exist a field-like <a href=/posts/kbhidentity/>identity</a> for a cross product.</p><p>For the sake of contradiction let&rsquo;s say for some nonzero vector \(\vec{v} \in \mathbb{F}^{3}\), there exists some identity named \(\vec{e} \in \mathbb{F}^{3}\) that follows the properties of identities in a field.</p><p>We first have that:</p><p>\begin{equation}
+\vec{e} \times \vec{v} = \vec{v}
+\end{equation}</p><p>by the definition of the identity.</p><p>And also that:</p><p>\begin{equation}
+\vec{v} \times \vec{e}= \vec{v}
+\end{equation}</p><p>by the fact that field-like operations commutes.</p><p>We have also the property of cross products that:</p><p>\begin{align}
+&\vec{a} \times \vec{b} = -(\vec{b} \times \vec{a}) \\
+\Rightarrow\ & \vec{a} \times \vec{b} + \vec{b} \times \vec{a} = 0
+\end{align}</p><p>By applying the inverse of \(-(\vec{b}\times \vec{a})\) to both sides, as cross products are closed and therefore an additive inverse exists.</p><p>Therefore, we have that:</p><p>\begin{equation}
+\vec{v} + \vec{v} = 0
+\end{equation}</p><p>We see then \(\vec{v}\) is its own <a href=/posts/kbhinverses/>additive inverse</a>. Therefore \(\vec{v}\) itself is also \(0\). But we established that \(\vec{v}\) can be non-zero. Reaching contradiction, \(\blacksquare\). (this is iffy)</p><h3 id=commutativity>Commutativity</h3><p>Because of the fact that two-by-two <a href=/posts/kbhmatricies/>matricies</a> exists on the diagonals, the cross product is also not commutative. In fact,</p><h2 id=determinants>Determinants</h2><p>The geometric interpretation of the <a href=/posts/kbhmatricies/#determinants>determinants</a> is the change in area inside a vector which it stretches a given vector.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

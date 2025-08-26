@@ -1,0 +1,88 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>meeting 8/1</title>
+<meta name=description content="Updates
+
+dropping dropout: https://proceedings.mlr.press/v202/geiping23a/geiping23a.pdf
+CAW-coref: revised! do we need more space for things such as a figure?
+
+stanza 1.9.0 staged! https://huggingface.co/stanfordnlp/stanza-en
+
+
+
+Yay mend works!
+
+
+
+.mean() vs. .sum() for the dW maps?
+PPL Isn&rsquo;t the Only Possible Metric
+
+
+
+even if our model is better ppl, its worse at squad than Facebook (granted its been trained a lot less); will run with new pretraining model (expect that no dropout will be better (see paper above))."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>meeting 8/1</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=updates>Updates</h2><ul><li>dropping dropout: <a href=https://proceedings.mlr.press/v202/geiping23a/geiping23a.pdf>https://proceedings.mlr.press/v202/geiping23a/geiping23a.pdf</a></li><li>CAW-coref: revised! do we need more space for things such as a figure?<ul><li>stanza 1.9.0 staged! <a href=https://huggingface.co/stanfordnlp/stanza-en>https://huggingface.co/stanfordnlp/stanza-en</a></li></ul></li></ul><h3 id=yay-mend-works>Yay mend works!</h3><figure><img src=/ox-hugo/2024-08-01_14-11-07_screenshot.png></figure><p>.mean() vs. .sum() for the dW maps?</p><h3 id=ppl-isn-t-the-only-possible-metric>PPL Isn&rsquo;t the Only Possible Metric</h3><figure><img src=/ox-hugo/2024-08-01_15-12-14_screenshot.png></figure><p>even if our model is better ppl, its worse at squad than Facebook (granted its been trained a lot less); will run with new pretraining model (expect that no dropout will be better (see paper above)).</p><h3 id=pretraining-updates--smaller-bert-which-dataset>Pretraining Updates (smaller Bert, which dataset?)</h3><p><a href="https://wandb.ai/jemoka/dropfree?nw=nwuserjemoka">https://wandb.ai/jemoka/dropfree?nw=nwuserjemoka</a></p><h3 id=binary-masking-with-the-pretraining-above>Binary Masking with the Pretraining Above</h3><p>Edit success</p><table><thead><tr><th></th><th>Our Bert (No Dropout)</th><th>Our Bert (Dropout)</th></tr></thead><tbody><tr><td>edit success</td><td>0.9709</td><td>0.9723</td></tr><tr><td>edit localization</td><td>0.8375</td><td>0.8452</td></tr><tr><td>mean activations</td><td>3853</td><td>22511</td></tr></tbody></table><p>Yay! (more seriously)</p><h2 id=question>Question</h2><h3 id=paper-plan>Paper Plan</h3><h4 id=part-1-skipping-dropout-isn-t-bad-and-may-even-be-good>Part 1: Skipping Dropout isn&rsquo;t bad, and may even be good</h4><ul><li>pretraining</li><li>squad</li></ul><h4 id=part-3-emperics-dropout-has-knowledge-storage-consiquences>Part 3: Emperics: Dropout Has Knowledge Storage Consiquences</h4><ul><li>knowledge neurons</li><li>integrated gradients</li><li>binary masking</li></ul><h4 id=part-4-impact-look-editing-is-easier-without-dropout--no-data-yet>Part 4: Impact: look, editing is easier without dropout (no data yet)</h4><ul><li><p>consistency (this is weak, hence theory maybe helpful, or we can skip)</p></li><li><p>MEND (just worked yay!)</p></li><li><p>Finetune (echo to squad)</p></li><li><p>LoRA</p><p>slowly reduce ReFT update rank, see how edit success drops</p></li></ul><p>(x verbs y)</p><ul><li>for each, train/(MEND infer) on 90%, test on the other 10%, see if it works<ul><li>&ldquo;correct&rdquo; to the {IID} example</li></ul></li></ul><h3 id=casual-interventions>Casual Interventions</h3><p>shall we? simple exchange interaction? how does it work for a bert? does it fit into this story?</p><p>(ottowa captial &lt;mask>)
+=>
+(DC capital &lt;mask>)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

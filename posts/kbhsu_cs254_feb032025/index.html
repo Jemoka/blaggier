@@ -1,0 +1,94 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS254 FEB032025</title>
+<meta name=description content="Key question: why is having a SAT oracle less powerful than \(\text{SAT} \in P\)? What&rsquo;s the role of a oracle?
+with a SAT oracle&mldr;
+We can solve NP problems because SAT is NP complete; we can solve coNP problems we can now finally just negate it.
+polynomial hierarchy collapses if \(\text{SAT} \in \text{P}\)
+We can solve \(\Sigma_{j}\) because we can peel off inner languages; for instance, for \(\Sigma_{2}\):
+\begin{equation}
+x \in L \Leftrightarrow \exists w_{1} \forall w_{2} V\qty(x, w_{1}, w_{2}) = 1
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS254 FEB032025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><strong>Key question</strong>: why is having a SAT oracle less powerful than \(\text{SAT} \in P\)? What&rsquo;s the role of a oracle?</p><h2 id=with-a-sat-oracle-dot-dot-dot>with a SAT oracle&mldr;</h2><p>We can solve NP problems because SAT is NP complete; we can solve coNP problems we can now finally just negate it.</p><h2 id=polynomial-hierarchy-collapses-if-text-sat-in-text-p>polynomial hierarchy collapses if \(\text{SAT} \in \text{P}\)</h2><p>We can solve \(\Sigma_{j}\) because we can peel off inner languages; for instance, for \(\Sigma_{2}\):</p><p>\begin{equation}
+x \in L \Leftrightarrow \exists w_{1} \forall w_{2} V\qty(x, w_{1}, w_{2}) = 1
+\end{equation}</p><p>We can define:</p><p>\begin{equation}
+\qty(x, w_{1}) \in L&rsquo; \Leftrightarrow \forall w_{2} V\qty(x, w_{2}, w_{2}) = 1
+\end{equation}</p><p>since \(P = NP \implies P = coNP\), there exists a polytime \(A\) for \(L&rsquo;\).</p><p>Therefore, \(x \in L \Leftrightarrow \exists w_1, A\qty(x, w_{1}) = 1\), so this is now in \(NP\), and we again have a polytime for it.</p><h2 id=polynomial-hierarchy-against-a-text-sat-oracle-dot-dot-dot>polynomial hierarchy against a \(\text{SAT}\) oracle&mldr;</h2><p>Look at our definition about \(A\); if we only have a \(\text{SAT}\) oracle, we don&rsquo;t have \(A \in \text{coNP} \implies A \in \text{P}\). This is because we actually have \(A \in \text{coNP} \implies A^{\text{SAT}} \in P\).</p><p>Yet, on the next step, we have</p><p>\(x \in L \Leftrightarrow \exists w_1, A^{\text{SAT}}\qty(x, w_{1}) = 1\)</p><p>Now, we can&rsquo;t actually use or oracle again! What we want to do next is to show that the above stament implies that \(\text{L} \in \text{NP}\) and we can invoke <a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a>. Yet, this oracle use <strong>breaks <a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a>!</strong></p><h3 id=oracles-break-cook-levin-theorem>oracles break Cook-Levin theorem</h3><p>&mldr;because a magic box can&rsquo;t be easily encoded in a <a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a> formula (since there&rsquo;s no tape delta that can be captured as a clause in the <a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a> reduction).</p><h3 id=instead-we-need-to-use-the-result-in-text-p-text-sat-subseteq-sigma-2--orgb2a66fd--to-show-that-the-oracle-is-slightly-less-powerful>instead, we need to use the result in <a href=#text-p-text-sat-subseteq-sigma-2>\(\text{P}^{\text{SAT}} \subseteq \Sigma_{2}\)</a> to show that the oracle is slightly less powerful</h3><h2 id=oracle-turing-machine--kbhoracle-reduction-dot-md><a href=/posts/kbhoracle_reduction/#oracle-turing-machine>Oracle Turing Machine</a></h2><p>See <a href=/posts/kbhoracle_reduction/#oracle-turing-machine>Oracle Turing Machine</a></p><h2 id=oracle-turing-languages>Oracle Turing Languages</h2><p>\begin{equation}
+\text{P}^{\text{SAT}} : \qty {L : L\text{ can be decided in polytime with SAT-oracle TM}}
+\end{equation}</p><p>generally&mldr;</p><p>\begin{equation}
+\qty {\text{NP}, \text{P}, \text{coNP}} \in \text{P}^{\text{SAT}}
+\end{equation}</p><h3 id=text-p-text-sat-subseteq-sigma-2>\(\text{P}^{\text{SAT}} \subseteq \Sigma_{2}\)</h3><p>Suppose \(\text{L} \in \text{P}^{\text{SAT}}\), solved by some SAT oracle Turing Machine called \(A\).</p><p>We desire that \(A\) accepts \(x\) \(\Leftrightarrow\) \(\exists w_{1} \forall w_{2} V\qty(x, w_1, w_2) = 1\).</p><hr><p>tangent, why can&rsquo;t we place \(A\) into \(\Sigma_{1}\)? Say we desire \(A\) accepts \(x\) \(\Leftrightarrow \exists w, V\qty(x, w) = 1\). Can&rsquo;t we feasibly make \(w\) contain all the oracle answers? In particular since \(A\) is a poly-oracle machine, it makes at most poly oracle calls, so the &ldquo;witness is fine.&rdquo;</p><p>The problem is that unlike a normal verifier, the oracle machine gives full trust to the oracle&rsquo;s output; unlike a verifier, it trusts the oracle fully and hence can be fooled.</p><p>You may say &ldquo;hey, I can just include the for-real certificate along as well&rdquo;; this is fine and poly-time for the \(1\) cases, but for the \(0\) cases, we have to ship along the &ldquo;for all&rdquo; flavor certificates (think UNSAT).</p><p>This actually motivates our overall proof.</p><hr><p>For:</p><p>\begin{equation}
+\qty(b_1, \dots, b_{m}) \text{ and } \begin{cases}
+b_{i} = 1, \text{proof $\phi_{i}$ \text{SAT}} \\
+b_{i} = 0, \text{proof $\phi_{i}$ \text{UNSAT}}
+\end{cases}
+\end{equation}</p><p>So, we desire to make:</p><p>\begin{equation}
+\text{A} \text{ accept } x \Leftrightarrow \exists w_{1} \forall w_{2} V\qty(x, w_1, w_2) = 1
+\end{equation}</p><p>Let&rsquo;s write certificates:</p><p>the oracle anwsers + the &ldquo;satisfying assignment&rdquo; certificate</p><p>\begin{equation}
+w_1 = \qty {\qty(b_1, \dots, b_{m}), \forall i \text{ s.t. } b_{i} = 1, \text{ give } z_{i}: \phi_{i} \qty(z_{i}) = 1}
+\end{equation}</p><p>and the &ldquo;unsatisfying assignment&rdquo; certificate</p><p>\begin{equation}
+w_2 = \qty {\forall i \text{ s.t. } b_{i} = 0, z_{i}\text{ s.t. } \phi_{i}\qty(z_{i}) = 0}
+\end{equation}</p><p>given \(x, w_1, w_2\), our \(V\) will proceed as follows:</p><ul><li>simulate \(A\) on \(x\)</li><li>when \(A\) makes its ith Oracle query, \(V\) looks up answer \(b_{i}\)<ul><li>if \(b_{i} = 1\), check if \(\phi_{i} \qty(z_{i}) = 1\); reject if not</li><li>if \(b_{i} = 0\), check if \(\phi_{i} \qty(z_{i}) = 0\), reject if not</li></ul></li><li>if \(b_{i}\) passes check, then use \(b_{i}\) as an answer</li><li>accept iff \(A\) accepts</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

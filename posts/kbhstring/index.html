@@ -1,0 +1,131 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>string (C)</title>
+<meta name=description content='In C, string is an array of chars. C strings don&rsquo;t track their length; each C string always end in an null-terminating character: \0. This is represents the zero byte.
+There&rsquo;s a built in function strlen which checks the length of a string without the null-terminating character. This function is O(n)!!!
+String Pointer Syntax Sugar Synonyms
+char str[6];
+
+// these are equivalent
+char *ptr = str;
+char *ptr = &amp;str[0];
+char *ptr = &amp;str; // DON&#39;T DO THIS
+
+// these are equivalent
+char thirdLetter = str[3];
+char thirdLetter = *(str + 3);
+seven commandments of c strings
+
+if we create a string as char[], we can modify its characters because its memory lives in our stack instead of living in a global data segment
+we can&rsquo;t set char[] as equaling to something, because its not strictly a pointer and instead it refers to an entire block of memory instead of a pointer to the first element (in a same vein, an array&rsquo;s size is fixed and travels with the variable)
+if we pass char[] as a parameter, it is converted to a char *
+if we create a string with new string literal as char *thing = "thing", we can&rsquo;t modify it because its on the global data segment
+we can set char * equaling to another value because its a pointer
+adding an offset to a c string gives a substring that&rsquo;s places past the first character
+if we change characters in a string parameter, these changes will persist
+
+passing strings around
+Strings are passed as a pointer to their first character.'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>string (C)</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>In C, <a href=/posts/kbhstring/>string</a> is an array of <a href=/posts/kbhchar/>char</a>s. C strings don&rsquo;t track their length; each C string always end in an null-terminating character: <code>\0</code>. This is represents the zero byte.</p><p>There&rsquo;s a built in function <code>strlen</code> which checks the length of a string without the null-terminating character. This function is <code>O(n)</code>!!!</p><h2 id=string-pointer-syntax-sugar-synonyms>String Pointer Syntax Sugar Synonyms</h2><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>char</span> <span style=color:#111>str</span><span style=color:#111>[</span><span style=color:#ae81ff>6</span><span style=color:#111>];</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// these are equivalent
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>ptr</span> <span style=color:#f92672>=</span> <span style=color:#111>str</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>ptr</span> <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span><span style=color:#111>str</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>];</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>ptr</span> <span style=color:#f92672>=</span> <span style=color:#f92672>&amp;</span><span style=color:#111>str</span><span style=color:#111>;</span> <span style=color:#75715e>// DON&#39;T DO THIS
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// these are equivalent
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#00a8c8>char</span> <span style=color:#111>thirdLetter</span> <span style=color:#f92672>=</span> <span style=color:#111>str</span><span style=color:#111>[</span><span style=color:#ae81ff>3</span><span style=color:#111>];</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>char</span> <span style=color:#111>thirdLetter</span> <span style=color:#f92672>=</span> <span style=color:#f92672>*</span><span style=color:#111>(</span><span style=color:#111>str</span> <span style=color:#f92672>+</span> <span style=color:#ae81ff>3</span><span style=color:#111>);</span>
+</span></span></code></pre></div><h2 id=seven-commandments-of-c-string--kbhstring-dot-md--s>seven commandments of c <a href=/posts/kbhstring/>string</a>s</h2><ol><li>if we create a string as <code>char[]</code>, we can modify its characters because its memory lives in our stack instead of living in a global data segment</li><li>we can&rsquo;t set <code>char[]</code> as equaling to something, because its not strictly a pointer and instead it refers to an entire block of memory instead of a pointer to the first element (in a same vein, an array&rsquo;s size is fixed and travels with the variable)</li><li>if we pass <code>char[]</code> as a parameter, it is converted to a <code>char *</code></li><li>if we create a string with new string literal as <code>char *thing = "thing"</code>, we can&rsquo;t modify it because its on the global data segment</li><li>we can set <code>char *</code> equaling to another value because its a pointer</li><li>adding an offset to a c string gives a substring that&rsquo;s places past the first character</li><li>if we change characters in a string parameter, these changes will persist</li></ol><h2 id=passing-strings-around>passing strings around</h2><p>Strings are passed as a pointer to their first character.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>void</span> <span style=color:#75af00>foo</span><span style=color:#111>(</span><span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>str</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// do string things
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>char</span> <span style=color:#111>string</span><span style=color:#111>[</span><span style=color:#ae81ff>6</span><span style=color:#111>];</span> <span style=color:#75715e>// THIS IS A STRING OF LENGTH 5!!!! (beacuse there&#39;s a null terminator)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75af00>foo</span><span style=color:#111>(</span><span style=color:#111>string</span><span style=color:#111>);</span> <span style=color:#75715e>// pass the syntax sugar pointer
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75af00>foo</span><span style=color:#111>(</span><span style=color:#f92672>&amp;</span><span style=color:#111>string</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>]);</span> <span style=color:#75715e>// pass the actual first pointer
+</span></span></span></code></pre></div><p>you won&rsquo;t know whether or not this is the address to a string or a pointer to a single character; so good practice to call it <code>something_str</code> if you&rsquo;d like a string.</p><h2 id=character-manipulation-checker>character manipulation checker</h2><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;ctype.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#75af00>main</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>isalpha</span><span style=color:#111>(</span><span style=color:#111>ch</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>islower</span><span style=color:#111>(</span><span style=color:#111>ch</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>...</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div><figure><img src=/ox-hugo/2023-10-06_11-08-28_screenshot.png></figure><h2 id=string-manipulations>string manipulations</h2><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;string.h&gt;</span><span style=color:#75715e>
+</span></span></span></code></pre></div><figure><img src=/ox-hugo/2023-10-06_11-17-37_screenshot.png></figure><h3 id=strcmp>strcmp</h3><p>When you comparing <a href=/posts/kbhstring/>string</a>s, you can&rsquo;t use == or &lt; or >. Instead:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#75715e>#include</span> <span style=color:#75715e>&lt;string.h&gt;</span><span style=color:#75715e>
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#75af00>main</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>int</span> <span style=color:#111>cmp</span> <span style=color:#f92672>=</span> <span style=color:#75af00>strcmp</span><span style=color:#111>(</span><span style=color:#111>str1</span><span style=color:#111>,</span> <span style=color:#111>str2</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>cmp</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// if str1 is equal to str2
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>cmp</span> <span style=color:#f92672>&lt;</span> <span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// if str1 comes before str2 lexographically
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// if str2 comes before str1 lexographically
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div><h3 id=strcpy>strcpy</h3><p>Copying strings, dangerously, because buffer <a href=/posts/kbhbinary_number_system/#overflow>overflow</a>s are fun.</p><figure><img src=/ox-hugo/2023-10-06_11-22-58_screenshot.png></figure><p>This function does NOT care about buffer overflows, and <strong>WILL</strong> put in a null terminator.</p><h3 id=strncopy>strncopy</h3><p>This function optimize <strong>against</strong> buffer overflow, but it may not write a null terminator.</p><figure><img src=/ox-hugo/2023-10-09_10-42-25_screenshot.png></figure><h3 id=strcat>strcat</h3><figure><img src=/ox-hugo/2023-10-09_10-45-17_screenshot.png></figure><p>strncat always puts in a null terminator.</p><h3 id=pointer-arithmetic-with-strings>pointer arithmetic with strings</h3><p>Fortunatly, each <a href=/posts/kbhchar/>char</a> is</p><h3 id=strspn>strspn</h3><figure><img src=/ox-hugo/2023-10-09_11-16-40_screenshot.png></figure><p>Count the number of characters that are &ldquo;cool&rdquo;: contained within the end</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

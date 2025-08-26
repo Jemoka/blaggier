@@ -1,0 +1,113 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>MFA Disfluency Measurement</title>
+<meta name=description content="Applying the MFA aligner upon the Pitt (cookie only) data and performing statistics upon the calculated disfluency information. The ultimate goal is to replicate Wang 2019.
+The code is available here.
+The (unvalidated, draft) results are reported below:
+Mean value reported, standard deviation in parens. For our data, \(N=422\), cases balanced.
+
+  
+      
+          Variable
+          AD (Pitt, ours)
+          MCI (Wang)
+          Control (ours)
+          Control (Wang)
+      
+  
+  
+      
+          Silence Duration
+          28.10 (21.28)
+          13.55 (5.53)
+          18.06 (12.52)
+          7.71 (5.03)
+      
+      
+          Speech Duration*
+          23.77 (14.11)
+          46.64 (5.79)
+          27.23 (15.3)
+          53.63 (7.82)
+      
+      
+          Voice-Silence Ratio
+          1.79 (4.88)
+          4.43 (2.78)
+          5.78 (31.95)
+          10.11 (6.05)
+      
+      
+          Verbal Rate
+          1.59 (0.61)
+          1.56 (0.40)
+          1.989 (0.51)
+          1.91 (0.43)
+      
+  
+
+*speech duration would obviously vary with file length"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>MFA Disfluency Measurement</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Applying the MFA aligner upon the Pitt (cookie only) data and performing statistics upon the calculated disfluency information. The ultimate goal is to replicate <a href=/posts/kbhwang_2019/>Wang 2019</a>.</p><p>The code <a href=https://github.com/Jemoka/DBA/blob/f01862efe3fe7c196ff63252d73c86f1b64f03af/analyze.py#L154-L198>is available here</a>.</p><p>The (unvalidated, draft) results are reported below:</p><p>Mean value reported, standard deviation in parens. For our data, \(N=422\), cases balanced.</p><table><thead><tr><th>Variable</th><th>AD (Pitt, ours)</th><th>MCI (Wang)</th><th>Control (ours)</th><th>Control (Wang)</th></tr></thead><tbody><tr><td>Silence Duration</td><td>28.10 (21.28)</td><td>13.55 (5.53)</td><td>18.06 (12.52)</td><td>7.71 (5.03)</td></tr><tr><td>Speech Duration*</td><td>23.77 (14.11)</td><td>46.64 (5.79)</td><td>27.23 (15.3)</td><td>53.63 (7.82)</td></tr><tr><td>Voice-Silence Ratio</td><td>1.79 (4.88)</td><td>4.43 (2.78)</td><td>5.78 (31.95)</td><td>10.11 (6.05)</td></tr><tr><td>Verbal Rate</td><td>1.59 (0.61)</td><td>1.56 (0.40)</td><td>1.989 (0.51)</td><td>1.91 (0.43)</td></tr></tbody></table><p>*speech duration would obviously vary with file length</p><p>Further statistical quantification also tells us some more things. Although the data does not make a good classifier, I performed two tests: a <a href=/posts/kbhkolmogorov_smirnov_test/>Kolmogorov-Smirnov test</a> for goodness of fit, and a good &lsquo;ol Pearson&rsquo;s correlation with AD/control target. p-values are reported below.</p><h2 id=ks-test--kbhkolmogorov-smirnov-test-dot-md><a href=/posts/kbhkolmogorov_smirnov_test/>KS test</a></h2><ul><li>silence duration: \(1.31 \times 10^{-5}\)</li><li>speech duration: \(2.98 \times 10^{-3}\)</li><li>voice-silence ratio: \(2.01 \times 10^{-7}\)</li><li>verbal rate: \(4.32 \times 10^{-10}\)</li></ul><h2 id=pearson-s>Pearson&rsquo;s</h2><ul><li>silence duration: \(4.15 \times 10^{-8}\)</li><li>speech duration: \(0.164\)</li><li>voice-silence ratio: \(0.732\)</li><li>verbal rate: \(1.22 \times 10^{-12}\)</li></ul><p>As per the values reported in <a href=/posts/kbhwang_2019/>Wang 2019</a>, we can see that&mdash;apart from audio metadata&mdash;verbal rate is a strongly correlated indicator against MCI/AD. We can reasonably say that <a href=/posts/kbhwang_2019/>Wang 2019&rsquo;s</a> data collection can be automated with reasonable success using <a href=/posts/kbhbatchalign/>batchalign</a> + MFA.</p><h2 id=broken-ml>Broken ML</h2><p>I applied an RBF Support-Vector machine to classify AD/control based only on the two most highly correlated variables: verbal rate and silence duration. The results were disappointing.</p><p>On test data, N=42, balanced labels:</p><ul><li>SVC: \(61.9\%\)</li><li>Random forest: also \(61.9\%\)</li></ul><p>We have fairly disappointing results. Here&rsquo;s my hypothesis of why:</p><figure><img src=/ox-hugo/2022-07-12_15-50-37_screenshot.png></figure><p>if you take a look at this figure, we can see two main distributions</p><figure><img src=/ox-hugo/2022-07-12_15-52-29_screenshot.png></figure><p>So, if we, like <a href=/posts/kbhwang_2019/>Wang 2019</a>, used statistics on independence (they used <a href=/posts/kbhchi_square/>chi-square</a>, I used <a href=/posts/kbhkolmogorov_smirnov_test/>KS test</a>), we <em>will</em> come up that the distributions are different.</p><p>However, if you take a look at a randomly sampled set of validation data (crosses on the figure), you can see that a lot of them lands in the &ldquo;mostly control&rdquo; area: making the classifier not super useful.</p><p>We can therefore catch a lot of the &ldquo;slow talking, long pausing&rdquo; patients, but most speaking fluently will possibly need semantic information for prediction.</p><p>I have some preliminary results on Pitt+ERNIE (a kind of BERT) that indicate that a key semantic factor is &ldquo;on-topicness.&rdquo; However, Pitt does not contain a lot of off-topic control data (say, the fluency task, which it has for dementia) for me to validate those claims easily. I will continue work on that front.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

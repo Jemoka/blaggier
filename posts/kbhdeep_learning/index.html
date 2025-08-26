@@ -1,0 +1,95 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>deep learning</title>
+<meta name=description content="deep learning is MLE performed with neural networks. A neural network is many logistic regression pieces (sic.?) stack on top of each other.
+
+We begin motivating this with trying to solve MNIST with logistic regression. What a time to be alive. After each layer of deep learning, we are going to use a layer of &ldquo;hidden variable&rdquo;, made of singular logistic regressions,
+
+Notation:
+\(x\) is the input, \(h\) is the hidden layers, and \(\hat{y}\) is the prediction."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>deep learning</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhdeep_learning/>deep learning</a> is <a href=/posts/kbhmaximum_likelihood_parameter_learning/>MLE</a> performed with neural networks. A <a href=/posts/kbhdeep_learning/>neural network</a> is many <a href=/posts/kbhlogistic_regression/>logistic regression</a> pieces (sic.?) stack on top of each other.</p><hr><p>We begin motivating this with trying to solve MNIST with <a href=/posts/kbhlogistic_regression/>logistic regression</a>. What a time to be alive. After each layer of <a href=/posts/kbhdeep_learning/>deep learning</a>, we are going to use a layer of &ldquo;<a href=/posts/kbhinference/>hidden variable</a>&rdquo;, made of singular <a href=/posts/kbhlogistic_regression/>logistic regression</a>s,</p><hr><p>Notation:</p><p>\(x\) is the input, \(h\) is the hidden layers, and \(\hat{y}\) is the prediction.</p><p>We call each weight, at each layer, from \(x_{i}\) to \(h_{j}\), \(\theta_{i,j}^{(h)}\). At every neuron on each layer, we calculate:</p><p>\begin{equation}
+h_{j} = \sigma\qty[\sum_{i}^{} x_{i} \theta_{i,j}^{(h)}]
+\end{equation}</p><p>\begin{equation}
+\hat{y} = \sigma\qty[\sum_{i}^{} h_{i}\theta_{i}^{(y)}]
+\end{equation}</p><p>note! we often</p><h2 id=backpropegation>backpropegation</h2><p><a href=#backpropegation>backpropegation</a> is a special case of &ldquo;backwards differentiation&rdquo; to update a computation grap.h</p><h3 id=toy>Toy</h3><p>Consider:</p><p>\begin{equation}
+L(a,b,c) = c(a+2b)
+\end{equation}</p><p>meaning, we obtain a graph that looks like:</p><figure><img src=/ox-hugo/2024-02-13_23-46-34_screenshot.png></figure><p>in three steps, we have:</p><ul><li>\(d = 2b\)</li><li>\(e = a+d\)</li><li>\(L = e\cdot e\)</li></ul><p>To perform backpropagation, we compute derivatives from right to left, computing first \(\pdv{L}{L}= 1\), then, moving slowly towards the left to obtain \(\pdv{L}{c} = \pdv{L}{L}\pdv{L}{c}\), and then \(\pdv{L}{e} = \pdv{L}{L}\pdv{L}{c}\) , and then \(\pdv{L}{d} = \pdv{L}{L}\pdv{L}{e}\pdv{e}{d}\) and so forth.</p><h3 id=motivation>Motivation</h3><ul><li>deep learning is useful by having good \(\theta\)</li><li>we can find useful thetas by <a href=/posts/kbhmaximum_likelihood_parameter_learning/>MLE</a></li><li>we <a href=/posts/kbhmaximum_likelihood_parameter_learning/>MLE</a> by doing optimization to maximize the <a href=/posts/kbhlikelyhood/>likelyhood</a></li></ul><h3 id=example>Example</h3><p>For one data point, let us define our neural network:</p><p>\begin{equation}
+h_{j} = \sigma\qty[\sum_{i}^{} x_{i} \theta_{i,j}^{(h)}]
+\end{equation}</p><p>\begin{equation}
+\hat{y} = \sigma\qty[\sum_{i}^{} h_{i}\theta_{i}^{(y)}]
+\end{equation}</p><p>we can define our network:</p><p>\begin{equation}
+L(\theta) = P(Y=y|X=x) = (\hat{y})^{y} (1-\hat{y})^{1-y}
+\end{equation}</p><p>from IID datasets, we can multiply the probablities together:</p><p>\begin{equation}
+L(\theta) = \prod_{i=1}^{n} (\hat{y_{i}})^{y_{i}} (1-\hat{y_{i}})^{1-y_{i}}
+\end{equation}</p><p>and, to prevent calculus and derivative instability, we take the log:</p><p>\begin{equation}
+LL(\theta) = \sum_{i=1}^{n}{y_{i}}\log (\hat{y_{i}}) \cdot ( 1-y_{i} )\log (1-\hat{y_{i}})
+\end{equation}</p><p>We want to maximise this, meaning we perform <a href=/posts/kbhargmax/#gradient-ascent>gradient ascent</a> on this statement. Recall the chain rule; so we can break each layer down:</p><p>\begin{equation}
+\pdv{LL(\theta)}{\theta_{ij}^{h}} = \pdv{LL(\theta)}{\hat{y}} \pdv{\hat{y}}{h_{j}} \pdv{h_{j}}{\theta_{ij}^{h}}
+\end{equation}</p><p>furthermore, for any summation,</p><p>\begin{equation}
+\dv x \sum_{i=0}^{} x = \sum_{i=0}^{}\dv x x
+\end{equation}</p><p>So we can consider our derivatives with respect to each data point. When going about the second part, recall an important trick:</p><p>\begin{equation}
+\pdv{h_{i}} \qty[\sum_{i}^{} h_{i}\theta_{i}^{(y)}]
+\end{equation}</p><p>you will note that, for the inside derivative, much the summation expands</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

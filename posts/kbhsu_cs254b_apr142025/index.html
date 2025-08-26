@@ -1,0 +1,99 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS254B APR142025</title>
+<meta name=description content="Some motivations
+
+time and space are usually considered as independent resources
+but now&mldr; consider them as joint (dependent) resources!
+
+question!: what are simultaneous time and space efficient systems? Our interest: time space trade-offs.
+Time-Space Tradeoffs
+Consider the case that a single TM does something time and space efficiently.
+
+\begin{equation}
+\text{TISP}\qty(t\qty(n), s \qty(n)) = \qty {L: \exists \text{TM that decides $L$ in time $O(t(n))$, and space $O\qty(s \qty(n))$}}
+\end{equation}
+
+Some theorems
+
+No algorithm that solves SAT in \(O\qty(n)\) time and \(O\qty(\log n)\) space simultaneously. That is, \(\text{SAT} \not \in \text{TISP}\qty(n, \log n)\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS254B APR142025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=some-motivations>Some motivations</h2><ul><li>time and space are usually considered as independent resources</li><li>but now&mldr; consider them as joint (dependent) resources!</li></ul><p><strong>question!</strong>: what are simultaneous time <em>and</em> space efficient systems? Our interest: time space trade-offs.</p><h2 id=time-space-tradeoffs>Time-Space Tradeoffs</h2><p>Consider the case that a single TM does something time and space efficiently.</p><div class=definition><span><p>\begin{equation}
+\text{TISP}\qty(t\qty(n), s \qty(n)) = \qty {L: \exists \text{TM that decides $L$ in time $O(t(n))$, and space $O\qty(s \qty(n))$}}
+\end{equation}</p><p></span></div></p><h3 id=some-theorems>Some theorems</h3><div class=theorem><span><p>No algorithm that solves SAT in \(O\qty(n)\) time and \(O\qty(\log n)\) space simultaneously. That is, \(\text{SAT} \not \in \text{TISP}\qty(n, \log n)\).</p><p></span></div></p><p>We have three competingly high lower bound:</p><div class=theorem><span><p>\begin{align}
+\text{SAT} \not \in \text{TISP} \qty(n^{\sqrt{2}}, n^{o\qty(1)})
+\end{align}</p><p></span></div></p><p>where \(n^{o\qty(1)} \approx n^{0.00000001}\). This is followed up by:</p><div class=theorem><span><p>\begin{equation}
+\text{SAT}\not \in \text{TISP}\qty(n^{\phi = 1.618}, n^{o\qty(1)})
+\end{equation}</p><p></span></div></p><p>finally, using computed aided search, we have:</p><div class=theorem><span><p>\begin{equation}
+\text{SAT}\not \in \text{TISP}\qty(n^{2 \cos \qty(\frac{\pi}{7})}, n^{o\qty(1)})
+\end{equation}</p><p></span></div></p><p>In fact, this is optimal. We have a barrier result!</p><div class=theorem><span><p>\(n^{1.8}\) is optimal among all possible compos of the &ldquo;ingredients&rdquo; (TODO define later) we will see.</p><p></span></div></p><h3 id=sat-is-complete-for-n-poly-log-n>SAT is complete for n poly log n</h3><p>Rather than SAT, we will prove an equivalent statement about:</p><p>\begin{equation}
+\text{NTIME}\qty(n \text{poly} \log n) \not \subseteq \text{TIMP}\qty(n^{c}, n^{o\qty(1)})
+\end{equation}</p><p>This is because:</p><div class=lemma><span><p>\(\text{SAT}\) is complete for \(\text{NTIME}\qty( n \text{poly} \log n)\)</p><p></span></div></p><p>The proof for this is essentially just a souped up version of <a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a>. To prove this, we need <a href=/posts/kbhcook_levin_theorem/#quasi-linear-cook-levin>Quasi-Linear Cook-Levin</a>. In fact, we will even prove a harder thing:</p><div class=lemma><span><p>\begin{equation}
+\text{NTIME}\qty(n) \not \in \text{TISP}\qty(n^{c}, n^{o\qty(1)})
+\end{equation}</p><p></span></div></p><p>Let&rsquo;s get started</p><h4 id=proof>Proof</h4><p>We need two ingredients we will need.</p><ul><li><p>Time hierarchy theorems for \(\Sigma_{k}\) and \(\pi_{k}\)</p><p>This is the same proof as the regular <a href=/posts/kbhtime_complexity/#time-hierarchy-theorem>time hierarchy theorem</a>.</p><div class=theorem><span><p>\begin{equation}
+\text{TIME}\qty(o\qty(t\qty(n))) \not \subseteq \Sigma_{k} \text{TIME}\qty(t\qty(n))
+\end{equation}</p><p></span></div></p><p>ditto for \(\pi_{k}\). We are going to assume this for now.</p></li></ul><ul><li><p>TISP speed-ups by adding quantifiers</p><div class=theorem><span><p>\begin{equation}
+\text{TISP}\qty(t,s) \subseteq \Sigma_{2} \text{TIME}\qty(\sqrt{t} \sqrt{s}) \text{ if } s \geq \log n
+\end{equation}</p><p></span></div></p><div class=proof><span><p>Let \(L \in \text{TISP}\qty(t\qty(n), \sqrt{n})\), and \(M\) be corresponding \(TM\).</p><p>The configuration of \(M\) on input \(x\) at time \(l\) will give you everything you need; this tableau includes&mldr;.</p><ul><li>\(O\qty(s)\) worktape contents</li><li>\(O\qty(\log s)\) worktape heads</li><li>\(O\qty(\log n)\) input tape head</li><li>\(O\qty(1)\) state</li></ul><p>in total this is going to be \(O\qty(s)\).</p><p>Shown: \(L \in \Sigma_{2} \text{TIME}\qty( \frac{t}{r} s + \log \qty(\frac{t}{r}) tr)\). In particular the thing in the parentheses gives \(O\qty( \frac{t}{r} s + r )\).</p><p></span></div></p></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,123 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Build a System, Not a Monolith</title>
+<meta name=description content="&ldquo;How do we build well developed AI systems without a bangin&rsquo; company&rdquo;
+Two main paradigms
+
+transfer learning: (pretrain a model, and) faster convergence, better performance
+*monolithic models: (pretrain a model, and) just use the pretrained model
+
+Problems with monolythic models
+
+Continual development of large language models mostly don&rsquo;t exist: no incremental updates
+To get better improvements, we throw out the old monolythic model
+Most of the research community can&rsquo;t participate in their development
+
+New Alternative Paradigm
+
+A very simple routing layer
+A very large collection of specialist models all from a base model
+Collaborative model development means that a large amount of contributors can band together to contribute to the development of the models
+
+Why
+
+Specialist models are cheaper and better to train
+
+few shot parameter efficient fine tuning is better liu et al
+few shot fine-tuning is better than few-shot in-context learning
+
+
+Specialist models can be communicable, incremental updates to a base model
+
+think: PEFT
+each of the specialist models can only need to update a small percent of the weights
+think &ldquo;adapters&rdquo;: parameter efficient updates
+
+
+
+Routing
+
+task2vec: task embedding for meta learning Achille et al
+efficiently tuned parameters are task embeddings Zhou et al
+
+distinction between MoE
+
+instead of routing in sub-layer level routing, we are routing at the input level
+we look at the
+
+Novel Tasks (Model Merging)
+Tasks can be considered as a composition of skills."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Build a System, Not a Monolith</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>&ldquo;How do we build well developed AI systems without a bangin&rsquo; company&rdquo;</p><h2 id=two-main-paradigms>Two main paradigms</h2><ul><li><strong>transfer learning</strong>: (pretrain a model, and) faster convergence, better performance</li><li><strong>*monolithic models</strong>: (pretrain a model, and) just use the pretrained model</li></ul><h2 id=problems-with-monolythic-models>Problems with monolythic models</h2><ul><li>Continual development of large language models mostly don&rsquo;t exist: no incremental updates</li><li>To get better improvements, we throw out the old monolythic model</li><li>Most of the research community can&rsquo;t participate in their development</li></ul><h2 id=new-alternative-paradigm>New Alternative Paradigm</h2><ul><li>A very simple routing layer</li><li>A very large collection of specialist models all from a base model</li><li>Collaborative model development means that a large amount of contributors can band together to contribute to the development of the models</li></ul><h3 id=why>Why</h3><ul><li>Specialist models are cheaper and better to train<ul><li>few shot parameter efficient fine tuning is better liu et al</li><li><strong>few shot fine-tuning is better than few-shot in-context learning</strong></li></ul></li><li>Specialist models can be communicable, incremental updates to a base model<ul><li>think: <a href=/posts/kbhpeft/>PEFT</a></li><li>each of the specialist models can only need to update a small percent of the weights</li><li>think &ldquo;adapters&rdquo;: parameter efficient updates</li></ul></li></ul><h3 id=routing>Routing</h3><ul><li>task2vec: task embedding for meta learning Achille et al</li><li>efficiently tuned parameters are task embeddings Zhou et al</li></ul><h4 id=distinction-between-moe>distinction between MoE</h4><ul><li>instead of routing in sub-layer level routing, we are routing at the <strong>input level</strong></li><li>we look at the</li></ul><h3 id=novel-tasks--model-merging>Novel Tasks (Model Merging)</h3><p>Tasks can be considered as a composition of skills.</p><ol><li>each task can be encoded as a composition of skills</li><li>we can merge the skills of sub-models</li></ol><h4 id=usual-updates>Usual updates</h4><ol><li>we take a pretrained model</li><li>we adapt it to some target task</li></ol><h4 id=model-merging>Model Merging</h4><ul><li><p>Fisher-weight averaging</p><p><strong>&ldquo;Merging models with fisher-weight averaging&rdquo;, Matena et al</strong>
+Merging can be shown as an optimization problem:</p><p>\begin{equation}
+argmax_{\theta} \sum_{i-1}^{M} \lambda_{i} \log p(\theta \mid \mathcal{D}_{i})
+\end{equation}</p><p>&ldquo;a merged model is the set of parameters which would maximize the log-posterior of each model \(\mathcal{D}_{i}\), controlled by \(\lambda_{i}\)&rdquo;</p></li></ul><ul><li><p>Task arthmetic</p><p><strong>&ldquo;Editing models with Task Arthmetic&rdquo;, llharco et al</strong>
+<strong>&ldquo;Resolving inference when merging models&rdquo; by Yadev et al</strong></p><p>You can create multi-task models by just doing maff:</p><p>\begin{equation}
+\tau_{1} = \theta_{finetune_{1}} - \theta_{pretrain}
+\end{equation}</p><p>\begin{equation}
+\tau_{2} = \theta_{finetune_{2}} - \theta_{pretrain}
+\end{equation}</p><p>\begin{equation}
+\theta_{finetune_{1+2}} = (\tau_{1} + \tau_{2}) + \theta_{pretrain}
+\end{equation}</p><p>this apparently works ok.</p></li></ul><ul><li><p>Soft MoE</p><p><strong><strong>Soft merging of experts with adaptive routing, Muqeeth et al</strong></strong></p><p>MoE, but instead of choosing an expert to activate, the router&rsquo;s probability densities will result in a mixture of the experts&rsquo; weights. So, mulitple experts can be invoked in a linear way.</p></li></ul><h2 id=git-theta>Git-Theta</h2><p><strong>Git-Theta: A Git Extension for Collaborative Development of Machine Learning Models, Kandpal et al</strong></p><p>Communal and iterative development of model checkpoints. Saves only LoRA&rsquo;d parameters, and removes any weights that didn&rsquo;t change between diffs.</p><h2 id=petals>Petals</h2><p><strong>Petals: Collaborative Inference and Fine-Tuning of Large Models, Borzunov et al.</strong></p><p>Distributed fine-tuning and model inference by using different sub-worker nodes to run different layers of the model.</p><p><a href=https://health.petals.dev/>https://health.petals.dev/</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

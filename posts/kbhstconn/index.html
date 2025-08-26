@@ -1,0 +1,84 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>STCONN</title>
+<meta name=description content="\begin{equation}
+\text{STCONN} = \qty {\langle G, S, t \rangle : \text{$\exists^{?}$ a path from s $\to$ t $\in$ G}}
+\end{equation}
+we solve this with BFS or DFS; but those algorithms&rsquo; working sets require linear space. Turns out, we can solve this algorithm \(\text{STCONN} \in \text{SPACE}\qty(\log^{2}\qty(n))\)
+
+for directed \(G\), we are not sure if its in L.
+for undirected \(G\), Omer showed that its in L
+
+open problem: Savitch&rsquo;s Algorithm is really really slow; we are not sure if there is an algorithm in which we can solve it in better time."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>STCONN</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>\begin{equation}
+\text{STCONN} = \qty {\langle G, S, t \rangle : \text{$\exists^{?}$ a path from s $\to$ t $\in$ G}}
+\end{equation}</p><p>we solve this with BFS or DFS; but those algorithms&rsquo; working sets require linear space. Turns out, we can solve this algorithm \(\text{STCONN} \in \text{SPACE}\qty(\log^{2}\qty(n))\)</p><ul><li>for <strong>directed</strong> \(G\), we are not sure if its in <a href=/posts/kbhspace_class_l/>L</a>.</li><li>for <strong>undirected</strong> \(G\), Omer showed that its in <a href=/posts/kbhspace_class_l/>L</a></li></ul><p><strong>open problem</strong>: <a href=#savitch-s-algorithm>Savitch&rsquo;s Algorithm</a> is really really slow; we are not sure if there is an algorithm in which we can solve it in better time.</p><h2 id=savitch-s-algorithm>Savitch&rsquo;s Algorithm</h2><p><a href=#savitch-s-algorithm>Savitch&rsquo;s Algorithm</a> is a <a href=#savitch-s-algorithm>middle-first search</a> scheme for solving <a href=/posts/kbhstconn/>STCONN</a>.</p><p><strong>key observation</strong>: if there is a path form \(s \to t\) of length \(n\), then there must be a point \(w\) such that \(s\to w\) in \(\frac{n}{2}\) steps and \(w \to t\) in \(\frac{n}{2}\) steps.</p><p>Goal: brute force search for this \(w\). There is \(n\) possibilities for \(w\), we shall just try all of them! This engenders a more general problem named <a href=#path>PATH</a>: \(\text{STCONN}\qty(s,t) = \text{PATH}\qty(s,t,\ceil{\log n})\)</p><h3 id=path>PATH</h3><p>\begin{equation}
+\text{PATH}\qty(x,y,k): \text{does there exist path of length $\leq 2^{k}$ from $x$ to $y$}
+\end{equation}</p><p>solution:</p><ul><li>if \(k = 0\), then return TRUE IFF \(\qty(x,y) \in E \vee x = y\) (that \(x\) and \(y\) are adjacent or identical)</li><li>else for each \(w \in V\)<ul><li>if \(\text{PATH}\qty(x,w,k-1) \wedge \text{PATH}\qty(w,y,k-1)\), return TRUE</li></ul></li><li>return FALSE</li></ul><p>space of this:</p><p>\begin{equation}
+S\qty(k) = O\qty(\log n) + S\qty(k-1)
+\end{equation}</p><p>because for every \(w\), we need to track \(\log n\) possible \(w\), and then also need to recurse down to keep track the two \(\text{PATH}\) calls; in particular, we recuse the two recurse PATH calls to prevent exponential growth. This gives \(S(t) = O\qty(k \log n)\), so for \(k = \log n\), we have \(S \qty(\log n) = O \qty(\log^{2} n)\)</p><p>time of this:</p><p>\begin{equation}
+T(k) = n 2 T(k-1) = \qty(2n)^{k} = n^{O(k)}
+\end{equation}</p><p>so for \(k = \log n\) (n nodes), then \(T \qty(\log n) = n^{O \qty(\log n)}\)</p><p>because we can&rsquo;t recuse time, so the 2 times factor exsits.</p><h3 id=stconn-is-in-nl--kbhnon-deterministic-space-dot-md><a href=/posts/kbhnon_deterministic_space/#stconn-is-in-nl>STCONN is in NL</a></h3><p>see <a href=/posts/kbhnon_deterministic_space/#stconn-is-in-nl>STCONN is in NL</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

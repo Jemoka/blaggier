@@ -1,0 +1,122 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>probability distribution</title>
+<meta name=description content="probability distributions &ldquo;assigns probability to outcomes&rdquo;
+\(X\) follows distribution \(D\). \(X\) is a &ldquo;\(D\) random variable&rdquo;, where \(D\) is some distribution (normal, gaussian, etc.)
+syntax: \(X \sim D\).
+Each distribution has three properties:
+
+variables (what is being modeled)
+values (what values can they take on)
+parameters (how many degrees of freedom do we have)
+
+Types of Distribution
+discrete distribution
+
+described by PMF
+
+continuous distribution
+
+described by PDF
+
+parametrized distribution
+We often represent probability distribution using a set of parameters \(\theta_{j}\).  For instance, a normal distribution is given by \(\mu\) and \(\sigma\), and a PMF is by the probability mass for each."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>probability distribution</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhprobability_distributions/>probability distributions</a> &ldquo;assigns probability to outcomes&rdquo;</p><p>\(X\) follows distribution \(D\). \(X\) is a &ldquo;\(D\) random variable&rdquo;, where \(D\) is some distribution (<a href=/posts/kbhaxler_7_a/#normal>normal</a>, gaussian, etc.)</p><p>syntax: \(X \sim D\).</p><p>Each distribution has three properties:</p><ul><li>variables (what is being modeled)</li><li>values (what values can they take on)</li><li>parameters (how many degrees of freedom do we have)</li></ul><h2 id=types-of-distribution>Types of Distribution</h2><h3 id=discrete-distribution--kbhdiscrete-distribution-dot-md><a href=/posts/kbhdiscrete_distribution/>discrete distribution</a></h3><ul><li>described by <a href=/posts/kbhprobability_mass_function/>PMF</a></li></ul><h3 id=continuous-distribution--kbhcontinuous-distribution-dot-md><a href=/posts/kbhcontinuous_distribution/>continuous distribution</a></h3><ul><li>described by <a href=/posts/kbhprobability_density_function/>PDF</a></li></ul><h2 id=parametrized-distribution>parametrized distribution</h2><p>We often represent probability distribution using a set of <a href=/posts/kbhparameter/>parameter</a>s \(\theta_{j}\). For instance, a <a href=/posts/kbhnormal_distribution/>normal distribution</a> is given by \(\mu\) and \(\sigma\), and a <a href=/posts/kbhprobability_mass_function/>PMF</a> is by the probability mass for each.</p><h2 id=methods-of-compressing-the-parameters-of-a-distribution>Methods of Compressing the Parameters of a Distribution</h2><p>So, for instance, for a binary distribution with \(n\) variables which we know nothing about, we have:</p><p>\begin{equation}
+2^{n} - 1
+\end{equation}</p><p>parameters (\(2^{n}\) different possibilities of combinations, and \(1\) non-free variables to ensure that the distribution add up)</p><h3 id=assuming-independence>assuming independence</h3><p>HOWEVER, if the variables were <a href=/posts/kbhprobability/#independence>independent</a>, this becomes much easier. Because the variables are independent, we can claim that:</p><p>\begin{equation}
+p(x_{1\dots n}) = \prod_{i}^{} p(x_{i))
+\end{equation}</p><h3 id=decision-tree>decision tree</h3><p>For instance, you can have a decision tree which you selectively ignore some combinations.</p><figure><img src=/ox-hugo/2023-09-28_10-13-07_screenshot.png></figure><p>In this case, we ignored \(z\) if both \(x\) and \(y\) are \(0\).</p><h3 id=baysian-networks>Baysian networks</h3><p>see <a href=/posts/kbhbaysian_network/>Baysian Network</a></p><h2 id=types-of-probability-distributions>types of probability distributions</h2><ul><li><a href=/posts/kbhdiscrete_distribution/>discrete distribution</a></li><li><a href=/posts/kbhcontinuous_distribution/>continuous distribution</a></li><li><a href=/posts/kbhjoint_probability_distribution/>joint probability distribution</a></li></ul><h2 id=distribution-of-note>distribution of note</h2><ul><li><a href=#uniform-distribution>uniform distribution</a></li><li>gaussian distributions<ul><li><a href=/posts/kbhgaussian_distribution/>Gaussian distribution</a></li><li><a href=#truncated-gaussian-distribution>Truncated Gaussian distribution</a></li><li></li></ul></li></ul><h3 id=uniform-distribution>uniform distribution</h3><p>\begin{equation}
+X \sim Uni(\alpha, \beta)
+\end{equation}</p><p>\begin{equation}
+f(x) = \begin{cases}
+\frac{1}{\beta -\alpha }, 0\leq x \leq 10 \\0
+\end{cases}
+\end{equation}</p><p>\begin{equation}
+E[x] = \frac{1}{2}(\alpha +\beta)
+\end{equation}</p><p>\begin{equation}
+Var(X) = \frac{1}{12}(\beta -\alpha )^{2}
+\end{equation}</p><h3 id=gaussian-things>Gaussian Things</h3><h4 id=truncated-gaussian-distribution>Truncated Gaussian distribution</h4><p>Sometimes, we don&rsquo;t want to use a <a href=/posts/kbhgaussian_distribution/>Gaussian distribution</a> for values above or below a threshold (say if they are physically impossible). In those cases, we have some:</p><p>\begin{equation}
+X \sim N(\mu, \sigma^{2}, a, b)
+\end{equation}</p><p>bounded within the interval of \((a,b)\). The <a href=/posts/kbhprobability_density_function/>PDF</a> of this function is given by:</p><p>\begin{equation}
+N(\mu, \sigma^{2}, a, b) = \frac{\frac{1}{\sigma} \phi \qty(\frac{x-\mu }{\sigma })}{\Phi \qty(\frac{b-\mu }{\sigma }) - \Phi \qty(\frac{a-\mu}{\sigma})}
+\end{equation}</p><p>where:</p><p>\begin{equation}
+\Phi = \int_{-\infty}^{x} \phi (x&rsquo;) \dd{x&rsquo;}
+\end{equation}</p><p>and where \(\phi\) is the <a href=/posts/kbhgaussian_distribution/#standard-normal-density-function>standard normal density function</a>.</p><h2 id=three-ways-of-analysis>three ways of analysis</h2><h3 id=cumulative-distribution-function>cumulative distribution function</h3><p>What is the probability that a <a href=/posts/kbhrandom_variables/>random variable</a> takes on value less tha</p><p>\begin{equation}
+cdf_{x}(x) = P(X&lt;x) = \int_{-\infty}^{x} p(x&rsquo;) dx'
+\end{equation}</p><p>sometimes written as:</p><p>\begin{equation}
+F(x) = P(X &lt; x)
+\end{equation}</p><p>Recall that, with</p><h3 id=quantile-function>quantile function</h3><p>\begin{equation}
+\text{quantile}_{X}(\alpha)
+\end{equation}</p><p>is the value \(x\) such that:</p><p>\begin{equation}
+P(X \leq x) = \alpha
+\end{equation}</p><p>That is, the <a href=#quantile-function>quantile function</a> returns the minimum value of \(x\) at which point a certain <a href=#cumulative-distribution-function>cumulative distribution</a> value desired is achieved.</p><h3 id=adding-uniform-distribution--org6d62aae>adding <a href=#uniform-distribution>uniform distribution</a></h3><p>for \(1 &lt; a &lt; 2\)</p><p>\begin{equation}
+f(X+Y = a) =
+\begin{cases}
+a, 0 &lt; a &lt; 1, \\
+2-a, 1 &lt; a &lt; 2, \\
+0, otherwise
+\end{cases}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

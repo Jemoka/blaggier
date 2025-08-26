@@ -1,0 +1,122 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-MATh53 JAN262023</title>
+<meta name=description content="Underdetermined ODEs
+
+Complex ODE System
+Matrix Exponentiation
+
+Finding eigenvectors
+\(A = n \times n\) matrix, the task of finding eigenvalues and eigenvectors is a linear algebra problem:
+\begin{equation}
+A v = \lambda v
+\end{equation}
+Finding specific solutions to IVPs with special substitution
+For some:
+\begin{equation}
+\begin{cases}
+x&rsquo;  = Ax \\
+x(t_0) = x_0
+\end{cases}
+\end{equation}
+we can leverage the first task:
+
+find \(v\), \(\lambda\) for \(A\)
+guess \(x = u(t)v\), this is &ldquo;magical substitution&rdquo;
+and now, we can see that \(x&rsquo; = u&rsquo;v = A(uv) = \lambda u v\)
+meaning \(u&rsquo; = \lambda u\)
+finaly, \(u(t) = ce^{\lambda} t\)
+
+Eigenbasis case
+Suppose \(A\) has a basis of eigenvectors, and real eigenvalues. We can write its entire solution set in terms of these basis eigenvectors:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-MATh53 JAN262023</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=underdetermined-odes>Underdetermined ODEs</h2><ul><li><a href=/posts/kbhunderdetermined_ode_system/>Complex ODE System</a></li><li><a href=/posts/kbhmatrix_exponentiation/>Matrix Exponentiation</a></li></ul><h3 id=finding-eigenvector--kbheigenvalue-dot-md--s>Finding <a href=/posts/kbheigenvalue/>eigenvector</a>s</h3><p>\(A = n \times n\) matrix, the task of finding eigenvalues and eigenvectors is a linear algebra problem:</p><p>\begin{equation}
+A v = \lambda v
+\end{equation}</p><h3 id=finding-specific-solutions-to-ivp--kbhinitial-value-problems-dot-md--s-with-special-substitution>Finding specific solutions to <a href=/posts/kbhinitial_value_problems/>IVP</a>s with special substitution</h3><p>For some:</p><p>\begin{equation}
+\begin{cases}
+x&rsquo; = Ax \\
+x(t_0) = x_0
+\end{cases}
+\end{equation}</p><p>we can leverage the first task:</p><ol><li>find \(v\), \(\lambda\) for \(A\)</li><li>guess \(x = u(t)v\), this is &ldquo;magical substitution&rdquo;</li><li>and now, we can see that \(x&rsquo; = u&rsquo;v = A(uv) = \lambda u v\)</li><li>meaning \(u&rsquo; = \lambda u\)</li><li>finaly, \(u(t) = ce^{\lambda} t\)</li></ol><h3 id=eigenbasis-case>Eigenbasis case</h3><p>Suppose \(A\) has a basis of <a href=/posts/kbheigenvalue/>eigenvector</a>s, and <strong>real</strong> eigenvalues. We can write its entire solution set in terms of these basis eigenvectors:</p><p>\begin{equation}
+x(t) = u_1(t) v_1 + \dots + u_{n}(t) v_{n}
+\end{equation}</p><p>this means:</p><p>\begin{equation}
+x&rsquo;(t) = Ax = u_1&rsquo; v_1 + \dots +u_{n} &rsquo; v_{n} = \lambda_{1} u_{1} v_1 + \dots + \lambda_{n} u_{n} v_{n}
+\end{equation}</p><p>Because \(v\) forms a basis, each \(u_j&rsquo; = \lambda_{j} u_{j}\).</p><p>We thereby decomposed our entangled expression seperably by changing into eigenbasis.</p><p>After solving each \(u\), we obtain:</p><p>\begin{equation}
+x(t) = c_1 e^{\lambda_{1}} v_1 + \dots + c_{n} e^{\lambda_{n}} v_{n}
+\end{equation}</p><p>We can identify \(c_{j}\) by noting, that \(x(0)\) resolves to:</p><p>\begin{equation}
+x(0) = c_1v_1 + \dots + c_{n}v_{n}
+\end{equation}</p><p>Finally, we can write this as:</p><p>\begin{equation}
+x(0) = x_0 = \mqty[v_1 & \dots & v_{n}] c
+\end{equation}</p><p>Meaning, we can solve for initial conditions as:</p><p>\begin{equation}
+\mqty[v_1 & \dots & v_{n}]^{-1} x_0 = c
+\end{equation}</p><h2 id=practice-solving>Practice Solving</h2><p>Let:</p><p>\begin{equation}
+A = \mqty(0 & 1 & 1 \\ 1 & 0 & 1 \\ 1 & 1 & 0)
+\end{equation}</p><p>We have two eigenspaces:</p><p>\begin{equation}
+\lambda = -1, v = \left\{\mqty(-1 \\ 1 \\ 0), \mqty(0 \\ 1 \\ -1)\right\}
+\end{equation}</p><p>and</p><p>\begin{equation}
+\lambda = 2, v = \left\{\mqty(1 \\ 1 \\ 1)\right\}
+\end{equation}</p><p>This gives rise to a basis of eigenvectors with all three vectors. We obtain:</p><p>\begin{equation}
+x(t) = c_1 e^{-t} \mqty(-1 \\ 1\\0) + c_2 \mqty(0 \\ 1 \\ -1) e^{-t} + c_3 \mqty(1 \\ 1 \\ 1) e^{2t}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

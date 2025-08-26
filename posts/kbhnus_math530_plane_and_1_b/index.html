@@ -1,0 +1,136 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-MATH530 Plane and 1.B</title>
+<meta name=description content="Equation of a Plane
+We want to determine all points on the plane formed by two vectors.
+Let&rsquo;s take two vectors \(\vec{u} \in V\) and \(\vec{v} \in V\). The orthogonal vector to the both of them (i.e. the normal direction of the plane) is:
+\begin{equation}
+\vec{u}\times \vec{v}
+\end{equation}
+by the definition of the cross product.
+The points on the plane, therefore, have to be orthogonal themselves to this normal vector. This means that the dot product of the candidate vector against these vectors should be \(0\):"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-MATH530 Plane and 1.B</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=equation-of-a-plane>Equation of a Plane</h2><p>We want to determine all <a href=/posts/kbhvector/>point</a>s on the plane formed by two vectors.</p><p>Let&rsquo;s take two vectors \(\vec{u} \in V\) and \(\vec{v} \in V\). The orthogonal vector to the both of them (i.e. the normal direction of the plane) is:</p><p>\begin{equation}
+\vec{u}\times \vec{v}
+\end{equation}</p><p>by the definition of the <a href=/posts/kbhcross_product/>cross product</a>.</p><p>The <a href=/posts/kbhvector/>point</a>s on the plane, therefore, have to be orthogonal themselves to this normal vector. This means that the <a href=/posts/kbhdot_product/>dot product</a> of the candidate vector against these vectors should be \(0\):</p><p>\begin{equation}
+(\vec{u} \times \vec{v}) \cdot \begin{pmatrix}
+x_{1} \\ \dots \\ x_{n}
+\end{pmatrix} = 0
+\end{equation}</p><p>This forms the final equation for a plane given two vectors in \(\mathbb{F}^{n}\).</p><h2 id=a-dot-b-exercises>A.B Exercises</h2><h3 id=double-negative>Double Negative</h3><p>We desire that \(-(-v)=v \forall v \in V\)</p><p>By <a href=/posts/kbhdistributivity/>distributivity</a> in vector spaces, and the fact that \(0v=0\), we have that:</p><p>\begin{equation}
+v+(-1)v = (1-1)v = 0v = 0
+\end{equation}</p><p>Therefore, \((-1)v=-v\).</p><p>We now have:</p><p>\begin{equation}
+-(-v) = -((-1)v)
+\end{equation}</p><p>The scalar multiple of \(v\), by definition, is also \(\in V\) if \(v \in V\). Therefore, it itself holds that:</p><p>\begin{equation}
+(-1)((-1)v)
+\end{equation}</p><p>By <a href=/posts/kbhassociative/>associativity</a>:</p><p>\begin{equation}
+(-1\cdot -1)v
+\end{equation}</p><p>Finally:</p><p>\begin{equation}
+(-1\cdot -1)v = (1v) = v\ \blacksquare
+\end{equation}</p><h3 id=one-of-it-is-zero>One of it is zero</h3><p>If \(a \in \mathbb{F}\), \(v \in V\), and \(av=0\), we desire that \(a=0\) or \(v=0\). We perform casework.</p><p>Case 1: \(a=0\) &ndash; we are done.</p><p>Case 2: \(a \neq 0\):
+As \(a \in \mathbb{F}\), and \(a \neq 0\), \(\exists \frac{1}{a}: a\cdot \frac{1}{a}=1\).</p><p>Therefore:</p><p>\begin{align}
+&amp;av = 0 \\
+\Rightarrow\ & \frac{1}{a}av = \frac{1}{a} 0 \\
+\Rightarrow\ & 1v = \frac{1}{a} 0 \\
+\Rightarrow\ & 1v = 0 \\
+\Rightarrow\ & v=0\ \blacksquare
+\end{align}</p><h3 id=existence-and-uniqueness-given-equation>Existence and Uniqueness Given Equation</h3><p>Given \(v,w \in V\), we desire a unique \(x\in V: v+3x=w\).</p><p>Let&rsquo;s first check existence. Take the expression:</p><p>\begin{equation}
+n = \frac{1}{3} (w-v)
+\end{equation}</p><p>As both \(v,w \in V\), subtraction (<a href=/posts/kbhadding/>addition</a>) and <a href=/posts/kbhscalar_multiplication/>scalar multiplication</a> are defined. Therefore, \(\forall w,v \in V\), we can construct such an \(n\).</p><p>Supplying the expression into \(v+3x\) for the definition of \(x\):</p><p>\begin{align}
+v+3x &= v+3\qty(\frac{1}{3}(w-v)) \\
+&= v+(w-v) \\
+&= v+w-v \\
+&= v-v+w \\
+&= 0+w \\
+&= w
+\end{align}</p><p>by <a href=/posts/kbhdistributivity/>distributivity</a>, <a href=/posts/kbhassociative/>associativity</a>, and <a href=/posts/kbhcommutivity/>commutativity</a> in <a href=/posts/kbhvector_space/>vector space</a>s, yielding \(w\) as desired.</p><p>Now let&rsquo;s check uniqueness.</p><p>Suppose \(\exists x_1, x_2: v+3x_1=w\) and \(v+3x_2=w\).</p><p>By transitivity:</p><p>\begin{equation}
+v+3x_1=v+3x_2
+\end{equation}</p><p>Applying \(-v\) to both sides:</p><p>\begin{equation}
+3x_1=3x_2
+\end{equation}</p><p>Finally, applying \(\frac{1}{3}\) to both sides:</p><p>\begin{equation}
+x_{1}= x_2
+\end{equation}</p><p>Therefore, there only exists one unique \(x\) which satisfies the expression. \(\blacksquare\)</p><h3 id=empty-set-is-not-a-vector-space>Empty Set is Not a Vector Space</h3><p>The empty set is not a vector space as it doesn&rsquo;t have an <a href=/posts/kbhadditive_identity/>additive identity</a>. \(\blacksquare\)</p><h3 id=additive-inverse-is-also-zero-multiplication>Additive Inverse is also Zero Multiplication</h3><p>We first take the additive inverse expression:</p><p>\begin{equation}
+\forall v \in V, \exists -v: v+(-v) = 0
+\end{equation}</p><p>Take now:</p><p>\begin{equation}
+0v
+\end{equation}</p><p>We have that:</p><p>\begin{align}
+0v &= (0+0)v \\
+&= 0v + 0v
+\end{align}</p><p>By <a href=/posts/kbhdistributivity/>distributivity</a>.</p><p>As \(0v \in V\), \(\exists -0v: 0v+(-0v)=0\).</p><p>\begin{align}
+&amp;0v = 0v+0v \\
+\Rightarrow\ & 0v-0v = 0v+0v-0v \\
+\Rightarrow\ & 0 = 0v
+\end{align}</p><p>as desired. Now, we will start from this condition and work out way backwards.</p><p>Note that the statement for additive inverse condition is that:</p><p>\begin{equation}
+\forall v \in V, \exists -v: v+(-v) = 0
+\end{equation}</p><p>Let us begin with the expression that:</p><p>\begin{equation}
+0=0v
+\end{equation}</p><p>We have that:</p><p>\begin{equation}
+0=(1-1)v
+\end{equation}</p><p>Then, we have by <a href=/posts/kbhdistributivity/>distributivity</a>:</p><p>\begin{equation}
+0 = v + (-1)v
+\end{equation}</p><p><a href=/posts/kbhscalar_multiplication/>scalar multiplication</a> is defined on a <a href=/posts/kbhvector_space/>vector space</a>. Therefore, we have \(-1v\) to construct such an additive inverse \(\forall v \in V\). \(\blacksquare\)</p><h3 id=weird-vector-space>Weird Vector Space</h3><p>All operations are defined as given.</p><p>Take scalars \(t_1, t_2 \in \mathbb{R}\).</p><p>\begin{equation}
+(t_1-t_2)\infty = \infty
+\end{equation}</p><p>Yet, if we follow the rules of distribution:</p><p>\begin{equation}
+(t_1 -t_2)\infty = \infty -\infty =0
+\end{equation}</p><p>Therefore, distribution doesn&rsquo;t hold on this new structure. It is not a vector space. \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

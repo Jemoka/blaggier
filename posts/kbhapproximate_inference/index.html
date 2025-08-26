@@ -1,0 +1,100 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>approximate inference</title>
+<meta name=description content="Direct Sampling
+Direct Sampling is an approximate inference method where we pull samples from the given joint probability distribution.
+Example
+Suppose we are interested in:
+
+
+
+where we dare \(P(B^{1}|D^{1},C^{1})\).
+Step 1: sort
+We obtain a topological sort of this network:
+\begin{equation}
+B, S, E, D, C
+\end{equation}
+Step 2: sample from \(B,S\)
+
+We sample \(B\). We sampled that \(B=1\) today.
+We sample \(S\). We sampled that \(S=0\) today.
+
+Step 3: sample from \(E\)
+
+We sample \(E\) GIVEN what we already sampled, that \(B=1, S=0\), we sampled that that \(E = 1\)
+
+Step 4: sample from \(D, C\)
+
+We sample \(D\) given that \(E=1\) as we sampled.
+We sample \(C\) given that \(E=1\) as we sampled.
+
+Repeat
+Repeat steps 2-4"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>approximate inference</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=direct-sampling--kbhdirect-sampling-dot-md><a href=/posts/kbhdirect_sampling/>Direct Sampling</a></h2><p><a href=/posts/kbhdirect_sampling/>Direct Sampling</a> is an <a href=/posts/kbhapproximate_inference/>approximate inference</a> method where we pull samples from the given <a href=/posts/kbhjoint_probability_distribution/>joint probability distribution</a>.</p><h3 id=example>Example</h3><p>Suppose we are interested in:</p><figure><img src=/ox-hugo/2023-10-05_09-19-51_screenshot.png></figure><p>where we dare \(P(B^{1}|D^{1},C^{1})\).</p><h4 id=step-1-sort>Step 1: sort</h4><p>We obtain a <a href=/posts/kbhtopological_sort/>topological sort</a> of this network:</p><p>\begin{equation}
+B, S, E, D, C
+\end{equation}</p><h4 id=step-2-sample-from-b-s>Step 2: sample from \(B,S\)</h4><ul><li>We sample \(B\). We sampled that \(B=1\) today.</li><li>We sample \(S\). We sampled that \(S=0\) today.</li></ul><h4 id=step-3-sample-from-e>Step 3: sample from \(E\)</h4><ul><li>We sample \(E\) <strong>GIVEN</strong> what we already sampled, that \(B=1, S=0\), we sampled that that \(E = 1\)</li></ul><h4 id=step-4-sample-from-d-c>Step 4: sample from \(D, C\)</h4><ul><li>We sample \(D\) given that \(E=1\) as we sampled.</li><li>We sample \(C\) given that \(E=1\) as we sampled.</li></ul><h4 id=repeat>Repeat</h4><p>Repeat steps 2-4</p><h4 id=step-n-analyze>Step n: Analyze</h4><table><thead><tr><th>B</th><th>S</th><th>E</th><th>D</th><th>C</th></tr></thead><tbody><tr><td>1</td><td>0</td><td>1</td><td>0</td><td>1</td></tr><tr><td>0</td><td>1</td><td>1</td><td>0</td><td>0</td></tr><tr><td>1</td><td>1</td><td>1</td><td>1</td><td>0</td></tr><tr><td>0</td><td>0</td><td>1</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td><td>1</td><td>1</td></tr></tbody></table><p>We desire to know \(P(b^{1}|d^{1}, c^{1})\). Looks like, given this table, it would be \(100\%\).</p><h2 id=likelihood-weighted-sampling--kbhdirect-sampling-dot-md><a href=/posts/kbhdirect_sampling/#likelihood-weighted-sampling>Likelihood Weighted Sampling</a></h2><p><a href=/posts/kbhdirect_sampling/#likelihood-weighted-sampling>Likelihood Weighted Sampling</a> is a sampling approach whereby you force values that you wont, and then weight the results by the chance of it happening.</p><p>This is <strong>super useful</strong> when our envidence is unlikely.</p><h3 id=example>Example</h3><p>Suppose again you are interested in \(P(b^{1}|d^{1}, c^{1})\). In this case, we only sample \(B,S,E\):</p><table><thead><tr><th>B</th><th>S</th><th>E</th></tr></thead><tbody><tr><td>0</td><td>1</td><td>0</td></tr><tr><td>1</td><td>0</td><td>1</td></tr></tbody></table><p>Now, for each of these results, we the compute the chance of our priors happening given the samples.</p><ul><li>Row 1: \(p(d^{1}|e^{0})p(c^{1}|e^{0})\)</li><li>Row 2: \(p(d^{1}|e^{1})p(c^{1}|e^{1})\)</li></ul><p>Let&rsquo;s say:</p><ul><li>Row 1: \(p(d^{1}|e^{0})p(c^{1}|e^{0})=0.3\)</li><li>Row 2: \(p(d^{1}|e^{1})p(c^{1}|e^{1})=0.9\)</li></ul><p>Finally, to compute \(p(b^{1}|d^{1}c^{1})\):</p><p>\begin{equation}
+\frac{0.9}{0.9+0.3}
+\end{equation}</p><p>because only row \(2\) fit with our expectations.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

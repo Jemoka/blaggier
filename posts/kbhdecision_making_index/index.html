@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Decision Making Index</title>
+<meta name=description content="Lecture notes taking during CS238, decision making. Stanford Intelligence Systems Laboratory (SISL: planning and validation of intelligent systems).
+Big Ideas
+Themes
+
+There&rsquo;s a principled mathematical framework for defining rational behavior
+There are computational techniques that could lead to better, and perhaps counter-intuitive decisions
+Successful application depends on your choice of representation and approximation
+
+you typically can&rsquo;t solve mathematical models exactly
+so, we have to rely on good models of approximations
+
+
+The same computational approaches can be applied to different application domains
+
+the same set of abstractions can be carried through life
+send Mykel a note about how these topics about where this stuff is applied
+
+
+
+These algorithms drive high quality decisions on a tight timeline. You can&rsquo;t fuck up: people die."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Decision Making Index</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Lecture notes taking during CS238, decision making. Stanford Intelligence Systems Laboratory (SISL: planning and validation of intelligent systems).</p><h2 id=big-ideas>Big Ideas</h2><h3 id=themes>Themes</h3><ol><li>There&rsquo;s a principled mathematical framework for defining rational behavior</li><li>There are computational techniques that could lead to better, and perhaps counter-intuitive decisions</li><li>Successful application depends on your choice of representation and approximation<ul><li>you typically can&rsquo;t solve mathematical models <strong>exactly</strong></li><li>so, we have to rely on good models of approximations</li></ul></li><li>The same computational approaches can be applied to different application domains<ul><li>the same set of abstractions can be carried through life</li><li>send Mykel a note about how these topics about where this stuff is applied</li></ul></li></ol><p>These algorithms drive <strong>high quality</strong> decisions on a <strong>tight timeline</strong>. You can&rsquo;t fuck up: people die.</p><h3 id=contents>Contents</h3><ul><li>Fundamental understanding of mathematical models and solution methods&mdash;ungraded book exercises<ul><li>Three quizzes: one question per chapter<ol><li>chapters 2, 3, 5</li></ol></li></ul></li><li>Implement and extend key algorithms for learning and decision making</li><li>Identify an application of the theory of this course and formulate it mathematically (proposal)<ul><li>what are the i/o</li><li>what are the sensors measurements</li><li>what are the decisions to be made</li></ul></li><li>[one other thing]</li></ul><h2 id=course-outline>Course Outline</h2><h3 id=1-shot-probabilistic-reasoning>1-shot: Probabilistic Reasoning</h3><ul><li>models of distributions over many variables</li><li>using distributions to make inferences</li><li><a href=/posts/kbhutility_theory/>utility theory</a></li></ul><h3 id=n-shot-sequential-problems>n-shot: Sequential Problems</h3><ul><li>we now 1-shot <a href=/posts/kbhdecision_networks/>decision network</a>s into making a series of decisions<ul><li><strong>assume</strong>: model of environment is known (no <a href>Model Uncertainty</a>), and environment is fully observable (no <a href>State Uncertainty</a>)</li><li>this introduces a <a href=/posts/kbhmarkov_decision_process/>Markov Decision Process</a> (MDP)</li></ul></li><li>approximation solutions for observing the environment both online and offline</li></ul><h3 id=model-uncertainty>Model Uncertainty</h3><ul><li>deal with situations where we don&rsquo;t know what the best action is at any given step</li><li>i.e.: future rewards, etc.</li><li>introduce <a href=/posts/kbhreinforcement_learning/>reinforcement learning</a> and its challenges<ol><li>Rewards may be received long after important decisions</li><li>Agents must generalized from limited exploration experience</li></ol></li></ul><h3 id=state-uncertainty>State Uncertainty</h3><ul><li>deal with situations where we don&rsquo;t know what is actually happening: we only have a <strong>probabilistic</strong> state</li><li>introduce <a href=/posts/kbhpartially_observable_markov_decision_process/>Partially Observable Markov Decision Process</a><ol><li>keep a distribution of believes</li><li>update the distribution of believes</li><li>make decisions based the distribution</li></ol></li></ul><h3 id=multiagent-systems>Multiagent Systems</h3><ul><li>challenges of <a href=/posts/kbhinteraction_uncertainty/>Interaction Uncertainty</a></li><li>building up interaction complexity<ol><li><a href=/posts/kbhsimple_game/>simple game</a>s: many <a href=/posts/kbhagent/>agent</a>s, each with individual rewards, acting to make a single joint action</li><li><a href=/posts/kbhmarkov_game/>markov game</a>s: many agents, many states, multiple outcomes in a stochastic environment; <a href=/posts/kbhinteraction_uncertainty/>Interaction Uncertainty</a> arises out of unknowns about what other agents will do</li><li><a href=/posts/kbhpartially_observable_markov_game/>partially observable markov game</a>: <a href=/posts/kbhmarkov_game/>markov game</a>s with <a href>State Uncertainty</a></li><li>decentralized <a href=/posts/kbhpartially_observable_markov_game/>partially observable markov game</a>: <a href=/posts/kbhpartially_observable_markov_game/>POMG</a>s with shared rewards between <a href=/posts/kbhagent/>agent</a>s instead of individual rewards</li></ol></li></ul><h2 id=lectures>Lectures</h2><h3 id=probabilistic-reasoning-relating-to-single-decisions>probabilistic reasoning relating to single decisions</h3><p><a href=/posts/kbhbaysian_network/>Baysian Network</a>s, and how to deal with them.</p><ul><li><a href=/posts/kbhsu_cs238_sep262023/>SU-CS238 SEP262023</a></li><li><a href=/posts/kbhsu_cs238_sep272023/>SU-CS238 SEP272023</a></li><li><a href=/posts/kbhsu_cs238_oct032023/>SU-CS238 OCT032023</a></li><li><a href=/posts/kbhsu_cs238_oct052023/>SU-CS238 OCT052023</a></li><li><a href=/posts/kbhsu_cs238_oct102023/>SU-CS238 OCT102023</a></li><li><a href=/posts/kbhsu_cs238_oct122023/>SU-CS238 OCT122023</a></li></ul><h3 id=a-chain-of-reasoning-with-feedback>a chain of reasoning with feedback</h3><p><a href=/posts/kbhmarkov_decision_process/>Markov Decision Process</a> uses <a href=/posts/kbhpolicy/>policies</a> that are evaluated with <a href=/posts/kbhpolicy_evaluation/>policy evaluation</a> via <a href=/posts/kbhutility_theory/>utility</a>, <a href=/posts/kbhpolicy_evaluation/#bellman-expectation-equation>Bellman Equation</a>, <a href=/posts/kbhaction_value_function/#id-0b1509e0-4d88-44d1-b6fa-fe8e86d200bb-value-function>value function</a>, etc.</p><p>If we know the state space fully, we can use <a href=/posts/kbhpolicy_iteration/>policy iteration</a> and <a href=/posts/kbhvalue_iteration/>value iteration</a> to determine an objectively <a href=/posts/kbhpolicy/#optimal-policy>optimal policy</a>. If we don&rsquo;t (or if the state space is too large), we can try to discretize our state space and appropriate through <a href=/posts/kbhapproximate_value_function/>Approximate Value Function</a>s, or use <a href=/posts/kbhonline_planning/>online planning</a> approaches to compute good policy as we go.</p><p>If none of those things are feasible (i.e. your state space is too big or complex to be discretized (i.e. sampling will cause you to loose the structure of the problem)), you can do some lovely <a href=/posts/kbhpolicy_optimization/>Policy Optimization</a> which will keep you in continuous space while iterating on the policy directly. Some nerds lmao like <a href=/posts/kbhpolicy_gradient/>Policy Gradient</a> methods if your policy is differentiable.</p><p>Now, <a href=/posts/kbhpolicy_optimization/>Policy Optimization</a> methods all require sampling a certain set of <a href=/posts/kbhrollout_with_lookahead/#rollout>trajectories</a> and optimizing over them in order to work. How do we know how much sampling to do before we start optimizing? That&rsquo;s an <a href=/posts/kbhexploration_and_exploitation/>Exploration and Exploitation</a> question. We can try really hard to collect <a href=/posts/kbhrollout_with_lookahead/#rollout>trajectories</a>, but then we&rsquo;d loose out on collecting intermediate reward.</p><ul><li><a href=/posts/kbhsu_cs238_oct172023/>SU-CS238 OCT172023</a></li><li><a href=/posts/kbhsu_cs238_oct192023/>SU-CS238 OCT192023</a></li><li><a href=/posts/kbhsu_cs238_oct242023/>SU-CS238 OCT242023</a></li><li><a href=/posts/kbhsu_cs238_oct262023/>SU-CS238 OCT262023</a></li><li><a href=/posts/kbhsu_cs238_oct212023/>SU-CS238 OCT312023</a></li><li><a href=/posts/kbhsu_cs238_nov022023/>SU-CS238 NOV022023</a></li></ul><h3 id=pomdp--kbhpartially-observable-markov-decision-process-dot-md--bomp-bomp-bomp><a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a> bomp bomp bomp</h3><ul><li><a href=/posts/kbhsu_cs238_nov092023/>SU-CS238 NOV092023</a></li><li><a href=/posts/kbhsu_cs238_nov142023/>SU-CS238 NOV142023</a></li><li><a href=/posts/kbhsu_cs238_nov162023/>SU-CS238 NOV162023</a></li><li><a href=/posts/kbhsu_cs238_nov282023/>SU-CS238 NOV282023</a></li><li><a href=/posts/kbhsu_cs238_nov302023/>SU-CS238 NOV302023</a></li></ul><h3 id=failures>Failures?</h3><ul><li>Change the action space</li><li>Change the reward function</li><li>Change the transition function</li><li>Improve the solver</li><li>Don&rsquo;t worry about it</li><li>Don&rsquo;t deploy the system</li></ul><h3 id=words-of-wisdom-from-mykel>Words of Wisdom from Mykel</h3><p>&ldquo;The belief update is central to learning. The point of education is to change your beliefs; look for opportunities to change your belief.&rdquo;</p><p>&ldquo;What&rsquo;s in the action space, how do we maximize it?&rdquo;</p><p>From MDPs, &ldquo;we can learn from the past, but the past doesn&rsquo;t influence you.&rdquo;</p><p>&ldquo;Optimism under uncertainty&rdquo;: <a href=/posts/kbhexploration_and_exploitation/>Exploration and Exploitation</a> &ldquo;you should try things&rdquo;</p><h2 id=worksheets>Worksheets</h2><ul><li><a href=/posts/kbhsu_cs238_q0q3/>SU-CS238 Q0Q3</a></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

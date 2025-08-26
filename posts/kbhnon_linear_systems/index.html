@@ -1,0 +1,97 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Non-Linear System</title>
+<meta name=description content="&ldquo;Chaotic Dynamics&rdquo; Because the word is sadly nonlinear.
+motivating non-linearity
+\begin{equation}
+\dv t \mqty(x \\ y) = f\qty(\mqty(x\\y))
+\end{equation}
+This function is a function from \(f: \mathbb{R}^{2}\to \mathbb{R}^{2}\). All the work on Second-Order Linear Differential Equations, has told us that the above system can serve as a &ldquo;linearization&rdquo; of a second order differential equation that looks like the follows:
+\begin{equation}
+\dv t \mqty(x \\y) = A \mqty(x \\ y) +b
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Non-Linear System</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>&ldquo;Chaotic Dynamics&rdquo; Because the word is sadly nonlinear.</p><h2 id=motivating-non-linearity>motivating non-linearity</h2><p>\begin{equation}
+\dv t \mqty(x \\ y) = f\qty(\mqty(x\\y))
+\end{equation}</p><p>This function is a function from \(f: \mathbb{R}^{2}\to \mathbb{R}^{2}\). All the work on <a href=/posts/kbhsecond_order_linear_differential_equation/>Second-Order Linear Differential Equations</a>, has told us that the above system can serve as a &ldquo;linearization&rdquo; of a second order differential equation that looks like the follows:</p><p>\begin{equation}
+\dv t \mqty(x \\y) = A \mqty(x \\ y) +b
+\end{equation}</p><p>Actually going about deriving a solution to this requires powers of \(A\) to commute. If \(A\) has a independent variable in it, or if its a time-varying function \(A(t)\), you can&rsquo;t actually perform the linearization technique (raising diagonalized \(A\) to powers) <a href=/posts/kbhsecond_order_linear_differential_equation/#solving-homogeneous-higher-order-differential-equations>highlighted here</a>.</p><p>So we need something new.</p><h2 id=sudden-review-of-vector-functions>Sudden Review of Vector Functions</h2><p>Let&rsquo;s take some function:</p><p>\begin{equation}
+f: \mathbb{R}^{2} \to \mathbb{R}^{2}
+\end{equation}</p><p>It will output a vector:</p><p>\begin{equation}
+f(x,y) = \mqty(f_1(x,y)\\ f_{2}(x,y))
+\end{equation}</p><h2 id=solving-non-linear-systems--kbhnon-linear-systems-dot-md--actually>Solving <a href=/posts/kbhnon_linear_systems/>Non-Linear Systems</a>, actually</h2><p>Let&rsquo;s take a non-linear system:</p><p>\begin{equation}
+\begin{cases}
+\dv{x}{t} = F(x,y) \\
+\dv{y}{t} = G(x,y)
+\end{cases}
+\end{equation}</p><p><strong><strong>Overarching Idea</strong></strong>: To actually solve this, we go about taking a Taylor Series (i.e. linearize) the <a href=/posts/kbhfunction/>function</a>s next to its critical points. Then, we use an epsilon-delta proof to show that the linearization next to those critical points are a good approximation.</p><p>So! Let us begin.</p><p>Let \((x*,y*)\) be a critical point of \(F\). Naturally, \(d 0=0\), so it is also a critical point of \(G\).</p><p>So we have:</p><p>\begin{equation}
+F(x*,y*)=G(x*,y*) = 0
+\end{equation}</p><p>Now, we will begin building the &ldquo;slope&rdquo; of this function to eliminate the independent variable wholesale&mdash;by dividing:</p><p>\begin{equation}
+\dv{y}{x} = \dv{y}{t} / \dv{x}{t} = \frac{G(x,y)}{F(x,y)}
+\end{equation}</p><hr><p>a divergence into epsilon delta proof</p><h3 id=stable>stable</h3><p>A critical point is considered &ldquo;stable&rdquo; because, for each \(\epsilon >0\), \(\exists \delta >0\), such that:</p><p>\begin{equation}
+|x_0-x*| &lt; \delta \implies |x(t)-x*| &lt; \epsilon
+\end{equation}</p><h4 id=asymptotically-stable>asymptotically stable</h4><p>For every trajectory that begins close to the critical point, it will end up at the critical point as time increases. That is, \(\exists \delta >0\) such that:</p><p>\begin{equation}
+|x-x*| &lt; \delta \implies \lim_{t \to \infty } x(t)=x*
+\end{equation}</p><p>This is essentially epsilon delta, but the limit traces out the entire process descending so the critical point is <a href=#stable>stable</a> through the whole descend.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,70 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>AML: Your First Article</title>
+<meta name=description content="Hello y&rsquo;all! This quick post about&mldr; writing your first &ldquo;article&rdquo; (ahem, MA) for this class. To me, the most rewarding part of our journey together is to be able to support everyone through writing very presentable reports&mdash;even if it is on old or simple problems&mdash;but in the format from which you can easily jump off and write a fully-blown scientific article in the future.
+exemplar we discussed
+(Kameswari, Sravani, and Mamidi 2020)"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>AML: Your First Article</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Hello y&rsquo;all! This quick post about&mldr; writing your first &ldquo;article&rdquo; (ahem, MA) for this class. To me, the most rewarding part of our journey together is to be able to support everyone through writing very presentable reports&mdash;even if it is on old or simple problems&mdash;but in the format from which you can easily jump off and write a fully-blown scientific article in the future.</p><h2 id=exemplar-we-discussed>exemplar we discussed</h2><p>(<a href=#citeproc_bib_item_1>Kameswari, Sravani, and Mamidi 2020</a>)</p><p>I should add that, despite the word being used, this is by <em>no means</em> the only way that you can write a wonderful scientific article. It just had the right structure for us to go over in class :)</p><h2 id=overall-goals>overall goals</h2><p>We want to make reports that are <em>clear</em> (easily understandable for audience), <em>concise</em> (only uses words when needed, prioritizing figures and intuition), and <em>precise</em> (when making claims, they are supported clearly with data). And so, the following sections focus mostly on improving those three criteria.</p><h2 id=discussion-per-section>discussion per section</h2><p>Let&rsquo;s now switch to bullet-point format, going over some ideas of how to make strong sections:</p><h3 id=abstract>abstract</h3><p><em>Guiding Questions</em>: What is your study about? What did you do? How well did it work?</p><ul><li>more jargon here is OK, but should be <strong>immediately</strong> summative of your whole study</li><li>only use enough jargon to make it concise: this section should be <strong>crystal clear</strong> for everyone of your academic peers (i.e. anyone in our class/familiar with ML)</li><li>it should be easily skimmable</li></ul><h3 id=intro-motivation-background>intro/motivation/background</h3><p><em>Guiding Questions</em>: Why are you making big picture choices you made? Did anyone do it before you? How did they do it? What changes are you making (for this class, &ldquo;none&rdquo; is acceptable)?</p><ul><li>immediately, you should state what you are trying to do and why its worthwhile of your reader&rsquo;s time</li><li>keep the goal scope small: not &ldquo;cancer is an sickness that affects a lot of people&rdquo;, but &ldquo;this specific gene is correlated with cancer prognosis&rdquo;</li><li><strong>justify why you are using AML tools!</strong> if the relationship you are modeling is a line, deep learning is way overkill</li><li>summarize previous work: if anyone did it before you, what approach did they do; why? Are you/why are you doing anything difference (i.e. why do you believe methods to be not as good?)</li></ul><h3 id=methods>methods</h3><p><em>Guiding Questions</em>: How did you do your study?</p><ul><li>give as much information for a peer (i.e. anyone in our class/familiar with ML) to be able to <strong>reproduce your entire study</strong></li><li>good to think about&mldr;<ul><li>data sourcing</li><li><em>detailed</em> notes on data preparation and feature engineering (bonus points for code)</li><li>model selection + motivation (should be broadly given in the prev. section already)</li><li>model implementation (layer counts, activations, seeds)</li><li>(hyper)parameters (LR, batch size, epoch, optimizer momentum/beta, layer seeds) &mdash; saying &ldquo;default&rdquo; here is fine but be specific about what you are leaving to default</li><li>training environment (hardware, library versions, time it took, etc.)</li></ul></li></ul><p>Also, from a class standpoint, we want to see your hard work in actually practicing the skills we are learning!</p><h3 id=results-data>results/data</h3><p><em>Guiding Questions</em>: Why should your peer believe you did what you said you did?</p><ul><li>motivate validation metrics used (i.e. why is success in this validation metric a measurement by proxy of success in the stated problem in the intro?)</li><li>report the clear details the withholding scheme used&mdash;simple train/val split? k-fold? leave-one-out?</li><li>present in <strong>graphical or tabular form!</strong> your clear key takeaways; in general, keep words in this section to a minimum<ul><li>&ldquo;these distributions look visually different!&rdquo;</li><li>&ldquo;these lines are definitely parallel!&rdquo;</li><li>&ldquo;this number is definitely larger than this other number!&rdquo;</li></ul></li></ul><p>During the process of &ldquo;NTJ&rdquo;, a paper reading methodology taught by the XRT lab, the skill of jumping abstract => data (&ldquo;figures&rdquo;) => takeaways (&ldquo;novelty&rdquo;) is greatly emphasized. Usually, the best papers will represent their key takeaways clearly and graphically in this section, so that the reader only need to go into the methods section strictly when needed to reproduce or clarify questions.</p><h3 id=conclusion-discussion>conclusion/discussion</h3><p><em>Guiding Questions</em>: Summarize.</p><p>It is often good to include future work here as well as well as fascinating extensions of your choosing. This section differs from the abstract in both the inclusion of future work, as well as its audience: while the abstract need only to be crystal clear for your peers, the conclusion should be clear to everyone in the <em>field</em> &mdash; so redefinition of paper-specific jargon, etc.</p><h3 id=ethics>ethics</h3><p><em>Guiding Questions</em>: Where did your data come from; why is its collection and <strong>processing</strong> (they are independent permissions!) legal and ethical? Why are you not breaking the world?</p><p>See: <a href=https://medium.com/@GovAI/a-guide-to-writing-the-neurips-impact-statement-4293b723f832>this Medium article</a> for more!</p><h2 id=from-the-experts>from the experts</h2><p>NIPS (leading ML conference) rubric for a paper (<a href=https://nips.cc/Conferences/2020/PaperInformation/ReviewerGuidelines>jump to &ldquo;Review Content&rdquo; section</a>)</p><style>.csl-entry{text-indent:-1.5em;margin-left:1.5em}</style><div class=csl-bib-body><div class=csl-entry><a id=citeproc_bib_item_1></a>Kameswari, Lalitha, Dama Sravani, and Radhika Mamidi. 2020. “Enhancing Bias Detection in Political News Using Pragmatic Presupposition.” In <i>Proceedings of the Eighth International Workshop on Natural Language Processing for Social Media</i>, nil. doi:<a href=https://doi.org/10.18653/v1/2020.socialnlp-1.1>10.18653/v1/2020.socialnlp-1.1</a>.</div></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

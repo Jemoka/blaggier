@@ -1,0 +1,204 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>AIBridge Iris Variance Worksheet</title>
+<meta name=description content="SPOILER ALERT for future labs!! Don&rsquo;t scroll down!
+We are going to create a copy of the iris dataset with a random variance.
+import sklearn
+from sklearn.datasets import load_iris
+Let&rsquo;s load the iris dataset:
+x,y = load_iris(return_X_y=True)
+Because we need to generate a lot of random data, let&rsquo;s import random
+import random
+Put this in a df
+import pandas as pd
+df = pd.DataFrame(x)
+df
+       0    1    2    3
+0    5.1  3.5  1.4  0.2
+1    4.9  3.0  1.4  0.2
+2    4.7  3.2  1.3  0.2
+3    4.6  3.1  1.5  0.2
+4    5.0  3.6  1.4  0.2
+..   ...  ...  ...  ...
+145  6.7  3.0  5.2  2.3
+146  6.3  2.5  5.0  1.9
+147  6.5  3.0  5.2  2.0
+148  6.2  3.4  5.4  2.3
+149  5.9  3.0  5.1  1.8
+
+[150 rows x 4 columns]
+Let&rsquo;s make 150 random numbers with pretty low variance:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>AIBridge Iris Variance Worksheet</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><main><article><div style=max-width:700px><p>SPOILER ALERT for future labs!! Don&rsquo;t scroll down!</p><p>We are going to create a copy of the iris dataset with a random variance.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>sklearn</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>sklearn.datasets</span> <span style=color:#f92672>import</span> <span style=color:#111>load_iris</span>
+</span></span></code></pre></div><p>Let&rsquo;s load the iris dataset:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#111>load_iris</span><span style=color:#111>(</span><span style=color:#111>return_X_y</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>Because we need to generate a lot of random data, let&rsquo;s import random</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>random</span>
+</span></span></code></pre></div><p>Put this in a df</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>pandas</span> <span style=color:#00a8c8>as</span> <span style=color:#111>pd</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span> <span style=color:#f92672>=</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>DataFrame</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>       0    1    2    3
+</span></span><span style=display:flex><span>0    5.1  3.5  1.4  0.2
+</span></span><span style=display:flex><span>1    4.9  3.0  1.4  0.2
+</span></span><span style=display:flex><span>2    4.7  3.2  1.3  0.2
+</span></span><span style=display:flex><span>3    4.6  3.1  1.5  0.2
+</span></span><span style=display:flex><span>4    5.0  3.6  1.4  0.2
+</span></span><span style=display:flex><span>..   ...  ...  ...  ...
+</span></span><span style=display:flex><span>145  6.7  3.0  5.2  2.3
+</span></span><span style=display:flex><span>146  6.3  2.5  5.0  1.9
+</span></span><span style=display:flex><span>147  6.5  3.0  5.2  2.0
+</span></span><span style=display:flex><span>148  6.2  3.4  5.4  2.3
+</span></span><span style=display:flex><span>149  5.9  3.0  5.1  1.8
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[150 rows x 4 columns]
+</span></span></code></pre></div><p>Let&rsquo;s make 150 random numbers with pretty low variance:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>random_ns</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#111>random</span><span style=color:#f92672>.</span><span style=color:#111>uniform</span><span style=color:#111>(</span><span style=color:#ae81ff>65</span><span style=color:#111>,</span><span style=color:#ae81ff>65.2</span><span style=color:#111>)</span> <span style=color:#00a8c8>for</span> <span style=color:#111>_</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#ae81ff>150</span><span style=color:#111>)]</span>
+</span></span><span style=display:flex><span><span style=color:#111>random_series</span> <span style=color:#f92672>=</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>Series</span><span style=color:#111>(</span><span style=color:#111>random_ns</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>random_series</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>0      65.127515
+</span></span><span style=display:flex><span>1      65.034572
+</span></span><span style=display:flex><span>2      65.123271
+</span></span><span style=display:flex><span>3      65.043985
+</span></span><span style=display:flex><span>4      65.145743
+</span></span><span style=display:flex><span>         ...
+</span></span><span style=display:flex><span>145    65.036410
+</span></span><span style=display:flex><span>146    65.157172
+</span></span><span style=display:flex><span>147    65.034925
+</span></span><span style=display:flex><span>148    65.037373
+</span></span><span style=display:flex><span>149    65.042466
+</span></span><span style=display:flex><span>Length: 150, dtype: float64
+</span></span></code></pre></div><p>Excellent. Now let&rsquo;s put the two things together!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>df</span><span style=color:#111>[</span><span style=color:#d88200>&#34;temp&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span>  <span style=color:#111>random_series</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>       0    1    2    3       temp
+</span></span><span style=display:flex><span>0    5.1  3.5  1.4  0.2  65.127515
+</span></span><span style=display:flex><span>1    4.9  3.0  1.4  0.2  65.034572
+</span></span><span style=display:flex><span>2    4.7  3.2  1.3  0.2  65.123271
+</span></span><span style=display:flex><span>3    4.6  3.1  1.5  0.2  65.043985
+</span></span><span style=display:flex><span>4    5.0  3.6  1.4  0.2  65.145743
+</span></span><span style=display:flex><span>..   ...  ...  ...  ...        ...
+</span></span><span style=display:flex><span>145  6.7  3.0  5.2  2.3  65.036410
+</span></span><span style=display:flex><span>146  6.3  2.5  5.0  1.9  65.157172
+</span></span><span style=display:flex><span>147  6.5  3.0  5.2  2.0  65.034925
+</span></span><span style=display:flex><span>148  6.2  3.4  5.4  2.3  65.037373
+</span></span><span style=display:flex><span>149  5.9  3.0  5.1  1.8  65.042466
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[150 rows x 5 columns]
+</span></span></code></pre></div><p>And, while we are at it, let&rsquo;s make new labels</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>names</span> <span style=color:#f92672>=</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>Series</span><span style=color:#111>([</span><span style=color:#d88200>&#34;sepal length&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;sepal width&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;pedal length&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;pedal width&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;temp&#34;</span><span style=color:#111>])</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>columns</span> <span style=color:#f92672>=</span> <span style=color:#111>names</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>     sepal length  sepal width  pedal length  pedal width       temp
+</span></span><span style=display:flex><span>0             5.1          3.5           1.4          0.2  65.127515
+</span></span><span style=display:flex><span>1             4.9          3.0           1.4          0.2  65.034572
+</span></span><span style=display:flex><span>2             4.7          3.2           1.3          0.2  65.123271
+</span></span><span style=display:flex><span>3             4.6          3.1           1.5          0.2  65.043985
+</span></span><span style=display:flex><span>4             5.0          3.6           1.4          0.2  65.145743
+</span></span><span style=display:flex><span>..            ...          ...           ...          ...        ...
+</span></span><span style=display:flex><span>145           6.7          3.0           5.2          2.3  65.036410
+</span></span><span style=display:flex><span>146           6.3          2.5           5.0          1.9  65.157172
+</span></span><span style=display:flex><span>147           6.5          3.0           5.2          2.0  65.034925
+</span></span><span style=display:flex><span>148           6.2          3.4           5.4          2.3  65.037373
+</span></span><span style=display:flex><span>149           5.9          3.0           5.1          1.8  65.042466
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[150 rows x 5 columns]
+</span></span></code></pre></div><p>Excellent. Let&rsquo;s finally get the flower results.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>df</span><span style=color:#111>[</span><span style=color:#d88200>&#34;species&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>y</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>     sepal length  sepal width  pedal length  pedal width       temp  species
+</span></span><span style=display:flex><span>0             5.1          3.5           1.4          0.2  65.127515        0
+</span></span><span style=display:flex><span>1             4.9          3.0           1.4          0.2  65.034572        0
+</span></span><span style=display:flex><span>2             4.7          3.2           1.3          0.2  65.123271        0
+</span></span><span style=display:flex><span>3             4.6          3.1           1.5          0.2  65.043985        0
+</span></span><span style=display:flex><span>4             5.0          3.6           1.4          0.2  65.145743        0
+</span></span><span style=display:flex><span>..            ...          ...           ...          ...        ...      ...
+</span></span><span style=display:flex><span>145           6.7          3.0           5.2          2.3  65.036410        2
+</span></span><span style=display:flex><span>146           6.3          2.5           5.0          1.9  65.157172        2
+</span></span><span style=display:flex><span>147           6.5          3.0           5.2          2.0  65.034925        2
+</span></span><span style=display:flex><span>148           6.2          3.4           5.4          2.3  65.037373        2
+</span></span><span style=display:flex><span>149           5.9          3.0           5.1          1.8  65.042466        2
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[150 rows x 6 columns]
+</span></span></code></pre></div><p>And dump it to a CSV.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>to_csv</span><span style=color:#111>(</span><span style=color:#d88200>&#34;./iris_variance.csv&#34;</span><span style=color:#111>,</span> <span style=color:#111>index</span><span style=color:#f92672>=</span><span style=color:#00a8c8>False</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>Let&rsquo;s select for the input data again:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>X</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>iloc</span><span style=color:#111>[:,</span><span style=color:#ae81ff>0</span><span style=color:#111>:</span><span style=color:#ae81ff>5</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span><span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>iloc</span><span style=color:#111>[:,</span><span style=color:#ae81ff>5</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span><span style=color:#111>X</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>     sepal length  sepal width  pedal length  pedal width       temp
+</span></span><span style=display:flex><span>0             5.1          3.5           1.4          0.2  65.127515
+</span></span><span style=display:flex><span>1             4.9          3.0           1.4          0.2  65.034572
+</span></span><span style=display:flex><span>2             4.7          3.2           1.3          0.2  65.123271
+</span></span><span style=display:flex><span>3             4.6          3.1           1.5          0.2  65.043985
+</span></span><span style=display:flex><span>4             5.0          3.6           1.4          0.2  65.145743
+</span></span><span style=display:flex><span>..            ...          ...           ...          ...        ...
+</span></span><span style=display:flex><span>145           6.7          3.0           5.2          2.3  65.036410
+</span></span><span style=display:flex><span>146           6.3          2.5           5.0          1.9  65.157172
+</span></span><span style=display:flex><span>147           6.5          3.0           5.2          2.0  65.034925
+</span></span><span style=display:flex><span>148           6.2          3.4           5.4          2.3  65.037373
+</span></span><span style=display:flex><span>149           5.9          3.0           5.1          1.8  65.042466
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[150 rows x 5 columns]
+</span></span></code></pre></div><p>And use the variance threshold tool:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>sklearn.feature_selection</span> <span style=color:#f92672>import</span> <span style=color:#111>VarianceThreshold</span>
+</span></span><span style=display:flex><span><span style=color:#111>sel</span> <span style=color:#f92672>=</span> <span style=color:#111>VarianceThreshold</span><span style=color:#111>(</span><span style=color:#ae81ff>0.1</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>sel</span><span style=color:#f92672>.</span><span style=color:#111>fit_transform</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>)</span>
+</span></span></code></pre></div><table><thead><tr><th>5.1</th><th>3.5</th><th>1.4</th><th>0.2</th></tr></thead><tbody><tr><td>4.9</td><td>3</td><td>1.4</td><td>0.2</td></tr><tr><td>4.7</td><td>3.2</td><td>1.3</td><td>0.2</td></tr><tr><td>4.6</td><td>3.1</td><td>1.5</td><td>0.2</td></tr><tr><td>5</td><td>3.6</td><td>1.4</td><td>0.2</td></tr><tr><td>5.4</td><td>3.9</td><td>1.7</td><td>0.4</td></tr><tr><td>4.6</td><td>3.4</td><td>1.4</td><td>0.3</td></tr></tbody></table><p>&mldr;</p><p>As we expected.</p><p>And let&rsquo;s use the select k best tool:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>sklearn.feature_selection</span> <span style=color:#f92672>import</span> <span style=color:#111>SelectKBest</span><span style=color:#111>,</span> <span style=color:#111>chi2</span>
+</span></span><span style=display:flex><span><span style=color:#111>sel</span> <span style=color:#f92672>=</span> <span style=color:#111>SelectKBest</span><span style=color:#111>(</span><span style=color:#111>chi2</span><span style=color:#111>,</span> <span style=color:#111>k</span><span style=color:#f92672>=</span><span style=color:#ae81ff>4</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>res</span> <span style=color:#f92672>=</span> <span style=color:#111>sel</span><span style=color:#f92672>.</span><span style=color:#111>fit_transform</span><span style=color:#111>(</span><span style=color:#111>X</span><span style=color:#111>,</span> <span style=color:#111>y</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>res</span>
+</span></span></code></pre></div><table><thead><tr><th>5.1</th><th>3.5</th><th>1.4</th><th>0.2</th></tr></thead><tbody><tr><td>4.9</td><td>3</td><td>1.4</td><td>0.2</td></tr><tr><td>4.7</td><td>3.2</td><td>1.3</td><td>0.2</td></tr><tr><td>4.6</td><td>3.1</td><td>1.5</td><td>0.2</td></tr><tr><td>5</td><td>3.6</td><td>1.4</td><td>0.2</td></tr><tr><td>5.4</td><td>3.9</td><td>1.7</td><td>0.4</td></tr><tr><td>4.6</td><td>3.4</td><td>1.4</td><td>0.3</td></tr><tr><td>5</td><td>3.4</td><td>1.5</td><td>0.2</td></tr></tbody></table><p>&mldr;</p><p>Also, as we expected. Got rid of temp.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Ranked Information Retrieval</title>
+<meta name=description content="Most users are incapable of writing good Boolean Retrieval queries.
+feast or famine problem
+Boolean Retrieval either returns too few or too many results: AND queries return often too few results \(\min (x,y)\), and OR queries return too many results \(x+y\).
+This is not a problem with Ranked Information Retrieval because a large result set doesn&rsquo;t matter: top results just needs to be good results.
+free text query
+Instead of using a series of Boolean Retrieval, we instead give free text to the user."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Ranked Information Retrieval</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Most users are incapable of writing good <a href=/posts/kbhinverted_index/#boolean-retrieval>Boolean Retrieval</a> queries.</p><h2 id=feast-or-famine-problem>feast or famine problem</h2><p><a href=/posts/kbhinverted_index/#boolean-retrieval>Boolean Retrieval</a> either returns too few or too many results: AND queries return often too few results \(\min (x,y)\), and OR queries return too many results \(x+y\).</p><p>This is not a problem with <a href=/posts/kbhranked_information_retrieval/>Ranked Information Retrieval</a> because a large result set doesn&rsquo;t matter: top results just needs to be good results.</p><h2 id=free-text-query>free text query</h2><p>Instead of using a series of <a href=/posts/kbhinverted_index/#boolean-retrieval>Boolean Retrieval</a>, we instead give free text to the user.</p><h2 id=score>score</h2><p>To do <a href=/posts/kbhranked_information_retrieval/>Ranked Information Retrieval</a>, we need a way of asigning a <a href=#score>score</a> to a query-document pair.</p><ol><li>the more frequently the query term appears in the doc, the higher the score should be</li><li>if the word doesn&rsquo;t appear, we score as 0</li></ol><h3 id=jaccard-coefficient>Jaccard Coefficient</h3><p>\begin{equation}
+jaccard(A,B) = |A \cap B | / |A \cup B|
+\end{equation}</p><p>where \(A\) and \(B\) are vocab, (i.e. no frequency).</p><h4 id=limitation>limitation</h4><ol><li>doesn&rsquo;t consider <strong>frequency</strong></li><li>rare terms are more informative than frequent terms</li><li>the normalization isn&rsquo;t quite right, ideally we should use \(\sqrt{A\cup B}\), which can be obtained via cosine-similarity</li></ol><h3 id=log-frequency-weighting>log-frequency weighting</h3><p>&ldquo;Relevance does not increase proportionally with term frequency&rdquo;&mdash;a document with 10 occurrences of a term is more relevant than that with 1, but its not 10 times more relevant.</p><p>\begin{equation}
+w_{t,d} = \begin{cases}
+1 + \log_{10} (tf_{t,d}), \text{if } tf_{t,d} > 0 \\
+0
+\end{cases}
+\end{equation}</p><p>this gives less-than-linear growth.</p><p>to score, we add up all the terms which intersect.</p><h3 id=document-frequency>document frequency</h3><p>the <a href=#document-frequency>document frequency</a> is the number of documents in which a term occur.</p><p>Its an <strong>INVERSE MEASURE</strong> of the informativeness of a word&mdash;the more times a word appears, the less informative it is.</p><p>\begin{equation}
+idf_{t} = \log_{10} (N / df_{t})
+\end{equation}</p><p>where \(N\) is the number of documents, and \(df_{t}\) is the number of documents in which the term appears. We take the log in the motivation as <a href=#log-frequency-weighting>log-frequency weighting</a>.</p><p>&ldquo;a word that occurs in every document has a weight of \(0\)&rdquo;.</p><p>There is no effect to one-term queries.</p><p>We don&rsquo;t use <strong>collection frequencies</strong> (i.e. we never consider COUNTS in CORPUS, because collection frequencies would score commonly found words equally because it doesn&rsquo;t consider distribution).</p><h3 id=tf-idf>TF-IDF</h3><p>multiply <a href=#log-frequency-weighting>log-frequency weighting</a> TIMES <a href=#document-frequency>document frequency</a>.</p><p>\begin{equation}
+score(q,d) = \sum_{t \in q \cap d} (1+\log_{10}(tf_{t,d})) \times \log_{10}\qty(\frac{N}{df_{t}})
+\end{equation}</p><p>if \(tf = 0\), set the entire TF score to \(0\) without adding 1.</p><p>using this, we can now construct a weight-matrix. Each document is a vector of the TFIDF score for each term against each document.</p><p>There are a series of approaches that you can use as a possible approach to compute tfidf: various ways to normalizing, variable document frequency counts (or not use it), etc.</p><h4 id=smart-notation>SMART notation</h4><p><code>ddd.qqq</code>, where the first three letters represent the document weighting scheme, and the second three letter represents the query weighting scheme.</p><figure><img src=/ox-hugo/2024-02-24_21-04-31_screenshot.png></figure><h2 id=vector-space-model>vector-space model</h2><p>after creating a matrix where each column is a document and each row is a term, and the cells are <a href=#tf-idf>TF-IDF</a> of the words against the documents, we can consider each document as a vector over the team.</p><p>we can treat queries as <strong>ALSO</strong> a document in the space, and therefore use proximity of the vectors as a searching system.</p><p>(Euclidian distance is bad: because its too large for vectors of different lengths. Instead, we should use angle instead of distance.)</p><h3 id=cosine-similarity>cosine similarity</h3><p>\begin{equation}
+\cos(q,d) = \frac{q \cdot d}{|q| |d|}
+\end{equation}</p><p>because the dot product becomes just the angle between the two vectors after you normalize by length.</p><p>typically, you may want to normalize the length of the vectors in advance.</p><p>cosine is a little flatten ontop</p><h3 id=ltc-dot-lnn-weighting>ltc.lnn weighting</h3><p>document: logarithm + idf + normed
+query: logarithm + 1 + 1</p><p>meaning, we don&rsquo;t weight or normalize query vectors</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

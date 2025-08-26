@@ -1,0 +1,76 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>clock algorithm</title>
+<meta name=description content="in demand paging, if we have to kick out a page, which one do we kick?
+possible basic approaches
+
+random page (this works surprisingly well)
+throw out the page that&rsquo;s the longest in memory (this is BAD because if a page is there for a long time, its probably accessed a lot)
+oracle (pick the page whose next accesses is farest in the future&mldr; we can&rsquo;t predict the future)
+LRU (replace the page that&rsquo;s accessed longest time ago)
+
+LRU sounds decently good, but recall that \(2^{36}\) wall times to store wall time for each page are needed which is bad"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>clock algorithm</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>in <a href=/posts/kbhdemand_paging/>demand paging</a>, if we have to kick out a page, which one do we kick?</p><h2 id=possible-basic-approaches>possible basic approaches</h2><ul><li>random page (this works surprisingly well)</li><li>throw out the page that&rsquo;s the longest in memory (this is BAD because if a page is there for a long time, its probably accessed a lot)</li><li>oracle (pick the page whose next accesses is farest in the future&mldr; we can&rsquo;t predict the future)</li><li>LRU (replace the page that&rsquo;s accessed <strong>longest time ago</strong>)</li></ul><p><strong>LRU</strong> sounds decently good, but recall that \(2^{36}\) wall times to store wall time for each page are needed which is bad</p><h2 id=clock-algorithm>clock algorithm</h2><p><strong>rotate through all pages until we find one that hasn&rsquo;t been referenced since last time</strong></p><ol><li>we add a <strong>reference bit</strong> to the <a href=/posts/kbhvirtual_memory/#paging>page table</a>&mdash;its set to \(1\) if the program wrote or read each page, otherwise its set to \(0\)</li><li>when page kick is needed, clock algorithm starts where it left off before and scan through physical pages<ol><li>each page it checks with reference bit 1, it sets the <strong>reference bit</strong> as 0</li><li>if it checked a page and its reference bit is 0, we kick it out (because we&rsquo;ve gone through two )</li></ol></li></ol><p>We now <strong>save the position of the hand</strong>&mdash;we want to begin checking with the page that hasn&rsquo;t been checked for the longest time.</p><p>If every page has a <strong>reference bit</strong> is one, running this algorithm doesn&rsquo;t break because it would set its immediately next bit of memory.</p><h2 id=page-replacement-model>page replacement model</h2><h3 id=per-process-replacement>per-process replacement</h3><p><strong>THIS IS NOT USED</strong>: we only kick out our own pages (but&mldr; how would we know how many pages we allocate max per process before we start kicking?).</p><h3 id=global-replacement>global replacement</h3><p><strong>THIS IS USED</strong>: a page fault in one process can kick out a page from another process. all pages from all processes in a single pool.</p><h2 id=recall-demand-paging>recall: demand paging</h2><p>get space:</p><ol><li>pick a page to kick out</li><li>write it to disk</li><li>mark the old page map entry as &ldquo;not present&rdquo;</li><li>update the new page map entry for the new process + point to our reused page</li></ol><hr><p>restore kicked page:</p><ol><li>trigger page fault</li><li>check swap (if it isn&rsquo;t present, page fault end)</li><li>get a new physical page by kicking another page out</li><li>load the data from disk into that reused page</li><li>update page map yet again</li></ol></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

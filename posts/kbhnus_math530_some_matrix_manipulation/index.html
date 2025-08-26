@@ -1,0 +1,211 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-MATH530 Some Matrix Manipulation</title>
+<meta name=description content="Proof: identity of a group is unique
+Assume for contradiction that there exists two identities \(e_1\) and \(e_2\) which are identities of the group \(A\). Take also an \(a \in A\).
+Given both \(e_1\) and \(e_2\) are identities, we have that:
+\begin{equation}
+a * e_1 = a
+\end{equation}
+as well as
+\begin{equation}
+a * e_2 = a
+\end{equation}
+Therefore, we have by the transitive property that:
+\begin{equation}
+a * e_1 = a*e_2
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-MATH530 Some Matrix Manipulation</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=proof-identity-of-a-group-is-unique>Proof: identity of a group is unique</h2><p>Assume for contradiction that there exists two identities \(e_1\) and \(e_2\) which are identities of the group \(A\). Take also an \(a \in A\).</p><p>Given both \(e_1\) and \(e_2\) are identities, we have that:</p><p>\begin{equation}
+a * e_1 = a
+\end{equation}</p><p>as well as</p><p>\begin{equation}
+a * e_2 = a
+\end{equation}</p><p>Therefore, we have by the transitive property that:</p><p>\begin{equation}
+a * e_1 = a*e_2
+\end{equation}</p><p>Because we are in a group, there exists a \(1/a\) the inverse of \(a\). Applying this inverse to the expression, we have that:</p><p>\begin{equation}
+1/a*a * e_1 = 1/a*a*e_2
+\end{equation}</p><p>Therefore, that:</p><p>\begin{equation}
+e_1 = e_2\ \blacksquare
+\end{equation}</p><p>Therefore, there cannot be two unique identities in a group.</p><h2 id=proof-inverse-of-an-element-in-a-group-is-unique>Proof: inverse of an element in a group is unique</h2><p>Take group \(A\) and element \(a\in A\), assume for contradiction that there exists two inverses of \(a\) named here \(a&rsquo;_1\) and \(a&rsquo;_2\). Given they are both inverses for \(a\), we have that:</p><p>\begin{equation}
+a * a&rsquo;_1 = 1
+\end{equation}</p><p>as well as</p><p>\begin{equation}
+a * a&rsquo;_2 = 1
+\end{equation}</p><p>Therefore, we have by the transitive property that:</p><p>\begin{equation}
+a * a&rsquo;_1 = a*a&rsquo;_2
+\end{equation}</p><p>Because we are in a group, there exists a \(1/a\) the inverse of \(a\). Applying this inverse to the expression, we have that:</p><p>\begin{equation}
+1/a*a * a&rsquo;_1 = 1/a*a*a&rsquo;_2
+\end{equation}</p><p>Therefore, that:</p><p>\begin{equation}
+a&rsquo;_1 = a&rsquo;_2\ \blacksquare
+\end{equation}</p><p>Therefore, there cannot be two unique inverses for an element in group.</p><h2 id=proof-additive-identity-in-field-cannot-have-multiplicative-inverse>Proof: additive identity in field cannot have multiplicative inverse</h2><p>For some field \(F\) take its additive identity \(0 \in F\). Assume for the sake of contradiction there exists a multiplicative inverse for \(0\) named \(0&rsquo; \in F\).</p><p>Let&rsquo;s take some \(a \in F\). By definition of the additive identity, we have:</p><p>\begin{equation}
+0 + a = a
+\end{equation}</p><p>We will apply \(0&rsquo;\) to both sides, we having that:</p><p>\begin{equation}
+0&rsquo;(0+a) = 0&rsquo;a
+\end{equation}</p><p>Distributing \(0&rsquo;\) to both sides, we have:</p><p>\begin{equation}
+1 + 0&rsquo;a = 0&rsquo;a
+\end{equation}</p><p>Given \(a,0&rsquo; \in F\), and multiplication is closed in \(F\) being a field, \(0&rsquo;a \in F\); applying \(-0&rsquo;a \in F\) the additive inverse of the result of multiplying together to both sides, we have that:</p><p>\begin{equation}
+1 + 0&rsquo;a - 0&rsquo;a = 0&rsquo;a - 0&rsquo;a
+\end{equation}</p><p>And therefore:</p><p>\begin{equation}
+1 = 0
+\end{equation}</p><p>which is absurd, reaching the desired contradiction. \(\blacksquare\)</p><h2 id=system>System</h2><p>\begin{equation}
+\begin{cases}
+x + 2y + z = 0 \\
+2x + 0y - z = 1 \\
+x - y + z = 2 \\
+\end{cases}
+\end{equation}</p><p>We will subtract the top and bottom expressions to have that:</p><p>\begin{equation}
+3y = -2
+\end{equation}</p><p>And to get:</p><p>\begin{equation}
+y = \frac{-2}{3}
+\end{equation}</p><p>Manipulating the second expression, we have that:</p><p>\begin{equation}
+2x -1 = z
+\end{equation}</p><p>Substituting this expression and \(y\) into the third expression, we have:</p><p>\begin{equation}
+x + \frac{2}{3} + 2x -1 = 2
+\end{equation}</p><p>performing algebraic manipulations:</p><p>\begin{align}
+&amp;3x + \frac{2}{3} = 3 \\
+\Rightarrow\ &amp;3x = \frac{7}{3} \\
+\Rightarrow\ &amp;x = \frac{7}{9}
+\end{align}</p><p>And finally:</p><p>\begin{equation}
+\frac{14}{9}-1 = z = \frac{5}{9}
+\end{equation}</p><h2 id=multiply>Multiply</h2><p>\begin{equation}
+\begin{pmatrix}
+1 & 2 & 1 \\
+2 & 0 & -1 \\
+1 & -1 & 0\end{pmatrix} \begin{pmatrix} x \\
+y\\
+z \end{pmatrix} = \begin{pmatrix}
+x+2y+z \\
+2x-z \\
+x-y
+\end{pmatrix}
+\end{equation}</p><p>The inner dimensions (column vs. row) of the matricies have to be the same for them to be multiplied; matrix multiplication is not commutative.</p><h2 id=proof-2x2-matrices-with-real-entries-form-a-group-under-addition>Proof: 2x2 Matrices with Real Entries form a Group Under Addition</h2><h3 id=closure>Closure</h3><p>\begin{equation}
+\begin{pmatrix}
+a & b \\
+c &amp;d
+\end{pmatrix} + \begin{pmatrix}
+e & f \\
+g & h
+\end{pmatrix} = \begin{pmatrix}
+a+e & b+f \\
+c+g & d+h
+\end{pmatrix}
+\end{equation}</p><h3 id=identity>Identity</h3><p>\begin{equation}
+\begin{pmatrix}
+a & b \\
+c &amp;d
+\end{pmatrix} + \begin{pmatrix}
+0 & 0 \\
+0 & 0
+\end{pmatrix} = \begin{pmatrix}
+a & b \\
+c & d
+\end{pmatrix}
+\end{equation}</p><h3 id=inverse>Inverse</h3><p>\begin{equation}
+\begin{pmatrix}
+a & b \\
+c &amp;d
+\end{pmatrix} + \begin{pmatrix}
+-a & -b \\
+-c & -d
+\end{pmatrix} = \begin{pmatrix}
+0 & 0 \\
+0 & 0
+\end{pmatrix}
+\end{equation}</p><h3 id=associative>Associative</h3><p>\begin{equation}
+\left (
+\begin{pmatrix}
+x_1 & x_2 \\
+x_3 & x_4
+\end{pmatrix} + \begin{pmatrix}
+y_1 & y_2 \\
+y_3 & y_4
+\end{pmatrix} \right) + \begin{pmatrix}
+z_1 & z_2 \\
+z_3 & z_4
+\end{pmatrix} = \begin{pmatrix}
+(x_1+y_1)+z_1 & (x_2+y_2)+z_2 \\
+(x_3+y_3)+z_3 & (x_4+y_4)+z_4
+\end{pmatrix}
+\end{equation}</p><p>which is equal, by associativity in \(\mathbb{F}\), as:</p><p>\begin{equation}
+\begin{pmatrix}
+x_1+(y_1+z_1) & x_2+(y_2+z_2) \\
+x_3+(y_3+z_3) & x_4+(y_4+z_4)
+\end{pmatrix}
+\end{equation}</p><p>And finally, this is equal to:</p><p>\begin{equation}
+\begin{pmatrix}
+x_1 & x_2 \\
+x_3 & x_4
+\end{pmatrix} + \left (\begin{pmatrix}
+y_1 & y_2 \\
+y_3 & y_4
+\end{pmatrix} + \begin{pmatrix}
+z_1 & z_2 \\
+z_3 & z_4
+\end{pmatrix} \right)
+\end{equation}</p><p>We have therefore shown that 2x2 matricies form a group under addition.</p><h2 id=proof-2x2-matrices-with-real-entries-does-not-from-a-group-under-multiplication>Proof: 2x2 Matrices with Real Entries does <em>not</em> from a Group Under Multiplication</h2><h3 id=inverse>Inverse</h3><p>The matrix</p><p>\begin{equation}
+\begin{pmatrix}
+0 & 0 \\
+0 &amp;1
+\end{pmatrix}
+\end{equation}</p><p>is not invertable. In that, one cannot apply a matrix to this one to result in the multiplicative identity \(I_2\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,116 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>talkbank</title>
+<meta name=description content="Moved much of this to Drafts instead
+
+
+phonbank: poor articulation
+
+
+disfluent kids
+
+
+late talkers
+
+
+Write a review about ASR benchmark methods
+
+REV would be our benchmark
+
+What corpora we use?
+Has anyone used disordered speech?
+Or really seriously accented speech vis a vi CORALL (how was CORALL sampled?)
+
+
+What samples? How do we sample? What are the benchmarks?
+
+
+
+
+
+
+
+
+
+ASR model + WER
+
+
+tildes and noprompt swapped
+
+
+WER
+
+
+missing words"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>talkbank</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Moved much of this to Drafts instead</p><ul><li><p>phonbank: poor articulation</p></li><li><p>disfluent kids</p></li><li><p>late talkers</p></li><li><p>Write a review about ASR benchmark methods</p><ul><li>REV would be our benchmark<ul><li>What corpora we use?</li><li>Has anyone used <strong>disordered speech</strong>?</li><li>Or really seriously accented speech vis a vi CORALL (how was CORALL sampled?)</li></ul></li><li>What samples? How do we sample? What are the benchmarks?</li></ul></li></ul><hr><figure><img src=/ox-hugo/2023-06-01_16-32-05_screenshot.png></figure><ul><li><p>ASR model + WER</p></li><li><p>tildes and noprompt swapped</p></li><li><p>WER</p></li><li><p>missing words</p></li><li><p>correct alignment</p></li></ul><h2 id=things>things</h2><ul><li>swap noprompt backwards</li><li>apostrophies for quotes</li><li>the word separation error<ul><li>put tilde BETWEEN specific symbols with connection symbols</li></ul></li><li>jemoka becomes batchalign 2</li><li>Extended UD?</li></ul><h2 id=combining>combining</h2><ul><li>bash script to run batchalign multiple times throughout the directories</li></ul><h2 id=removing>Removing</h2><ul><li>removing non-auditory SBCA corpus area</li></ul><h2 id=diarization>Diarization</h2><ul><li>Diarization as a Bi-product of ASR</li></ul><h2 id=humans-at-the-end>humans at the end</h2><ul><li>do speaker ID in the end</li><li>DO TO BATCHALIGN</li><li>allow people to reject files</li></ul><h2 id=runhouse-meeting>runhouse meeting</h2><ul><li>&lt;>Donny Greenberg: ADNE, nurses&rsquo; health</li><li>implementation at Google: grantees of canniniminty</li></ul><h3 id=remaining-questions>Remaining questions</h3><ul><li>but <strong>we can&rsquo;t provide SSH</strong></li><li>function.save()</li><li>remote<ul><li>running through hashicorp vault?</li><li>serializing ssh key remote?</li><li>RUNHOUSE call into remote!</li><li><em>headscale</em></li></ul></li><li>take wave2vec and hubert and GSLM</li></ul><h2 id=questions>questions?</h2><ul><li>ask about inter-turn pauses, where<ul><li>INV: something something something &lt;-</li><li>PAR: WWW &lt;-</li><li>INV: somethingsomething else &lt;-</li><li>PAR: words words word</li></ul></li><li>no bullets are given for PAR, so do we skip it? do we count the time for WWW all as an inter-turn pause between INV and PAR? etc.</li></ul><h2 id=per-turn>Per Turn</h2><ul><li><strong>Turn</strong> level analysis</li><li>Rename tier to</li></ul><h2 id=silence-duration>Silence duration?</h2><ul><li><p>does it include inter-utterance pauses?</p></li><li><p>within-utterance pause</p><ul><li>fluency, mechanistic</li></ul></li><li><p>between-utterance pause</p><ul><li>pause between utterances</li></ul></li><li><p>also: between-speaker pause!</p><ul><li>leaves room for the speaker to take the floor</li><li>BETWEEN speaker pauses: &ldquo;I don&rsquo;t know what you are asking me&rdquo;, etc.: &ldquo;breakdown!&rdquo;</li></ul></li><li><p>add features: STOPPA, TRESTLE, Wang</p></li></ul><p><a href=https://coryshain.github.io/>https://coryshain.github.io/</a></p><h2 id=featurize>featurize</h2><ul><li>saturnino</li><li>fausa</li></ul><h3 id=questions>Questions</h3><ul><li>What features?</li><li>Where to put them?</li><li>TalkBankDB</li><li>How to encode the features?</li></ul><h3 id=how-informative-are-your-features>&ldquo;How informative are your features&rdquo;</h3><ul><li>Start coming up with features (TRESTLE, perhaps)</li><li>Encode them into xarray</li><li>&lt;> saturnino</li></ul><h2 id=stuff>stuff</h2><ul><li>make Spanish names list</li><li>name, city, countries</li></ul><h2 id=corpuses>corpuses</h2><ul><li><strong>SABSAE</strong>: santa barbara english</li><li><strong>CABNC</strong>: British english</li><li></li></ul><h2 id=next>next</h2><ul><li>ignore any words that goes wrong in the pipeline</li><li><code>~change: noun => n; verb => v, etc.~</code></li><li>DET: ignore &ldquo;DEF&rdquo;, or perhaps the entir featureless</li><li>unbulleted VAD exprimentents</li></ul><h2 id=errors>errors!</h2><figure><img src=/ox-hugo/2022-12-23_20-22-46_screenshot.png></figure><p>line 1492</p><p>*PAR: so ‡ anyway I tiptoe to the front door , open the front door and
+walk in . •1045194_1050644•
+%mor: co|so beg|beg adv|anyway pro:sub|I v|+n|tip+n|toe prep|to
+det:art|the n|front n|door cm|cm adj|open det:art|the n|front n|door
+coord|and n|walk adv|in .
+%gra: 1|0|BEG 2|1|BEGP 3|5|JCT 4|5|SUBJ 5|0|ROOT 6|5|JCT 7|9|DET 8|9|MOD
+9|6|POBJ 10|5|LP 11|14|MOD 12|14|DET 13|14|MOD 14|5|OBJ 15|14|CONJ
+16|15|COORD 17|16|NJCT 18|5|PUNCT</p><h2 id=errors>errors?</h2><ul><li>words without features needs to be correctly handled (done in the middle of meeting)</li><li>04111 (me ma SOS)</li><li>nouns shouldn&rsquo;t mark if it is Com,Neut, should&rsquo;nt mark if its Com</li><li>fix PASTP => PAST</li><li>and does past participles exist?</li></ul><h2 id=more>more</h2><ul><li>Move shua to d(e)</li><li>Include instructions on how to recreate a broken Conda environment</li><li>Update the package to conda somehow</li></ul><h2 id=move>move</h2><figure><img src=/ox-hugo/2022-12-03_00-17-14_screenshot.png></figure><h2 id=next-steps>next steps</h2><ul><li>deal with `n`</li><li>+&mldr; fix</li><li>remove bullets</li></ul><h2 id=results>results</h2><ul><li>~ contraction</li><li>& fused</li><li><ul><li>suffix</li></ul></li><li>getting rid of punkt in mor<ul><li>, => cm</li><li>. => no PUNKT, stays</li></ul></li></ul><h2 id=stuff>stuff</h2><ul><li>chocolaty (noadmin, <a href=https://docs.chocolatey.org/en-us/choco/setup#non-administrative-install>https://docs.chocolatey.org/en-us/choco/setup#non-administrative-install</a>)</li><li>miniconda</li><li>setx path &ldquo;%path%;C:\tools\miniconda3\condabin&rdquo;</li><li>curl env first, the install (Windows can&rsquo;t do it from a URL)</li></ul><h2 id=readme>readme</h2><ul><li><del>conda init zsh (close shell, open again)</del></li><li>.mp4</li><li>mfa model downloading</li><li>what&rsquo;s the difference between online docker install and manual install</li><li>NLTK Huggingface transformers tokenizers (versining)</li><li>/opt/homebrew/Caskroom/miniforge/base/envs/aligner/lib/python3.9/site-packages/montreal_forced_aligner/corpus/text_corpus.py; getattr(self, k).update(error_dict[k])</li></ul><p>AttributeError: &rsquo;list&rsquo; object has no attribute &lsquo;update&rsquo;
+FileArgumentNotFoundError: ; line 139</p><ul><li></li></ul><h2 id=dba>DBA</h2><ul><li>See the data on the frequency of haphax legomina vs. COCA</li></ul><h2 id=espnet>ESPNet</h2><ul><li>need to talk to Ji Yang</li></ul><h2 id=andrew-s-features>Andrew&rsquo;s Features</h2><ul><li>Collapse two PAR tiers down</li><li><del>Checkpoint per file</del></li><li><del>One corpus prompt per run</del></li><li><del>Handle empty tiers</del></li><li><del>I/P selection crashes! contingency</del></li><li><del>preview the LONGEST segment instead of the top one</del></li><li><del>-i kill in the middle</del></li></ul><h2 id=fixes>fixes</h2><ul><li>&ldquo;my mom&rsquo;s cryin(g)&rdquo; [&lt;] mm [l648] (also themmm after)</li><li>&ldquo;made her a nice dress&rdquo; [&lt;] mhm [l1086]</li><li>&ldquo;when I was a kid I&rdquo; &=laughs [l1278]</li></ul><h2 id=others>Others</h2><ul><li><p>chstring (for uh, mm-hmm)</p></li><li><p>retrace (asr&amp;fa folder)</p></li><li><p>lowcase (caps)</p></li><li><p>rep-join.cut (fixes/)</p><figure><img src=/ox-hugo/2022-08-02_12-55-55_screenshot.png></figure></li></ul><ul><li>numbers</li><li>&lt;affirmative></li><li>&lsquo;mo data!<ul><li>CallFriend/CallHome (ca-data)</li><li>ISL?</li><li>SBCSAE</li><li>Aphasia + MICASE</li><li>TBI data</li></ul></li><li>Providing a Two-Pass Solution</li><li>Writing<ul><li>Big description of the pipeline</li><li>Notion of the pipeline</li><li>Better tokenization?</li></ul></li><li>8/18</li></ul><hr><ul><li>Initial segment repetition</li><li>Extracting studdering</li><li>Gramatically problematic</li></ul><h2 id=mar>mar</h2><ul><li>mar has done a thing and its phoneme level</li><li>We did it, now automated</li><li>LEAP data</li></ul><h2 id=next-actions>next actions</h2><ul><li>Aphasia (-apraxia?): classification</li><li>Child data (EllisWeismer)</li><li>Dementia</li></ul><h2 id=a>a</h2><ul><li><p><code>~Multiple @Begin/CHECK problem~</code></p></li><li><p><code>~Placement of @Options~</code></p></li><li><p><code>~Strange, missing period~</code></p></li><li><p><code>~Bracket comments should FOLLOW words instead of PRECEEDING them~</code></p></li><li><p><code>~%xwor: line~</code></p></li><li><p>STICK TO DASHES WHEN DISTRIBUTING BATCHALIGN</p></li><li><p>end the utterance when it ends (incl. inter-utterance pauses)</p></li><li><p>&ldquo;I&rdquo; need to be capitalized</p></li><li><p>11005 (LT)</p></li></ul><p>Align EllisWeismer</p><p>Also cool to align:</p><ul><li><p>fluency IISRP/*</p></li><li><p><a href=https://en.wikipedia.org/wiki/Speaker_diarisation>https://en.wikipedia.org/wiki/Speaker_diarisation</a></p></li><li><p><a href=https://universaldependencies.org/>https://universaldependencies.org/</a></p></li></ul><h2 id=alzheimer-s-project>Alzheimer&rsquo;s Project</h2><ul><li><p><a href=https://dementia.talkbank.org/>https://dementia.talkbank.org/</a></p></li><li><p><a href=https://luzs.gitlab.io/adresso-2021/>https://luzs.gitlab.io/adresso-2021/</a></p></li><li><p>Specifically: <a href=https://dementia.talkbank.org/access/English/Pitt.html>https://dementia.talkbank.org/access/English/Pitt.html</a></p></li><li><p>Review Kathleen Fraser: <a href=https://drive.google.com/drive/u/1/folders/1lYTIzzXLXw3LlDG9ZQ7k4RayDiP6eLs1>https://drive.google.com/drive/u/1/folders/1lYTIzzXLXw3LlDG9ZQ7k4RayDiP6eLs1</a></p></li><li><p>Here are the review papers: <a href=https://drive.google.com/drive/u/1/folders/1pokU75aKt6vNdeSMpc-HfN9fkLvRyutt>https://drive.google.com/drive/u/1/folders/1pokU75aKt6vNdeSMpc-HfN9fkLvRyutt</a></p></li><li><p>Read this first: <a href="https://drive.google.com/drive/u/1/folders/0B3XZtiQwQW4XMnlFN0ZGUndUamM?resourcekey=0-AlOCZb4q9TyG4KpaMQpeoA">https://drive.google.com/drive/u/1/folders/0B3XZtiQwQW4XMnlFN0ZGUndUamM?resourcekey=0-AlOCZb4q9TyG4KpaMQpeoA</a></p></li><li><p>Some PITT data have 3-4 recordings</p></li></ul><p><strong><strong>The best way to diagnosing alzhimers&rsquo; is from language.</strong></strong></p><p>Why this field is needed: to analyze a pre-post test metric.</p><p>Desired output: existence of dementia (a.k.a alzheimer&rsquo;s&rsquo;).</p><p>Other research to read:</p><ul><li>Penn (julia parish something but they don&rsquo;t stare their data but they smile and things with Mark Libermann type of thing)</li><li>Learning more about speech text</li><li><a href=https://my.clevelandclinic.org/health/diagnostics/22327-differential-diagnosis>https://my.clevelandclinic.org/health/diagnostics/22327-differential-diagnosis</a></li></ul><p>python3 ~/mfa_data/<a href=/posts/kbhbatchalign/>batchalign</a>-dist/batchalign.py ~/mfa_data/my_corpus ~/mfa_data/my_corpus_aligned</p><p>christan marr paper on MFA on child data</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

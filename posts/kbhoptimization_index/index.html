@@ -1,0 +1,103 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Optimization Index</title>
+<meta name=description content="AA222/CS361
+Applications
+Example Objectives
+
+efficiency
+safety
+accuracy
+
+Example Constraints
+
+cost
+weight
+(structural) integrity
+
+Why this is hard?
+
+high dimensional search spaces
+multiple competing objectives
+model uncertainty
+
+Queen Dido&rsquo;s Problem
+
+you are granted a plot of land
+how do we surround it with the smallest amount of string?
+
+Design Workflow
+
+
+
+&ldquo;Optimization: how do we &lsquo;change design&rsquo; in response to evaluation&rdquo;
+Logistics
+aa222.stanford.edu
+Overview
+Lectures
+Derivatives, Bracketing, Descent, and Approximations
+Topics: Derivatives, Bracking, Descent, and Approximation"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Optimization Index</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>AA222/CS361</p><h2 id=applications>Applications</h2><h3 id=example-objectives>Example Objectives</h3><ul><li>efficiency</li><li>safety</li><li>accuracy</li></ul><h3 id=example-constraints>Example Constraints</h3><ul><li>cost</li><li>weight</li><li>(structural) integrity</li></ul><h3 id=why-this-is-hard>Why this is hard?</h3><ul><li>high dimensional search spaces</li><li>multiple competing objectives</li><li>model uncertainty</li></ul><h2 id=queen-dido-s-problem>Queen Dido&rsquo;s Problem</h2><ul><li>you are granted a plot of land</li><li>how do we surround it with the smallest amount of string?</li></ul><h2 id=design-workflow>Design Workflow</h2><figure><img src=/ox-hugo/2024-04-02_09-38-28_screenshot.png></figure><p>&ldquo;Optimization: how do we &lsquo;change design&rsquo; in response to evaluation&rdquo;</p><h2 id=logistics>Logistics</h2><p>aa222.stanford.edu</p><h2 id=overview>Overview</h2><h2 id=lectures>Lectures</h2><h2 id=derivatives-bracketing-descent-and-approximations>Derivatives, Bracketing, Descent, and Approximations</h2><p>Topics: <a href=/posts/kbhderivatives_descent_and_approximation/>Derivatives, Bracking, Descent, and Approximation</a></p><h3 id=lectures>Lectures</h3><ul><li><a href=/posts/kbhsu_cs361_apr022024/>SU-CS361 APR022024</a></li><li><a href=/posts/kbhsu_cs361_apr042024/>SU-CS361 APR042024</a></li><li><a href=/posts/kbhsu_cs361_apr092024/>SU-CS361 APR092024</a></li><li><a href=/posts/kbhsu_cs361_apr112024/>SU-CS361 APR112024</a></li></ul><h2 id=stochastic-methods-and-constraints>Stochastic Methods and Constraints</h2><p>Topics: <a href=/posts/kbhsu_cs361_stochastic_methods_and_constraints_index/>SU-CS361 Stochastic Methods and Constraints Index</a></p><h3 id=lecture>Lecture</h3><ul><li><a href=/posts/kbhsu_cs361_apr162024/>SU-CS361 APR162024</a></li><li><a href=/posts/kbhsu_cs361_apr182024/>SU-CS361 APR182024</a></li><li><a href=/posts/kbhsu_cs361_apr252024/>SU-CS361 APR252024</a></li><li><a href=/posts/kbhsu_cs361_apr302024/>SU-CS361 APR302024</a></li></ul><h2 id=multi-objective-optimization>Multi-Objective Optimization</h2><p>Topics: <a href=/posts/kbhsu_cs361_multi_objective_optimization_sampling_surrogates/>SU-CS361 Multi-Objective Optimization, Sampling, Surrogates</a></p><h3 id=lecture>Lecture</h3><ul><li><a href=/posts/kbhsu_cs361_apr302024/>SU-CS361 APR302024</a></li></ul><h2 id=sampling-and-surrogates>Sampling and Surrogates</h2><h2 id=optimization-under-uncertainty>Optimization Under Uncertainty</h2><h2 id=what-s-next>What&rsquo;s Next</h2></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

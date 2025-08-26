@@ -1,0 +1,97 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>value iteration</title>
+<meta name=description content="We apply the Bellman Expectation Equation and selecting the utility that is calculated by taking the most optimal action given the current utility:
+\begin{equation}
+U_{k+1}(s) = \max_{a} \qty(R(s,a) + \gamma \sum_{s&rsquo;} T(s&rsquo; | s,a) U_{k}(s&rsquo;))
+\end{equation}
+This iterative process is called the Bellman backup, or Bellman update.
+\begin{equation}
+U_1 \dots U_{k} \dots U^{*}
+\end{equation}
+eventually will converge into the optimal value function. After which, we just extract the greedy policy from the utility to get a policy to use."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>value iteration</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>We apply the <a href=/posts/kbhpolicy_evaluation/#bellman-expectation-equation>Bellman Expectation Equation</a> and selecting the <a href=/posts/kbhutility_theory/>utility</a> that is calculated by taking the most optimal action given the current <a href=/posts/kbhutility_theory/>utility</a>:</p><p>\begin{equation}
+U_{k+1}(s) = \max_{a} \qty(R(s,a) + \gamma \sum_{s&rsquo;} T(s&rsquo; | s,a) U_{k}(s&rsquo;))
+\end{equation}</p><p>This iterative process is called the <a href=/posts/kbhvalue_iteration/>Bellman backup</a>, or <a href=/posts/kbhvalue_iteration/>Bellman update</a>.</p><p>\begin{equation}
+U_1 \dots U_{k} \dots U^{*}
+\end{equation}</p><p>eventually will converge into the <a href=/posts/kbhpolicy/#optimal-policy>optimal value function</a>. After which, we just extract the <a href=/posts/kbhaction_value_function/#value-function-policy>greedy policy</a> from the <a href=/posts/kbhutility_theory/>utility</a> to get a <a href=/posts/kbhpolicy/>policy</a> to use.</p><p>We stop when the <a href=#bellman-residual>Bellman Residual</a> hits a the desired error threshold:</p><h2 id=bellman-residual>Bellman Residual</h2><p>Take the <a href=/posts/kbhl_infty/>L-\(\infty\)</a> norm of \(U^{k+1}-U^{k}\) (that is, take \(||U_{k+1} - U_{k}||_{\infty}\). We call that the <a href=#bellman-residual>Bellman Residual</a>. If this <a href=#bellman-residual>Bellman Residual</a> drops below \(\delta\), it is shown that the error between \(U^{*}\) (convergence) and \(U_{k}\) will only be:</p><p>\begin{equation}
+\epsilon = \frac{\delta \gamma}{(1-\gamma)}
+\end{equation}</p><p>So as long as the <a href=#bellman-residual>Bellman Residual</a> between your two updates \(\leq \delta\), you know that you are at most \(\epsilon\) away from the <a href=/posts/kbhpolicy/#optimal-policy>optimal utility</a>.</p><p><strong>You will note that as future discount \(\gamma \to 1\), this error bound becomes much larger. Therefore, you have to iterate more to get to the same \(\epsilon\).</strong> You need more iterations when \(\gamma \to 1\).</p><p>Notably, the loss of some arbitrary <a href=/posts/kbhutility_theory/>utility</a> derived from <a href=/posts/kbhpolicy_evaluation/>policy evaluation</a> is:</p><p>\begin{equation}
+|| U^{\pi} - U^{*} || &lt; \frac{2\epsilon \gamma}{1-\gamma}
+\end{equation}</p><h2 id=asynchronous-value-iteration>asynchronous value iteration</h2><p>We choose an ordering of states. We then loop through the entire list, updating the value function. Then, we loop through this system multiple times until the system converged.</p><p>That is, instead of creating a list of things \(U_{k}\), keeping only the current current one in memory, we come up with some:</p><p>\begin{equation}
+U(s) \leftarrow \max_{a} \qty(R(s,a) + \gamma \sum_{s&rsquo;} T(s&rsquo; | s,a) U(s&rsquo;))
+\end{equation}</p><p>The idea is, instead of keeping all of the \(U_{k-1}\) until you have calculated all of \(U_{k}\) for each state, we just use an ordering of the states to just use whatever value we calculated last.</p><h2 id=time-complexity>time complexity</h2><p>\begin{equation}
+O(S^{2}A)
+\end{equation}</p><p>where \(S\) is the number of states and \(A\) the number of actions.</p><ol><li>loop over all states in each update</li><li>loop over all actions to figure out the max</li><li>loop over all next states and calculate their <a href=/posts/kbhutility_theory/>utility</a></li></ol><h2 id=pomdp--kbhpartially-observable-markov-decision-process-dot-md--value-iteration><a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a> value-iteration</h2><ol><li>compute <a href=/posts/kbhalpha_vector/>alpha vector</a>s for all one-step plans (i.e. <a href=/posts/kbhconditional_plan/>conditional plan</a>s that does just one action and gives up)</li><li><a href=/posts/kbhalpha_vector/#id-a11af4cf-7e36-4b3f-876f-e6a26cf6817e-alpha-vector-pruning>alpha vector pruning</a> on any plans that are dominated</li><li>generate all possible two-step <a href=/posts/kbhconditional_plan/>conditional plan</a>s over all actions using combinations of non-pruned one-step plans above as <strong><strong>SUBPLANS</strong></strong> (yes, you can use a one-step plan twice)</li><li>repeat steps 2-3</li></ol><p>see also performing value-iteration naively with <a href=/posts/kbhalpha_vector/#one-step-lookahead-in-pomdp>one-step lookahead in POMDP</a>.</p><h2 id=pomdp-bellman-update>POMDP Bellman Update</h2><p>Say you want to extract a <a href=/posts/kbhpolicy/>policy</a> out of a bunch of <a href=/posts/kbhalpha_vector/>alpha vector</a>s.</p><p>Let \(\alpha \in \Gamma\), a set of <a href=/posts/kbhalpha_vector/>alpha vector</a>s; we obtain a new <a href=/posts/kbhalpha_vector/>alpha vector</a> \(U&rsquo;(b) = [U(s_0) \dots U(s_{n})]\) by:</p><p>\begin{equation}
+U&rsquo;(b) = \max_{a}\qty[R(b,a)+\gamma \qty(\sum_{o}^{}P(o|b,a) U(b))]
+\end{equation}</p><p>where:</p><p>\begin{equation}
+R(b,a) = \sum_{s}^{} R(s,a)b(s)
+\end{equation}</p><p>\begin{align}
+P(o|b,a) &= \sum_{s}^{} p(o|s,a) b(s) \\
+&= \sum_{s}^{} \sum_{s&rsquo;}^{} T(s&rsquo;|s,a) O(o|s&rsquo;,a) b(s)
+\end{align}</p><p>and</p><p>\begin{equation}
+U^{\Gamma}(b) = \max_{\alpha \in \Gamma} \alpha^{\top} b
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,104 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>typing</title>
+<meta name=description content="what is a type? a type is a set of values.
+consider
+List[Int]; importantly, List is not a type; its a &ldquo;type constructor&rdquo; which takes a type as input (Int) and gives you as type as output List[int].
+-> is another &ldquo;type constructor&rdquo;; its a type constructor written in infix notation. It takes two arguments, it constructs a type for set of functions which takes an integer as input and maps it to another integer Int -> Int"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>typing</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>what is a <a href=/posts/kbhtyping/>type</a>? a <a href=/posts/kbhtyping/>type</a> is a set of values.</p><h3 id=consider>consider</h3><p><code>List[Int]</code>; importantly, <code>List</code> is <em>not</em> a type; its a &ldquo;type constructor&rdquo; which takes a type as input (<code>Int</code>) and gives you as type as output <code>List[int]</code>.</p><p><code>-></code> is another &ldquo;type constructor&rdquo;; its a type constructor written in infix notation. It takes two arguments, it constructs a type for set of functions which takes an integer as input and maps it to another integer <code>Int -> Int</code></p><h3 id=types-are-rules-of-inference>types are rules of inference</h3><p>&ldquo;If Hypothesis is true, then Conclusion is true&rdquo;
+&ldquo;If E1 and E2 have certain types, then E3 has a certain type&rdquo;</p><p>For instance:</p><p>if \(e_1\) has type <code>Int</code> and \(e_2\) has type <code>Int</code>, then \(e_1 + e_2\) has type <code>Int</code>.</p><h3 id=inference-rule-notation>inference rule notation</h3><p>\begin{equation}
+\frac{\vdash H_{1} \dots \vdash H_{n}}{\vdash C}
+\end{equation}</p><p>where each \(H_{j}, C\) have the shape \(\vdash e: T\), that some \(e\) has type some \(T\)</p><h4 id=summation>summation</h4><p>\begin{equation}
+\frac{\vdash e_1 : Int, \vdash e_2: Int}{\vdash e_1+e_2 : Int}
+\end{equation}</p><h4 id=combining-rules>combining rules</h4><p>suppose you need to first show that \(1\) and \(2\) are integers</p><p>\begin{equation}
+\frac{\frac{\vdash 1: \text{1 is an integer}}{\vdash 1 : Int}, \frac{\vdash 2: \text{1 is an integer}}{\vdash 2 : Int}}{\vdash 1+2 : Int}
+\end{equation}</p><h3 id=type-rules>type rules</h3><h4 id=variables>variables</h4><p>\begin{equation}
+\frac{}{A, x: t \vdash x: t}
+\end{equation}</p><p>if you assume \(x:t\), then \(x:t\)</p><h4 id=integers>integers</h4><p>\begin{equation}
+\frac{}{A \vdash i: int}
+\end{equation}</p><p>we call \(i\) any int</p><h4 id=function-applications>function applications</h4><p>\begin{equation}
+\frac{\begin{align}
+&amp;A \vdash e_1: t \to t&rsquo;\\
+&amp;A \vdash e_2 : t
+\end{align}}{A \vdash e_1e_2: t&rsquo;}
+\end{equation}</p><p>if my function \(f\) takes \(t\) to \(t&rsquo;\), then applying it to a \(t\) will give you a \(t&rsquo;\)</p><h4 id=abstraction>abstraction</h4><p>\begin{equation}
+\frac{A, x:t \vdash e: t&rsquo;}{A \vdash \lambda x:t . e : t \to t&rsquo;}
+\end{equation}</p><p>if we can prove that with a thing \(x\) of type \(t\) we can force \(e\) to be type \(t&rsquo;\), then the lambda wrapped around it would have the signature \(t \to t&rsquo;\).</p><h4 id=let>let</h4><p>\begin{equation}
+\frac{\begin{align}
+&amp;A \vdash \lambda x.e : t, A \\
+&amp;f: t \vdash e&rsquo; : t'
+\end{align}}{A \vdash let\ f=\lambda x.e \text{ in } e&rsquo; : t&rsquo;}
+\end{equation}</p><h3 id=environment>environment</h3><p>Environments gives types for free variables&mdash;an environment is a function from variables to types.</p><p>Let \(A\) be a function from <a href=/posts/kbhsu_cs242_oct032024/#free-variables>free variables</a> to <a href=/posts/kbhtyping/>type</a>. For instance, \(A \vdash e:T\), meaning &ldquo;under the assumption that variables have types by \(A\), its provable that the expression \(e\) has type \(T\).</p><p>We have then tack on this on</p><p>\begin{equation}
+\frac{A \vdash e_1 : Int, A \vdash e_2: Int}{A\vdash e_1+e_2 : Int}
+\end{equation}</p><h3 id=variables>variables</h3><p>\begin{equation}
+\frac{A(x) = T}{A \vdash x:T}
+\end{equation}</p><h2 id=religion>religion</h2><p>For a type system that doesn&rsquo;t allow primitive recursion, there maybe type duplication because you can&rsquo;t assign a thing into multiple types.</p><h2 id=type-inference>type inference</h2><p>see <a href=/posts/kbhsu_cs242_oct102024/#type-inference>type inference</a></p><p>for every new application, we wrote</p><p>\begin{equation}
+\frac{A \vdash f: t \to t&rsquo;, A \vdash e : t}{A \vdash f e: t&rsquo;}
+\end{equation}</p><p>now, we modify this with a new type variables</p><p>\begin{equation}
+\frac{t=t&rsquo; \to \beta, A \vdash e_1: t, A \vdash e_2 : t&rsquo;}{A \vdash e_1e_2: \beta}
+\end{equation}</p><p>and now, to actually type things, we just want to solve for \(\beta\). we then solve the constraints:</p><ul><li>S, t = ⍺ => S, t = ⍺, ⍺ = t [Symmetry]</li><li>S, ⍺ = t1, ⍺ = t2 => S, ⍺ = t1, ⍺ = t2, t1 = t2 [Transitivity]</li><li>S, t1 → t2 = t3 → t4 => S, t1 → t2 = t3 → t4, t1 = t3, t2 = t4 [Structure]</li></ul><h3 id=infiite-solutions>infiite solutions</h3><p>Consider:</p><p>\begin{equation}
+x = int \to x
+\end{equation}</p><h3 id=constraint-solving>constraint solving</h3><ul><li>for each equation \(A=B \in S\), check that \(A&rsquo; = C(\emptyset, S, A)\) is defined</li><li><a href=/posts/kbhsu_cs242_oct102024/#canonicalization>canonicalization</a></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

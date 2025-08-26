@@ -1,0 +1,97 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Defensive Programming</title>
+<meta name=description content="Facts
+
+Everybody writes bugs
+Debugging sucks
+
+Defensive Programming Tools + Techniques
+
+Use language features
+Specs, documentations, Test-Driven Development, unit testing
+Fail fast and loudly
+Systematic debugging
+Investing in tools
+
+Use Language Features
+
+Descriptors: static, final, pub./priv.
+Type checking: prevent type errors
+Automatic array bounds checking
+Memory management
+Compiler optimization
+
+Key idea: know what language features are available, why/when to use them. don&rsquo;t work against the language in circumventing them
+Specs, Docs., TDD, Unit Tests
+
+How should it work: specs
+How does it work: docs
+How will I know it works: TDD
+How do I know it still works: unit tests
+
+These all force you to think about your code before!! you write it so then you can correct them as soon as possible."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Defensive Programming</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=facts>Facts</h2><ol><li>Everybody writes bugs</li><li>Debugging <em>sucks</em></li></ol><h2 id=defensive-programming-tools-plus-techniques>Defensive Programming Tools + Techniques</h2><ul><li>Use language features</li><li>Specs, documentations, <a href=/posts/kbhtesting/#test-driven-development>Test-Driven Development</a>, unit testing</li><li>Fail fast and loudly</li><li>Systematic debugging</li><li>Investing in tools</li></ul><h2 id=use-language-features>Use Language Features</h2><ul><li>Descriptors: static, final, pub./priv.</li><li>Type checking: prevent type errors</li><li>Automatic array bounds checking</li><li>Memory management</li><li>Compiler optimization</li></ul><p>Key idea: know what language features are available, why/when to use them. <strong>don&rsquo;t work against the language in circumventing them</strong></p><h2 id=specs-docs-dot-tdd-unit-tests>Specs, Docs., TDD, Unit Tests</h2><ul><li>How should it work: specs</li><li>How does it work: docs</li><li>How will I know it works: TDD</li><li>How do I know it still works: unit tests</li></ul><p>These all force you to <em>think</em> about your code <em>before!!</em> you write it so then you can correct them as soon as possible.</p><h2 id=failing-fast-and-failing-loudly>Failing Fast and Failing Loudly</h2><ol><li>The earlier you recognize there is a problem, the easier it is to fix it</li><li>Problems not fixed can be lost, covered up, or even <strong>relied upon</strong></li><li>Learn from every failure</li></ol><h3 id=how-do-we-put-this-into-practice>How do we put this into practice</h3><ol><li>Use asserts, exceptions, logging</li><li>Fix/diagnose/track every bug, even if you choose not to fix it</li><li>Add regression tests for every bug + run them regularly</li></ol><h2 id=systematic-debugging>Systematic Debugging</h2><p><a href=#systematic-debugging>Systematic Debugging</a> is a framework for debugging software.</p><ol><li>Reproduce the bug</li><li>Reduce the bug to the smallest possible, repeatable test case<ol><li>Faster test cases mean faster iterations in debugging</li><li>Smaller test cases help eliminate possible causes for error</li></ol></li><li>Find the root cause<ol><li>Study data (logs, behavior, etc.), hypothesis, experiment, repeat</li><li>Change code and data to get more information</li><li><strong>FIXING SYMPTOM IS NOT ENOUGH</strong></li></ol></li><li>Fix the bug</li><li>Add a regression test, and run all tests</li></ol><h3 id=reducing-test-case>Reducing Test Case</h3><ul><li>Start with the data that uncovered the bug</li><li>Remove pieces of data until the bug no longer occurs<ul><li>Bracketing: create both a test case that fails and similar test cases that pass</li><li>Binary search: remove/add back half of the data at a time</li></ul></li><li>Can work from either end: start with everything and reduce until disappearance, or start with only one line and build until bug</li></ul><h3 id=finding-the-cause>Finding the Cause</h3><ul><li>Trace through the program</li><li>View intermediate results<ul><li>Every iteration of a for loop</li><li>Input and output of a given function</li></ul></li><li>Tools to use<ul><li>assert()</li><li>printing/logging</li><li>a debugger</li><li>binary search</li></ul></li></ul><h2 id=tooling>Tooling!</h2><ul><li>Linter</li><li>Fuzzer</li><li>Sanitizer</li><li>Valgrind</li><li>DTrace</li></ul><h2 id=d41d8c></h2><h2 id=d41d8c></h2><h2 id=d41d8c></h2></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

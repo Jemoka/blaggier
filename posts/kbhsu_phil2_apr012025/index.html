@@ -1,0 +1,102 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-PHIL2 APR012025</title>
+<meta name=description content="Challenge of moral philosophy: a system which resolves morality and ethics together.
+tools
+
+definitions
+appearance vs. reality (descriptive vs. true values)
+reflective equilibrium
+
+
+morality
+morality is paradimatically a set of rules/expectations (concerning character/motives/emotions) for right/wrong behavior.
+A code of conduct that people &ldquo;must&rdquo; follow to&mldr;
+
+regulate / guide interpersonal interactions
+rules that concern&mldr;
+
+harm / benefit
+justice / fairness
+loyalty / obedience
+sanctity / purity
+
+
+
+Key question of morality: what do we owe to each other? what do I owe other people?"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-PHIL2 APR012025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Challenge of moral philosophy: a system which resolves morality and ethics together.</p><h2 id=tools>tools</h2><ul><li>definitions</li><li>appearance vs. reality (descriptive vs. true values)</li><li>reflective equilibrium</li></ul><hr><h2 id=morality>morality</h2><p><a href=#morality>morality</a> is paradimatically a set of rules/expectations (concerning character/motives/emotions) for right/wrong behavior.</p><p>A code of conduct that people &ldquo;must&rdquo; follow to&mldr;</p><ul><li>regulate / guide interpersonal interactions</li><li>rules that concern&mldr;<ul><li>harm / benefit</li><li>justice / fairness</li><li>loyalty / obedience</li><li>sanctity / purity</li></ul></li></ul><p><strong>Key question of morality</strong>: what do we owe to each other? what do I owe other people?</p><h3 id=example>example</h3><h4 id=twelve-commandments>twelve commandments</h4><ol><li>no other gods</li><li>no idols</li><li>no swearing</li><li>keep sabbath holy</li><li>honor parents</li><li>don&rsquo;t murder</li><li>don&rsquo;t commit adultery</li><li>no stealing</li><li>no lying</li><li>no coveting</li></ol><h3 id=descritive-morality>descritive morality</h3><p>what people think or believe is right and wrong</p><ul><li>privileging some kind of in-group</li></ul><h3 id=true-morality>true morality</h3><p>what is right and wrong</p><h2 id=ethics>ethics</h2><ul><li>what&rsquo;s a good life?</li><li>how should I live?</li><li>what should I do, all things considered?</li></ul><p>that is, ethics considers <a href=#morality>morality</a>, etc but also beauty, etc.</p><h2 id=modern-morality>modern morality</h2><p>Modern <a href=#morality>morality</a> has four typical features:</p><ul><li>&ldquo;universal&rdquo; &mdash; applies to everyone</li><li>&ldquo;impartial / egalitarian&rdquo; &mdash; everyone counts the same, everyone is &ldquo;equally real&rdquo;</li><li>&ldquo;inescapable&rdquo; &mdash; you can&rsquo;t ot out</li><li>&ldquo;overriding&rdquo; &mdash; morality is important, moral considerations are weighty + need to be taken seriously (&ldquo;always beat others&rdquo;)</li></ul><h2 id=theory>theory</h2><p>Why do we need theory?</p><ol><li>identify the &ldquo;correct&rdquo; rules / principles in a systematic way</li><li>we want to know why these &ldquo;correct&rdquo; rules are correct</li><li>why be moral?</li><li>how do we know any of this? what&rsquo;s the methodology?</li></ol><h3 id=coherentism>coherentism</h3><p>A <a href=#coherentism>coherentism</a> is looping belief that forms the basis of a belief.</p><h4 id=agrippa-s-trilemma>Agrippa&rsquo;s Trilemma</h4><p>Beliefs help justify observations.</p><pre tabindex=0><code class=language-dot data-lang=dot>digraph {
+graph [bgcolor=transparent];
+node [fontcolor=white, color=white];
+edge [fontcolor=white, color=white];
+
+observation [shape=rectangle];
+dot [shape=none, label=&#34;...&#34;]
+
+belief1 -&gt; &#34;observation&#34; -&gt; belief2 -&gt; {&#34;belief3&#34;, &#34;belief4&#34;};
+&#34;belief4&#34; -&gt; observation [label=&#34;coherentism&#34;];
+&#34;belief3&#34; -&gt; dot;
+}
+</code></pre><figure><img src=/ox-hugo/phil2_apr012025_beliefs.svg></figure><h3 id=reflective-equilibrium>reflective equilibrium</h3><p>once figure above reaches equilibrium, that&rsquo;s <a href=#reflective-equilibrium>reflective equilibrium</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

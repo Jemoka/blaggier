@@ -1,0 +1,79 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>ICLR2025 Saturday Posters</title>
+<meta name=description content="ICLR2025 Cassidy: AssistanceZero
+
+Train reward predictor to also have rewards at test time
+MCTS
+Learn to match root node KL
+
+ICLR2025 Liu: synthesizing programmatic reinforcement learning policies with LLM guided search
+Hill climbing with partial mutations of generated programs of LLMs
+ICLR2025 Weller: l PromptTrirver
+??
+ICLR2025 Yu: robust LLM safeguard via refusal feature adversarial training
+With mechanistic interpretability, we can find a sub space which is correlated with refusal, pull that up"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>ICLR2025 Saturday Posters</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=iclr2025-cassidy-assistancezero>ICLR2025 Cassidy: AssistanceZero</h2><ol><li>Train reward predictor to also have rewards at test time</li><li>MCTS</li><li>Learn to match root node KL</li></ol><h2 id=iclr2025-liu-synthesizing-programmatic-reinforcement-learning-policies-with-llm-guided-search>ICLR2025 Liu: synthesizing programmatic reinforcement learning policies with LLM guided search</h2><p>Hill climbing with partial mutations of generated programs of LLMs</p><h2 id=iclr2025-weller-l-prompttrirver>ICLR2025 Weller: l PromptTrirver</h2><p>??</p><h2 id=iclr2025-yu-robust-llm-safeguard-via-refusal-feature-adversarial-training>ICLR2025 Yu: robust LLM safeguard via refusal feature adversarial training</h2><p>With mechanistic interpretability, we can find a sub space which is correlated with refusal, pull that up</p><h2 id=iclr2025-thrush-improving-pre-training-data-using-complexity-correlation>ICLR2025 Thrush: improving pre-training data using complexity correlation</h2><p>For each pre-training data domain, measure perplexity using existing language model, wrong correlations, train a fast text data sampler using samples of high correlations with ppl</p><h2 id=iclr2025-muenninghoff-generative-representational-instruction-tuning>ICLR2025 Muenninghoff: generative representational instruction tuning</h2><p>Train your model to do both the instructions and embeddings</p><h2 id=iclr2025-aycock-can-lm-really-learn-to-translate-a-low-resource-language-from-grammar-books>ICLR2025 Aycock: can LM really learn to translate a low resource language from grammar books</h2><p>LLM&rsquo;s mostly learn parallel examples from grammar book in order for translation, gain from actually having grammar comes only in linguistic tasks</p><h2 id=iclr2025-kaplan-from-tokens-to-words>ICLR2025 Kaplan: from tokens to words</h2><p>Interpretability results show that last token embeddings is often how multiword tokens are represented in language model; so, why don&rsquo;t we use the last token embedding as new embedding to insert more vocab into the language model, also, for typos, we can use logit lens to trace at one point of a typo becomes corrected</p><h2 id=iclr2025-kumarappan-lifeline-learning-for-formal-theorem-proving>ICLR2025 Kumarappan: lifeline learning for formal theorem proving</h2><p>lean prover; tree research with intermediate rewards to identify useful partial steps, online learning using these steps, sequence problems in curriculum learning fashion to build on using simple proofs</p><h2 id=iclr2025-goyal-context-parametric-conversion>ICLR2025 Goyal: context parametric conversion</h2><p>Although instruction tuning improves context reliance initially, context reliance drops after time of in instruction fine-tuning despite standard performance benchmarks increasing</p><h2 id=iclr2025-wan-self-improving-many-shot-reasoners>ICLR2025 Wan: self improving many shot reasoners</h2><p>for in context learning, run Bayesian optimization steps on some of the outputs, and use that to generate new in context examples</p><h2 id=iclr2025-hsu-grounding-by-trying>ICLR2025 Hsu: grounding by trying</h2><p>Do you RAG by trying some queries and for the good ones do SFT and then DPO</p><h2 id=iclr2025-jia-your-proofs-are-use-for-optimization-based-jailbreaking>ICLR2025 Jia: your proofs are use for optimization based jailbreaking</h2><p>update multiple tokens at once in order to make attack efficiency faster</p><h2 id=iclr2025-kang-visual-attention-sink-in-large-language-models>ICLR2025 Kang: visual attention sink in large language models</h2><p>Visual language models tend to attend to stuff that is kind of irrelevant, where a good intervention is to distribute attention weights from irrelevant things to relevant things</p><h2 id=iclr2025-huang-steering-llm-behavior-with-concept-activation-factors>ICLR2025 Huang: steering LLM behavior with concept activation factors</h2><p>Method: extract last token embedding using positive and negative instructions. From there, steer LLMs using these in bedding</p><h2 id=iclr2025-wang-perplexity-trap>ICLR2025 Wang: perplexity trap</h2><p>documents, under semantic permutation, is considered more relevant when the perplexity is lower</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

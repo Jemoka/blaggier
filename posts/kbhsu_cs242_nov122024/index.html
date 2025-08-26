@@ -1,0 +1,124 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 NOV122024</title>
+<meta name=description content="Haskell
+functional
+We can express lambda calculi
+\begin{equation}
+f = \lambda x . x \qty(\lambda y . y)
+\end{equation}
+def f = \x -> x (\y -> y)
+This is currently polymorphic
+Haskell primer
+pairs!
+dup' :: a -> (a,a)
+dup' x = (x,x)
+arrows here are right associative
+pattern match
+fst :: (a,b) -> a
+fst (x, _) = x
+fst (x, _) = x
+underscore has special meaning
+lists!
+a list (cons)
+1 : 2
+nil
+[]
+we can also write
+[1,2]
+ADTs
+data IntList = IntCons Int IntList | IntNil
+btw; you can also use `backticks` to infix something, so to construct something you can write"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 NOV122024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=haskell>Haskell</h2><h3 id=functional>functional</h3><p>We can express lambda calculi</p><p>\begin{equation}
+f = \lambda x . x \qty(\lambda y . y)
+\end{equation}</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#75af00>def</span> <span style=color:#111>f</span> <span style=color:#f92672>=</span> <span style=color:#75af00>\</span><span style=color:#111>x</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>x</span> <span style=color:#111>(</span><span style=color:#75af00>\</span><span style=color:#111>y</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>y</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>This is currently polymorphic</p><h3 id=haskell-primer>Haskell primer</h3><h4 id=pairs>pairs!</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#75af00>dup&#39;</span> <span style=color:#f92672>::</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>dup&#39;</span> <span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>x</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>arrows here are right associative</p><h4 id=pattern-match>pattern match</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#75af00>fst</span> <span style=color:#f92672>::</span> <span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>b</span><span style=color:#111>)</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>a</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>fst</span> <span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>,</span> <span style=color:#00a8c8>_</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>fst</span> <span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>,</span> <span style=color:#00a8c8>_</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span>
+</span></span></code></pre></div><p>underscore has special meaning</p><h4 id=lists>lists!</h4><p>a list (cons)</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#ae81ff>1</span> <span style=color:#00a8c8>:</span> <span style=color:#ae81ff>2</span>
+</span></span></code></pre></div><p>nil</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>[]</span>
+</span></span></code></pre></div><p>we can also write</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>2</span><span style=color:#111>]</span>
+</span></span></code></pre></div><h4 id=adts>ADTs</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>data</span> <span style=color:#00a8c8>IntList</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>IntCons</span> <span style=color:#00a8c8>Int</span> <span style=color:#00a8c8>IntList</span> <span style=color:#f92672>|</span> <span style=color:#00a8c8>IntNil</span>
+</span></span></code></pre></div><p>btw; you can also use <code>`backticks`</code> to infix something, so to construct something you can write</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#ae81ff>12</span> <span style=color:#111>`</span><span style=color:#00a8c8>IntCons</span><span style=color:#111>`</span> <span style=color:#00a8c8>IntNil</span>
+</span></span></code></pre></div><h4 id=generic-adts>Generic ADTs</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>data</span> <span style=color:#00a8c8>List</span> <span style=color:#111>a</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>Cons</span> <span style=color:#111>a</span> <span style=color:#111>(</span><span style=color:#00a8c8>List</span> <span style=color:#111>a</span><span style=color:#111>)</span> <span style=color:#f92672>|</span> <span style=color:#00a8c8>Nil</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#75af00>l</span> <span style=color:#f92672>::</span> <span style=color:#00a8c8>List</span> <span style=color:#00a8c8>String</span>
+</span></span></code></pre></div><h4 id=dot-operator>dot operator</h4><p>You can compose functions together&mdash;</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#75af00>fn</span> <span style=color:#f92672>=</span>  <span style=color:#111>f1</span> <span style=color:#f92672>.</span> <span style=color:#111>f2</span> <span style=color:#f92672>.</span> <span style=color:#111>f3</span>
+</span></span></code></pre></div><h4 id=lazy-semantics-normal-order--kbhcombinator-calculus-dot-md>lazy semantics / <a href=/posts/kbhcombinator_calculus/#normal-order>normal order</a></h4><p>Haskell is a <a href=/posts/kbhcombinator_calculus/#normal-order>normal order</a> language (&mldr;caveats, but basically). This makes side-effects (i.e. a case where the return value isn&rsquo;t used) is hard because side effects don&rsquo;t actually use the return value so it will never be evaluated.</p><p>Some solutions&mldr;</p><ul><li><p>&ldquo;impure&rdquo; languages</p><p>Don&rsquo;t evaluate normal order, and then have side effects directly.</p><ul><li>OCaml</li><li>Scala</li><li>F#</li></ul><p>this makes side effects easy but prevents normal order evaluation</p></li></ul><h4 id=monads>monads</h4><p>notice that you can have monads encoded through ADTs</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>data</span> <span style=color:#00a8c8>State</span> <span style=color:#111>s</span> <span style=color:#111>a</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>State</span> <span style=color:#111>(</span><span style=color:#111>s</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>))</span>
+</span></span></code></pre></div><p>whereby the <code>State</code> monad takes an old state in, and some new state and return value. But, we now have to write state and bind for each possible monad. So, we can abstract away by wrapping stuff in a monad instance.</p><p>To implement: typeclasses!!</p><p>A monad is defined already as&mdash;</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#00a8c8>Monad</span> <span style=color:#111>m</span> <span style=color:#00a8c8>where</span>
+</span></span><span style=display:flex><span>  <span style=color:#111>return</span> <span style=color:#f92672>::</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>m</span> <span style=color:#111>a</span>
+</span></span><span style=display:flex><span>  <span style=color:#111>bind</span> <span style=color:#f92672>::</span> <span style=color:#111>m</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>(</span><span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>m</span> <span style=color:#111>b</span><span style=color:#111>)</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>m</span> <span style=color:#111>b</span>
+</span></span></code></pre></div><p>we can inherit this type class</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>instance</span> <span style=color:#00a8c8>Monad</span> <span style=color:#111>(</span><span style=color:#00a8c8>State</span> <span style=color:#111>s</span><span style=color:#111>)</span> <span style=color:#00a8c8>where</span>
+</span></span><span style=display:flex><span>  <span style=color:#111>return</span> <span style=color:#f92672>=</span> <span style=color:#111>myReturnFunction</span>
+</span></span><span style=display:flex><span>  <span style=color:#111>bind</span> <span style=color:#f92672>=</span> <span style=color:#111>myBindFunction</span>
+</span></span></code></pre></div><p>now, we can then define functions that check if stuff inherits this typeclass</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#75715e>-- silly monad thing</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>callBind</span> <span style=color:#f92672>::</span> <span style=color:#00a8c8>Monad</span> <span style=color:#111>m</span> <span style=color:#f92672>=&gt;</span> <span style=color:#111>(</span><span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>mb</span><span style=color:#111>)</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>m</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>m</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>callBind</span> <span style=color:#111>f</span> <span style=color:#111>m1</span> <span style=color:#111>m2</span> <span style=color:#f92672>=</span> <span style=color:#111>bind</span> <span style=color:#111>m</span> <span style=color:#111>f</span><span style=color:#f92672>...</span>
+</span></span></code></pre></div><p>this function is now generic over any monads</p><h4 id=other-typeclasses>other typeclasses</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#00a8c8>Applicative</span> <span style=color:#111>m</span> <span style=color:#00a8c8>where</span>
+</span></span><span style=display:flex><span>  <span style=color:#111>pure</span> <span style=color:#f92672>::</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>m</span> <span style=color:#111>a</span>
+</span></span><span style=display:flex><span>  <span style=color:#111>app</span> <span style=color:#f92672>::</span> <span style=color:#111>m</span> <span style=color:#111>(</span><span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>b</span><span style=color:#111>)</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>m</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>m</span> <span style=color:#111>b</span>
+</span></span></code></pre></div><p>so you write</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,114 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Gaussian distribution</title>
+<meta name=description content="\begin{equation}
+\mathcal{N}(x|\mu, \Sigma) = \qty(2\pi)^{-\frac{n}{2}} |\Sigma|^{-\frac{1}{2}} \exp \qty(-\frac{1}{2} \qty(x-\mu)^{\top} \Sigma^{-1}(x-\mu))
+\end{equation}
+where \(\Sigma\) is positive semidefinite
+conditioning Gaussian distributions
+For distributions that follow Gaussian distributions, \(a, b\), we obtain:
+\begin{align}
+\mqty[a \\ b] \sim \mathcal{N} \qty(\mqty[\mu_{a}\\ \mu_{b}], \mqty(A & C \\ C^{\top} & B))
+\end{align}
+meaning, each one can be marginalized as:
+\begin{align}
+a \sim \mathcal{N}(\mu_{a}, A) \\
+b \sim \mathcal{N}(\mu_{b}, B) \\
+\end{align}
+Conditioning works too with those terms, for \(a|b\):"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Gaussian distribution</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>\begin{equation}
+\mathcal{N}(x|\mu, \Sigma) = \qty(2\pi)^{-\frac{n}{2}} |\Sigma|^{-\frac{1}{2}} \exp \qty(-\frac{1}{2} \qty(x-\mu)^{\top} \Sigma^{-1}(x-\mu))
+\end{equation}</p><p>where \(\Sigma\) is positive semidefinite</p><h2 id=conditioning-gaussian-distributions>conditioning Gaussian distributions</h2><p>For distributions that follow <a href=/posts/kbhgaussian_distribution/>Gaussian distribution</a>s, \(a, b\), we obtain:</p><p>\begin{align}
+\mqty[a \\ b] \sim \mathcal{N} \qty(\mqty[\mu_{a}\\ \mu_{b}], \mqty(A & C \\ C^{\top} & B))
+\end{align}</p><p>meaning, each one can be marginalized as:</p><p>\begin{align}
+a \sim \mathcal{N}(\mu_{a}, A) \\
+b \sim \mathcal{N}(\mu_{b}, B) \\
+\end{align}</p><p>Conditioning works too with those terms, for \(a|b\):</p><p>\begin{align}
+\mu_{a|b} &= \mu_a + CB^{-1}\qty(b - \mu_{b}) \\
+\sigma_{a|b} &= A - CB^{-1}C^{\top}
+\end{align}</p><h2 id=standard-normal-density-function>standard normal density function</h2><p>This is a function used to model many Gaussian distributions.</p><p>\begin{equation}
+\phi(x) = \frac{1}{\sqrt{2\pi}} e^{-\frac{x^{2}}{2}}
+\end{equation}</p><p>This function is the <a href=/posts/kbhprobability_distributions/#cumulative-distribution-function>CDF</a> of the <a href=#standard-normal>standard normal.</a></p><p><a href=#standard-normal-density-function>standard normal density function</a> is also symmetric:</p><p>\begin{equation}
+\phi(a) = 1- \phi(a)
+\end{equation}</p><h2 id=gaussian-distribution>Gaussian distribution</h2><h3 id=constituents>constituents</h3><ul><li>\(\mu\) the mean</li><li>\(\sigma\) the variance</li></ul><h3 id=requirements>requirements</h3><p>\begin{equation}
+X \sim N(\mu, \sigma^{2})
+\end{equation}</p><p>Its <a href=/posts/kbhprobability_distributions/#probability-density-function>PDF</a> is:</p><p>\begin{equation}
+\mathcal{N}(x \mid \mu, \sigma^{2}) = \frac{1}{\sigma\sqrt{2\pi}} e^{ \frac{-(x-u)^{2}}{2 \sigma^{2}}}
+\end{equation}</p><p>where, \(\phi\) is the <a href=#standard-normal-density-function>standard normal density function</a></p><p>Its <a href=/posts/kbhprobability_distributions/#cumulative-distribution-function>CDF</a>:</p><p>\begin{equation}
+F(x) = \Phi \qty( \frac{x-\mu}{\sigma})
+\end{equation}</p><p>We can&rsquo;t integrate \(\Phi\) further. So we leave it as a special function.</p><p>And its expectations:</p><p>\(E(X) = \mu\)</p><p>\(Var(X) = \sigma^{2}\)</p><h3 id=additional-information>additional information</h3><h4 id=linear-transformations-on-gaussian>linear transformations on Gaussian</h4><p>For some:</p><p>\begin{equation}
+Y = aX + b
+\end{equation}</p><p>where \(X \sim \mathcal{N}\)</p><p>We will end up with another normal \(Y \sim \mathcal{N}\) such that:</p><ul><li>mean: \(au + b\)</li><li>variance: \(a^{2}\sigma^{2}\)</li></ul><h4 id=standard-normal>standard normal</h4><p>The standard normal is:</p><p>\begin{equation}
+Z=\mathcal{N}(0,1)
+\end{equation}</p><p>mean 0, variance 1. You can transform anything into a standard normal via the following linear transform:</p><h4 id=transformation-into-standard-normal--org8e66162>transformation into <a href=#standard-normal>standard normal</a></h4><p>\begin{equation}
+X \sim \mathcal{N}(\mu, \sigma^{2})
+\end{equation}</p><p>and, we can shift it into a standard normal with:</p><p>\begin{equation}
+Z = \frac{X-\mu}{\sigma}
+\end{equation}</p><p>therefore, we can derive what the <a href=/posts/kbhprobability_distributions/#cumulative-distribution-function>CDF</a> of the <a href=/posts/kbhnormal_distribution/>normal distribution</a> by shifting it back into the center:</p><p>\begin{equation}
+P(X&lt;x) \implies P\qty(\frac{X-\mu}{\theta} &lt; \frac{x-\mu}{\theta}) \implies P\qty(Z&lt; \frac{x-\mu}{\theta}) = \Phi\qty(\frac{x-\mu}{\theta})
+\end{equation}</p><h4 id=normal-maximizes-entropy>normal maximizes entropy</h4><p>no other <a href=/posts/kbhrandom_variables/>random variable</a> uses as little <a href=/posts/kbhparameter/>parameter</a>s to convey as much information</p><h4 id=approximation-of-binomial-distribution--kbhbinomial-distribution-dot-md--with-normal-distribution--kbhnormal-distribution-dot-md>approximation of <a href=/posts/kbhbinomial_distribution/>binomial distribution</a> with <a href=/posts/kbhnormal_distribution/>normal distribution</a></h4><p>You can use a <a href=/posts/kbhnormal_distribution/>normal distribution</a> to approximate <a href=#approximation-of-binomial-distribution--kbhbinomial-distribution-dot-md--with-normal-distribution--kbhnormal-distribution-dot-md>binomial approximation</a>. However, be aware of a <a href=/posts/kbhcontinuity_correction/>continuity correction</a></p><h4 id=adding-gaussian-distribution--kbhgaussian-distribution-dot-md--s>adding <a href=/posts/kbhgaussian_distribution/>Gaussian distribution</a>s</h4><p>for <a href=/posts/kbhprobability/#independence>independent</a>:</p><p>\begin{equation}
+X+Y \sim \mathcal{N}(\mu_{1}+\mu_{2}, \sigma_{1}^{2}+\sigma_{2}^{2})
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

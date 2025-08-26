@@ -1,0 +1,83 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>MOMDP</title>
+<meta name=description content="MOMDP are POMDPs where some parts of the state are fully observable.
+
+Motivation
+scaling up POMDPs is really hard: exponential curse of dimensionality. Even discretization will cause the number of beliefs to really blow up.
+Some of the state isn&rsquo;t uncertain, some others are bounded uncertainty: this REDUCES scale a lot.
+Solving
+Solving the algorithm uses SARSOP, or any point-based system. Instead of sampling the full belief state, however, we sample from a tuple \((x, b_{y})\), whereby \(x\) is the observable part and \(b_{y}\) is the unobservable part."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>MOMDP</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhmomdp/>MOMDP</a> are <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a>s where some parts of the state are fully observable.</p><hr><h2 id=motivation>Motivation</h2><p>scaling up <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a>s is <strong><strong>really hard</strong></strong>: exponential <a href=/posts/kbhcurse_of_dimensionality/>curse of dimensionality</a>. Even discretization will cause the number of beliefs to really blow up.</p><p><strong>Some of the state isn&rsquo;t uncertain, some others are bounded uncertainty: this REDUCES scale a lot.</strong></p><h2 id=solving>Solving</h2><p>Solving the algorithm uses <a href=/posts/kbhsarsop/>SARSOP</a>, or any point-based system. Instead of sampling the full belief state, however, we sample from a tuple \((x, b_{y})\), whereby \(x\) is the observable part and \(b_{y}\) is the unobservable part.</p><h2 id=how-exactly-tuple>How Exactly Tuple?</h2><h3 id=true-mixed-observability>True Mixed Observability</h3><p>Go about splitting about your space based on the true observability part. Say there are \(10\) states which are observable, you literally just initialize 10 sets of <a href=/posts/kbhalpha_vector/>alpha vector</a>s to create \(V_{1} &mldr; V_{10}\) for your observable states, where each one you have:</p><p>\begin{equation}
+V_{x_{i}}(b_{j}) = \dots
+\end{equation}</p><p>whereby all of your objectives and backup, etc., takes \(x\) your observable state as input. Then, during inference/backup looking at where you are in the observable part and use the value function from that part.</p><h3 id=pseudo-full-observability>Pseudo-Full Observability</h3><p>Train a fully observable model, and then use <a href=/posts/kbhbelief/>belief</a>-weighted average during inference. This is where <a href=/posts/kbhqmdp/>QMDP</a> came from.</p><h3 id=bounded-uncertainty>Bounded Uncertainty</h3><p>Most of the time neither of the top two cases apply cleanly. Instead, most frequently your uncertainty in your observation is <em>bounded</em> by a significant degree.</p><h4 id=condition>Condition</h4><p>For instance, your GPS maybe uncertain, but if it says you are in Kansas you are not in Shanghai. Formally, for \(h: O \to S\) (the hypothetical &ldquo;preimage&rdquo; of any observation), we expect that:</p><p>\begin{equation}
+\frac{h(o)}{S} = c
+\end{equation}</p><p>gives \(c \ll 1\).</p><h4 id=solution>Solution</h4><p>If we know we have <a href=#bounded-uncertainty>Bounded Uncertainty</a>, we can reparameterize our <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a> to an <a href=/posts/kbhmarkov_decision_process/>MDP</a> over observations (we call this \(X\)) plus a <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a> modeling <a href=/posts/kbhuncertainty/>uncertainty</a> in offsets from those observations (we call this \(Y\)).</p><p>Whereby:</p><p>\begin{equation}
+\begin{cases}
+T_{x}(x&rsquo;|x,y,a) = \sum_{s&rsquo; \in S} T(s&rsquo; | (x,y),a) O(x&rsquo;|s&rsquo;,a) \\
+T_{y}(y&rsquo;|x,x&rsquo;,y,a) = \frac{T((x&rsquo;,y&rsquo;) | (x,y),a) O((x&rsquo;,y&rsquo;)|s&rsquo;,a)}{T_{x}(x&rsquo;|x,y,a)}
+\end{cases}
+\end{equation}</p><p>where our state space is now split into \(s \in S = X \times Y\) s.t. \(s=(x,y)\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

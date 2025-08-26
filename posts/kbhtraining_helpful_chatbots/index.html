@@ -1,0 +1,90 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Training Helpful Chatbots</title>
+<meta name=description content="&ldquo;What we have been building since ChatGPT at H4.
+
+No pretraining in any way
+
+Basic Three Steps
+Goal: &ldquo;helpful, harmless, honest, and huggy&rdquo; bots.
+
+Retraining step: large-scale next token prediction
+Incontext learning: few shot learning without updating parameters
+&ldquo;Helpful&rdquo; steps
+
+Taking supervised data to perform supervised fine tuning
+
+
+&ldquo;Harmless&rdquo; steps
+
+Training a classifier for result ranking
+RLHF
+
+
+
+Benchmarking
+Before we started to train, we have a problem. Most benchmarks are on generic reasoning, which evaluates 1), 2). Therefore, we need new metrics for steps 4) and 5)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Training Helpful Chatbots</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>&ldquo;What we have been building since ChatGPT at <a href=/posts/kbhh4/>H4</a>.</p><ul><li>No pretraining in any way</li></ul><h2 id=basic-three-steps>Basic Three Steps</h2><p>Goal: &ldquo;helpful, harmless, honest, and huggy&rdquo; bots.</p><ol><li>Retraining step: large-scale next token prediction</li><li>Incontext learning: few shot learning without updating parameters</li><li>&ldquo;Helpful&rdquo; steps<ol><li>Taking supervised data to perform supervised fine tuning</li></ol></li><li>&ldquo;Harmless&rdquo; steps<ol><li>Training a classifier for result ranking</li><li>RLHF</li></ol></li></ol><h2 id=benchmarking>Benchmarking</h2><p>Before we started to train, we have a problem. Most benchmarks are on generic reasoning, which evaluates 1), 2). Therefore, we need new metrics for steps 4) and 5).</p><p>So:</p><h3 id=evaluating-instruction-and-chatty-ness>Evaluating instruction and &ldquo;chatty-ness&rdquo;</h3><p>Pairwise <a href=/posts/kbhelo_ratings/>Elo Ratings</a> leaderboard from 🤗 + AlpacaEval. Both use GPT4 as the automated evaluator + as well as humans. MTBench from LMSYS has a new benchmark for the same thing, but supports multi-turn evaluation.</p><p>Three main effects observed:</p><ol><li>results improve <em>slightly</em> the longer the prompt</li><li>GPT4 MTBench assigns worse scores on gpt4 like data</li><li>adding more data into fine tuning had diminishing returns after thousands of samples</li></ol><p>TruthfulQA is the most differentiating benchmark; most others score about the same</p><h3 id=evaluating-reward-model>Evaluating Reward Model</h3><p>There are not any open source reward models. Nor is there anything on evaluating or dataset on red teaming. The only dataset out there is Anthropic&rsquo;s red teaming data.</p><p><a href=https://huggingface.co/blog/red-teaming>https://huggingface.co/blog/red-teaming</a></p><h3 id=wackiness-gpt4-as-an-evaluator>Wackiness GPT4 as an evaluator</h3><p>Why is everybody using GPT4 as a proxy for humans?</p><ol><li>GPT4 has a left positional bias (if you admonish GPT about this, it will prefer the second one instead :/), while humans provide pretty much uniform rating</li><li>&ldquo;Doping&rdquo;: GPT4 prefers model trained on data that it itself generated</li><li>GPT4 prefers a large variance in unique tokens</li><li>GPT4 has bad correlation with humans with &ldquo;low entropy&rdquo; factual tasks: QA, Summarization, Code; it has better correlation with humans in brainstorming and creative generation</li></ol><p>arxiv:2306.05685</p><h2 id=supervised-fine-tuning>Supervised Fine Tuning</h2><h3 id=data>Data</h3><p>&ldquo;Self-Instruct&rdquo; dataset, Wang et all 2022 => &ldquo;Surge Instruct&rdquo;, huggingface 2023</p><ul><li>Instruction (what to do)</li><li>Input (what to do it on)</li><li>Output (what you are supposed to do)</li></ul><p>Goal: &ldquo;helpful and chatty&rdquo;</p><h4 id=bootstrapping-data-generation>Bootstrapping Data Generation</h4><ul><li>175 seed tasks: 1 instruction + 1 input/output pair</li><li>Give it to a language model to generate more instructions</li><li>Language mode</li></ul><h4 id=human-in-the-loop-data-generation>Human-In-The-loop Data Generation</h4><p>Ultrachat, Ding et al 2023</p><ol><li>human doing some research on the topic and create a prompt</li><li>ask LLM to generate the output</li><li>if result not good, rephrase the prompt</li><li>repeat until good</li></ol><h4 id=roleplaying-data-generation>Roleplaying Data Generation</h4><p>Have two models role play to get and correct data.</p><h4 id=huggingface-surge-instruct>Huggingface Surge-Instruct</h4><p>Humans write everything from scratch. With a pretrained model, diminishing return is seen after a few thousand high quality examples.</p><ul><li><p>Task Distribution</p><p>What should the topics be?</p><p>Use InstructGPT as guidance: largestest section is a generation task (12%), OpenQA the second largest one (12.4%).</p><p>HF replaced InstructGPT distribution&rsquo;s &ldquo;Other&rdquo; section (3.5%) with code work.</p></li></ul><ul><li><p>Length Distribution</p><p>How long should the prompts be? Collected distributions, and Surge Instruct seems to be closest with InstructionGPT.</p><p>Both Anthropic and InstructGPT used a US based task force, and so so did 🤗</p><ul><li>us based taskforce</li><li>roughly even gender slpit</li><li>19 to 62 years old</li><li>primarily white</li><li>technical degree to PhD</li></ul><p>Only used one turn. Multi-turn fine tuning wasn&rsquo;t a thing a few mounths ago.</p></li></ul><h3 id=training>Training</h3><ul><li>starcoder, falcon, llama2</li><li>True fine tuning + <a href=/posts/kbhpeft/>PEFT</a> (LoRA)</li></ul><h2 id=the-hf-part-of-rlhf>The HF part of RLHF</h2><p>Scale agreed with Surge and <a href=/posts/kbhh4/>H4</a> a lot more, but mostly no one agreed with anyone.</p><p>Goal: &ldquo;safe and factual&rdquo;</p><h3 id=task-distribution>Task Distribution</h3><p>Distribution: a lot more about factual things (because we want to encourage factualness) so much more math and code than the general generation. Its also easier to score.</p><h3 id=ranking-guidelines>Ranking Guidelines</h3><ul><li>OpenAI have guidelines about how to rate</li><li>Rate every turn from the diaglogue</li><li>Smaller total length (&lt;2048 tokens)</li><li><strong>Helpfulness OVER honesty</strong> &ndash; this is the opposite of OpenAI because the model wasn&rsquo;t large enough to be very honest</li></ul><p>Two step selection: &ldquo;which one is better&rdquo; => &ldquo;how much is better&rdquo;</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,133 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Fourier Series</title>
+<meta name=description content="Fourier Series and how to find them.
+For a function given at some interval of length \(l\), then the function can be written at:
+\begin{equation}
+f(x) = \sum_{k=1}^{\infty} a_{k} \sin \qty( \frac{k\pi x}{l})
+\end{equation}
+or
+\begin{equation}
+f(x) = \sum_{k=1}^{\infty} b_{k} \cos \qty( \frac{k\pi x}{l})
+\end{equation}
+Recall that because sin and cos are even and odd parts, the functions above force an even and oddness to your expansions. They will be particularly helpful for Dirichlet Conditions and Neumann Conditions."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Fourier Series</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhfourier_series/>Fourier Series</a> and how to find them.</p><p>For a function given at some interval of length \(l\), then the function can be written at:</p><p>\begin{equation}
+f(x) = \sum_{k=1}^{\infty} a_{k} \sin \qty( \frac{k\pi x}{l})
+\end{equation}</p><p>or</p><p>\begin{equation}
+f(x) = \sum_{k=1}^{\infty} b_{k} \cos \qty( \frac{k\pi x}{l})
+\end{equation}</p><p>Recall that because <a href=#sin-and-cos-are-even-and-odd-parts>sin and cos are even and odd parts</a>, the functions above force an even and oddness to your expansions. They will be particularly helpful for <a href=/posts/kbhsu_math53_feb232024/#dirichlet-conditions>Dirichlet Conditions</a> and <a href=/posts/kbhsu_math53_feb232024/#neumann-conditions>Neumann Conditions</a>.</p><p>But, in general, you can use a linear combination of the two by doubling the frequency over your interval \(l\):</p><p>\begin{equation}
+f(x) = a_0 + \sum_{k=1}^{\infty} \qty( a_{k} \cos(k \omega x) + b_{k} \sin(k \omega x))
+\end{equation}</p><p>where \(\omega = \frac{2\pi}{L}\).</p><h2 id=statement>Statement</h2><p>Suppose we have a function that satisfies:</p><p>Recall that each \(\cos(\dots)\) and \(\sin (&mldr;)\) are <a href=/posts/kbhorthogonal/>orthogonal</a>, we can then use the <a href=/posts/kbhlearn_more/>Fourier formula</a> to figure the coefficients \(a_{k}\), \(b_{k}\).</p><hr><p>Aside: why is \(a_0\) also orthogonal?</p><p>\begin{equation}
+a_0 = a_0 \cos (0 \omega x) = a_0 \cdot 1 = a_0
+\end{equation}</p><h3 id=general-fourier-decomposition>General Fourier Decomposition</h3><p>Therefore, by the <a href=/posts/kbhlearn_more/>Fourier formula</a>, we expect that:</p><p>\begin{equation}
+a_0 = \frac{\langle f, 1 \rangle}{ \langle 1,1 \rangle} = \frac{1}{L} \int_{0}^{L} f(x) \dd{x}
+\end{equation}</p><p>\begin{equation}
+a_{k} = \frac{\langle f, \cos (k\omega x) \rangle}{\langle \cos (k\omega x), \cos (k\omega x) \rangle} = \frac{2}{L} \int_{0}^{L} f(x) \cos (k\omega x) \dd{x}
+\end{equation}</p><p>\begin{equation}
+b_{k} = \frac{\langle f, \sin (k\omega x) \rangle}{\langle \sin (k\omega x), \sin (k\omega x) \rangle} = \frac{2}{L} \int_{0}^{L} f(x) \sin (k\omega x) \dd{x}
+\end{equation}</p><p>When computing this, recall that:</p><p>\begin{equation}
+\omega = \frac{2\pi}{L}
+\end{equation}</p><p>where \(L\) the period of your \(L\) periodic function.</p><h3 id=odd-and-even-break>Odd and Even Break</h3><p>If you have an even or odd \(f(x)\), we can refine the series even more into simply a sine or cosine only series.</p><p>For even \(f(x)\), we can write:</p><p>\begin{equation}
+a_{0} + \sum_{k=1}^{\infty} a_{k} \cos (k\omega x)
+\end{equation}</p><p>where:</p><p>\begin{equation}
+a_0 = \frac{1}{L / 2} \int_{0}^{\frac{L}{2}} f(x) \dd{x}
+\end{equation}</p><p>\begin{equation}
+a_{k} = \frac{2}{L / 2} \int_{0}^{\frac{L}{2}} f(x) \cos (k \omega x) \dd{x}
+\end{equation}</p><p>Whereas for odd \(f(x)\), we write:</p><p>\begin{equation}
+\sum_{k=1}^{\infty} b_{k} \sin (k\omega x)
+\end{equation}</p><p>\begin{equation}
+b_{k} = \frac{2}{L / 2} \int_{0}^{L / 2} f(x) \sin (k\omega x) \dd{x}
+\end{equation}</p><h3 id=over-any-function>over any function</h3><p>Suppose we have a function with two roots:</p><p>\begin{equation}
+f(0) = 0 = f(l)
+\end{equation}</p><p>then, we can write it in terms of a <a href=/posts/kbhfourier_series/>Fourier Series</a> by odd-extending the function to the negative direction (see &ldquo;odd extensions below&rdquo;).</p><p>This makes us be able to write \(f\) over \([0,l]\) as:</p><p>\begin{equation}
+f(x) = \sum_{n=1}^{\infty} b_{n} \sin \qty( \frac{n\pi}{l} x)
+\end{equation}</p><p>where:</p><p>\begin{equation}
+b_{n} = \frac{2}{l} \int_{0}^{l} f(x) \sin \qty( \frac{n \pi}{l} x) \dd{x}
+\end{equation}</p><p>this is just the \(l\) extension function above, but with small \(l\) as the function is odd to one side.</p><p>Here&rsquo;s the motivation:</p><h4 id=sin-and-cos-are-even-and-odd-parts>sin and cos are even and odd parts</h4><ul><li><p>odd extensions</p><p>Important note: this function seems to vanish at endpoints \(0\) and \(l\), and not all functions do that.</p><p>So, instead, let&rsquo;s consider the odd extension of \(f\):</p><p>\begin{equation}
+\hat{f}(x) = f(x), x \geq 0
+\end{equation}</p><p>and</p><p>\begin{equation}
+\hat{f}(x) = -f(-x), x &lt; 0
+\end{equation}</p><p>There will therefore be a discontinuous jump at \(0\).</p><p>Using the \(\sin\) function, which are odd, recall that <a href=#fourier-series-converges-with-l-periodic-function>Fourier Series Converges with \(L\) Periodic Function</a>, so at \(0\) given <a href=#fourier-series-converges-with-l-periodic-function>Gibbs Phenomena</a>, the jump will average the discontinouity down to \(0\) (given our extensions are odd).</p></li></ul><ul><li><p>even extensions</p><p>instead, if you want to use \(\cos\), you can make an even extension:</p><p>\begin{equation}
+\hat{f}(x) = f(x), x \geq 0
+\end{equation}</p><p>and</p><p>\begin{equation}
+\hat{f}(x) = f(-x), x &lt; 0
+\end{equation}</p><p>which shouldn&rsquo;t be discontinuous at \(0\) at all.</p></li></ul><h2 id=additional-informatino>Additional Informatino</h2><h3 id=fourier-series-converges-with-l-periodic-function>Fourier Series Converges with \(L\) Periodic Function</h3><p>Suppose \(f(x)\) is an \(L\) periodic function with at most jump discountinuty, and \(f&rsquo;\) continuous everywhere. Then, the associated <a href=/posts/kbhfourier_series/>Fourier Series</a> converges everywhere and coincides with \(f\) except for jump discontinuances, where the values are the average of limits from either side. This is called the <a href=#fourier-series-converges-with-l-periodic-function>Gibbs Phenomena</a></p><h3 id=shifted-sum-of-sinusoids>shifted sum of sinusoids</h3><p>see <a href=/posts/kbhsu_engr76_apr182024/#fourier-series--kbhfourier-series-dot-md--as-exactly-a-shifted-sum-of-sinusoids>Fourier Series as exactly a shifted sum of sinusoids</a></p><h2 id=background>Background</h2><h3 id=fourier-formula--kbhlearn-more-dot-md><a href=/posts/kbhlearn_more/>Fourier formula</a></h3><p>Consider some <a href=/posts/kbhorthogonal/>orthogonal</a> basis \(v_1, &mldr; v_{n}\), recall that if we have:</p><p>\begin{equation}
+v = c_1 v_1 + \dots + c_{n} v_{n}
+\end{equation}</p><p>we can write:</p><p>\begin{equation}
+c_{j} = \frac{v \cdot v_{j}}{ v_{j} \cdot v_{j}}
+\end{equation}</p><p>(this is similar to <a href=/posts/kbhorthonormal_basis/#writing-a-vector-as-a-linear-combination-of-orthonormal-basis>Writing a vector as a linear combination of orthonormal basis</a>, but recall the \(v_{j}\) are <strong>orthogonal</strong> and not <strong>orthonormal</strong>, so we have to divide by the square of the norm of \(v\). <a href=/posts/kbhlearn_more/>learn more</a>)</p><h3 id=inner-product-of-l-periodic-functions--kbhinner-product-dot-md><a href=/posts/kbhinner_product/#inner-product-of-l-periodic-functions>inner product of \(L\) periodic functions</a></h3><p>For \(f,g : [0,L] \to \mathbb{R}\), which are <a href=/posts/kbhsu_math53_feb252024/#l-periodicity>L-periodic</a>, we write:</p><p>\begin{equation}
+\langle f,g \rangle := \frac{1}{L} \int_{0}^{L} f(x) g(x) \dd{x}
+\end{equation}</p><h4 id=properties-worth-noting>properties worth noting</h4><p>for continuous functions \([0,L]\) \(g_1, g_2, h_1, h_2, g, h\), the <a href=/posts/kbhinner_product/>inner product</a> rules hold, which gives</p><ul><li>\(\langle c_1 g_1 + c_2 g_2, h \rangle = c_1 \langle g_1, h \rangle + c_2 \langle g_2, h \rangle\)</li><li>\(\langle g, c_1h_1 + c_2h_2 \rangle = c_1 \langle g, h_1 \rangle + c_2 \langle g, h_2 \rangle\)</li><li>\(\langle h,g \rangle = \langle g,h \rangle\), as the functions are over the reals</li><li>\(\langle g,g \rangle\) is zero only when \(g\) is zero</li></ul><h4 id=l-periodic-sinusoids-are-orthogonal>\(L\) periodic sinusoids are orthogonal</h4><p>Recall that we have two basic <a href=/posts/kbhsu_math53_feb252024/#l-periodicity>L-periodic</a> sinusoids:</p><ul><li>\(\sin \qty(\frac{2\pi k }{L}x)\)</li><li>\(\cos \qty(\frac{2\pi k }{L}x)\)</li></ul><p>Let&rsquo;s write:</p><p>\begin{equation}
+\omega = \frac{2\pi}{L}
+\end{equation}</p><p>then, for any distinct integer \(k_1 \neq k_2, k_1, k_2 > 0\), we see that:</p><p>\begin{equation}
+\int_{0}^{L} \cos (k_1 \omega x) \cos (k_2 \omega x) = \int_{0}^{L} \sin (k_1 \omega x) \sin (k_2 \omega x) = 0
+\end{equation}</p><p>and further for any \(k\):</p><p>\begin{equation}
+\int_{0}^{L} \cos (k_1 \omega x) \sin (k_2 \omega x) = 0
+\end{equation}</p><p>Meaning, every pair of \(\langle \{\sin, \cos\} (k_1 \omega x), \{\sin, \cos\} (k_1 \omega x) \rangle\) are orthogonal.</p><p>Further, for the same \(k\),</p><p>\begin{equation}
+\langle \cos (k\omega x), \cos (k \omega x) \rangle = \langle \sin (k\omega x), \sin (k \omega x) \rangle = \frac{L}{2}
+\end{equation}</p><p>in partiular:</p><p>\begin{equation}
+\int_{0}^{\frac{L}{2}} \sin (k \omega x) \sin (k \omega x) = \frac{L}{4}
+\end{equation}</p><p>if \(k\) are equal.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

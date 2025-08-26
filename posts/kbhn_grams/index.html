@@ -1,0 +1,105 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>N-Grams</title>
+<meta name=description content="Main goals: assign a probability of each sequence of words existing:
+\begin{equation}
+P(W) = P(w_1, \dots, w_{n})
+\end{equation}
+closely related is the NLG formulation of predicting an upcoming word:
+\begin{equation}
+P(w_5|w_1, \dots, w_{n})
+\end{equation}
+either of these we call a &ldquo;grammar&rdquo;, or &ldquo;Language Model&rdquo;.
+Chain Rule Language Modeling
+Recall probability chain rule. Now, the probability of a sequence like:
+\begin{equation}
+P(its\ water\ is\ so\ transparent)
+\end{equation}
+gives:
+\begin{equation}
+P(its) \times P(water|its) \times P(is | its\ water) \dots
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>N-Grams</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Main goals: assign a probability of each sequence of words existing:</p><p>\begin{equation}
+P(W) = P(w_1, \dots, w_{n})
+\end{equation}</p><p>closely related is the NLG formulation of predicting an upcoming word:</p><p>\begin{equation}
+P(w_5|w_1, \dots, w_{n})
+\end{equation}</p><p>either of these we call a &ldquo;grammar&rdquo;, or &ldquo;<a href=/posts/kbhlanguage_model/>Language Model</a>&rdquo;.</p><h2 id=chain-rule-language-modeling>Chain Rule Language Modeling</h2><p>Recall <a href=/posts/kbhprobability/#conditional-probability>probability chain rule</a>. Now, the probability of a sequence like:</p><p>\begin{equation}
+P(its\ water\ is\ so\ transparent)
+\end{equation}</p><p>gives:</p><p>\begin{equation}
+P(its) \times P(water|its) \times P(is | its\ water) \dots
+\end{equation}</p><p>That is:</p><p>\begin{equation}
+P(w_1 \dots w_{n}) = \prod_{i}P(w_{i} | w_1 \dots w_{i-1})
+\end{equation}</p><h2 id=markov-assumption>Markov Assumption</h2><p>Because we can&rsquo;t make conditional counts over all words all the time, we make an assumption: the probability of the current word is the probability of the current word conditioned on the probability of the last \(k\) words.</p><p>\begin{equation}
+P(w_1, \dots, w_{n}) \approx \prod_{i}P(w_{i} | w_{i-k} \dots w_{i-1})
+\end{equation}</p><h2 id=unigrams>Unigrams</h2><p>The simplest <a href=#markov-assumption>Markov Assumption</a> is unigrams, which will be word salad generation because it has no understanding of language structure.</p><h3 id=naive-bays-language-modeling>Naive Bays Language Modeling</h3><p>You can consider each class in Naive Bayes \(P(word | c)\) as a language model.</p><p>So:</p><p>\begin{equation}
+P(sentence|c) = \prox_{i}P(word_{i}|c)
+\end{equation}</p><p>Each class is a separate class-conditioned language model. So, we just want to compute the probability of each sentence, and classify the sentence based on the higher probability result.</p><h2 id=limitations>Limitations</h2><p>In general, n gram models are limited because they don&rsquo;t consider long distance dependencies which are present in English.</p><h2 id=estimating-n-grams--kbhn-grams-dot-md>Estimating <a href=/posts/kbhn_grams/>N-Grams</a></h2><p>Many counts are results of&mldr;</p><ol><li>world (&ldquo;people want chinese food more often, so want+Chinese appears more&rdquo;)</li><li>grammar (&ldquo;want+want is less likely&rdquo;)</li></ol><h3 id=mle--kbhmaximum-likelihood-parameter-learning-dot-md><a href=/posts/kbhmaximum_likelihood_parameter_learning/>MLE</a></h3><p>\begin{equation}
+P(w_{i} | w_{i-1}) = \frac{C(w_{i-1}, w_{i})}{C(w_{i-1})}
+\end{equation}</p><h3 id=map-i-dot-e-dot-laplace-smoothing--kbhbaysian-parameter-learning-dot-md>MAP, i.e. <a href=/posts/kbhbaysian_parameter_learning/#laplace-smoothing>Laplace Smoothing</a></h3><p>\begin{equation}
+P(w_{i} | w_{i-1}) = \frac{C(w_{i-1}, w_{i})+1}{C(w_{i-1})+V}
+\end{equation}</p><p>we have to add \(V\) on the denominator because every word could possibly follow \(w_{i-1}\). Note that as \(N\) increases we actually still add \(V\) because we are predicting at each time a <strong>single word</strong> (just conditioned on more words), so if we are smoothing output we are only adding \(V\) extra counts.</p><p>IMPORTANT NOTE THOUGH: this is typically not used for <a href=/posts/kbhn_grams/>N-Grams</a> (because there are simply so many OOS sequences). Instead, its more frequently used in other cases such as <a href=/posts/kbhbag_of_words/#naive-bayes-for-text-classification>Naive Bayes for Text Classification</a>.</p><h3 id=log-probs>Log Probs</h3><p>In practice, we keep probability as log probabilities after we computed them.</p><h3 id=n-gram-models>N-Gram Models</h3><p>Google n-gram models, SRILM</p><h3 id=backoff>Backoff</h3><p>Use trigrams if high probability evidence is found, otherwise bigrams or unigrams</p><h4 id=stupid-backoff>Stupid Backoff</h4><ol><li>give the <a href=/posts/kbhmaximum_likelihood_parameter_learning/>MLE</a> if the conditioning sequence has a non-zero count</li><li>otherwise, start backing off, recursively calculating the probability of the current word given the last n-1-gram, multplied by a discount factor</li><li>if we end up with a unigram, just give the unigram probability</li></ol><p>This <strong>DOES NOT PRODUCE A PROBABILITY</strong> as it is not normalized. Instead of being probabilites, we consider them &ldquo;scores&rdquo;.</p><h3 id=unigram-interpolation>Unigram Interpolation</h3><p>In practice, <a href=#unigram-interpolation>Interpolation</a> works better. <a href=#unigram-interpolation>Interpolation</a> smoothes the probability between unigram, bigram, and trigrams.</p><p>Mostly simply, we mix them with some factors \(\lambda_{1}, \lambda_{2}, \lambda_{3}\), where \(\sum_{i} \lambda_{i} = 1\). This makes a weighted average over probabilities:</p><p>\begin{equation}
+P(comb) = \lambda_{1} P(uni) + \lambda_{2} P(bi)+ \lambda_{3} P(tri)
+\end{equation}</p><p>lambdas could also be a function of the previous tokens.</p><p>We sometimes obtain this with a disjoint dataset from the original training set, whereby we train some ngrams from the original dataset, and then identify \(\lambda\) which maximises the probabilities.</p><h3 id=oov-words>OOV Words</h3><p>we sometimes replace the lowest likelyhood few words with <code>&lt;UNK></code>, and train models such that we can have an <a href=#oov-words>open vocabulary</a>: whenever we encounter unknown words, we replace it with <code>&lt;UNK></code></p><h2 id=scaling-up>Scaling Up</h2><p>Strategies to make LMing with Ngrams more efficient</p><ul><li>pruning: only store ngrams of top k</li><li>use tries (suffix trees, etc.)</li><li>approximations: bloom filter</li><li>storing indicies</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

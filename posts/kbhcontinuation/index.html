@@ -1,0 +1,98 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>continuation</title>
+<meta name=description content="Consider:
+we can consider this as two parts
+
+the computation of x = e1
+and the continuation e2
+
+it essentially create statement labels:
+such that:
+
+\(k_0 = \lambda w . k_1 e\)
+\(k_1 = \lambda x . k_2 e&rsquo;\)
+\(k_2 = \lambda y . k_3 (x+y)\)
+\(k_3 = \lambda z . z\)
+
+why
+
+we can make the order of evaluatinos explicit
+we give a name to each intermediate value
+we name every step of the computation
+
+it is important in language implementation (where ever intermediate result is named); but we can also make continuation available as program value."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>continuation</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Consider:</p><p>we can consider this as two parts</p><ul><li>the computation of x = e1</li><li>and the continuation e2</li></ul><p>it essentially create statement labels:</p><p>such that:</p><ul><li>\(k_0 = \lambda w . k_1 e\)</li><li>\(k_1 = \lambda x . k_2 e&rsquo;\)</li><li>\(k_2 = \lambda y . k_3 (x+y)\)</li><li>\(k_3 = \lambda z . z\)</li></ul><h2 id=why>why</h2><ul><li>we can make the order of evaluatinos explicit</li><li>we give a name to each intermediate value</li><li>we name every step of the computation</li></ul><p>it is important in language implementation (where ever intermediate result is named); but we can also make continuation available as program value.</p><h3 id=implementation-gotos>implementation: gotos</h3><p>\begin{equation}
+e \to \qty(x \mid \lambda x . e \mid e e \mid i \mid e + e \mid (call / cc) \lambda k.e \mid \text{resume}\ k\ e)
+\end{equation}</p><p>specifically, we add two new cases which is translated as follows:</p><ul><li>\(C(call / cc\ \lambda x.e, k) = \qty(\lambda x . C(e,k))k\)</li><li>\(C(resume\ k e, k&rsquo;) = C(e,k)\)</li></ul><p>as in:</p><ol><li>call/cc - give the program access to the current continuation; it simply passes the program the current continuation \(k\) into the function provided to call/cc</li><li>resume - instead of continuing at the intended continuation, continue at the given continuation instead</li></ol><p><strong>this allows early returns</strong>, and other nice non-local control operations&mdash;exceptions, backtracking, jmp, co-routines</p><h4 id=discussion>discussion</h4><ul><li>a software architecture device&mdash;event driven systems (events are basically continuations)</li><li>makes <strong>program control</strong> first class values - which is nice when control flow is really really hard</li><li>turns programs &ldquo;inside-out&rdquo;&mdash;this is contagious, which means it will affect the structure of the entire program</li></ul><h2 id=cps-transformation>CPS transformation</h2><p>Let \(C(e,k)\) to be the translation of \(e\) with continuation \(k\) into CPS. Meaning, we create a program \(C(e,k) = k e\), but we want \(e\) to also be in CPS:</p><ul><li>\(C(i,k) = ki\) for integers \(i\)</li><li>\(C(x,k)\) for variable \(x\)</li></ul><h3 id=sum>sum</h3><p>Parse continuations in the order in which you would evaluate things.</p><p>\begin{equation}
+C(e + e&rsquo;, k) = C(e, \lambda v . C(e&rsquo;, \lambda v&rsquo; . k (v + v&rsquo;)))
+\end{equation}</p><h3 id=abstractions>abstractions</h3><p>\begin{equation}
+C(\lambda x . e, k)
+\end{equation}</p><p>challenge: we don&rsquo;t evaluate under lambdas; its passed around until its called, then we need to CPS and evaluate it. That is, where \(e\) returns to (the continuation of \(e\)) is <em>not</em> \(k\)! Because we don&rsquo;t know when the function is called.</p><p>idea: we therefore split the continuation into two points, first \(k\) when function is used, and \(k&rsquo;\) where functions are called.</p><p>\begin{equation}
+C(\lambda x . e, k) = k (\lambda k&rsquo; . \lambda x . C( e, k&rsquo;))
+\end{equation}</p><p>notice where the function is called, \(k&rsquo;\) is a continuation you will have to pass the function for it to work.</p><h3 id=application>application</h3><p>\begin{equation}
+C(e e&rsquo;, k) = C(e, \lambda f . C(e&rsquo; , \lambda v . f k v))
+\end{equation}</p><p>typically, we translate the function first&mdash;notice how we are passing the function the output continuation first, and then run the function on \(e&rsquo;\) (named \(v\)).</p><h3 id=complete-program>Complete Program</h3><p>The initial continuation is the identity function \(I\) (that is, \(\lambda x. x\)).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

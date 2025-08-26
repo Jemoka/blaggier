@@ -1,0 +1,100 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 OCT220224</title>
+<meta name=description content="pairs
+
+Constructor: \(\qty(e,e&rsquo;)\)
+Destructor: \(p.l, p.r\) or \(fst\ p\), \(snd\ p\)
+Type: \(A * B\)
+
+currying
+Consider a function from pairs to a thing: \(A * B \to C\)
+We can instead construct a function: \(A \to B \to C: \lambda a . \lambda b. f(a,b)\)
+state and exception
+Both state and exceptions create &ldquo;side information&rdquo;&mdash;-the side information is threaded through computation in a specific order; we create new primitives for manipulating side information."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 OCT220224</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=pairs>pairs</h2><ul><li>Constructor: \(\qty(e,e&rsquo;)\)</li><li>Destructor: \(p.l, p.r\) or \(fst\ p\), \(snd\ p\)</li><li>Type: \(A * B\)</li></ul><h2 id=currying>currying</h2><p>Consider a function from pairs to a thing: \(A * B \to C\)</p><p>We can instead construct a function: \(A \to B \to C: \lambda a . \lambda b. f(a,b)\)</p><h2 id=state-and-exception>state and exception</h2><p>Both state and exceptions create &ldquo;side information&rdquo;&mdash;-the side information is threaded through computation in a specific order; we create new primitives for manipulating side information.</p><p>This is the typical description of PL:</p><ul><li>some lambda calculus semantics</li><li>additional features that give you escape hatches</li></ul><h3 id=but-why-not-just-put-it-as-a-pure-function>But why not just put it as a pure function?</h3><p>try just put the state in a pair</p><p>\begin{equation}
+a * s \to b * s
+\end{equation}</p><p>every function must take and expose a state.</p><p>or we can curry the state:</p><p>\begin{equation}
+a \to (s \to b * s)
+\end{equation}</p><p>In particular, we can create a state transformer: \(M b = s \to b * s\) (i.e. the right side; that is, we can&rsquo;t get the \(b\) out without doing the computation to unwrap \(Mb\) with state)</p><p>THIS IS A <a href=/posts/kbhmonad/>monad</a>!</p><h2 id=exception>exception</h2><p>In an <a href=#exception>exception</a> system, operations has two forms:</p><p>\begin{equation}
+E \vdash e \to v
+\end{equation}</p><p>or</p><p>\begin{equation}
+E \vdash e \to Exc(v)
+\end{equation}</p><p>that is, the evaluate produces a normal value, or produce an exception that may wrap an value. Further evaluation must be <em>strict</em> in the exception&mdash;if anyone touches that value, it should return that value unless yo you are a handler.</p><h3 id=semantics-of-exceptions>semantics of exceptions</h3><p>variables</p><p>\begin{equation}
+\frac{}{E \vdash x \to E(x)}
+\end{equation}</p><p>integers</p><p>\begin{equation}
+\frac{}{E \vdash i \to i}
+\end{equation}</p><p>closures</p><p>\begin{equation}
+\frac{}{E \vdash \lambda x . e \to &lt; \lambda x . e , E >}
+\end{equation}</p><p>raising</p><p>\begin{equation}
+\frac{E \vdash e \to v}{E \vdash \text{raise } e \to Exc(v)}
+\end{equation}</p><p>application, part1: exception propagation in function</p><p>\begin{equation}
+\frac{E \vdash e_1 \to Exc(v)}{E \vdash e_1 e_2 \to Exc(v)}
+\end{equation}</p><p>application, part2: exception propagation in value</p><p>\begin{equation}
+\frac{E \vdash e_1 \to &lt; \lambda x . e_0, E &rsquo; >, E \vdash e_2 \to Exc(v)}{E \vdash e_1 e_2 \to Exc(v)}
+\end{equation}</p><p>application, part 3: normal abstractions</p><p>\begin{equation}
+\frac{E \vdash e_1 \to &lt; \lambda x . e_0, E&rsquo; >, E \vdash e_2 \to v, E&rsquo;[x: v] \vdash e_0 \to v&rsquo;}{E \vdash e_1 e_2 \to v&rsquo;}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

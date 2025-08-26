@@ -1,0 +1,81 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>pumping lemma</title>
+<meta name=description content="Let \(L\) be a regular language; then there is a positive integer \(P\) such that, for all strings \(w \in L\) with \(|w| \geq P\) there is a way to write \(w = x y z\), where&mldr;
+
+\(|y| > 0\) &mdash; so \(y \neq \varepsilon\)
+\(|x y | \leq P\)
+for all \(i \geq 0, xy^{i}z \in L\) (where \(y^{i}\) is \(y\) repeated \(i\) times); note that this also means that we can also reduce \(y\) in size to \(y \in \varepsilon\), and it will still hold.
+
+
+Proof:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>pumping lemma</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Let \(L\) be a regular language; then there is a positive integer \(P\) such that, for all strings \(w \in L\) with \(|w| \geq P\) there is a way to write \(w = x y z\), where&mldr;</p><ul><li>\(|y| > 0\) &mdash; so \(y \neq \varepsilon\)</li><li>\(|x y | \leq P\)</li><li>for all \(i \geq 0, xy^{i}z \in L\) (where \(y^{i}\) is \(y\) repeated \(i\) times); note that this also means that we can also reduce \(y\) in size to \(y \in \varepsilon\), and it will still hold.</li></ul><hr><p>Proof:</p><p>let \(M\) be a DFA that recognizes \(L\); and let \(P\) be the number of states in \(M\); let \(w\) be a string where \(w \in L\) and \(|w| \geq P\)</p><p>We desire that \(w = xyz\), and has properties</p><ul><li>\(|y| > 0\) &mdash; so \(y \neq \varepsilon\)</li><li>\(|x y | \leq P\)</li><li>for all \(i \geq 0, xy^{i}z \in L\) (where \(y^{i}\) is \(y\) repeated \(i\) times); note that this also means that we can also reduce \(y\) in size to \(y \in \varepsilon\), and it will still hold.</li></ul><p>As \(M\) processes \(w\), we will go through at least \(|w|+1\) states (the initial state to the first state is one transition, and since \(w\) has at length \(|w|\), it needs to go through \(|w|\) transitions connecting \(|w|+1\) states; note that \(|w| \geq P\), so the number of states we go through is strictly bigger than \(P\). note that \(P\) is the number of states, so by pigeonhole we go through at least one state twice. Let us call them \(q_{j}, q_{k}\) where \(q_{j} = q_{k}\).</p><p>WLOG let&rsquo;s call \(q_{j}\) and \(q_{k}\) \(q_{j}\) only. Now, let us divide this situation into three strings \(x, y,z\) and verify they have the behavior we desire.</p><figure><img src=/ox-hugo/2024-10-07_19-35-34_screenshot.png></figure><p>First, since \(0 \leq j &lt; k \leq P\) (that is, \(j\) and \(k\) are distinct due to pidgenhole and the pidgins are distinct), \(y\) (the string that triggers transition between \(j\) and \(k\) ) is nonempty (condition 1). Note that \(|xy| \leq p\) because \(k\) is at most \(p\) because the pigeonhole principle gives us the lack of holes starting at state \(p\) (since, including \(q_{0}\), that&rsquo;s \(p+1\) states). Since after taking any number of \(y\), you stay at \(q_{j}\); so, you can take \(y\) any number of times, including \(0\) times, to stay at \(q_{j}\) and have the option of moving on.</p><h2 id=generalized-pumping-lemma>Generalized Pumping Lemma</h2><p>Let \(L\) be a regular language; then there is a positive integer \(P\) such that for <strong>all</strong> strings \(awb \in L\) with \(|w| \geq P\) there is a way to write \(w = xyz\) such that</p><ul><li>\(|y| > 0\) &mdash; so \(y \neq \varepsilon\)</li><li>\(|x y | \leq P\)</li><li>for all \(i \geq 0, axy^{i}zb \in L\) (where \(y^{i}\) is \(y\) repeated \(i\) times); note that this also means that we can also reduce \(y\) in size to \(y \in \varepsilon\), and it will still hold.</li></ul><h2 id=example-using-the-pumping-lemma-to-show-things-is-not-regular>Example: Using the Pumping Lemma to Show Things is Not Regular</h2><h3 id=eq>EQ</h3><p>Suppose we have:</p><p>\begin{equation}
+EQ = \qty {w | N(1) = N(0) }
+\end{equation}</p><p>have that the number of \(1\) in this language is equal to the number of \(0\); we want to show that this is not regular.</p><hr><p>Proof:</p><p>assume for contradiction \(EQ\) is regular. Let \(P\) be that in the pumping lemma; construct \(w = 0^{P}1^{P}\); note that \(|w| > P\) and it is in \(EQ\). So, let&rsquo;s follow the pumping lemma and note that there should exist:</p><p>\begin{equation}
+w = xyz
+\end{equation}</p><p>where \(|y| > 0\), \(|xy | \leq P\), and \(xy^{i}z \in EQ\). Note! since \(|xy| \leq P\), the whole of \(xy\) should be all zeros because the first \(P\) part of \(w\) is all zeros. In particular, \(y\) should also be all zeros.</p><p>Yet, \(xyyz\) has more zeros than 1s, meaning \(x yy z \not \in EQ\)! We failed the pumping lemma. Having reached contradiction, \(EQ\) is not regular.</p><h3 id=sq>SQ</h3><p>Suppose we haev:</p><p>\begin{equation}
+SQ = \qty {0^{n^{2}} | n \geq 0}
+\end{equation}</p><p>is not regular.</p><hr><p>Proof:</p><p>assume for contradiction that \(SQ\) is indeed regular. So let \(w = 0^{p^{2}}\) for some \(p\) . Note that we again have by pumping lemma \(w = xyz\) with \(|y| > 0\), and \(|xy| &lt; p\).</p><p>This means again that \(xyyz\) should be in \(SQ\). Note that \(|xyyz| = P^{2} + |y|\). Note that from \(|xy | &lt; p\), we have \(0 &lt; |y| \leq P\). Note that \(P^{2} + P &lt; (P+1)^{2}\), meaning that this new string doesn&rsquo;t actually fit into our language since \(y\) can&rsquo;t possibly be long enough. Having again reached contradiction, \(SQ\) is not regular.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

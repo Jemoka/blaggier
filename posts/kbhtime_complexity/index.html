@@ -1,0 +1,105 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Time Complexity</title>
+<meta name=description content="Time complexity \(t(n): \mathbb{N} \to  \mathbb{N}\), and:
+\begin{equation}
+\text{TIME}\qty(t(n)) = \qty {\text{languages } L \mid\ \exists  \text{TM that decides $L$ in $O(t(n))$ steps} }
+\end{equation}
+notice! the Big-oh is backed into the definition. And we write:
+\begin{equation}
+P = \bigcup_{c \in \mathbb{N}} \text{TIME}\qty(n^{c})
+\end{equation}
+we call this &ldquo;efficient&rdquo; vs. &ldquo;feasible&rdquo;.
+\begin{equation}
+EXP = \bigcup_{c \in \mathbb{N}} \text{TIME}\qty(2^{n^{c}})
+\end{equation}
+and adding in non-determinism, we have:
+\begin{equation}
+\text{NTIME}\qty(t(n)) = \qty {L : \exists\ \text{NTM that decides L in O(t(n)) steps}}
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Time Complexity</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Time complexity \(t(n): \mathbb{N} \to \mathbb{N}\), and:</p><p>\begin{equation}
+\text{TIME}\qty(t(n)) = \qty {\text{languages } L \mid\ \exists \text{TM that decides $L$ in $O(t(n))$ steps} }
+\end{equation}</p><p>notice! the <a href=/posts/kbhamortized_analysis/>Big-oh</a> is backed into the definition. And we write:</p><p>\begin{equation}
+P = \bigcup_{c \in \mathbb{N}} \text{TIME}\qty(n^{c})
+\end{equation}</p><p>we call this &ldquo;efficient&rdquo; vs. &ldquo;feasible&rdquo;.</p><p>\begin{equation}
+EXP = \bigcup_{c \in \mathbb{N}} \text{TIME}\qty(2^{n^{c}})
+\end{equation}</p><p>and adding in <a href=/posts/kbhnon_deterministic_computation/>non-determinism</a>, we have:</p><p>\begin{equation}
+\text{NTIME}\qty(t(n)) = \qty {L : \exists\ \text{NTM that decides L in O(t(n)) steps}}
+\end{equation}</p><p>and so:</p><p>\begin{equation}
+NP = \bigcup_{c \in \mathbb{N}} \text{NTIME}\qty(n^{c})
+\end{equation}</p><h2 id=turing-machine--kbhturing-machinea-dot-md--time-complexity--kbhtime-complexity-dot-md><a href=/posts/kbhturing_machinea/>turing machine</a> <a href=/posts/kbhtime_complexity/>Time Complexity</a></h2><p>We measure a <a href=/posts/kbhturing_machinea/>turing machine</a>&rsquo;s time complexity via number of steps it takes for a <a href=/posts/kbhturing_machinea/>turing machine</a> to halt.</p><p>Let \(M\) be a turing machine that halts on all inputs; we will only consider for now <a href=/posts/kbhturing_machinea/#decidable>decidable</a> languages. We define:</p><p>the <strong>running time</strong> or <a href=/posts/kbhtime_complexity/>Time Complexity</a> of the machine \(M\) is a function \(T : \mathbb{N} \to \mathbb{N}\), such that \(T(n)\) is the maximum number of steps taken by \(M\) over all inputs of length \(n\) (the &ldquo;worst case complexity&rdquo;).</p><h3 id=time-bounded-complexity>Time-Bounded Complexity</h3><p>Let us define:</p><p>\begin{equation}
+\text{TIME}\qty(t(n)) = \qty {L&rsquo; \mid \text{there&rsquo;s a TM $M$ with time complexity $O(t(n))$ so that $L&rsquo; = L(M)$}}
+\end{equation}</p><p>that is, \(\text{TIME}(T(n))\) a set of languages decided by <em>some</em> TM with \(O(t(n))\) running time.</p><h3 id=polynomial-time>Polynomial Time</h3><p>\begin{equation}
+P = \bigcup_{k \in N} \text{TIME}\qty(n^{k})
+\end{equation}</p><p>&ldquo;efficient&rdquo;; and &ldquo;robust&rdquo;: that is, <a href=#multi-tape-tm-theorem>multi-tape TM theorem</a> (number of tapes, etc.) and <a href=#time-hierarchy-theorem>time hierarchy theorem</a></p><h3 id=extended-church-turing-thesis--kbhextended-church-turing-thesis-dot-md><a href=/posts/kbhextended_church_turing_thesis/>Extended Church-Turing Thesis</a></h3><p>see <a href=/posts/kbhextended_church_turing_thesis/>Extended Church-Turing Thesis</a></p><h3 id=one-tape-tm-cannot-decide-some-language-a-in-less-than-o--n-log-n--time>one-tape TM cannot decide some language \(A\) in less than \(O(n \log n)\) time</h3><p>For any</p><p>\begin{equation}
+f(n) = O\qty( \frac{n \log n}{\alpha \qty (n)})
+\end{equation}</p><p>where \(\alpha(n)\) is unbounded, we have that \(TIME(f(n))\) contains only <a href=/posts/kbhregular_language/>regular language</a>s.</p><h3 id=two-tapes-could-be-more-powerful-than-one-tape>two tapes could be more powerful than one tape</h3><p>&mldr;because you can do things in parallel (i.e. different models of computation can yield different run times, even if they are both <a href=/posts/kbhmapping_reduction/#computable-function>computable function</a>)</p><p>in fact, something like \(B = \qty { ww \mid w \in \qty {0,1}^{*}}\) has a quadratic gap</p><h4 id=multi-tape-tm-theorem>multi-tape TM theorem</h4><p>Let \(t: \mathbb{N} \to \mathbb{N}\), which satisfies \(t(n) \geq n\), for all \(n\). Then, every \(t(n)\) time multi-tape TM has an equivalent \(O\qty (t(n)^{2})\) time one-tape TM.</p><p>Its transition function is:</p><p>\begin{equation}
+\delta : Q \times \Gamma^{k} \to Q \times \Gamma^{k-1} \times \qty {L, R, S}^{k}
+\end{equation}</p><p>&mldr;.because you can just append the tapes in the style of multi-tape simulation by one tape and then just move across all of \(n\) each time to increment the next tape.</p><p><strong>correlary</strong>: suppose language \(A\) can be decided by a multi-tape Turing Machine in \(p(n)\) steps for some polynomial \(p\), then \(A\) can be decided by a one-tape TM in \(q(n)\) steps, by some polynomial \(q\) (because we just squared in the example above).</p><h3 id=efficient-universal-turing-machine>efficient universal Turing Machine</h3><p>there is a one-tape Turing Machine \(U\) which takes as input&mldr;.</p><ul><li>the code of an arbitrary Turing Machine \(M\)</li><li>an input string \(w\)</li><li>and a string of \(t\) 1s which represents the runtime where \(t > |w|\)</li></ul><p>such that \(U\qty (M,w, 1^{t})\) halts in \(O\qty (|M|^{2} t^{2})\) steps and \(U\) accepts \(\qty (M, w, 1^{t}) \Leftrightarrow M\) accepts \(w\) in \(t\) steps.</p><p>That is&mldr;. the universal Turning machine will <strong>not</strong> run forever; its a clock that goes to a certain amount of steps and gives up.</p><p>The idea to make this is to make a multi-tape TM \(U&rsquo;\) that does the above, and run the multi-tape reduction.</p><h4 id=time-hierarchy-theorem>time hierarchy theorem</h4><p>&ldquo;if you get more time to compute then you can solve strictly more problems&rdquo;</p><p>254:</p><p>If \(t(n), T(n)\) are such that \(t(n) \geq n\) where \(T(n) = \omega \qty(t(n) \log\qty(t(n)))\), then \(\text{TIME}\qty(t(n)) \subset \text{TIME} \qty(T(n))\).</p><hr><p>154:</p><p>For all reasonable (&ldquo;constructible&rdquo;) \(f,g: \mathbb{N} \to \mathbb{N}\) where for all \(n\), \(g(n) > n^{2} f(n)^{2}\), then \(\text{TIME}(f(n)) \subset \text{TIME}(g(n))\) strictly contain.</p><p><strong>proof idea</strong>: <a href=/posts/kbhthere_are_non_recognizable_languages/#russell-s-paradox>Diagonalization Arguments</a> with a clock; make a Turing machine \(N\) on input \(M\); simulate \(M\) on input \(M\) for \(f(|M|)\) steps then flip the answer.</p><hr><p>Proof:</p><p>let us define some machine \(N(M)\) which computes in \(t = f(|M|)\). Run \(U\qty (M, M, 1^{t})\), and output the opposite answer.</p><p>Assume for contradiction \(L(N)\) has time complexity \(f(n)\). By assumption, \(N(N)\) runs in \(f(|N|)\) time and outputs the opposite answer as \(U\qty (N, N, 1^{f\qty (|N|)})\). This is contradiction because \(N(N)\) outputting true means \(U(N, N)\) outputs false, etc. Tish is a contradiction.</p><p>This means that \(L(N)\) does not have time complexity \(f(n)\).</p><p>Recall however \(U\qty (N, N, 1^{f\qty (|N|)})\) halts in \(O\qty (|M|^{2} t^{2})\) steps, so let&rsquo;s set \(g(|M|) > |M|^{2} f(|M|)^{2}\) for all \(M\).</p><p>(This also holds for multiple Turing Machines).</p><hr><p><strong>correlary</strong></p><p>\begin{equation}
+\text{TIME}\qty(n) \subset \text{TIME}\qty(n^{2}) \subset \dots
+\end{equation}</p><p>there are an infinite hierarchy of increasingly time-consuming problems</p><h3 id=example>example</h3><h4 id=same-number>same number</h4><p>\begin{equation}
+A = \qty {0^{k} 1^{k} \mid k \geq 0}
+\end{equation}</p><p>for a <a href=/posts/kbhturing_machinea/>turing machine</a> on \(A\), on input of length \(n\), we&mldr;.</p><ol><li>first pass: scan the tape and reject if the string is not of the form \(0^{i}1^{j}\)</li><li>repeat if both $0$s and $1$s are an the tape<ol><li>scan across the tape, crossing off a single \(0\) and a single \(1\)</li></ol></li><li>if \(0\) remain after all \(1\) crossed off, then reject. otherwise, accept</li></ol><p>This has complexity of&mldr;</p><ol><li>single scan: \(O(n)\)</li><li>crossing off left right: \(O\qty (n^{2})\)</li><li>verifying: \(O(n)\)</li></ol><h4 id=actually-though-we-can-do-this-in-o--n-log-n>actually, though, we can do this in \(O(n \log n)\)</h4><ul><li>if \(w\) is not in the right shape \(0^{*}1^{*}\), reject</li><li>repeat until all bits of \(w\) are crossed out<ul><li>if parity (odd/evenness) of \(0\) is not parity of \(1\), reject</li><li>cross out every other \(0\), cross out ever other \(1\)</li></ul></li><li>if all bits crossed out, accept</li></ul><p>There will be \(\log n\) crossings-out at most (since each divides by \(2\)), and each of such crossings-out, will check linearly.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

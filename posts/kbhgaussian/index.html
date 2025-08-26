@@ -1,0 +1,148 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Gaussian</title>
+<meta name=description content="The Gaussian, in general, gives:
+\begin{equation}
+e^{-\frac{ax^{2}}{2}}
+\end{equation}
+which is a Bell-Shaped curve. It&rsquo;s pretty darn important
+solving heat equation without boundary
+for general expression:
+\begin{equation}
+\pdv{U}{t} = \alpha \pdv[2]{U}{x}
+\end{equation}
+\begin{equation}
+U(t,x) =  \frac{1}{\sqrt{4\pi \alpha t}}\int_{\mathbb{R}} f(y) e^{-\frac{(x-y)^{2}}{4\alpha t}} \dd{y}
+\end{equation}
+where,
+\begin{equation}
+\hat{U}(t,\lambda) = \hat{f}(\lambda)e^{-\alpha t \lambda^{2}}
+\end{equation}
+\begin{equation}
+\hat{U}(t,\lambda) = \hat{f}(\lambda)e^{-\lambda^{2}(t)}
+\end{equation}
+Heat Equation and Gaussian
+\begin{equation}
+H(t,x) = \frac{1}{\sqrt{2\pi} t}e^{-\frac{x^{2}}{2t}}
+\end{equation}
+You will note that \(H\) does satisfy the heat equation:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Gaussian</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>The <a href=/posts/kbhgaussian/>Gaussian</a>, in general, gives:</p><p>\begin{equation}
+e^{-\frac{ax^{2}}{2}}
+\end{equation}</p><p>which is a Bell-Shaped curve. It&rsquo;s pretty darn important</p><h2 id=solving-heat-equation-without-boundary>solving heat equation without boundary</h2><p>for general expression:</p><p>\begin{equation}
+\pdv{U}{t} = \alpha \pdv[2]{U}{x}
+\end{equation}</p><p>\begin{equation}
+U(t,x) = \frac{1}{\sqrt{4\pi \alpha t}}\int_{\mathbb{R}} f(y) e^{-\frac{(x-y)^{2}}{4\alpha t}} \dd{y}
+\end{equation}</p><p>where,</p><p>\begin{equation}
+\hat{U}(t,\lambda) = \hat{f}(\lambda)e^{-\alpha t \lambda^{2}}
+\end{equation}</p><p>\begin{equation}
+\hat{U}(t,\lambda) = \hat{f}(\lambda)e^{-\lambda^{2}(t)}
+\end{equation}</p><h2 id=heat-equation--kbhheat-equation-dot-md--and-gaussian--kbhgaussian-dot-md><a href=/posts/kbhheat_equation/>Heat Equation</a> and <a href=/posts/kbhgaussian/>Gaussian</a></h2><p>\begin{equation}
+H(t,x) = \frac{1}{\sqrt{2\pi} t}e^{-\frac{x^{2}}{2t}}
+\end{equation}</p><p>You will note that \(H\) <strong>does</strong> satisfy the heat equation:</p><p>\begin{equation}
+\pdv{U}{t} = \pdv[2]{U}{x}
+\end{equation}</p><h3 id=closed-form-solution>closed form solution</h3><p>\begin{equation}
+U(t,x) = \frac{1}{\sqrt{2\pi} t} \int_{\mathbb{R}} f(y) e^{-\frac{(x-y)^{2}}{2t}} \dd{y}
+\end{equation}</p><p>this is exactly:</p><p>\begin{equation}
+\int_{\mathbb{R}}f(y) H(t,(x-y)) \dd{y} = \int_{\mathbb{R}}\frac{1}{\sqrt{2\pi} t}e^{-\frac{(x-y)^{2}}{2t}} f(y) \dd{y}
+\end{equation}</p><p>We can understand this when \(t \to 0\), where there is a single, narrow, area \(1\) band which we sweep across all of \(y\). Because its thin and \(1\), its basically \(f(x)\) at each \(y\).</p><h3 id=solving-heat-equation--kbhheat-equation-dot-md--without-boundary>solving <a href=/posts/kbhheat_equation/>Heat Equation</a> without boundary</h3><p>Consider the partial <a href=/posts/kbhfourier_transform/>Fourier Transform</a> on the \(x\) variable of the heat equation.</p><p>\begin{equation}
+U(t,x) = \frac{1}{2\pi} \int_{\mathbb{R}} e^{ix\lambda} \hat{U} \qty(t,\lambda) \dd{\lambda}
+\end{equation}</p><p>Taking derivatives of this:</p><p>\begin{equation}
+\pdv{U}{t} (t,x) = \frac{1}{2\pi} \int_{\mathbb{R}} e^{i\lambda x} \pdv{\hat{U}}{t} (t,\lambda) \dd{\lambda}
+\end{equation}</p><p>and:</p><p>\begin{equation}
+\pdv[2]{U}{x} = \frac{1}{2\pi} \int_{\mathbb{R}} \qty(-\lambda^{2}) e^{ix \lambda } \hat{U}(t,\lambda) \dd{\lambda}
+\end{equation}</p><p>Because these two are equal, it gives us that:</p><p>\begin{equation}
+\hat{U}(t,\lambda) = -\lambda^{2} \hat{U}(t,\lambda)
+\end{equation}</p><p>meaning:</p><p>\begin{equation}
+\hat{U}(t,\lambda) = a(\lambda)e^{-\lambda^{2}t}
+\end{equation}</p><p>Finally, at:</p><p>\begin{equation}
+\hat{U}(0,\lambda) = a(\lambda) = \hat{f}(\lambda)
+\end{equation}</p><p>We see that:</p><p>\begin{equation}
+\hat{U}(t,\lambda) = \hat{f}(\lambda)e^{-\lambda^{2}(t)}
+\end{equation}</p><p>To get our original function back, we need to inverse Fourier transform it:</p><p>\begin{equation}
+U(t,x) = \frac{1}{2\pi} \int_{\mathbb{R}} e^{ix\lambda - \lambda^{2}t} \hat{f}(\lambda) \dd{\lambda}
+\end{equation}</p><h2 id=integrating-gaussian-more-generally>Integrating Gaussian, more Generally</h2><p>Let&rsquo;s integrate:</p><p>\begin{equation}
+\int_{-\infty}^{\infty} e^{-\frac{{ax}^{2}}{2}} \dd{x}
+\end{equation}</p><p>Let&rsquo;s replace: \(s = \sqrt{a} x\)</p><p>This gives us that (based on <a href=#integrating-gaussian>Integrating Gaussian</a>):</p><p>\begin{equation}
+x = \sqrt{\frac{2\pi}{a}}
+\end{equation}</p><p>If we replace \(a\) by \(\frac{1}{t}\), we obtain:</p><p>\begin{equation}
+\frac{1}{\sqrt{2\pi}t} \int_{-\infty}^{\infty} e^{-\frac{x^{2}}{2t}} \dd{x} = 1
+\end{equation}</p><p>by rescaling \(x(a)\) function above.</p><p>If \(t\) increases, you will see that this function diffuses from a single point at \(0\) and spreading out. Notice, that over the whole real line, no matter what the \(t\) is, you always end up with integral \(1\).</p><h2 id=integrating-gaussian>Integrating Gaussian</h2><p>Let&rsquo;s integrate:</p><p>\begin{equation}
+\int_{-\infty}^{\infty} e^{-\frac{x^{2}}{2}} \dd{x}
+\end{equation}</p><hr><p>computing this is funny:</p><p>\begin{equation}
+A \cdot A = \int_{-\infty}^{\infty} e^{-\frac{x^{2}}{2}} \dd{x} \int_{-\infty}^{\infty} e^{-\frac{y^{2}}{2}} \dd{y}
+\end{equation}</p><p>We can think of this as a double integral:</p><p>\begin{equation}
+A \cdot A = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} e^{-\frac{x^{2}}{2}} e^{-\frac{y^{2}}{2}} \dd{x} \dd{y}
+\end{equation}</p><p>meaning we get:</p><p>\begin{equation}
+A \cdot A = \int_{-\infty}^{\infty} \int_{-\infty}^{\infty} e^{-\frac{x^{2}+y^{2}}{2}} \dd{x} \dd{y}
+\end{equation}</p><p>Its polar time; recall:</p><p>\begin{equation}
+x^{2} + y^{2} = r^{2}
+\end{equation}</p><p>we can now go over this whole thing by converting into polar (notice the extra factor \(r\)):</p><p>\begin{equation}
+A \cdot A = \int_{0}^{2\pi} \int_{0}^{\infty} e^{-\frac{r^{2}}{2}} r \dd{r} \dd{\theta}
+\end{equation}</p><p>very suddenly we can use u sub on \(r\) to obtain:</p><p>\begin{equation}
+2\pi \int_{0}^{\infty} e^{-u} \dd{u} = 2\pi \cdot 1 = 2\pi
+\end{equation}</p><p>Meaning:</p><p>\begin{equation}
+A = \sqrt{2\pi}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

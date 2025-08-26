@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS143 APR242025</title>
+<meta name=description content="Bottom-Up Parsing
+Bottom-Up Parsing is more general than top-down parsing (i.e., it doesn&rsquo;t require left factorization, etc.)
+This is generally the preferred method. Key insight: we reduce strings into increasingly higher level symbols
+Sketch
+Because of the Properties of Bottom-Up Parsing, we can&mldr;.
+initialization
+
+split the string into two pieces
+right substring has terminals, not yet examined
+left substring has terminals and non-terminals
+
+We begin by splitting to the left since we begin with no non-terminals."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS143 APR242025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=bottom-up-parsing>Bottom-Up Parsing</h2><p><a href=#bottom-up-parsing>Bottom-Up Parsing</a> is more general than top-down parsing (i.e., it doesn&rsquo;t require left factorization, etc.)</p><p>This is generally the preferred method. Key insight: <strong>we reduce strings into increasingly higher level symbols</strong></p><h3 id=sketch>Sketch</h3><p>Because of the <a href=#properties-of-bottom-up-parsing--orgf7cb876>Properties of Bottom-Up Parsing</a>, we can&mldr;.</p><h4 id=initialization>initialization</h4><ul><li>split the string into two pieces</li><li>right substring has terminals, not yet examined</li><li>left substring has terminals and non-terminals</li></ul><p>We begin by splitting to the left since we begin with no non-terminals.</p><table><thead><tr><th></th></tr></thead><tbody><tr><td>x1 x2 x3 &mldr;. xn</td></tr></tbody></table><h4 id=moves>moves</h4><p>Shift / Reduce</p><ul><li>shift: move | one place to the right &mdash; shifts a terminal to the left string</li><li>reduce: apply an inverse production at the right end of the left string (i.e., take a substring closest to the bar, and reduce it)</li></ul><p>Think: left string is a stack. <strong>top</strong>: is the |; <strong>push</strong>: the &ldquo;shift&rdquo; operation to push a terminal onto the stack; <strong>reduce</strong>: pop something onto the stack.</p><h4 id=conflict>conflict</h4><p>When Shift/Reduce are both legal, that&rsquo;s a &ldquo;shift reduce&rdquo; conflict; if multiple reductions are possible, that&rsquo;s a &ldquo;reduce reduce&rdquo; conflict.</p><h4 id=deciding-moves>deciding moves</h4><ul><li><p>handle</p><p>We want to reduce only if the result can <em>still</em> be reduced to the starting symbol.</p><p>A <a href=#handle>handle</a> is a single production in a legal sequence coming from \(S\) which can be reduced into a single nonterminal. Consider:</p><p>\begin{equation}
+S \to^{*} \alpha X \omega \to \alpha \beta \omega
+\end{equation}</p><p>then \(X \to \beta\) in the position after \(\alpha\) is a <a href=#handle>handle</a> of \(\alpha \beta \omega\). We reduce at <a href=#handle>handle</a>s.</p><p>The handles are always top of the stack, otherwise it&rsquo;d not be a rightmost derivation in reverse.</p></li></ul><ul><li><p>SLR</p><p>Simple Left-to-right Rightmost derivation is a class of <a href=/posts/kbhcontext_free_grammars/>CFG</a>s for which we have simple heuristics for detecting <a href=#handle>handle</a>s.</p></li></ul><ul><li><p>heuristics</p><ul><li><p>item</p><p>An item is a production with &ldquo;.&rdquo; somewhere on the RHS, denoting a focus point. For instance, \(T \to .(E)\).</p><p>The only item for \(X \to \epsilon\) is $X → .$</p><p>We also call these LR(0) items.</p></li></ul><ul><li><p>viable prefix</p><p>\(\alpha\) is a &ldquo;viable prefix&rdquo; if there exists \(\omega\) such that \(\alpha | \omega\) is a state of a shift-reduce parser.</p><ul><li>a viable prefix doesn&rsquo;t extend beyond the right end of handle</li><li>its a variable prefix because its a possible prefix of a handle</li><li>as long as a parser has viable prefixes on the stack, no parsing error</li></ul></li></ul><ul><li><p>detecting <a href=#viable-prefix>viable prefix</a>s</p><p>We us an <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a>!</p><ol><li>add a new start production \(S&rsquo; \to S\) to the grammar</li><li>the NFA states are <a href=#item>item</a>s of the grammar</li><li>For item \(E \to \alpha . X \beta\) add the transition \([E \to \alpha . X \beta] \to^{x} [E \to \alpha X . \beta]\)</li><li>For item \(E \to \alpha . X \beta\) and production \(X \to \gamma\), add the transition \([E \to \alpha . X \beta] \to^{\epsilon} [X \to . \gamma]\)</li></ol><p>every state is an accepting state, start state is \(S&rsquo; \to .S\)</p></li></ul><ul><li><p>LR(0) Parsing</p><p>Suppose stack contains \(\alpha\), next input is \(t\). DFA on input \(\alpha\) terminated it state \(s\).</p><ul><li><strong>Reduce</strong> by \(X \to \beta\) if \(s\) contains item $X → β .$</li><li><strong>Shift</strong> if \(s\) contains item \(X \to \beta .t\omega\) (that is, there&rsquo;s a transition labeled \(t\)</li></ul><p>We will get reduce/reduce conflicts if one state contains $X → β .$ and $Y → ω .$; we will get shift/reduce conflict if $X → β.$ and \(Y \to \omega .t \gamma\)</p></li></ul><ul><li><p>LR(0) to SLR</p><p>Exactly the same process, but!</p><p>Suppose stack contains \(\alpha\), next input is \(t\). DFA on input \(\alpha\) terminated it state \(s\).</p><ul><li><strong>Reduce</strong> by \(X \to \beta\) if \(s\) contains item $X → β. $; and if \(t \in \text{Follow}\qty(X)\)</li><li><strong>Shift</strong> if \(s\) contains item \(X \to \beta .t\omega\) (that is, there&rsquo;s a transition labeled \(t\)</li></ul><p>If there are conflicts under these rules, then you don&rsquo;t have an SLR grammar.</p><p>Remember to keep (symbol, DFA state) on the stack.</p></li></ul></li></ul><h3 id=properties-of-bottom-up-parsing--orgf7cb876>Properties of <a href=#bottom-up-parsing>Bottom-Up Parsing</a></h3><ol><li>bottom-up parser traces a rightmost derivation in reverse</li><li>in shift-reduce strategy, <a href=#handle>handle</a>s appear only at the top of the stack, never inside the stack</li><li>for any SLR grammar, the set of viable prefixes is a <a href=/posts/kbhregular_language/>regular language</a>!</li><li>Let \(\alpha \beta \omega\) be a step of bottom up parse, assume the next reduction is \(X \to \beta\), then \(\omega\) should already have been a string of terminals (since we go rightmost first)</li></ol><h3 id=example>Example</h3><pre tabindex=0><code class=language-nil data-lang=nil>int * int + int | T -&gt; int
+int * T + int | T -&gt; int * T
+T + int | T -&gt; int
+T + T | E -&gt; T
+T + E | E -&gt; T + E
+E
+</code></pre><p>Weird! It somehow starts in the middle.</p><p>Generally, the parsing strategy expands non-terminals bottom-up in the rightmost first.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,71 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Proof of the Immerman-Szelepscenyi Theorem</title>
+<meta name=description content="Suppose \(\qty(G,s,t) \in \neg \text{STCONN}\), meaning no path \(s \to t\) exists in \(G\).
+setup
+For \(l \in \qty {0,1, \dots, n}\), define \(R_{l} \subseteq V\) is the set of all vertices readable from \(s\) in \(\leq l\) steps. \(R_0 \subseteq R_1 \subset &mldr; R_{n}\). Meaning \(R_0 = \qty {s}\). Goal: convince \(V\) that \(t \not \in R_{n}\).
+Define: \(r_{l} = |R_{l}|\). What&rsquo;s the size of \(r_{l}\)? It&rsquo;s at most \(O\qty(\log \qty(n))\) size. Notice that storing \(R_{l}\) takes \(O\qty(n \log n)\) or at least \(O(n)\) space by storing either IDs or at least bitstring of everything."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Proof of the Immerman-Szelepscenyi Theorem</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Suppose \(\qty(G,s,t) \in \neg \text{STCONN}\), meaning <strong>no path</strong> \(s \to t\) exists in \(G\).</p><h2 id=setup>setup</h2><p>For \(l \in \qty {0,1, \dots, n}\), define \(R_{l} \subseteq V\) is the set of all vertices readable from \(s\) in \(\leq l\) steps. \(R_0 \subseteq R_1 \subset &mldr; R_{n}\). Meaning \(R_0 = \qty {s}\). Goal: convince \(V\) that \(t \not \in R_{n}\).</p><p>Define: \(r_{l} = |R_{l}|\). What&rsquo;s the size of \(r_{l}\)? It&rsquo;s at most \(O\qty(\log \qty(n))\) size. Notice that storing \(R_{l}\) takes \(O\qty(n \log n)\) or at least \(O(n)\) space by storing either IDs or at least bitstring of everything.</p><h2 id=certificates>certificates</h2><p>Here&rsquo;s the certificate for \(\neg \text{STCONN}\):</p><ul><li>certificate 1: convince you of the size of \(r_1\)</li><li>certificate 2: convince you of the size of \(r_2\)</li><li>&mldr;</li><li>certificate n: convince you of the size of \(r_n\)</li></ul><p>Finally, we compose them for a certificate for \(t\) is not reachable from \(s\).</p><h2 id=operations>operations</h2><p>As you move from left to right through the certificates, we use the certificate \(j\) to recover the value for \(r_{j}\) onto the tape (taking \(O\qty(\log n)\) space); then, we use the value \(r_{j}\) to validate the certificate \(j+1\). When we write \(r_{j+1}\), we <strong>erase the previous \(r_{j}\) value from tape</strong>. This uses at most \(O\qty(\log n)\) space to store a single \(r_{j}\).</p><h2 id=lemma-1>lemma 1</h2><p>Suppose \(V\) is convinced of the size of \(r_{n}\) (i.e. its on its work tape). There exist a certificate that \(t\) is not reachable from \(s\) (in \(n\) steps, but that&rsquo;s true of everything that&rsquo;s reachable).</p><p>The certificate here is the <strong>reachable paths</strong> from \(s\) to each of the \(r_{n}\) vertices, and we check that \(t\) is not one of the \(r_{n}\) things. Naively doing this has a potential cheat where a path is repeated twice, thereby hiding our target vertex. So, we pre-process the input graph by presenting the paths in increasing order of input vertices. So, a node can&rsquo;t be repeated since they would appear right next to each other. We only have to store a single vertex, which is size \(\log n\).</p><h2 id=lemma-2>lemma 2</h2><p>Suppose \(V\) &ldquo;knows&rdquo; \(r_{l}\); there is a certificate that convinces \(V\) of the value of \(r_{l+1}\).</p><h3 id=requirements>requirements</h3><p>That is, we want verifier \(V\) which only uses \(O \qty(\log n)\) space, reaching the cert just once, and gets convinced that:</p><ul><li>vertices 1, 2, &mldr;, n all present</li><li>counts the number of &ldquo;vertex i in p_l+1&rdquo; which it claims it sees; checks the end of the &ldquo;because &mldr;&rdquo; claims</li></ul><h3 id=certificates>certificates</h3><p>For each vertex \(v_{j}\), we issue a certificate for either \(v_{j} \in R_{l+1}\), or \(v_{j} \not \in R_{l+1}\).</p><h4 id=v-j-in-r-l-plus-1>\(v_{j} \in R_{l+1}\)</h4><p>we just give a path from \(s \to v_{j}\) of length \(\leq l+1\)</p><h4 id=v-j-not-in-r-l-plus-1>\(v_{j} \not \in R_{l+1}\)</h4><p>we show this by reminding \(V\) of \(R_{l}\) by enumerating every single path \(s \to v_{k}\) of length \(l\), \(V\) will then add one more step on top of each of these \(v_{k}\) and checking that \((v_{k}, v_{j})\) is not an edge</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

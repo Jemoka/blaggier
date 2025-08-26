@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Cook-Levin Theorem</title>
+<meta name=description content="Cook-Levin Theorem states that SAT and 3SAT are NP-complete. That is, for NP language \(L \in NP\), we have \(L \leq_{p} SAT\), meaning
+exists a poly-computable function \(R: \qty {0,1}^{*} \to \qty {0,1}^{*}\) to perform the polynomial time mapping reduction \(x \to  \phi_{x}\) such that:
+\begin{equation}
+x \in L \Leftrightarrow R(x) = \phi_{x} \in \text{SAT}
+\end{equation}
+\(3SAT \in NP\)
+see 3cnf-formula
+\(3SAT\) is \(NP\) hard
+We will give a polynomial time mapping reduction.
+For every string \(w\), we want to convert it to a 3cnf-formula such that \(w \in A \in NP\) IFF \(f(w) = \phi \in 3SAT\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Cook-Levin Theorem</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhcook_levin_theorem/>Cook-Levin Theorem</a> states that <a href=/posts/kbhnon_deterministic_turing_machines/#boolean-formula-satisfiability>SAT</a> and <a href=/posts/kbhnon_deterministic_turing_machines/#3cnf-formula>3SAT</a> are NP-complete. That is, for NP language \(L \in NP\), we have \(L \leq_{p} SAT\), meaning</p><p>exists a poly-computable function \(R: \qty {0,1}^{*} \to \qty {0,1}^{*}\) to perform the <a href=/posts/kbhmapping_reduction/#polynomial-time-mapping-reduction>polynomial time mapping reduction</a> \(x \to \phi_{x}\) such that:</p><p>\begin{equation}
+x \in L \Leftrightarrow R(x) = \phi_{x} \in \text{SAT}
+\end{equation}</p><h2 id=3sat-in-np>\(3SAT \in NP\)</h2><p>see <a href=/posts/kbhnon_deterministic_turing_machines/#3cnf-formula>3cnf-formula</a></p><h2 id=3sat-is-np-hard>\(3SAT\) is \(NP\) hard</h2><p>We will give a <a href=/posts/kbhmapping_reduction/#polynomial-time-mapping-reduction>polynomial time mapping reduction</a>.</p><p>For every string \(w\), we want to convert it to a <a href=/posts/kbhnon_deterministic_turing_machines/#3cnf-formula>3cnf-formula</a> such that \(w \in A \in NP\) IFF \(f(w) = \phi \in 3SAT\).</p><hr><p>Proof:</p><p>Recall that for any \(A \in NP\), let \(N\) be a nondeterministic TM deciding \(A\) in \(n^{k}\). We will then define \(\phi\) to simulate \(N\) on \(w\).</p><p>\(N\) accepts \(w\) if and only if there is an accepting tableau for \(N\) on \(w\). So, given \(w\), we will construct \(O\qty (|w|^{2k})\) clause which describes the constraints imposed by the Tableau.</p><p>Variables of \(\phi\) will encode a Tableau; each \(\qty(n^{k})^{2}\) entries of a tableau is a cell containing value in \(C = Q \cup \Gamma \cup \qty {\#}\); now:</p><p>Let&rsquo;s define cell[i,j] = value of the cell at row \(i\) and column \(j\), meaning the \(j\) th symbol in the \(i\) th configuration.</p><p>For every \(i\) and \(j\) (\(1 \leq i, j \leq n^{k}\)) and for every \(s \in C\), we have a Boolean variable \(x_{i,j,s} \in \phi\). Since size of \(C\) is constant (its just our variables and symbol set), the total number of variables we have is \(|C|n^{2k}\).</p><p>We write \(x_{i,j,s} = 1 \Leftrightarrow \text{cell}[i,j] = s\).</p><p>Key idea: make \(\phi\) so that every satisfying assignment to \(x_{i,j,s}\) corresponds to an accepting tableau for \(N\) on \(w\) (an in particular an accepting \(cell[i,j]\) assignment of the tableau); in particular, we write:</p><p>\begin{equation}
+\phi = \phi_{cell} \wedge \phi_{start} \wedge \phi_{accept} \wedge \phi_{move}
+\end{equation}</p><p>whereby we constrain cells to be only one choice, that the first configuration is starting, the second configuration, and move the transition function.</p><p>in particular:</p><h3 id=cell>cell</h3><p>\(\phi_{cell}\): for all \(i,j\) there is a unique \(s \in C\) with \(x_{i,j,s} = 1\), meaning we can&rsquo;t have two values for a cell</p><figure><img src=/ox-hugo/2024-11-11_20-37-48_screenshot.png></figure><p>the length of this formula is \(O\qty (n^{2k})\)</p><h3 id=start>start</h3><p>the first row of the table equals the start configuration of \(N\) on \(w\); we just have to program it, and this is of length \(O(n)\)</p><figure><img src=/ox-hugo/2024-11-11_20-41-07_screenshot.png></figure><h3 id=end>end</h3><p>the last row of the table has an accept state</p><figure><img src=/ox-hugo/2024-11-11_20-41-39_screenshot.png></figure><p>we only care about the last row, and we want one of our cells to say \(q_{accept}\).</p><h3 id=move>move</h3><p>Transitions are a bit subtle. In particular: if one yields the next row, at most three cells change: that is, your play head can move (1 cell), you can change a symbol under your playhead (1 cell), you can move your playhead (1 cell)</p><p>The idea now is to check every 2x3 window of cells for their legality. The key lemma here is that</p><ul><li><strong>if</strong> every 2x3 window on the tableau is legal, and top row is the start configuration</li><li><strong>then</strong> each row of the tableau is a configuration that yields the next row of the tableau</li></ul><p>we show this by strong induction; essentially, assuming that the first \(k\) rows are legal, and the next row is illegal, then there MUST be a window which is illegal (because if something went wrong, something wrong must have happened somewhere).</p><p>Now, to actually write the boolean formula, notice that \((i,j)\) window of a tableau is a tuple \(\qty(a_1, \dots, a_{6}) \in C^{6}\) of a grid of symbols.</p><p>In particular, we AND every window together and check that its legal, either by ORing all of the legal windows together, or ANDING all illegal windows together and say we want none of them:</p><figure><img src=/ox-hugo/2024-11-11_21-09-29_screenshot.png></figure><h3 id=3sat--kbhnon-deterministic-turing-machines-dot-md--ify><a href=/posts/kbhnon_deterministic_turing_machines/#3cnf-formula>3SAT</a>ify</h3><p>Currently, we have just some polynomial size formula. We now need to turn it into <a href=/posts/kbhnon_deterministic_turing_machines/#3cnf-formula>3SAT</a>; to do this, introduce new variables \(z_{j}\), and notice that for all \(a_{j}\), the expression</p><p>\begin{equation}
+\qty(a_1 \vee a_2 \vee z_{1}) \wedge \qty(\neg z_1 \vee a_{3} \vee z_{2}) \wedge \qty (\neg z_{2} \vee a_{4} \vee z_3) \dots \wedge \qty(\neg z_{t-3} \vee a_{t-1} \vee a_{t})
+\end{equation}</p><p>is equivalent to</p><p>\begin{equation}
+\qty (a_{1} \vee a_{2} \vee \dots)
+\end{equation}</p><p>because the letters \(z_{j}\) essentially act as &ldquo;surrogate&rdquo; for groups of \(a_{j}\)</p><h3 id=finally-finishing>finally, finishing</h3><ul><li>\(\phi_{cell} = O\qty(n^{2k})\) &ndash; deal with the whole tableau</li><li>\(\phi_{start} = O\qty(n^{k})\) &ndash; deal with the first row</li><li>\(\phi_{accept} = O\qty(n^{k})\) &ndash; deal with the first row</li><li>\(\phi_{move} = O\qty(n^{2k})\) &ndash; there is order \(n^{2k}\) such entire grid in groups of six</li></ul><p>and so this is a polynomial time reduction in 3SAT. We gave a generic method to reduce \((N,w)\) to a \(3CNF\) formula \(\phi\) such that satisfying assignments to \(\phi\) directly corresponded to accepting computation histories.</p><h3 id=aside-tableau>aside: Tableau</h3><p>A tableau for \(N\) on \(w\) is an \(n^{k}\times n^{k}\) table, whose rows are configurations of some possible computation history of \(N\) on \(w\).</p><p>Whereby, each row of this Tableau represents some possible configuration, with the first row being the initial configuration. We know this table in \(n^{k}\) wide at most because we know this system is verifiable in \(n^{k}\), so we can move \(n^{k}\) slots to the right before we halt.</p><p>We call a <strong>tableau</strong> accepting if the last row of the tableau is accepting.</p><h2 id=corollary>Corollary</h2><p>\begin{equation}
+3SAT \in P \text{ IFF } P=NP
+\end{equation}</p><p>meaning, we don&rsquo;t know if we can solve 3SAT in polynomial time.</p><h2 id=alternative-proof>Alternative proof</h2><p>Luca Trevisan&rsquo;s notes</p><ul><li>define CIRCUT-SAT: given a circuit \(C(y)\), compute if there&rsquo;s an input \(a\) such that \(C(a) = 1\)</li><li>CIRCUIT_SAT is NP-hard (simulate a tableau using logical circut with \(O\qty (n^{2k})\) gates)</li><li>Reduce CIRCUIT-SAT to 3SAT in polynomial time</li><li>Therefore, 3SAT is NP hard</li><li>we know 3SAT is in NP, so 3SAT in NP complete</li></ul><h2 id=quasi-linear-cook-levin>Quasi-Linear Cook-Levin</h2><div class=lemma><span><p>\(\text{SAT}\) is complete for \(\text{NTIME}\qty( n \text{poly} \log n)\)</p><p></span></div></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

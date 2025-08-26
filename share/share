@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+pushd ~/Documents/knowledgebase/site 
+git add --all
+git commit -m "kb autocommit"
+git push
+popd
+

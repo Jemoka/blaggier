@@ -1,0 +1,86 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>casting</title>
+<meta name=description content='Pitfalls
+The bytes remains the same despite copying, so you can get too funky:
+int v = -12345;
+unsigned int uv = v;
+
+printf("v = %d, uv = %d\n", v, uv);
+This prints &ldquo;v = -12345, uv=4294954951&rdquo;. As in: when you copy rvalues, the bit pattern gets copied and not the numerical number itself; so, it will overflow.
+You can use U to force an signed quantity to be unsigned:
+unsigned int uv = -12345U;
+sign promotion
+If you have the nerve of putting a comparing things of different types (don&rsquo;t), then, the signed quantities gets promoted to be unsigned.'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>casting</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=pitfalls>Pitfalls</h2><p>The bytes remains the same despite copying, so you can get too funky:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#111>v</span> <span style=color:#f92672>=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>12345</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>int</span> <span style=color:#111>uv</span> <span style=color:#f92672>=</span> <span style=color:#111>v</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75af00>printf</span><span style=color:#111>(</span><span style=color:#d88200>&#34;v = %d, uv = %d</span><span style=color:#8045ff>\n</span><span style=color:#d88200>&#34;</span><span style=color:#111>,</span> <span style=color:#111>v</span><span style=color:#111>,</span> <span style=color:#111>uv</span><span style=color:#111>);</span>
+</span></span></code></pre></div><p>This prints &ldquo;v = -12345, uv=4294954951&rdquo;. As in: <strong>when you copy rvalues, the <a href=/posts/kbhbinary_number_system/#bit>bit</a> pattern gets copied and not the numerical number itself</strong>; so, it will overflow.</p><p>You can use U to force an signed quantity to be unsigned:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>unsigned</span> <span style=color:#00a8c8>int</span> <span style=color:#111>uv</span> <span style=color:#f92672>=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>12345U</span><span style=color:#111>;</span>
+</span></span></code></pre></div><h2 id=sign-promotion>sign promotion</h2><p>If you have the nerve of putting a comparing things of different types (don&rsquo;t), then, the <strong>signed quantities gets promoted to be unsigned</strong>.</p><p>That is, we get that:</p><ul><li>-1 &lt; 0U is <strong>false</strong> because the -1 is promoted to an <a href=/posts/kbhbinary_number_system/#unsigned-integers>unsigned integer</a></li><li>2&mldr;.7 > -2&mldr;.7 is <strong>true</strong> because nothing is converted</li><li></li></ul><h2 id=type-size-promotion>type size promotion</h2><p>If you have the nerve of putting a comparing things of different types (don&rsquo;t), then, the <strong>smaller types get promoted to being a bigger types</strong>.</p><ul><li>casting from small unsigned value to larger unsigned value just requires us prepending a buncha zeros as needed</li><li>casting from a small signed value to larger signed value requires us repeating the left most value to fill out the rest of the variable (-1 = 11111, so bigger -1 = 11111 (repeated) 111)</li><li>lasting from a large value to a smaller value will cause <strong>truncation</strong></li></ul><h2 id=type-size-truncation>type size truncation</h2><p>Take, for instance:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>53191</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>short</span> <span style=color:#111>sx</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#111>sx</span><span style=color:#111>;</span>
+</span></span></code></pre></div><p>The short is 2 <a href=/posts/kbhbinary_number_system/#byte>byte</a>, which means that 2 of the left <a href=/posts/kbhbinary_number_system/#byte>byte</a>s of the int got dropped.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,112 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS224N MAY022024</title>
+<meta name=description content="Zero-Shot Learning
+GPT-2 is able to do many tasks with not examples + no gradient updates.
+Instruction Fine-Tuning
+Language models, by default, are not aligned with user intent.
+
+collect paired examples of instruction + output across many tasks
+then, evaluate on unseen tasks
+
+~3 million examples << n billion examples
+dataset: MMLU
+You can generate an Instruction Fine-Tuning dataset by asking a larger model for it (see Alpaca).
+Pros + Cons
+
+simple and straightforward + generalize to unseen tasks
+but, its EXPENSIVE to collect ground truth data
+
+ground truths maybe wrong
+creative tasks may not have a correct answer
+LMs penalizes all token-level mistakes equally, but some mistakes are worse than others
+humans may generate suboptimal answers
+
+
+
+Human Preference Modeling
+Imagine if we have some input \(x\), and two output trajectories, \(y_{1}\) and \(y_{2}\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS224N MAY022024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=zero-shot-learning>Zero-Shot Learning</h2><p>GPT-2 is able to do many tasks with <strong>not examples</strong> + <strong>no gradient updates</strong>.</p><h2 id=instruction-fine-tuning>Instruction Fine-Tuning</h2><p>Language models, by default, are not <em>aligned</em> with user intent.</p><ol><li>collect paired examples of <strong>instruction</strong> + <strong>output</strong> across many tasks</li><li>then, evaluate on <strong>unseen tasks</strong></li></ol><p>~3 million examples &lt;&lt; n billion examples</p><p>dataset: MMLU</p><p>You can generate an <a href=#instruction-fine-tuning>Instruction Fine-Tuning</a> dataset by asking a larger model for it (see Alpaca).</p><h3 id=pros-plus-cons>Pros + Cons</h3><ul><li>simple and straightforward + generalize to unseen tasks</li><li>but, its <strong>EXPENSIVE</strong> to collect ground truth data<ul><li>ground truths maybe wrong</li><li>creative tasks may not have a correct answer</li><li>LMs penalizes all token-level mistakes equally, but some mistakes are worse than others</li><li>humans may generate suboptimal answers</li></ul></li></ul><h2 id=human-preference-modeling>Human Preference Modeling</h2><p>Imagine if we have some input \(x\), and two output trajectories, \(y_{1}\) and \(y_{2}\).</p><p>Suppose we have \(R(x, y)\).</p><p>We desire:</p><p>\begin{equation}
+\mathbb{E}_{\hat{y} \sim p_{\theta}(y | x)} R(x, y)
+\end{equation}</p><h3 id=rlhf-in-broad-strokes>RLHF, in broad strokes</h3><ol><li>do <a href=#instruction-fine-tuning>Instruction Fine-Tuning</a></li><li>estimate a reward model \(R(x,y)\)</li><li>maximize that reward model</li></ol><h3 id=model-preferences-as-an-nlp-problem>Model Preferences as an NLP Problem</h3><p>Train:</p><p>\begin{equation}
+RM_{\phi}(x, y)
+\end{equation}</p><p>which models a human preference scores.</p><h3 id=get-preference-data>Get preference data</h3><p>To get the preference data actually, ask the humans to <strong>RANK</strong> the rankings.</p><h4 id=bradley-terry-preference-model>Bradley-Terry Preference Model</h4><p>Suppose a human chose \(y^{w}\) over \(y^{l}\). Then, <a href=#bradley-terry-preference-model>Bradley-Terry Preference Model</a> tells us that a good reward model \(R\) will minimize:</p><p>\begin{equation}
+J(\phi) = -\mathbb{E}_{(x, y^{w}, y^{l})} \qty[\log \sigma \qty(R_{\phi}(x, y^{w}) - R_{\phi}(x, y^{l}))]
+\end{equation}</p><h3 id=ppo>PPO</h3><p>Then, we optimize this:</p><p>\begin{equation}
+\max_{\theta} \mathbb{E}\qty[ RM_{\phi}(x, \hat{y}) - \beta \log \qty( \frac{P_{\theta}^{RL} (\hat{y} | x)}{P_{\theta}^{orig} (\hat{y} | x)})]
+\end{equation}</p><p>we have a penalty term to prevent large drifts.</p><h3 id=dpo>DPO</h3><p>What if there is a way to write \(R_{\phi}(x,y)\) directly in terms of \(p_{\theta}^{RL}(\hat{y}|x)\)?</p><hr><p>Our goal is to solve this problem:</p><p>\begin{equation}
+\max_{\theta} \mathbb{E}\qty[ RM(x, \hat{y}) - \beta \log \qty( \frac{P_{\theta}^{RL} (\hat{y} | x)}{P_{\theta}^{orig} (\hat{y} | x)})]
+\end{equation}</p><p>There&rsquo;s actually a closed-form solution to this!</p><p>\begin{equation}
+p^{*} (\hat{y} | x) = \frac{1}{Z(x)} p^{orig} (\hat{y}|x) \exp \qty(\frac{1}{\beta} RM(x| \hat{y}))
+\end{equation}</p><p>where \(Z(x) = \sum_{\hat{y} \in y}^{} p^{orig}(\hat{y}|x)\).</p><p>Notice! Computing the normalization term \(Z\) is intractable! But first, we rearrange this equation to get:</p><p>\begin{equation}
+RM(x, \hat{y}) = \beta \log \frac{p^{*}(\hat{y}|x)}{p^{PT}(\hat{y}|x)} + \beta \log Z(x)
+\end{equation}</p><p>Now, we want to solve for a \(p^{*}\) given reward signal, so let&rsquo;s parametrize it:</p><p>\begin{equation}
+RM_{\theta}(x, \hat{y}) = \beta \log \frac{p_{\theta}(\hat{y}|x)}{p^{PT}(\hat{y}|x)} + \beta \log Z(x)
+\end{equation}</p><p>(issue: wait, but in the beginning \(\theta = PT\), so \(\log (1) = 0\), and this whole thing is \(0\)&mldr;. we will get to that, also \(Z\) is still intractable.)</p><p>Now! Recall <a href=#bradley-terry-preference-model>Bradley-Terry Preference Model</a>: a good \(RM_{\theta}\) should</p><p>\begin{equation}
+\min_{\phi} -\mathbb{E}_{(x, y^{w}, y^{l})} \qty[\log \sigma \qty(R_{\phi}(x, y^{w}) - R_{\phi}(x, y^{l}))]
+\end{equation}</p><p>Plugging our expression for \(RM_{\theta}\) from an equation ago into here, you&rsquo;ll notice the \(Z\) CANCELLS OUT! And this gives:</p><p>\begin{equation}
+\min_{\theta} -\mathbb{E}_{(x, y^{w}, y^{l})} \qty[\log \sigma \qty(\beta \log \frac{p_{\theta}(y^{w}|x)}{p_{PT}(y^{w}|x)} - \beta \log \frac{p_{\theta}(y^{l}|x)}{p_{PT}(y^{l}|x)})]
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

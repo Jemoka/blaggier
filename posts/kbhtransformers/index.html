@@ -1,0 +1,77 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>old Transformers</title>
+<meta name=description content="Transformers has replaced large pipelines into a single system.
+&ldquo;Transformers verticalized tasks in 2013 EMNLP; various domains&rdquo;
+Process
+
+Multiple manual systems that talk to each other has been replaced by neurons talking to each other
+General word embeddings like Word2Vec
+Sequence to sequence modeling from those vecs that are more general: learning variable length representations
+From LSTMs to Encoder-Decoder architectures: Google Neural Machine Translation System 2016 (LSTM seq2seq SoTA)
+
+So: big complicated pipelines turn into one homogeneous system."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>old Transformers</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhtransformers/>Transformers</a> has replaced large pipelines into a single system.</p><p>&ldquo;<a href=/posts/kbhtransformers/>Transformers</a> verticalized tasks in 2013 EMNLP; various domains&rdquo;</p><h2 id=process>Process</h2><ol><li>Multiple manual systems that talk to each other has been replaced by neurons talking to each other</li><li>General word embeddings like Word2Vec</li><li>Sequence to sequence modeling from those vecs that are more general: learning variable length representations</li><li>From LSTMs to Encoder-Decoder architectures: Google Neural Machine Translation System 2016 (LSTM seq2seq SoTA)</li></ol><p>So: big complicated pipelines turn into one homogeneous system.</p><h3 id=big-lstm-problems-and-their-solutinos>Big LSTM Problems and their Solutinos</h3><p>LSTMs crush the entire sequence into one embedding, which is bad because there&rsquo;s no representation between inputs.</p><p><a href=/posts/kbhrandom_variables/#adding-random-variables>Convolution</a>s begin to solve this problem by looking at the local interactions to learn about the structure of the problem.</p><p>Self-attention does this massively: capturing token-to-token interactions in a parallelization fashion.</p><h3 id=transformer-motivation>Transformer Motivation</h3><p>Motivation: convolutions allows parallelism, &ldquo;can we read and write in parallel instead of left to right generation?&rdquo;</p><p>no. decoding in parallel sucks apparently.</p><ol><li>the ordering is hard: we don&rsquo;t know how the outputs should be ordered; generating all at once assumes the output are conditionally independent</li><li>each ordering selection narrows the posterior space and it makes generation easier</li></ol><p>But we can still read in parallel unlike LSTMs which is BASED.</p><p>Self attention is actually faster too, because convolutions are \(O(knd^{2})\) but self attention happens without convolving with only \(O(nd^{2})\).</p><p>&ldquo;Processing&rdquo; happens through contractions/expansions like ResNet.</p><h3 id=multi-head-attention>Multi-Head Attention</h3><p>Language modeling: &ldquo;who did what to whom&rdquo;?</p><p>A single self-attention only can capture one of those W relationships. The best in can do (because of softmax) is to do a weighted average of the inputs.</p><h3 id=position-encodings>Position encodings</h3><p>Because adding is commutative, attention is permutation invariant so we have to add a positional encoding.</p><p>In theory we want length invariant models, which requires long term embeddings. Absolute embeddings, when generation length becomes too long, you end up with degration as length increases</p><h2 id=next-steps>Next Steps</h2><h3 id=long-form-retrival>Long-Form Retrival</h3><p>There are ways of doing &ldquo;structured sparse attention&rdquo;, an input modulated sparse matrix for attention that saves a lot of flops. So, we can do long form contexts eventually by playing with this area of retrival.</p><h3 id=liking-physics>Liking Physics</h3><p>&ldquo;You want to make physics your friend&rdquo;</p><p>Convolutions and self attention moves memory between GPU HBM and GPU SRAM a lot: four different move/load operations. That&rsquo;s not a FLOP problem. How do we fix that?</p><ol><li>multi-query/group query approach: reduce read heads: n&lt;d key and n&lt;d values; a bunch of queries attend to the same keys and values&mdash;loose fidelity but less loads</li><li>Softmax improvements to improve performance</li></ol></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,141 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-MATH530 1.C Problem 23</title>
+<meta name=description content="Statement
+Suppose \(U_1\), \(U_2\), and \(W\) are subspaces of \(V\), such that:
+\begin{equation}
+\begin{cases}
+V = U_1 \oplus W\\
+V = U_2 \oplus W
+\end{cases}
+\end{equation}
+Prove or give a counterexample that \(U_1=U_2\)
+Intuition
+The statement is not true. The definition of direct sums makes it such that, \(\forall v \in V\), there exists a unique representation of \(v\) with \(u_{1i}+w_{i} = v\) for \(u_{1j}\in U_1, w_{j} \in W\) as well as another unique representation \(u_{2i} + w_{i}=v\) for \(u_{2j} \in U_{2}, w_{j} \in W\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-MATH530 1.C Problem 23</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=statement>Statement</h2><p>Suppose \(U_1\), \(U_2\), and \(W\) are subspaces of \(V\), such that:</p><p>\begin{equation}
+\begin{cases}
+V = U_1 \oplus W\\
+V = U_2 \oplus W
+\end{cases}
+\end{equation}</p><p>Prove or give a counterexample that \(U_1=U_2\)</p><h2 id=intuition>Intuition</h2><p>The statement is not true. The definition of direct sums makes it such that, \(\forall v \in V\), there exists a unique representation of \(v\) with \(u_{1i}+w_{i} = v\) for \(u_{1j}\in U_1, w_{j} \in W\) as well as another unique representation \(u_{2i} + w_{i}=v\) for \(u_{2j} \in U_{2}, w_{j} \in W\).</p><p>However, the definition of direct sums doesn&rsquo;t guarantee that the distinct unique representations are equivalent; although \(V\) can only be represented uniquely by EITHER a sum of \(U_1+W\) or \(U_2+W\), it does not mean that each \(v \in V\) itself has only one unique representation.</p><h2 id=counterexample>Counterexample</h2><p>In constructing a counterexample, we turn to the fact that the sums of two variables creates a third free variable; therefore, we can figure two distinct ways of creating a third, final free variable that construct an equivalent space.</p><h3 id=constructing-u-1-as-a-subspace>Constructing \(U_1\) as a subspace</h3><p>We begin with constructing:</p><p>\begin{equation}
+U_1= \left\{\begin{pmatrix}
+x_1\\y_1\\2y_1
+\end{pmatrix}, x_1,y_1 \in \mathbb{F} \right\}
+\end{equation}</p><p>By setting both free variables to \(0\), we construct the additive identity. Then:</p><p>\begin{equation}
+\lambda \begin{pmatrix}
+x_1 \\ y_1 \\ 2y_1
+\end{pmatrix} = \begin{pmatrix}
+\lambda x_1 \\ \lambda y_1\\ 2(\lambda y_1)
+\end{pmatrix}
+\end{equation}</p><p>by multiplication in \(\mathbb{F}\), scalar multiplication, commutativity, and associativity. We can show closure under addition by inheriting the operation in \(\mathbb{F}\) as well as applying distributive to the factor of \(2\).</p><p>Therefore, we show that \(U_1\) is a subspace of \(\mathbb{F}^{3}\).</p><h3 id=constructing-u-2-as-a-subspace>Constructing \(U_2\) as a subspace</h3><p>Then, we construct:</p><p>\begin{equation}
+U_2=\left\{\begin{pmatrix}
+x_1 \\ y_1 \\ 0
+\end{pmatrix}, x_1,y_1\in \mathbb{F} \right\}
+\end{equation}</p><p>We again have \(0\) by setting free variables to create the additive identity. Addition and scalar multiplication is closed by inheriting them from \(\mathbb{F}\) (and the fact that \(0\) is the additive inverse and therefore \(\lambda 0 = 0\)).</p><p>Therefore, \(U_2\) is a subspace as well in \(\mathbb{F}^{3}\).</p><h3 id=constructing-w-as-a-subspace>Constructing \(W\) as a subspace</h3><p>Finally, we have:</p><p>\begin{equation}
+W = \left\{\begin{pmatrix}
+0 \\ 0 \\z_1
+\end{pmatrix}, z_1\in \mathbb{F} \right\}
+\end{equation}</p><p>By setting \(z_1=0\), we have the additive identity. As with above, addition and scalar multiplication is closed through inheritance and that \(\lambda 0=0\).</p><h3 id=constructing-sum-of-subsets>Constructing Sum of Subsets</h3><p>Let&rsquo;s construct:</p><p>\begin{equation}
+U_1+W = V
+\end{equation}</p><p>Take \(u_1 \in U_1, w \in W\), attempting to construct a \(v\in V\), we have that:</p><p>\begin{equation}
+\begin{pmatrix}
+x_{1} \\ y_1 \\ 2y_1
+\end{pmatrix} + \begin{pmatrix}
+0 \\ 0 \\ z_1
+\end{pmatrix} = \begin{pmatrix}
+x_1 \\ y_1 \\ 2y_1+z_1
+\end{pmatrix} = \begin{pmatrix}
+a \\ b \\ c
+\end{pmatrix}
+\end{equation}</p><h3 id=constructing-direct-sum>Constructing Direct Sum</h3><p>For all vectors in \(\mathbb{F}^{3}\), this is an equivalence with 3 free variables and 3 expressions&mdash;rendering each vector in \(\mathbb{F}^{3}\) to have a representation by \(U_1+W\). We can see this also with the unique \(0\) test:</p><p>We see that for:</p><p>\begin{equation}
+0 \in U_1+W
+\end{equation}</p><p>To solve for some \(u_1 \in U, w \in W : u_1+w = 0\) we have that:</p><p>\begin{equation}
+\begin{pmatrix}
+x_{1} \\ y_1 \\ 2y_1
+\end{pmatrix} + \begin{pmatrix}
+0 \\ 0 \\ z_1
+\end{pmatrix} = \begin{pmatrix}
+0 \\ 0 \\ 0
+\end{pmatrix}
+\end{equation}</p><p>where the first vector is in \(U_1\) and the second is in \(W\). The first two expressions tell us that \(x_1=y_1=0\); the final equation requires that \(2y_1+z_1=0+z_1=0\Rightarrow z_1=0\) .</p><p>Therefore, the only way to write \(0\) is to take each element in the sum to \(0\) (i.e. in this case \(u_1=w=0 \implies u_1+w = 0\)), making the above a direct sum.</p><p>Therefore:</p><p>\begin{equation}
+U_1 \oplus W = V
+\end{equation}</p><p>In almost the same manner, we can show that:</p><p>\begin{equation}
+U_2\oplus W = V
+\end{equation}</p><p>That, for some \(u_2\in U_2, w \in W, v \in V\):</p><p>\begin{equation}
+\begin{pmatrix}
+x_1\\y_1\\0
+\end{pmatrix} + \begin{pmatrix}
+0 \\ 0 \\ z_1
+\end{pmatrix} = \begin{pmatrix}
+x_1\\y_1\\z_1
+\end{pmatrix}
+\end{equation}</p><p>for the first vector in \(U_2\), the second in \(W\). In fact, this is the statement made in example <code>1.41</code>.</p><h3 id=creating-the-counterexample>Creating the Counterexample</h3><p>Finally, we have that:</p><p>\begin{equation}
+\left\{\begin{pmatrix}
+x_1 \\ y_1 \\ 2y_1
+\end{pmatrix}: x_1,y_1 \in \mathbb{F}\right\} \neq\left\{\begin{pmatrix}
+x_1 \\ y_1 \\ 0
+\end{pmatrix}: x_1,y_1 \in \mathbb{F}\right\}
+\end{equation}</p><p>\(\forall y_1 \neq 0\) in the first expression. Therefore, \(U_1 \neq U_2\), finishing the counterexample. \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,151 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Heat Equation</title>
+<meta name=description content="see also two-dimensional heat equation the following relates to 1d
+heat distributes by &ldquo;diffusing&rdquo;; this is heat \(u\) diffusing across a plate
+\begin{equation}
+\pdv{u}{t} = \pdv[2]{u}{x}
+\end{equation}
+we have, with Dirichlet Conditions:
+\begin{equation}
+u_{k}(t,x) =  \sum b_{k} e^{ - \frac{k^{2} \pi^{2}}{l^{2}} t } \sin \qty( \frac{k \pi x}{l})
+\end{equation}
+and with Neumann Conditions:
+\begin{equation}
+u_{k}(t,x) =  \sum b_{k} e^{ - \frac{k^{2} \pi^{2}}{l^{2}} t } \cos \qty( \frac{k \pi x}{l})
+\end{equation}
+with infinite boundaries:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Heat Equation</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><strong>see also <a href=/posts/kbhtwo_dimensional_heat_equation/>two-dimensional heat equation</a></strong> the following relates to 1d</p><p>heat distributes by &ldquo;diffusing&rdquo;; this is heat \(u\) diffusing across a plate</p><p>\begin{equation}
+\pdv{u}{t} = \pdv[2]{u}{x}
+\end{equation}</p><p>we have, with <a href=/posts/kbhsu_math53_feb232024/#dirichlet-conditions>Dirichlet Conditions</a>:</p><p>\begin{equation}
+u_{k}(t,x) = \sum b_{k} e^{ - \frac{k^{2} \pi^{2}}{l^{2}} t } \sin \qty( \frac{k \pi x}{l})
+\end{equation}</p><p>and with <a href=/posts/kbhsu_math53_feb232024/#neumann-conditions>Neumann Conditions</a>:</p><p>\begin{equation}
+u_{k}(t,x) = \sum b_{k} e^{ - \frac{k^{2} \pi^{2}}{l^{2}} t } \cos \qty( \frac{k \pi x}{l})
+\end{equation}</p><p>with infinite boundaries:</p><p>\begin{equation}
+U(t,x) =\frac{1}{\sqrt{4 \pi \alpha t}} \int_{\mathbb{R}} f(y) e^{-\frac{(x-y)^{2}}{4\alpha t}} \dd{y}
+\end{equation}</p><p>general system:</p><p>\begin{equation}
+\begin{cases}
+A&rsquo;(t) = \lambda A(t) \\
+B&rsquo;&rsquo;(x) = \lambda B(x)
+\end{cases}
+\end{equation}</p><h2 id=removing-a-constant>Removing a constant</h2><p>Consider a function:</p><p>\begin{equation}
+t = c \tau
+\end{equation}</p><p>you can remove the constant by finanglisng because the constant drops out when scaled (i.e. you can just scale your results back TODO check this).</p><h2 id=damping>damping</h2><p><a href=/posts/kbhdamped_heat_equation/>damped heat equation</a></p><h2 id=solving-heat-equation>Solving Heat Equation</h2><p>Consider the one dimensional heat equation:</p><p>\begin{equation}
+\pdv{u}{t} = \pdv[2]{u}{x}
+\end{equation}</p><p>&ldquo;well posed-ness&rdquo; of to this problem requires two sets of initial conditions: one &ldquo;boundary condition&rdquo;</p><h3 id=initial-condition>Initial Condition</h3><p>Because the expression is linear by time, we need one initial condition; let&rsquo;s say its some function in \(x\):</p><p>\begin{equation}
+f_{0}(x)
+\end{equation}</p><h3 id=solving>Solving</h3><p>Let&rsquo;s make an educated guess:</p><p>\begin{equation}
+u(t,x) = A(t) B(x)
+\end{equation}</p><p>Consider:</p><p>\begin{equation}
+\pdv{u}{t} = A&rsquo;(t)B(x)
+\end{equation}</p><p>\begin{equation}
+\pdv[2]{u}{x} = A(t) B&rsquo;&rsquo;(x)
+\end{equation}</p><p>This results in:</p><p>\begin{equation}
+A&rsquo;(t) B(x) = A(t) B&rsquo;&rsquo;(X)
+\end{equation}</p><p>meaning, we can rearrange and integrate:</p><p>\begin{equation}
+\frac{A&rsquo;(t)}{A(t)} = \frac{B&rsquo;&rsquo;(x)}{B(x)}
+\end{equation}</p><p>You will note that taking a derivative by \(t\) on one side tells us that the right side is \(0\), and taking derivative of \(x\) on the other results in left side is \(0\). This tell us that this function is constant in both \(t\) and \(x\). Meaning:</p><p>\begin{equation}
+\frac{A&rsquo;(t)}{A(t)} = \frac{B&rsquo;&rsquo;(x)}{B(x)} = \lambda
+\end{equation}</p><p>This results in a renewed system:</p><p>\begin{equation}
+\begin{cases}
+A&rsquo;(t) = \lambda A(t) \\
+B&rsquo;&rsquo;(x) = \lambda B(x)
+\end{cases}
+\end{equation}</p><h4 id=solving-using-dirichlet-conditions--kbhsu-math53-feb232024-dot-md>Solving using <a href=/posts/kbhsu_math53_feb232024/#dirichlet-conditions>Dirichlet Conditions</a></h4><ul><li><p>Finding \(\lambda\) using Boundary Conditions</p><p>Now, recall from our system:</p><p>\begin{equation}
+B&rsquo;&rsquo;(x) = \lambda B(x)
+\end{equation}</p><p>Its solutions are</p><p>\begin{equation}
+B(x) = c_1 e^{\sqrt{\lambda}x} + c_2 e^{-\sqrt{\lambda}x}
+\end{equation}</p><p>Recall <a href=/posts/kbhsu_math53_feb232024/#dirichlet-conditions>Dirichlet Conditions</a>:</p><p>\begin{equation}
+u(t,0) = u(t, l)= 0
+\end{equation}</p><p>This tells us that \(B(0) = 0\), \(B(l) = 0\).</p><p>At \(B(0)\), this gives us that \(c_1 + c_2 = 0\), meaning \(c_2 = -c_1\)</p><p>At \(B(l) = 0 = c_1 \qty( e^{\sqrt{\lambda}l} - e^{-\sqrt{\lambda}l})\). Dividing \(c_1\) to both sides, we obtain \(e^{2\sqrt{\lambda} l} = 1\).</p><p>We finally can obtain \(\lambda\). One obvious answer is \(\lambda = 0\). But, there are other fun things we can do:</p><hr><p>Aside:</p><p>Recall, if we desire</p><p>\begin{equation}
+e^{i\theta} = \cos \theta + i \sin \theta = 1
+\end{equation}</p><p>This gives:</p><p>\begin{equation}
+\theta = 2\pi k
+\end{equation}</p><hr><p>Therefore, recall that we obtained \(e^{2\sqrt{\lambda}l}\), we obtained:</p><p>\begin{equation}
+2\sqrt{\lambda}l = 2\pi k i
+\end{equation}</p><p>Solving for \(\lambda\), we finally get solutions:</p><p>\begin{equation}
+\lambda_{k} = \frac{-k^{2}\pi^{2}}{l^{2}}
+\end{equation}</p><p>for \(k = 0, 1, 2, 3\); this condition called &ldquo;quantization&rdquo;</p></li></ul><ul><li><p>Solving Again</p><p>Now that we know \(\lambda\), we can say:</p><p>\begin{equation}
+\begin{cases}
+A&rsquo;(t) = \frac{-k^{2}\pi^{2}}{l^{2}} A(t) \\
+B&rsquo;&rsquo;(x) = \frac{-k^{2}\pi^{2}}{l^{2}} B(x)
+\end{cases}
+\end{equation}</p><p>And then we can proceed to solve everything again. [a little lost, but in theory \(\cos(x)\) drops out after solving].</p><p>This Gives us eventually:</p><p>\begin{equation}
+A(t) = e^{-\frac{k^{2}\pi^{2}}{l^{2}} t}
+\end{equation}</p><p>and</p><p>\begin{equation}
+B(x) = \sin \frac{k\pi x}{l}
+\end{equation}</p><p>sin
+Recall that \(U = AB\), this means, with all generality:</p><p>\begin{equation}
+u_{k} = e^{-\frac{k^{2}\pi^{2}}{l^{2}} t}\sin \frac{k\pi x}{l}
+\end{equation}</p></li></ul><ul><li><p>Initial Conditions</p><p>Suppose we have initial condition:</p><p>\begin{equation}
+f_{0}(x) = \sum a_{n} \sin \qty( \frac{k\pi x}{l})
+\end{equation}</p><p>because the PDE is linear, we obtain:</p><p>\begin{equation}
+u_{k}(t,x) = \sum a_{k} e^{-\frac{k^{2}\pi^{2}}{l^{2}}t} \sin \qty( \frac{k \pi x}{l})
+\end{equation}</p><p>again quantized over \(k\).</p><p>This is because each individual terms corresponds to a solution \(a_{n} \sin \qty(\frac{k\pi x}{l})\), and at boundary condition \(f_{0}(x)\), the left term of the general solution drops out, to obtain:</p><p>\begin{equation}
+a_{n}\frac{k \pi x}{l} = f_{0}(x) = u(0, x) = e^{0} \sin \qty(\frac{k \pi x}{l}) = a_{k} \sin \qty(\frac{k \pi x}{l})
+\end{equation}</p><p>so we can just match terms.</p><p>The good news is that, because exists, any initial condition that&rsquo;s a well-formed function can be written a sum of sines. This also converges really quickly (because \(e^{-k^{2}}\)). Further, given some \(f_{0}(x)\), we obtain a specific \(k\) and will obtain a specific solution.</p></li></ul><h4 id=solving-using-neumann-conditions--kbhsu-math53-feb232024-dot-md>Solving using <a href=/posts/kbhsu_math53_feb232024/#neumann-conditions>Neumann Conditions</a></h4><p>Go through the derivation, this gives:</p><p>\begin{equation}
+u_{k}(t,x) = \sum b_{k} e^{ - \frac{k^{2} \pi^{2}}{l^{2}} t } \cos \qty( \frac{k \pi x}{l})
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

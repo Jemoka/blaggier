@@ -1,0 +1,79 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>product summation map</title>
+<meta name=description content="Let \(U_1, \dots, U_{m}\) be subspaces of \(V\); we define a linear
+We define \(\Gamma\) to be a map \(U_1 \times \dots U_{m} \to U_1 + \dots + U_{m}\) such that:
+\begin{equation}
+\Gamma (u_1, \dots, u_{m}) = u_1 + \dots + u_{m}
+\end{equation}
+Essentially, \(\Gamma\) is the sum operation of the elements of the tuple made by the Product of Vector Spaces.
+\(U_1 + \dots + U_{m}\) is a direct sum IFF \(\Gamma\) is injective
+Proof:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>product summation map</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Let \(U_1, \dots, U_{m}\) be <a href=/posts/kbhsubspace/>subspace</a>s of \(V\); we define a linear</p><p>We define \(\Gamma\) to be a map \(U_1 \times \dots U_{m} \to U_1 + \dots + U_{m}\) such that:</p><p>\begin{equation}
+\Gamma (u_1, \dots, u_{m}) = u_1 + \dots + u_{m}
+\end{equation}</p><p>Essentially, \(\Gamma\) is the sum operation of the elements of the tuple made by the <a href=/posts/kbhproduct_of_vector_spaces/>Product of Vector Space</a>s.</p><h2 id=u-1-plus-dots-plus-u-m-is-a-direct-sum--kbhdirect-sum-dot-md--iff--kbhequivalence-dot-md--gamma-is-injective--kbhinjectivity-dot-md>\(U_1 + \dots + U_{m}\) is a <a href=/posts/kbhdirect_sum/>direct sum</a> <a href=/posts/kbhequivalence/>IFF</a> \(\Gamma\) is <a href=/posts/kbhinjectivity/>injective</a></h2><p>Proof:</p><p>Given \(\Gamma\) is injective:
+Given <a href=/posts/kbhinjectivity/>injectivity</a>, we have that <a href=/posts/kbhinjectivity/#injectivity-implies-that-id-767a441d-4931-4fad-aa8e-c6b001e8b507-null-space-is-0>injectivity implies that null space is \(\{0\}\)</a>. Now, because the only way to produce \(0\) is to have the input product/tuple be 0, \(u_1 \dots u_{m} = 0\). So, given <a href=/posts/kbhdirect_sum/#a-id-1b800658-2f83-4802-acfd-2d15cf5a1d74-sum-of-subsets-is-a-id-4e586014-c91f-4d52-98bb-a2fe11a75007-direct-sum-id-fddf0648-91ea-4c5b-8298-fa0a30637cb7-iff-there-is-only-one-way-to-write-0>a sum of subsets is a direct sum IFF there is only one way to write \(0\)</a>, the sum is a <a href=/posts/kbhdirect_sum/>direct sum</a>.</p><p>Given <a href=/posts/kbhdirect_sum/>direct sum</a>:
+Reverse the logic of above directly. Given its a direct sum, the only way to be in the <a href=/posts/kbhnull_space/>null space</a> of \(\Gamma\) (i.e. have the sum of the elements of tuple by \(0\)) is by taking each \(u_1 \dots u_{m}\) to \(0\). Now, <a href=/posts/kbhinjectivity/#injectivity-implies-that-id-767a441d-4931-4fad-aa8e-c6b001e8b507-null-space-is-0>injectivity implies that null space is \(\{0\}\)</a>, so \(\Gamma\) is <a href=/posts/kbhinjectivity/>injective</a>. \(\blacksquare\)</p><h3 id=aside>Aside:</h3><p>\(\Gamma\) is <a href=/posts/kbhsurjectivity/>surjective</a> because product of vector-spaces is simply the pre-combined version of the sum.</p><p>So a corollary of the above result is that: \(U_1 + \dots + U_{m}\) is a <a href=/posts/kbhdirect_sum/>direct sum</a> <a href=/posts/kbhequivalence/>IFF</a> \(\Gamma\) is <a href=/posts/kbhinvertability/>invertable</a>, because <a href=/posts/kbhinvertability/#id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injectivity-and-id-1af529ce-e2fb-43a4-8f13-aee1dc743b5f-surjectivity-implies-id-ff05739c-6e70-46ba-9d56-0958ef847f57-invertability>injectivity and surjectivity implies invertability</a>.</p><h2 id=u-1-plus-dots-plus-u-m-is-a-direct-sum--kbhdirect-sum-dot-md--iff-dim--u-1-plus-dots-plus-u-m--dim-u-1-plus-dots-plus-dim-u-m>\(U_1 + \dots + U_{m}\) is a <a href=/posts/kbhdirect_sum/>direct sum</a> IFF \(\dim (U_1 + \dots + U_{m}) = \dim U_1 + \dots + \dim U_{m}\)</h2><p>\(\Gamma\) is <a href=/posts/kbhsurjectivity/>surjective</a> for all cases because product of vector-spaces is simply the pre-combined version of the sum.</p><p>So, by <a href=/posts/kbhfundamental_theorem_of_linear_maps/>rank-nullity theorem</a>, \(\dim (U_1 \times \dots U_{m}) = \dim null\ \Gamma + \dim (U_1 + \dots + U_{m})\).</p><p>Now, \(\dim null\ \Gamma = 0\) <a href=/posts/kbhequivalence/>IFF</a> \(\dim (U_1 \times \dots U_{m}) = 0 + \dim (U_1 + \dots + U_{m})\).</p><p>Now, <a href=/posts/kbhproduct_of_vector_spaces/#dimension-of-the-id-a45b05c0-3e01-4c27-bc3b-543ff3606c66-product-of-vector-space-s-is-the-sum-of-the-spaces-dimension>dimension of the Product of Vector Spaces is the sum of the spaces&rsquo; dimension</a>.</p><p>So: \(\dim null\ \Gamma = 0\) <a href=/posts/kbhequivalence/>IFF</a> \(\dim U_1 + \dots + \dim U_{m} = 0 + \dim (U_1 + \dots + U_{m})\).</p><p>Now, <a href=#u-1-plus-dots-plus-u-m-is-a-direct-sum--kbhdirect-sum-dot-md--iff--kbhequivalence-dot-md--gamma-is-injective--kbhinjectivity-dot-md>\(U_1 + \dots + U_{m}\) is a direct sum IFF \(\Gamma\) is injective</a>, and from above \(\dim null\ \Gamma = 0\) (that \(\Gamma\) is <a href=/posts/kbhinjectivity/>injective</a>) <a href=/posts/kbhequivalence/>IFF</a> \(\dim U_1 + \dots + \dim U_{m} = 0 + \dim (U_1 + \dots + U_{m})\).</p><p>So, \(U_1 + \dots + U_{m}\) is a <a href=/posts/kbhdirect_sum/>direct sum</a> IFF \(\dim (U_1 + \dots + U_{m}) = \dim U_1 + \dots + \dim U_{m}\), as desired. \(\blacksquare\)</p><p>(Note that this proof is built out of a series of <a href=/posts/kbhequivalence/>IFF</a>s, so it goes in both directions.)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,83 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>homogeneity</title>
+<meta name=description content="statistical context
+Homogeneity is a measure of how similar many things are.
+Linear Algebra context
+&mldr;of linear maps
+homogeneity is a property of Linear Maps to describe the ability to &ldquo;factor out&rdquo; scalars
+&mldr;of linear equations
+A homogenous linear equation is one which the constant term on the right of the equations are \(0\).
+homogenous system with more variables than equations has nonzero solutions
+Proof:
+You can imagine the system as a matrix equation:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>homogeneity</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=statistic--kbhstastistic-dot-md--al-context><a href=/posts/kbhstastistic/>statistic</a>al context</h2><p><a href=/posts/kbhhomogeneity/>Homogeneity</a> is a measure of how similar many things are.</p><h2 id=linear-algebra--kbhlinear-algebra-index-dot-md--context><a href=/posts/kbhlinear_algebra_index/>Linear Algebra</a> context</h2><h3 id=dot-dot-dot-of-linear-maps>&mldr;of linear maps</h3><p><a href=/posts/kbhhomogeneity/>homogeneity</a> is a property of <a href=/posts/kbhlinear_map/>Linear Map</a>s to describe the ability to &ldquo;factor out&rdquo; scalars</p><h3 id=dot-dot-dot-of-linear-equations>&mldr;of linear equations</h3><p>A <a href=/posts/kbhhomogeneity/>homogenous</a> linear equation is one which the constant term on the right of the equations are \(0\).</p><h4 id=homogenous--kbhhomogeneity-dot-md--system-with-more-variables-than-equations-has-nonzero-solutions><a href=/posts/kbhhomogeneity/>homogenous</a> system with more variables than equations has nonzero solutions</h4><p>Proof:
+You can imagine the system as a <a href=/posts/kbhmatricies/>matrix</a> equation:</p><p>\begin{equation}
+Av = 0
+\end{equation}</p><p>where, \(v\) is a list of input variables, and \(A\) is a <a href=/posts/kbhpolynomial/>coefficient</a> <a href=/posts/kbhmatricies/>matrix</a>. Note that \(A = \mathbb{F}^{n} \to \mathbb{F}^{m}\), where \(n\) is the number of variables, and \(m\) the number of equations.</p><p>Now, the input variables \(v\) of the above expression is in the <a href=/posts/kbhnull_space/>null space</a> of \(A\). The question of &ldquo;whether is there non-zero solutions&rdquo; can be rephrased as given \(Av=0\), does \(v=0\)?" Otherwise known as &ldquo;is \(null\ A=\{0\}\)?&rdquo;: that is, &ldquo;is \(A\) <a href=/posts/kbhinjectivity/>injective</a>?&rdquo;</p><p>Given the fact that <a href=/posts/kbhlinear_map/#map-to-smaller-space-is-not-id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injective>map to smaller space is not injective</a>, if \(m &lt;n\), the map is not going to be <a href=/posts/kbhinjectivity/>injective</a>. Therefore, we want \(m&lt;n\), meaning we want more variables (\(n\)) than equations (\(m\)) to have non-zero solutions.</p><h4 id=in-homogenous--kbhhomogeneity-dot-md--system-with-more-equations-than-variables-has-no-solutions-for-an-arbitrary-set-of-constants>in<a href=/posts/kbhhomogeneity/>homogenous</a> system with more equations than variables has no solutions for an arbitrary set of constants</h4><p>Proof:
+You can imagine the system as a <a href=/posts/kbhmatricies/>matrix</a> equation:</p><p>\begin{equation}
+Av = C
+\end{equation}</p><p>where, \(v\) is a list of input variables, and \(A\) is a <a href=/posts/kbhpolynomial/>coefficient</a> <a href=/posts/kbhmatricies/>matrix</a>. Note that \(A = \mathbb{F}^{n} \to \mathbb{F}^{m}\), where \(n\) is the number of variables, and \(m\) the number of equations.</p><p>Now, a valid solution of the above expression means that \(Av=C\) for all \(v\) (as they are, of course, the variables.) If we want the expression to have a solution for all choices of \(C\), we desire that the <a href=/posts/kbhrange/>range</a> of \(A\) to equal to its codomain&mdash;that we desire it to be <a href=/posts/kbhsurjectivity/>surjective</a>.</p><p>Given the fact that <a href=/posts/kbhlinear_map/#map-to-bigger-space-is-not-id-1af529ce-e2fb-43a4-8f13-aee1dc743b5f-surjective>map to bigger space is not surjective</a>, if \(m > n\), the map is not going to be <a href=/posts/kbhsurjectivity/>surjective</a>. Therefore, we want \(m>n\), meaning we want more equations (\(m\)) than variables (\(n\)) to have no solutions for arbitrary \(C\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

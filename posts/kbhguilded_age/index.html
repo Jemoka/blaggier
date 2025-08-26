@@ -1,0 +1,76 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Guilded Age</title>
+<meta name=description content="The Guilded Age is a period in history between 1877 and 1900. This period deepened divide in racism, deepened the split between poor and rich, and the fluidity of American social classes became more set in this time.
+Links to Organize
+
+Imperialism
+New American South
+
+Why is the &ldquo;Guilded Age&rdquo; &ldquo;Guilded&rdquo;?
+Guilded: Outside Lined with Gold, Inside Contains Metal and is Less Valuable.
+The Guilded Age consists of three different sections:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Guilded Age</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>The <a href=/posts/kbhguilded_age/>Guilded Age</a> is a period in history between 1877 and 1900. This period deepened divide in racism, deepened the split between poor and rich, and the fluidity of American social classes became more set in this time.</p><h2 id=links-to-organize>Links to Organize</h2><ul><li><a href=/posts/kbhimperialism/>Imperialism</a></li><li><a href=/posts/kbhnew_american_south/>New American South</a></li></ul><h2 id=why-is-the-guilded-age--kbhguilded-age-dot-md--guilded>Why is the &ldquo;<a href=/posts/kbhguilded_age/>Guilded Age</a>&rdquo; &ldquo;Guilded&rdquo;?</h2><p><a href=#why-is-the-guilded-age--kbhguilded-age-dot-md--guilded>Guilded</a>: Outside Lined with Gold, Inside Contains Metal and is Less Valuable.</p><p>The Guilded Age consists of three different sections:</p><ul><li>Business (Top!)</li><li>Labour</li><li>Government</li></ul><h2 id=contributors-to-the-guilded-age--kbhguilded-age-dot-md>Contributors to the <a href=/posts/kbhguilded_age/>Guilded Age</a></h2><p>There are three pieces</p><ul><li>&ldquo;<a href=/posts/kbhhomestead_act/>Homestead Act</a>&rdquo;: legal way to give people land in the west</li><li>&ldquo;<a href=/posts/kbhnational_banking_act/>National Banking Act</a>&rdquo;: unified a uniform economic system, and to connect markets</li><li>&ldquo;<a href=/posts/kbhpacific_railroad_act/>Pacific Railroad Act</a>&rdquo;: expansion of connection; also formed the first &ldquo;Corporations&rdquo; based on railroad organization structures.</li></ul><h2 id=issues-of-the-guilded-age>Issues of the Guilded Age</h2><h3 id=immigration>Immigration</h3><p>&ldquo;They are coming to take our jobs!&rdquo; (Irish Edition.)</p><p>USCIS processed people in Ellis (Irish processing, took about 2 days to process) and Angel (Chinese processing, took about 6 <em>months</em> to process) islands: beginning having racial immigrant discrimination.</p><h3 id=urbanization>Urbanization</h3><p>Populations in the United States tripled in about 50 years. Immigrants were stuffed into Tennaments. The Guilded age saw the beginning of skyscrapers.</p><h3 id=social-activism>Social Activism</h3><p>Because of the issues began during the Guilded Age, more people essentially stepped instead of the governement to play a role in supporting welfare.</p><h3 id=industrialization>Industrialization</h3><p>&ldquo;Pulling yourself up by your bootstraps.&rdquo; <em>Steel</em> is invented. All of the technology has been moved to provide maximum output; this comes, of course, at an environmental cost. Large unions are starting to take off. Railroad Strike: federal troops fired upon railroad workers; argued the case for union but also for corp. influence on politics.</p><h3 id=politics>Politics</h3><ul><li>Democrats: racist, states rights, limited federal government.</li><li>Republicans: supported businesses, immigrations.</li></ul><p>Yes, they are still flipped.</p><p>But either way, democracy was rampant: 80% turnout! This is, however, one of the most corrupt time in American politics. The party system: local political bosses would provide favours for a vote &mdash; in an absence of welfare, in exchange for a vote, wolud provide protection and social welfare. At this time, there was mass lack of reliance.</p><h3 id=culture>Culture</h3><p>Victorianism! Proper manners, conservatism, etc. Bikes and contraceptives! There is also a fear that &ldquo;manliness was declining&rdquo;: that no more farming means need for more sports, body building, etc. Also, &ldquo;name brands&rdquo;, &ldquo;sears catalogue&rdquo;, and consumerism is taking hold.</p><h3 id=corportization>Corportization</h3><p>Corporations, as an idea, took hold. That the owners of a group is seperated by management, it allows the expansion of the size of companies. Monopolies in industries run while: concentrated wealth in addition to corrupted politics.</p><p>Taylorism: Taylor decided to make a shovel for each type of movement &mdash; which makes people repeat the same task over again but increased efficiency. &ldquo;Taylor-made&rdquo; comes from this.</p><h3 id=omaha-platform>Omaha Platform</h3><ul><li>Expanding Credit</li><li>Bracketed income tax</li><li>Social reforms</li></ul><p>Lays the groundwork for the progressive moment. This was a socialist movement!</p><h2 id=the-west>The West</h2><ul><li>Transcontinental railroad: power over towns and concessions</li><li>Rise of Cowboys and &ldquo;cattle bonanza&rdquo;</li><li>Prairies settled with new farming equipment and new Russian wheat strands: &ldquo;Americanlization&rdquo;</li></ul><p>The &ldquo;turner thesis&rdquo;: American democracy is formed at the frontier. However, Western Expansion is actually much of a tragedy, and this is actually leads to Imperialism.</p><h3 id=indian-removal>Indian Removal</h3><ul><li>Policy of Indian removal to force into treaties + reservation</li><li>Sioux Wars (crazy horse, etc.): Native American resistance</li><li>Native Americans of California extreme violence; as well as slave labour</li><li>Dawes Act of 1887 and forced &ldquo;assimilation&rdquo;: forced the breakup of many reservations</li></ul><h2 id=guilded-age-commentary-historians>Guilded Age Commentary Historians</h2><h3 id=rebekah-edwards>Rebekah Edwards</h3><ul><li>The late 19th century was not entirely <em>laissez faire</em></li><li>&ldquo;Progressive Era&rdquo;: not always progressive</li><li>Issues that lead to the &ldquo;Guilded age&rdquo; name that was not specific to the Guilded age</li></ul><p>&ldquo;Guilded age&rdquo;: &ldquo;eh, nothing else to deal with, so let&rsquo;s deal with racism!&rdquo;</p><h3 id=richard-john>Richard John</h3><ul><li>Guilded age was a period of rapid industrialization</li><li>Very charactured, unequal + vulgar time</li><li>The resulting changes are very concentrated; all of the changes that are 80 years apart</li></ul><p>This is super disconnected to social, political aspects of life. It doesn&rsquo;t talk about how the economy effects the social standings and ladders that people lived in => that movement comes from a lot of social change.</p><p>Made a point about the positive/negatives effects of the guilded age: don&rsquo;t focus the individuals but instead the structures.</p><p>He did not want the &ldquo;progressive era&rdquo; as a classification in line with the guilded age. &ldquo;Guilded age&rdquo; is the only pejorative term for an era: so one negative description does not do it justice.</p><h3 id=richard-benzel>Richard Benzel</h3><p>Richard Benzel claims that the textbook industry primes people; that a title for an age shoehorns the age and changes the reflection of the reader.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

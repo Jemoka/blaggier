@@ -1,0 +1,203 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>multithreading</title>
+<meta name=description content="
+we can have concurrency within a single process&mdash;each running a single function
+
+We will solve problems:
+
+never race condition
+never deadlock
+
+thread
+
+you can spawn a thread using the thread() can even pass function parameters
+threads share all virtual address space: bugs can arise when multiple threads modify the same thing at the same time&mdash;each thread has access to a small chunk of the stack
+threads are actually the unit of concurrency: the OS actually chooses threads to run
+
+
+// now the thread can execute at any time: once a thread is made, it will run in any order
+thread myThread(function_to_run, arg1, arg2, ...);
+// threads run AS SOON AS SPAWENED: so
+We can wait for a thread:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>multithreading</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><ul><li>we can have concurrency <strong>within a single process</strong>&mdash;each running a single function</li></ul><p>We will solve problems:</p><ul><li><strong>never <a href=#race-condition>race condition</a></strong></li><li><strong>never <a href=/posts/kbhdeadlock/>deadlock</a></strong></li></ul><h2 id=thread>thread</h2><ul><li>you can spawn a thread using the <strong>thread()</strong> can even pass function parameters</li><li><strong>threads share all virtual address space</strong>: bugs can arise when multiple threads modify the same thing at the same time&mdash;each thread has access to a small chunk of the stack</li><li>threads are actually the unit of concurrency: the OS actually chooses threads to run</li></ul><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#75715e>// now the thread can execute at any time: once a thread is made, it will run in any order
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#00a8c8>thread</span> <span style=color:#75af00>myThread</span><span style=color:#111>(</span><span style=color:#111>function_to_run</span><span style=color:#111>,</span> <span style=color:#111>arg1</span><span style=color:#111>,</span> <span style=color:#111>arg2</span><span style=color:#111>,</span> <span style=color:#111>...);</span>
+</span></span><span style=display:flex><span><span style=color:#75715e>// threads run AS SOON AS SPAWENED: so
+</span></span></span></code></pre></div><p>We can wait for a thread:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#111>myThread</span><span style=color:#111>.</span><span style=color:#111>join</span><span style=color:#111>()</span>
+</span></span></code></pre></div><p>You can also start a bunch on a loop:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#00a8c8>thread</span> <span style=color:#111>threads</span><span style=color:#111>[</span><span style=color:#ae81ff>3</span><span style=color:#111>];</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#00a8c8>thread</span><span style=color:#f92672>&amp;</span> <span style=color:#111>cf</span> <span style=color:#111>:</span> <span style=color:#111>threads</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>cf</span> <span style=color:#f92672>=</span> <span style=color:#00a8c8>thread</span><span style=color:#111>(</span><span style=color:#111>func</span><span style=color:#111>,</span> <span style=color:#111>...);</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div><p>Importantly, unlike <a href=/posts/kbhfork/#waitpid>waitpid</a>, we can&rsquo;t join an arbitrary thread. We basically have to wait for all your threads to finish.</p><p>DEBUGGING TRICK: <strong><strong>adding a sleep call everywhere shouldn&rsquo;t cause any problems</strong></strong>; if it does, there&rsquo;s a race condition.</p><h3 id=passing-by-reference>passing by reference</h3><p>threading doesn&rsquo;t know the type of arguments being passed into a function; this is especially prevalent when passing by reference.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#00a8c8>static</span> <span style=color:#00a8c8>void</span> <span style=color:#75af00>mythingref</span><span style=color:#111>(</span><span style=color:#00a8c8>int</span> <span style=color:#f92672>&amp;</span><span style=color:#111>pbr</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>thread</span><span style=color:#111>(</span><span style=color:#111>myfunc</span><span style=color:#111>,</span> <span style=color:#111>ref</span><span style=color:#111>(</span><span style=color:#111>myint</span><span style=color:#111>));</span>
+</span></span></code></pre></div><p>Remember: ref will <strong><strong>SHARE MEMORY</strong></strong>, and you have no control over when the thread runs. So once a pointer is passed all bets are off in terms of what values things take on.</p><h2 id=process--kbhmultiprocessing-dot-md--es-vs-thread--orga50f688--s><a href=/posts/kbhmultiprocessing/#process>process</a>es vs <a href=#thread>thread</a>s</h2><table><thead><tr><th>Processes</th><th>Threads</th></tr></thead><tbody><tr><td>isolate virtual address spaces</td><td>shares virtual address space to share info</td></tr><tr><td>can run external programs</td><td>can&rsquo;t run external programs (execvp wipes)</td></tr><tr><td>harder to coordinate tasks within the same program</td><td>easier to coordinate tasks within a program</td></tr></tbody></table><p><a href=#thread>thread</a>s are really the main way to break down big tasks.</p><h2 id=race-condition>race condition</h2><p>undesirable behavior caused by arbitrary execution order. we typically solve them using <a href=#mutex>mutex</a>es.</p><h3 id=thread-safe>thread safe</h3><p><a href=#thread-safe>thread safe</a> functions are ones whereby its designed to prevent against unexpected behavior during threading.</p><p>we want <a href=/posts/kbhdistributed_algorithum/#atomicity>atomicity</a> in the code: we want entire data viewing + modification operations to not be interrupted&mdash;otherwise, you will generate race conditions.</p><p>Recall: <strong><strong>C++ statements themselves are not INHERENTLY autonomic</strong></strong>.</p><p>we want to outline a &ldquo;critical section&rdquo; and ensure it doesn&rsquo;t get ran more than once.</p><h3 id=critical-section>critical section</h3><p>A <a href=#critical-section>critical section</a> is a region of code which should only be executed by one thread at a time. We want to keep this section as small as possible to preserve performance.</p><ol><li>we want to organize it to be as small as we possibly can</li><li>we want to move the critical section in terms of expressions; so if you have a loop you should put the loop in the outer area, and do the checking + break within</li></ol><p>if our <a href=#critical-section>critical section</a>s are not small, we would have little benefits to multithreading</p><h2 id=mutex>mutex</h2><p>it would be nice if a <a href=#critical-section>critical section</a> can only be executed once; a <a href=#mutex>mutex</a> can be shared across threads, but can only be &ldquo;owned&rdquo; by a single thread at once.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#111>mutex</span> <span style=color:#111>tmp</span><span style=color:#111>;</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#111>tmp</span><span style=color:#111>.</span><span style=color:#111>lock</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span><span style=color:#111>tmp</span><span style=color:#111>.</span><span style=color:#111>unlock</span><span style=color:#111>();</span>
+</span></span></code></pre></div><p>importantly, if multiple <a href=#thread>thread</a>s are waiting on a mutex, the next thread that&rsquo;s going to get the mutex</p><ul><li>when there are multiple threads <strong>writing</strong> to a value</li><li>when there is a thread <strong>writing</strong> and one or more threads <strong>reading</strong></li><li>if you are no writes, you don&rsquo;t need a mutex</li></ul><p>when dealing with <a href=#mutex>mutex</a>, beware of <a href=/posts/kbhdeadlock/>deadlock</a></p><p>Sleep call can happen by putting a sleep call in certain places.</p><h3 id=implementation>implementation</h3><p>Things it needs to do:</p><ol><li>track whether or not the mutex is locked/unlocked</li><li>track which thread is the owner of the lock</li><li>threads that want to get this lock</li></ol><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#111>locked</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>Queue</span> <span style=color:#111>blocked_queue</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>void</span> <span style=color:#111>Lock</span><span style=color:#f92672>::</span><span style=color:#111>Lock</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// disable interrupts: otherwise multiple threads
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// could come and lock the mutex (such as between
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// the locked check and lock =1
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#111>IntrGuard</span> <span style=color:#111>grd</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#111>locked</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// if our thread is not locked, just lock it
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#111>locked</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// if our thread is locked, we need to prevent our current
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// thread from going to the ready queue, and push it to the current thread
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#111>blocked_queue</span><span style=color:#111>.</span><span style=color:#111>push</span><span style=color:#111>(</span><span style=color:#111>CURRENT_THREAD</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// remember this isn&#39;t an issue even if IntrGuard
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// didn&#39;t yet go out of scope; because it will either
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// land on a context_switch which will enable interrupts for you
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// or land on the beginning of a threadfunc helper, which
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// is also going to enable interrupts for you
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// nicely, the interrupts are here are *off* as required because switching
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// to another thread always will result in reenabling (either by new thread,
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// by timer handler, or by IntrGuard)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#111>mark_block_and_call_schedule</span><span style=color:#111>(</span><span style=color:#111>CURRENT_THREAD</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>void</span> <span style=color:#111>Lock</span><span style=color:#f92672>::</span><span style=color:#111>Unlock</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// disable interrupts: otherwise multiple threads
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// could come and lock the mutex (such as between
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// the locked check and lock =1
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#111>IntrGuard</span> <span style=color:#111>grd</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// if our thread is locked and nobody is waiting for it
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>q</span><span style=color:#111>.</span><span style=color:#111>empty</span><span style=color:#111>())</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>locked</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>unblock_thread</span><span style=color:#111>(</span><span style=color:#111>q</span><span style=color:#111>.</span><span style=color:#111>pop</span><span style=color:#111>());</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// we do not switch to the unblocked thread, just add it to the
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// ready queue. we are entrusting the scheduler to start this thread
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// whenever we feel right
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div><h2 id=intrguard>IntrGuard</h2><p><a href=#intrguard>IntrGuard</a> will turn off interrupts for the duration of its scope; when it goes out of scope, it will <strong>restore the state of the interrupt before</strong> (whether on or off). So, implementing the <a href=#mutex>mutex</a> code above <strong>without</strong> InterGuard:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c++ data-lang=c++><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#111>locked</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>Queue</span> <span style=color:#111>blocked_queue</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>void</span> <span style=color:#111>Lock</span><span style=color:#f92672>::</span><span style=color:#111>Lock</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// disable interrupts: otherwise multiple threads
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// could come and lock the mutex (such as between
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// the locked check and lock =1
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>bool</span> <span style=color:#111>interrupsEnabled</span> <span style=color:#f92672>=</span> <span style=color:#111>intr_enabled</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// only disable interrupts if they are currently
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// on
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>interrupsEnabled</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>intr_enable</span><span style=color:#111>(</span><span style=color:#111>false</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#111>locked</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// if our thread is not locked, just lock it
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#111>locked</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// if our thread is locked, we need to prevent our current
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// thread from going to the ready queue, and push it to the current thread
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#111>blocked_queue</span><span style=color:#111>.</span><span style=color:#111>push</span><span style=color:#111>(</span><span style=color:#111>CURRENT_THREAD</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>mark_block_and_call_schedule</span><span style=color:#111>(</span><span style=color:#111>CURRENT_THREAD</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// if interrupts was on, turn them on again.
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// otherwise, do nothing
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>interrupsEnabled</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>intr_enable</span><span style=color:#111>(</span><span style=color:#111>true</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>void</span> <span style=color:#111>Lock</span><span style=color:#f92672>::</span><span style=color:#111>Unlock</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// disable interrupts: otherwise multiple threads
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// could come and lock the mutex (such as between
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// the locked check and lock =1
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>bool</span> <span style=color:#111>interrupsEnabled</span> <span style=color:#f92672>=</span> <span style=color:#111>intr_enabled</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// only disable interrupts if they are currently
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// on
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>interrupsEnabled</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>intr_enable</span><span style=color:#111>(</span><span style=color:#111>false</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// if our thread is locked and nobody is waiting for it
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>q</span><span style=color:#111>.</span><span style=color:#111>empty</span><span style=color:#111>())</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>locked</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>unblock_thread</span><span style=color:#111>(</span><span style=color:#111>q</span><span style=color:#111>.</span><span style=color:#111>pop</span><span style=color:#111>());</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// we do not switch to the unblocked thread, just add it to the
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// ready queue. we are entrusting the scheduler to start this thread
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#75715e>// whenever we feel right
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>interrupsEnabled</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>intr_enable</span><span style=color:#111>(</span><span style=color:#111>true</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

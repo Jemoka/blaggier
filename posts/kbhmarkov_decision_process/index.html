@@ -1,0 +1,92 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Markov Decision Process</title>
+<meta name=description content="A MDP is a decision network whereby a sequences of actions causes a sequence of states. Each state is dependent on the action we take and the state we are in, and each utility is dependent on action taken and the state we are in.
+Note that, unlike a POMDP, we know what state we are in&mdash;the observations from the states are just unclear.
+
+
+
+constituents
+
+\(S\): state space (assuming discrete for now, there are \(n\) states) &mdash; &ldquo;minimum set of information that allows you to solve a problem&rdquo;
+\(A\): action space &mdash; set of things your agent can do
+\(T(s&rsquo; | s,a)\): &ldquo;dynamics&rdquo;, state-transition model &ldquo;probability that we end up in \(s&rsquo;\) given \(s\) and action \(a\)&rdquo;: good idea to make a table of probabilities of source vs. destination variables
+\(R(s,a,s&rsquo;)\): expected reward given in an action and a state (real world reward maybe stochastic)
+\(\pi_{t}(s_{1:t}, a_{1:t-1})\): the policy, returning an action, a system of assigning actions based on states
+
+however, our past states are d-seperated from our current action given knowing the state, so really we have \(\pi_{t}(s_{t})\)
+
+
+
+additional information
+We assume policy to be exact right now."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Markov Decision Process</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhmarkov_decision_process/>MDP</a> is a <a href=/posts/kbhdecision_networks/>decision network</a> whereby a sequences of actions causes a sequence of states. Each state is dependent on the action we take and the state we are in, and each <a href=/posts/kbhutility_theory/>utility</a> is dependent on action taken and the state we are in.</p><p>Note that, unlike a <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a>, we know what state we are in&mdash;the observations from the states are just unclear.</p><figure><img src=/ox-hugo/2023-10-17_09-18-03_screenshot.png></figure><h2 id=constituents>constituents</h2><ul><li>\(S\): state space (assuming discrete for now, there are \(n\) states) &mdash; &ldquo;minimum set of information that allows you to solve a problem&rdquo;</li><li>\(A\): action space &mdash; set of things your agent can do</li><li>\(T(s&rsquo; | s,a)\): &ldquo;dynamics&rdquo;, state-transition model &ldquo;<a href=/posts/kbhprobability/>probability</a> that we end up in \(s&rsquo;\) given \(s\) and action \(a\)&rdquo;: good idea to make a table of probabilities of source vs. destination variables</li><li>\(R(s,a,s&rsquo;)\): expected reward given in an action and a state (real world reward maybe stochastic)</li><li>\(\pi_{t}(s_{1:t}, a_{1:t-1})\): the <a href=/posts/kbhpolicy/>policy</a>, returning an action, a system of assigning actions based on states<ul><li>however, our past states are <a href=/posts/kbhbaysian_network/#checking-for-conditional-independence>d-seperated</a> from our <a href=/posts/kbhcurrent/>current</a> action given knowing the state, so really we have \(\pi_{t}(s_{t})\)</li></ul></li></ul><h2 id=additional-information>additional information</h2><p>We assume <a href=/posts/kbhpolicy/>policy</a> to be exact right now.</p><h3 id=stationary-markov-decision-process--kbhmarkov-decision-process-dot-md>stationary <a href=/posts/kbhmarkov_decision_process/>Markov Decision Process</a></h3><p>This is a <a href=#stationary-markov-decision-process--kbhmarkov-decision-process-dot-md>stationary Markov Decision Process</a> because at each node \(S_{n}\), we have: \(P(S_{n+1} | A_n, S_n)\). Time is <strong>not</strong> a variable: as long as you know what state you are in, and what you did, you know the transition <a href=/posts/kbhprobability/>probability</a>.</p><figure><img src=/ox-hugo/2023-10-17_13-07-24_screenshot.png></figure><p>(that is, the set of states is not dependent on time)</p><h3 id=calculating-utility--kbhutility-theory-dot-md--with-instantaneous-rewards>calculating <a href=/posts/kbhutility_theory/>utility</a> with instantaneous rewards</h3><p>Because, typically, in <a href=/posts/kbhdecision_networks/>decision network</a>s you sum all the <a href=/posts/kbhutility_theory/>utilities</a> together, you&rsquo;d think that we should sum the <a href=/posts/kbhutility_theory/>utilities</a> together.</p><h4 id=finite-horizon-models>finite-horizon models</h4><p>We want to maximize reward over time, over a finite horizon \(n\). Therefore, we try to maximize:</p><p>\begin{equation}
+\sum_{t=1}^{n}r_{t}
+\end{equation}</p><p>this function is typically called &ldquo;<a href=/posts/kbhrandom_walk/#return--finmetrics>return</a>&rdquo;.</p><h4 id=infinite-horizon-models>infinite-horizon models</h4><p>If you lived forever, small positive \(r_{t}\) and large \(r_{t}\) makes no utility difference. We therefore add discounting:</p><p>\begin{equation}
+\sum_{t=1}^{\infty} \gamma^{t-1} r_{t}
+\end{equation}</p><p>where, \(\gamma \in (0,1)\)</p><p>we discount the future by some amount&mdash;an &ldquo;interest rate&rdquo;&mdash;reward now is better than reward in the future.</p><ul><li>\(\gamma \to 0\): &ldquo;myopic&rdquo; strategies, near-sighted strategies</li><li>\(\gamma \to 1\): &ldquo;non-discounting&rdquo;</li></ul><h4 id=average-return-models>average return models</h4><p>We don&rsquo;t care about this as much:</p><p>\begin{equation}
+\lim_{n \to \infty} \frac{1}{n} \sum_{t=1}^{n}r_{t}
+\end{equation}</p><p>but its close to <a href=#infinite-horizon-models>infinite-horizon models</a> with Gama close to \(1\)</p><h3 id=solving-an-mdp--kbhmarkov-decision-process-dot-md>Solving an <a href=/posts/kbhmarkov_decision_process/>MDP</a></h3><h4 id=you-are-handed-or-can-predict-r--s-a--and-know-all-transitions>You are handed or can predict \(R(s,a)\), and know all transitions</h4><ul><li><p>Small, Discrete State Space</p><p>Get an exact solution for \(U^{*}(s)\) (and hence \(\pi^{ *}(a, s)\)) for the problem via&mldr;</p><ul><li><a href=/posts/kbhpolicy_iteration/>policy iteration</a></li><li><a href=/posts/kbhvalue_iteration/>value iteration</a></li></ul></li></ul><ul><li><p>Large, Continuous State Space</p><ul><li><p>Parameterize Policy</p><p>Optimize \(\pi_{\theta}\) to maximize \(U(\pi_{\theta})\) using <a href=/posts/kbhpolicy_optimization/>Policy Optimization</a> methods!</p><p><strong><strong>Gradient Free</strong></strong>: lower dimension <a href=/posts/kbhpolicy/>policy</a> space</p><ul><li><a href=/posts/kbhlocal_policy_search/>Local Policy Search</a> (aka <a href=/posts/kbhlocal_policy_search/>Hooke-Jeeves Policy Search</a>)</li><li><a href=/posts/kbhgenetic_policy_search/>Genetic Policy Search</a></li><li><a href=/posts/kbhcross_entropy_method/>Cross Entropy Method</a></li></ul><p><strong><strong>Gradient Based Method</strong></strong>: higher dimension <a href=/posts/kbhpolicy/>policy</a> space</p><p><a href=/posts/kbhpolicy_gradient/>Policy Gradient</a></p></li></ul><ul><li><p>Parameterize Value Function</p><p>Optimize \(U_{\theta}(S)\) via <a href=/posts/kbhapproximate_value_function/#global-approximation>global approximation</a> or <a href=/posts/kbhapproximate_value_function/#local-approximation>local approximation</a> methods, then use a <a href=/posts/kbhaction_value_function/#value-function-policy>greedy policy</a> on that nice and optimized <a href=/posts/kbhaction_value_function/#id-0b1509e0-4d88-44d1-b6fa-fe8e86d200bb-value-function>value function</a>.</p></li></ul></li></ul><h4 id=you-can-only-reason-about-your-immediate-surroundings-local-reachable-states>You can only reason about your immediate surroundings/local reachable states</h4><p><a href=/posts/kbhonline_planning/>online planning</a></p><p>or&mldr; &ldquo;you don&rsquo;t know the model whatsoever&rdquo;</p><p><a href=/posts/kbhreinforcement_learning/>reinforcement learning</a></p><p>during these cases, you never argmax over all actions; hence, its important to remember the methods to preserve <a href=/posts/kbhexploration_and_exploitation/>Exploration and Exploitation</a>.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

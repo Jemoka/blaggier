@@ -1,0 +1,85 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Social Network</title>
+<meta name=description content="A Social Network is a scheme for studying the relationships and interactions amongst groups of people.
+
+people: \(V\)
+relationship: \(E\)
+system: a network \(G(V,E)\)
+
+Importantly, the &ldquo;labels&rdquo; of \(E\) often do not matter as we frequently want to study only the graphical structure of the Social Network.
+degree (node)
+The degree of a node is the number of edges that are touching that node (whether in or out, or undirected).
+The in-degree and out-degree are the number of edges touching that node (going in or out) respectively."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Social Network</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhsocial_network/>Social Network</a> is a scheme for studying the relationships and interactions amongst groups of people.</p><ul><li><strong>people</strong>: \(V\)</li><li><strong>relationship</strong>: \(E\)</li><li><strong>system</strong>: a network \(G(V,E)\)</li></ul><p>Importantly, the &ldquo;labels&rdquo; of \(E\) often do not matter as we frequently want to study only the graphical structure of the <a href=/posts/kbhsocial_network/>Social Network</a>.</p><h2 id=degree--node>degree (node)</h2><p>The degree of a node is the number of edges that are touching that node (whether in or out, or undirected).</p><p>The in-degree and out-degree are the number of edges touching that node (going in or out) respectively.</p><h3 id=degree-of-node>degree of node</h3><p>many nodes on the internet have fairly low degree, whereas some hubs have very high degree. Consider a function \(P(k)\), representing the number of nodes with degree \(k\). This follows a power law:</p><p>\begin{equation}
+P(k) \propto k^{-a}
+\end{equation}</p><p>meaning:</p><p>\begin{equation}
+P(k) = ck^{-a}
+\end{equation}</p><p>whereby as degree increases, the percentage of nodes with that number of degree drops of exponentially.</p><p>A power law distribution is log-log linear, and is &ldquo;scale free&rdquo;: meaning no matter how the input \(x\) is scaled its simply resulting in a multiplicative constant under the output: shape does NOT change.</p><h3 id=zipf-s-law>Zipf&rsquo;s Law</h3><p>\begin{equation}
+freq(w_{r}) \prop \frac{1}{r^{\beta}}
+\end{equation}</p><p>where \(\beta\) is close to \(1\) and \(w_{r}\) is the r-th most frequent word.</p><h2 id=betweenness>betweenness</h2><p>the <a href=#betweenness>betweenness</a> of a target node is calculated as: for all pairs of nodes on the graph that is not our target node, what&rsquo;s the ratio between the number of shortest paths between the two nodes and the number that goes through \(j\).</p><p>Formally:</p><p>for some node \(j\) for which we want to calculate <a href=#betweenness>betweenness</a>, and \(s_{ik}(j)\) being the number of shortest paths between \(i\) and \(k\) that goes through \(j\) and \(s_{ik}\) being the number of shortest paths there are in general, we have:</p><p>\begin{equation}
+b_{j} = \frac{\sum_{i=1}^{n} \sum_{k=1}^{n} s_{ik}(j)}{\sum_{i=1}^{n} \sum_{k=1}^{n} s_{ik}}
+\end{equation}</p><p>where \(i \neq j \neq k\)</p><p>Recall that with directed graphs we may need to double count.</p><h2 id=clustering-coefficient>clustering coefficient</h2><p>for some node \(A\), the <a href=#clustering-coefficient>clustering coefficient</a> measures the percentage of nodes directly adjacent to \(A\) which are also directly adjacent with each other.</p><p>recall that, if a node has \(n\) friends, the total possible edges is \(\frac{n\qty(n-1)}{2}\).</p><h2 id=milgram-small-world-experiment>Milgram Small-World experiment</h2><p>made 300 people in Omaha NE to mail a thing to somebody in Boston by passing it through only people they knew by first-name basis.</p><h2 id=small-world-graph>Small World Graph</h2><p>The world is a <a href=#small-world-graph>Small World Graph</a>: networks of friends is large, sparse, decentralized, and extremely clustered. Yet, people mostly seem to be about 5-6 degrees of separation away.</p><p>This characterizes a <a href=#small-world-graph>Small World Graph</a>:</p><ul><li>high <a href=#clustering-coefficient>clustering coefficient</a></li><li>low average shortest path</li></ul><h3 id=watts-and-strogatz>Watts and Strogatz</h3><p><a href=#watts-and-strogatz>Watts and Strogatz</a> proposes a way to build a <a href=#small-world-graph>Small World Graph</a>:</p><ol><li>start with a ring and connect each node to the next \(z\) nodes</li><li>with probability \(p\) on each node, rewire every edge/add a shortcut to a random node</li></ol><p>as long as \(0 &lt; p &lt; 1\), we get a <a href=#small-world-graph>Small World Graph</a></p><p><strong>intuition</strong>: a single random connection builds a shortcut through highly centralized clusters&mdash;high \(C\), low \(L\).</p><h2 id=weak-link>weak link</h2><p>most job referrals were through personal contacts, but they are often <strong>WEAK LINKS</strong>.</p><h3 id=triadic-closure>Triadic Closure</h3><p>If two people have a common friend, its likely that they become friends eventually too. This increases cluster coefficient.</p><h4 id=strong-triadic-closure>Strong Triadic Closure</h4><p>If there is a strong tie between \(A - B\), and \(B - C\), then there must be a strong tie between \(A - C\).</p><p>If this property is satisfied, then any <a href=#local-bridge>Local Bridge</a> must be a weak tie. Otherwise:</p><figure><img src=/ox-hugo/2024-03-06_20-12-33_screenshot.png></figure><p>if there is a strong \(A-B\) tie and it is a local bridge, then \(C-B\) must be a connection under <a href=#strong-triadic-closure>Strong Triadic Closure</a>. yet, \(A-B\) is a local bridge.</p><p>By contradiction, \(A-B\) is a weak tie.</p><h3 id=local-bridge>Local Bridge</h3><p>A <a href=#local-bridge>Local Bridge</a> is an edge \(x-y\) which bridges two &ldquo;local components&rdquo; together. More formally, an edge between \(A,B\) is a <a href=#local-bridge>Local Bridge</a> if it does not live on any triangle of \(A\) or \(B\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

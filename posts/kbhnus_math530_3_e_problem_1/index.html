@@ -1,0 +1,112 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>3.E Problem 1</title>
+<meta name=description content="Suppose \(T\) is a function from \(V\) to \(W\). Let the &ldquo;graph&rdquo; of \(T\) be the subset of \(V \times W\) such that:
+\begin{equation}
+graph\ T = \{(v,Tv) \in V \times W \mid v \in  V\}
+\end{equation}
+Show that \(T\) is a linear map IFF the graph of \(T\) is a subspace of \(V \times W\).
+Review: A Linear Map
+Recall that a function \(T: V \to W\) is called a linear map if it is a map that&mldr;"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>3.E Problem 1</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Suppose \(T\) is a function from \(V\) to \(W\). Let the &ldquo;graph&rdquo; of \(T\) be the subset of \(V \times W\) such that:</p><p>\begin{equation}
+graph\ T = \{(v,Tv) \in V \times W \mid v \in V\}
+\end{equation}</p><p>Show that \(T\) is a linear map IFF the graph of \(T\) is a subspace of \(V \times W\).</p><h2 id=review-a-linear-map>Review: A Linear Map</h2><p>Recall that a function \(T: V \to W\) is called a linear map if it is a map that&mldr;</p><ol><li>is <strong>additive</strong>: so \(Tv + Tu = T(v+u): v,u \in V\)</li><li>is <strong>homogeneous</strong>, so \(\lambda Tv = T\lambda v: \lambda \in \mathbb{F}, v \in V\)</li></ol><h2 id=given-graph-is-subspace>Given Graph is Subspace</h2><p>Given the graph of \(T\) is a subspace of \(V \times W\), we desire that the function \(T\) is a linear map and therefore additive and homogeneous.</p><p>By declaration before, \(graph\ T\) is a subspace, meaning it would be closed under adddition and scalar multiplication. We will use this fact to show that \(T\) follows the properties of a linear map.</p><h3 id=additivity>Additivity</h3><p>We first desire that \(T\) is additive, that is, for \(v,u \in V\), we desire \(Tv + Tu = T(v+u)\).</p><p>Let \(v,u \in V\), and let \(a,b \in graph\ T\) declared as follows:</p><p>\begin{equation}
+\begin{cases}
+a = (v,Tv) \in V \times W \\
+b = (u,Tu) \in V \times W
+\end{cases}
+\end{equation}</p><p>We are given that \(graph\ T\) is a subspace of \(T\). As such, it is closed under addition; meaning, the sum of two elements from the space must remain in the space. Therefore:</p><p>\begin{equation}
+(v, Tv) + (u,Tu) = (v+u, Tv+Tu) \in graph\ T
+\end{equation}</p><p>And now, the latter being in \(graph\ T\) implies that \(\exists\) some \(c \in graph\ T\), \(n \in V\) such that:</p><p>\begin{equation}
+c := (n, Tn) = (v+u, Tv+Tu)
+\end{equation}</p><p>Taking the latter equivalence and solving for \(n\), we have that \(n = v+u\). And so, we have that:</p><p>\begin{equation}
+(v+u, T(v+u)) = (v+u, Tv+Tu)
+\end{equation}</p><p>Therefore, \(T(v+u) = Tv+Tu\), as desired.</p><h3 id=homogeneity>Homogeneity</h3><p>We now desire that \(T\) is homogeneous. That is, for \(v \in V, \lambda \in \mathbb{F}\), we desire \(\lambda Tv = T\lambda v\).</p><p>Let \(v \in V\), \(\lambda \in \mathbb{F}\), and \(a \in graph\ T\) declared as follows:</p><p>\begin{equation}
+a = (v, Tv) \in V \times W
+\end{equation}</p><p>By the same logic before, \(graph\ T\) is closed under scalar multiplication; meaning, the product of en element from the space to a scalar remain in the space. Therefore:</p><p>\begin{equation}
+\lambda (v,Tv) = (\lambda v, \lambda Tv) \in graph\ T
+\end{equation}</p><p>The latter being in \(graph\ T\) implies that \(\exists\) some \(c \in graph\ T\), \(n \in V\) such that:</p><p>\begin{equation}
+c :=(n,Tn) = (\lambda v, \lambda Tv)
+\end{equation}</p><p>Taking the latter equivalence and solving for \(n\), we have \(n = \lambda v\). And so, we have:</p><p>\begin{equation}
+(\lambda v, T \lambda v) = (\lambda v, \lambda Tv)
+\end{equation}</p><p>And therefore, \(T\lambda v = \lambda Tv\), as desired.</p><p>Having shown that \(T\) is now both additive and homogeneous, we have that \(T\) is a linear map, as desired.</p><h2 id=given-t-is-a-linear-map>Given \(T\) is a Linear Map</h2><p>We will essentially prove the previous condition backwards.</p><p>We are given that the graph of \(T\) is a subset of \(V \times W\), and that \(T: V \to W\) is a linear map. We desire that the graph of \(T\) is a subspace of \(V \times W\).</p><p>Recall that to show that a subset is a subspace, on simply has to show that it has closed operations and that it contains the additive identity.</p><h3 id=additive-identity>Additive Identity</h3><p>Recall that the additive identity in \(V \times W\) is the tuple that&rsquo;s identically \((0,0) \in V \times W\).</p><p>As \(V\) is a vector space, \(0 \in V\). Any linear map will send \(0\) to \(0\). Therefore, \(T 0 = 0\).</p><p>Therefore, construct \(a \in graph\ T\):</p><p>\begin{equation}
+a = (0, T 0) \in V \times W = (0, 0)
+\end{equation}</p><p>By construction, we have shown that the additive identity of \(V \times W\) is in \(graph\ T\).</p><h3 id=closure-of-addition>Closure of Addition</h3><p>Given WLOG \(a,b \in graph\ T\), we desire that \(a+b \in graph\ T\).</p><p>Let \(v,u \in V\), and let \(a,b \in graph\ T\) declared as follows:</p><p>\begin{equation}
+\begin{cases}
+a = (v,Tv) \in V \times W \\
+b = (u,Tu) \in V \times W
+\end{cases}
+\end{equation}</p><p>Now:</p><p>\begin{equation}
+a+b = (v,Tv) + (u+Tu) = (v+u, Tv+Tu)
+\end{equation}</p><p>Given \(T\) is a linear map, we have WLOG \(Tv+Tu = T(v+u)\). And therefore:</p><p>\begin{equation}
+a+b = (v,Tv) + (u+Tu) = (v+u, Tv+Tu) = (v+u, T(v+u)) \in \{(v,Tv) \mid v \in V\}
+\end{equation}</p><p>Hence, \(graph\ T\) is closed under addition.</p><h3 id=closure-of-scalar-multiplication>Closure of Scalar Multiplication</h3><p>Given WLOG \(a \in graph\ T, \lambda \in \mathbb{F}\), we desire that \(\lambda a \in graph\ T\).</p><p>Let \(v \in V, \lambda \in \mathbb{F}\), and let \(a \in graph\ T\) declared as follows:</p><p>\begin{equation}
+a = (v,Tv) \in V \times W
+\end{equation}</p><p>Now:</p><p>\begin{equation}
+\lambda a = \lambda (v,Tv) = (\lambda v, \lambda Tv)
+\end{equation}</p><p>Given \(T\) is a linear map, we have WLOG \(\lambda Tv = T\lambda v\). And therefore:</p><p>\begin{equation}
+\lambda a = \lambda (v,Tv) = (\lambda v, \lambda Tv) = (\lambda v, T \lambda v)\in \{(v,Tv) \mid v \in V\}
+\end{equation}</p><p>Hence, \(graph\ T\) is closed under scalar multiplication.</p><p>Having shown \(graph\ T\) to be closed under addition and scalar multiplication, as well as containing the additive identity, we see that it is a subspace of \(V \times W\) of which it is a subset.</p><p>Having shown both directions of the proof, \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

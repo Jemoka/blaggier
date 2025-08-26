@@ -1,0 +1,139 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Fourier Transform</title>
+<meta name=description content="requirements
+Consider a function that has no periodicity, but that:
+\begin{equation}
+f(x), -\infty < x < \infty
+\end{equation}
+And assume that:
+\begin{equation}
+\int_{\infty}^{\infty} |f(x)| \dd{x}, < \infty
+\end{equation}
+important: look up! the integral of \(f(x)\) has to converge AND this means that the \(f(x)\) goes to \(0\) actually at boundaries.
+(meaning the function decays as you go towards the end)
+definition
+a Fourier transform is an invertible transformation:
+\begin{equation}
+f(x) \to \hat{f}(\lambda)
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Fourier Transform</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=requirements>requirements</h2><p>Consider a function that has no periodicity, but that:</p><p>\begin{equation}
+f(x), -\infty &lt; x &lt; \infty
+\end{equation}</p><p>And assume that:</p><p>\begin{equation}
+\int_{\infty}^{\infty} |f(x)| \dd{x}, &lt; \infty
+\end{equation}</p><p>important: <strong><strong>look up! the integral of \(f(x)\) has to converge AND this means that the \(f(x)\) goes to \(0\) actually at boundaries</strong></strong>.</p><p>(meaning the function decays as you go towards the end)</p><h2 id=definition>definition</h2><p>a Fourier transform is an invertible transformation:</p><p>\begin{equation}
+f(x) \to \hat{f}(\lambda)
+\end{equation}</p><p>and</p><p>\begin{equation}
+\hat{f}(\lambda) \to f(x)
+\end{equation}</p><p>Where,</p><p>\begin{equation}
+\hat{f}(\lambda) = \int_{-\infty}^{\infty } e^{-i\lambda x} f(x) \dd{x}
+\end{equation}</p><p>\begin{equation}
+f(x) = \frac{1}{2\pi} \int_{\infty}^{-\infty} e^{ix\lambda} \hat{f}(\lambda) \dd{\lambda}
+\end{equation}</p><p>We sometimes write:</p><p>\begin{equation}
+\hat{f}(\lambda) = \mathcal{F}(f)(\lambda)
+\end{equation}</p><p>where \(\mathcal{F}\) is an invertible map that gives you the <a href=/posts/kbhfourier_series/>Fourier Series</a>.</p><h2 id=additional-information>additional information</h2><h3 id=properties-of-mathcal-f>Properties of \(\mathcal{F}\)</h3><ol><li>it&rsquo;s a <a href=/posts/kbhlinear_map/>Linear Map</a>: \(\mathcal{F}(c_1 f_1 + c_2 f_2) = c_1\mathcal{F}(f_1) + c_2 \mathcal{F}(f_2)\)</li><li>it&rsquo;s recenter able: \(\mathcal{F}(f(x+c)) = e^{i c \lambda}\mathcal{F}(f)(\lambda)\)</li><li>it&rsquo;s reverse-shift-able: \(\mathcal{F}\qty(e^{i \lambda_{0} x} f(x)) = \mathcal{F}(f) (\lambda -\lambda_{0})\)</li></ol><p>Proof:</p><ol><li>because integrals are linear</li><li>\(\int_{-\infty}^{\lambda} e^{-i(t-c)\lambda}f(t) \dd{t} = e^{ic\lambda} \mathcal{F}(f)(\lambda)\), where we define \(t = x+c\)</li><li>try it</li></ol><h3 id=derivative-of-fourier-transform>Derivative of Fourier Transform</h3><p>Suppose we want:</p><p>\begin{equation}
+\mathcal{F}(f&rsquo;(x)) = \int_{\infty}^{\infty} e^{-ix\lambda} f&rsquo;(x) \dd{x} = \left e^{-ix\lambda} f(x)\right|_{-\infty}^{\infty} + i \lambda \int_{-\infty}^{\infty} e^{-ix\lambda} f(x) \dd{x} = i \lambda \mathcal{F}(f) (\lambda)
+\end{equation}</p><p>Because we are guaranteed \(f(x)\) evaluated at infinity is \(0\), the first term drops out. The important conclusion here: <strong>*Fourier transforms change a derivative into ALGEBRA of multiplying by \(i\lambda\)</strong>.</p><p>Consider also:</p><p>\begin{equation}
+\mathcal{F}(x f(x)) = i \dv \lambda \mathcal{F}(f)(\lambda)
+\end{equation}</p><p>you can show this in a similar way, by attempting to distribute a \(\dv \lambda\) into the Fourier transform and showing that they are equal.</p><h3 id=fourier-transform-of-a-gaussian>Fourier Transform of a Gaussian</h3><p>\begin{equation}
+\mathcal{F}\qty(e^{-\frac{ax^{2}}{2}}) = \sqrt{\frac{2\pi}{a}}e^{-\frac{\lambda^{2}}{2a}}
+\end{equation}</p><p>and:</p><p>\begin{equation}
+\mathcal{F}^{-1}\qty(e^{-a\frac{\lambda^{2}}{2}}) = \frac{e^{-\frac{x^{2}}{2a}}}{\sqrt{2\pi a}}
+\end{equation}</p><hr><p>we obtain this:</p><p>\begin{equation}
+u = e^{-\frac{x^{2}}{2}}
+\end{equation}</p><p>and:</p><p>\begin{equation}
+\dv{u}{x} = -xe^{-\frac{x^{2}}{2}} = -xu
+\end{equation}</p><p>and if we took a Fourier transform on both sides, we obtain:</p><p>\begin{equation}
+\mathcal{F}\qty(\dv{u}{x} + xu) = 0 = i \lambda \hat{u} + i \pdv{\hat{u}} = 0
+\end{equation}</p><p>and note that this is the same equation. Meaning:</p><p>\begin{equation}
+\mathcal{F}\qty(\dv{u}{x} + xu) = \dv{\lambda}{x} + \lambda u
+\end{equation}</p><p>this gives:</p><p>\begin{equation}
+\mathcal{F}(u) = Cu
+\end{equation}</p><p>which is what we see.</p><h3 id=look-a-table>Look! A table</h3><figure><img src=/ox-hugo/2024-03-06_21-36-14_screenshot.png></figure><p>where:</p><p>\begin{equation}
+\Lambda_{a}
+\end{equation}</p><p>is the triangle between \([-a, a]\), that goes up to \(1\).</p><h3 id=interpreting-lambda>interpreting \(\lambda\)</h3><h4 id=if-f--x--is-a-function-in-time>if \(f(x)\) is a function in time</h4><p>\(\lambda\) could be thought of analogous to frequency</p><h4 id=if-f--x--is-a-function-of-space>if \(f(x)\) is a function of space</h4><p>\(\lambda\) could be thought of analogous to momentum</p><h3 id=fourier-transform-of-step-function>Fourier transform of step function</h3><p>if you have a function:</p><p>\begin{equation}
+f(x) =
+\begin{cases}
+1, |x| &lt; a \\
+0
+\end{cases}
+\end{equation}</p><p>its Fourier transform is <a href>sinc function</a>:</p><p>\begin{equation}
+\hat{f}(\lambda) = \frac{i \sin (a \lambda)}{\lambda}
+\end{equation}</p><h3 id=intuitive-understandings-the-formula>intuitive understandings the formula</h3><h4 id=sines-stuck-between>sines stuck between</h4><p>Consider what:</p><p>\begin{equation}
+f(x) \cos (x)
+\end{equation}</p><p>looks like.</p><p>Effectively, you are stenching the \(\cos(x)\) between \(f(x)\) and its reflection across \(x\). As you integrate, the majority of the up and downs cancel out, and the only thing you are left is the bits where \(f(x)\) peak up!</p><figure><img src=/ox-hugo/2024-03-06_10-48-46_screenshot.png></figure><p>as you increase \(k\):</p><p>\begin{equation}
+f(x) \cos (kx)
+\end{equation}</p><p>you obtain more cancellations and it will eventually integrate to \(0\).</p><h4 id=fourier-transform-properties>Fourier transform properties</h4><p>As a function gets smoother, its Fourier transform is more concentrated at one point (closer to a single frequency).</p><p>Conversely, as a function gets more jagged, its Fourier transform is smoother (closer to a composition of sinusoids).</p><h3 id=fourier-transform-as-quantization>Fourier Transform as Quantization</h3><p>Consider:</p><p>the big fun idea&mdash;-we can transform:</p><ul><li>\(L\) periodic function on \(f(x)\)</li><li>\(\left\{ (c_{n})^{\infty}_{-\infty} \right\}\)</li></ul><p>This series exists for all function, converges exceedingly quickly, and has great properties. It should look like the form:</p><p>\begin{equation}
+f(x) = \sum_{-\infty}^{\infty} c_{n} e^{n \omega x i}
+\end{equation}</p><h4 id=fourier-norm-of-a-function>Fourier norm of a function</h4><p>After you do this, and obtain</p><p>\(\left\{ (c_{n})^{\infty}_{-\infty} \right\}\)</p><p>we call the &ldquo;size&rdquo; of this function:</p><p>\begin{equation}
+\sum_{-\infty}^{\infty} | c_{n}|^{2}
+\end{equation}</p><h4 id=planchrel-s-formula>Planchrel&rsquo;s Formula</h4><p>For a usual \(L\) periodic function, size agrees:</p><p>\begin{equation}
+\langle f,f \rangle= \int_{0}^{L} |f(x)|^{2} \dd{x} = L\sum_{-\infty}^{\infty} | c_{n}|^{2}
+\end{equation}</p><p>You can show this by plugging in the <a href=/posts/kbhsu_math53_mar042024/#complex-fourier-series>Complex Fourier Series</a> in \(f\).</p><h3 id=motivation>motivation</h3><p>Consider a function period of period \(L\)</p><p>\begin{equation}
+a_{k} = \int_{0}^{L} F(x) e^{-i\omega kx} \dd{x}
+\end{equation}</p><p>where:</p><p>\begin{equation}
+f(x) = ?\sum_{k} a_{n} e^{i \omega kx}
+\end{equation}</p><p>And the BIG PICTURE: if we took the period \(L \to \infty\), we end up with the <a href=/posts/kbhfourier_transform/>Fourier Transform</a>.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

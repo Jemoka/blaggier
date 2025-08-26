@@ -1,0 +1,71 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>linear independence</title>
+<meta name=description content="A linearly independent list is a list of vectors such that there is one unique choice of scalars to be able to construct each member of their span.
+Based on the same technique as in the proof that a sum of subsets is a direct sum IFF there is only one way to write \(0\), we can show that in a linearly independent list, there is (IFF) only one way to write the zero vector as a linear combination of that list of vectors &mdash;namely, the trivial representation of taking each vector to \(0\). In fact, we will actually use that as the formal definition of linear independence."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>linear independence</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhlinear_independence/>linearly independent</a> list is a list of vectors such that there is one unique choice of scalars to be able to construct each member of their <a href=/posts/kbhspan/>span</a>.</p><p>Based on the same technique as in the proof that <a href=/posts/kbhdirect_sum/#a-id-1b800658-2f83-4802-acfd-2d15cf5a1d74-sum-of-subsets-is-a-id-4e586014-c91f-4d52-98bb-a2fe11a75007-direct-sum-id-fddf0648-91ea-4c5b-8298-fa0a30637cb7-iff-there-is-only-one-way-to-write-0>a sum of subsets is a direct sum IFF there is only one way to write \(0\)</a>, we can show that in a <a href=/posts/kbhlinear_independence/>linearly independent</a> <a href=/posts/kbhlist/>list</a>, there is (IFF) only one way to write the zero vector as a <a href=/posts/kbhlinear_combination/>linear combination</a> of that <a href=/posts/kbhlist/>list</a> of vectors &mdash;namely, the trivial representation of taking each vector to \(0\). In fact, we will actually use that as the formal definition of <a href=/posts/kbhlinear_independence/>linear independence</a>.</p><p>This definition of <a href=/posts/kbhlinear_independence/>linear independence</a> is the <em>result</em> of the definition for <a href=/posts/kbhdirect_sum/>direct sum</a>.</p><p>See also <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a>.</p><h2 id=constituents>constituents</h2><ul><li>A list of vectors \(v_1, \dots, v_{m}\) in \(V\)</li></ul><h2 id=requirements>requirements</h2><p>Formally, a <a href=/posts/kbhlinear_independence/>linearly independent</a> list is defined by there being only one choice of scalars \(a_1, \dots, a_{m} \in \mathbb{F}\) to write \(0\) as a <a href=/posts/kbhlinear_combination/>linear combination</a> of \(v_{1},\dots, v_{m}\): namely, by taking each \(a_1, \dots a_{m}\) to \(0\).</p><p>We also declare \(()\) to be <a href=/posts/kbhlinear_independence/>linearly independent</a>.</p><h2 id=additional-information>additional information</h2><h3 id=linearly-dependent>linearly dependent</h3><p>a list is <a href=#linearly-dependent>linearly dependent</a> if&mldr;. its not <a href=/posts/kbhlinear_independence/>linearly independent</a>.</p><p>oh. my. god.</p><p>Based on the same formal definition, this means that a <a href=#linearly-dependent>linearly dependent</a> list is defined by the fact that there can be more than one way of writing \(0\) as a <a href=/posts/kbhlinear_combination/>linear combination</a> of that <a href=/posts/kbhlist/>list</a> of <a href=/posts/kbhvector/>vector</a>s, where one of the ways makes it so that writing \(0\) does not require all zero scalars.</p><h3 id=length-of-linearly-independent-list-leq-length-of-spanning-list>length of linearly-independent list \(\leq\) length of spanning list</h3><p>A <a href=/posts/kbhlinear_independence/>linearly independent</a> list should be smaller or equal in length to a <a href=/posts/kbhspan/#spans>spanning</a> list.</p><p>The canonical proof is one by induction.</p><p>Suppose \(u_1, \dots u_{m}\) is an <a href=/posts/kbhlinear_independence/>linearly independent</a> list in \(V\). Take also a list \(w_1, \dots w_{n}\) <a href=/posts/kbhspan/#spans>spans</a> \(V\). We desire that \(m\leq n\). We create a list of length \(n\) containing all of the \(w\) thus far. Our invariant is that \(len(B) = n\). This proof essentially uses <a href=/posts/kbhfloyd_s_invariant_method/>Floyd&rsquo;s Invariant Method</a> (compsci topic for Jack&rsquo;s understanding only.)</p><h4 id=base-case>base case</h4><p>take the <a href=/posts/kbhspan/#spans>spanning</a> list of \(V\) we declared named \(w_1, \dots w_{n}\). Given it spans, adding any other vector in \(V\), if \(w_1, \dots w_{n}\) isn&rsquo;t already <a href=#linearly-dependent>linearly dependent</a>, will make it <a href=#linearly-dependent>linearly dependent</a>. This is because you can write the new vector \(v \in V\) which you add as a <a href=/posts/kbhlinear_combination/>linear combination</a> of the previous <a href=/posts/kbhvector/>vector</a>s already as they already span \(V\).</p><p>By the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a>, you can remove one of the <a href=/posts/kbhvector/>vector</a>s in the new <a href=#linearly-dependent>linearly dependent</a> list while keeping the list still <a href=/posts/kbhspan/#spans>spanning</a> \(V\).</p><p>Now, construct the list:</p><p>\begin{equation}
+u_1, w_1, \dots w_{n}
+\end{equation}</p><p>where, \(u_{1} \in V\) is taken from that <a href=/posts/kbhlinear_independence/>linearly independent</a> list in \(V\). By the statement above, via applying the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a>, we can create a list that <a href=/posts/kbhspan/>span</a>s the same space by taking away one of the \(w_{j}\) (we can&rsquo;t take \(u_1\) because it is at the first position, and we can&rsquo;t grantee its $0$&mdash;see the <a href=/posts/kbhlinear_dependence_lemma/#issue>issue</a> with the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a>). We now have a list \(B\) with length \(n\) with \(u_1\) and the rest of the \(w\) not taken away which span \(V\)</p><h4 id=case-number-j>case number \(j\)</h4><p>Given a spanning list \(B\) of \(V\) with length \(n\), with some parts \(u_1, \dots, u_{j-1}, w_{j}, \dots w_{n}\). We now include \(u_{j}\) in the list, placing it after \(u_{j-1}\). As the list pre-inclusion is already a <a href=/posts/kbhspan/#spans>spanning</a> list of \(V\), any new <a href=/posts/kbhvector/>vector</a>s from \(V\) added will necessarily be able to be written as a <a href=/posts/kbhlinear_combination/>linear combination</a> of the other vectors already in the list. Therefore, we know that&mdash;if not already pre-inclusion&mdash;the list is <a href=#linearly-dependent>linearly dependent</a>.</p><p>Because the first half (\(u_1,\dots u_{j}\)) of this new list is <a href=/posts/kbhlinear_independence/>linearly independent</a> (given), the bit that &ldquo;causes&rdquo; the linear dependence is in the \(w\) (i.e. each \(u\) cannot be written by other \(u\).) Therefore, we can say that the first condition of <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a> allows us to remove one of the \(w\) while <a href=/posts/kbhspan/#spans>spanning</a> the same space, creating again a <a href=/posts/kbhspan/#spans>spanning</a> list of length \(n\).</p><h4 id=induction>induction</h4><p>repeat the procedure \(m\) times, resulting in all the \(u_{j}\) being included in our new list \(B\) of length still \(n\). Given we contained a list of length \(m\) in a list of length \(n\), \(m \leq n\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

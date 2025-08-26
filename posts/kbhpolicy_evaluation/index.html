@@ -1,0 +1,99 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>policy evaluation</title>
+<meta name=description content="See also Roll-out utility if you don&rsquo;t want to get a vector utility over all states.
+solving for the utility of a policy
+We can solve for the utility of the policy given the transitions \(T\) and reward \(R\) by solving the following equation
+\begin{equation}
+\bold{U}^{\pi} = (I - \gamma T^{\pi})^{-1} \bold{R}^{\pi}
+\end{equation}
+where \(T\) is an \(|S| \times |S|\) square matrix where each horizontal row is supposed to add up to \(1\) which encodes the probability of transitioning from each horizontal row to the column next rows."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>policy evaluation</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>See also <a href=#rollout-utility>Roll-out utility</a> if you don&rsquo;t want to get a <a href=/posts/kbhvector/>vector</a> <a href=/posts/kbhutility_theory/>utility</a> over all states.</p><h2 id=solving-for-the-utility-of-a-policy>solving for the utility of a policy</h2><p>We can solve for the <a href=/posts/kbhutility_theory/>utility</a> of the <a href=/posts/kbhpolicy/>policy</a> given the transitions \(T\) and reward \(R\) by solving the following equation</p><p>\begin{equation}
+\bold{U}^{\pi} = (I - \gamma T^{\pi})^{-1} \bold{R}^{\pi}
+\end{equation}</p><p>where \(T\) is an \(|S| \times |S|\) square matrix where each horizontal row is supposed to add up to \(1\) which encodes the probability of transitioning from each horizontal row to the column next rows.</p><h3 id=lookahead-equation>lookahead equation</h3><p>We begin our derivation from <a href=/posts/kbhmarkov_decision_process/#finite-horizon-models>finite-horizon models</a>.</p><p>Gives some policy \(\pi\), at the base case:</p><p>\begin{equation}
+U^{\pi}_{1} (s) = R(s, \pi(s))
+\end{equation}</p><p>at time \(k+1\) steps remaining:</p><p>\begin{equation}
+U^{\pi}_{k+1}(s) = R(s, \pi(s)) + \gamma \sum_{s&rsquo;} T(s&rsquo; | s, \pi(s)) U^{\pi}_{k} (s&rsquo;)
+\end{equation}</p><p>we don&rsquo;t know what the next state will be; so for each possible next state, we marginalize the result, multiplying the <a href=/posts/kbhprobability/>probability</a> of being in that state (gotten by \(T(&mldr;)\)) times the utility of being in that state.</p><p>This is called the <a href=#lookahead-equation>lookahead equation</a>, which represents how much <a href=/posts/kbhutility_theory/>utility</a> any future state can be be if we took action at point \(k\).</p><h4 id=lookahead-with-sampling>lookahead with sampling</h4><p>what if we only want to get \(m\) of the next states, instead of all next states?</p><figure><img src=/ox-hugo/2023-11-02_16-45-23_screenshot.png></figure><h3 id=bellman-expectation-equation>Bellman Expectation Equation</h3><p>The <a href=#bellman-expectation-equation>Bellman Equation</a> states that &ldquo;the expected utility of being in a state is the instantaneous reward of being in that state plus the discounted future utility of all possible future state.&rdquo; It is the fundamental result of RL.</p><p>\begin{equation}
+U(s) = \arg\max_{a} R(s, a) + \gamma \sum_{s&rsquo;} T(s&rsquo; | s, a) U (s&rsquo;)
+\end{equation}</p><p>If we are dealing with <a href=/posts/kbhmarkov_decision_process/#infinite-horizon-models>infinite-horizon models</a> (at &ldquo;convergence&rdquo; of the <a href=#lookahead-equation>lookahead equation</a>), we just no longer have a time dependency from the <a href=#lookahead-equation>lookahead equation</a>:</p><p>We only care about some Markovian state \(s\), and its next possible states \(s&rsquo;\). When these pair happened doesn&rsquo;t matter.</p><p>For a stochastic policy, we have:</p><p>\begin{equation}
+U(S) = \sum_{a}^{} \pi(a|s) \qty[R(s,a) + \gamma \sum_{s&rsquo;}^{} T(s&rsquo;|s,a) U(s&rsquo;)]
+\end{equation}</p><hr><p>We now can go about solving for what \(U^{\pi}\) is:</p><p>Procedure:</p><p>from the <a href=#bellman-expectation-equation>Bellman Expectation Equation</a>, we actually have a linear equation whereby:</p><p>\begin{equation}
+\bold{U}^{\pi} = \bold{R}^{\pi} + \gamma T^{\pi}\bold{U}^{\pi}
+\end{equation}</p><p>where, \(T^{\pi}\) is an \(n\times n\) matrix where \(T^{\pi}_{i,j}\) represents the <a href=/posts/kbhprobability/>probability</a> of transitioning from the \(i\) th to the \(j\) the state; and where, \(\bold{U}^{\pi}\) and \(\bold{R}^{\pi}\) are \(n\) vectors which represents all possible states and all possible utilities. Note that everything is parametrized on \(\pi\) (so \(T\) doesn&rsquo;t need an action dimension because we will be using the <a href=/posts/kbhpolicy/>policy</a> to calculate all the actoins)</p><p>We can now solve for the <a href=/posts/kbhutility_theory/>utility</a> of the <a href=/posts/kbhpolicy/>policy</a>. Now, algebra time on the previous equation to get us:</p><p>\begin{equation}
+\bold{U}^{\pi} = (I - \gamma T^{\pi})^{-1} \bold{R}^{\pi}
+\end{equation}</p><p>we know that \(T\) is <a href=/posts/kbhinvertability/>invertable</a> because its a transition matrix. And that, folks, is the <a href=/posts/kbhutility_theory/>utility</a> of a <a href=/posts/kbhpolicy/>policy</a>.</p><h2 id=approximate-policy-evaluation>Approximate Policy Evaluation</h2><p>Instead of having a <a href=/posts/kbhpolicy_evaluation/>policy evaluation</a> based on a vector out of the fitness of this <a href=/posts/kbhpolicy/>policy</a> at all possible states, which really works if our state space is small, what if we made a <a href=/posts/kbhpolicy/>policy</a> evaluation scheme which estimates the expectation of the <a href=/posts/kbhutility_theory/>utility</a> of our policy based on the possibility of us landing in particular states?</p><h3 id=background>Background</h3><p>The <a href=/posts/kbhutility_theory/>utility</a> from following a <a href=/posts/kbhpolicy/>policy</a> AT A STATE is given by:</p><p>\begin{equation}
+U^{\pi}(s) = R(s, \pi(s)) + \gamma \sum_{s&rsquo;} T(s&rsquo; | s, \pi(s)) U^{\pi} (s&rsquo;)
+\end{equation}</p><p>The <a href=/posts/kbhutility_theory/>utility</a> of a policy, in general, can be represented by:</p><p>\begin{equation}
+U(\pi) = \sum_{s}^{} b(s) U^{\pi}(s)
+\end{equation}</p><p>where, \(b(s)\) is the &ldquo;initial state distribution&rdquo; of being in a particular state.</p><p>Our state space may not be discrete or otherwise small enough to be added up for every case. We therefore can a sampling of <a href=/posts/kbhrollout_with_lookahead/#rollout>Rollout</a> <a href=/posts/kbhrollout_with_lookahead/#rollout>trajectory</a> to perform <a href=#approximate-policy-evaluation>Approximate Policy Evaluation</a></p><h3 id=rollout-utility>Rollout utility</h3><p>Collecting a utility for all \(s\) is real hard. Therefore, instead, we perform a bunch of <a href=/posts/kbhrollout_with_lookahead/#rollout>Rollout</a>s and then calculate, for each trajectory \(\tau\) you ended up with:</p><p>\begin{align}
+U(\pi_{\theta}) &= \mathbb{E}[R(\tau)] \\
+&= \int_{\tau} p_{\tau} (\tau) R(\tau) d\tau
+\end{align}</p><p>where, \(p(\tau)\) is the probability of that trajectory happening, and \(R(\tau)\) is the discounted future reward of that trajectory. That is:</p><p>\begin{equation}
+R(\tau) = \sum_{k=1}^{d} r_{k}\ \gamma^{k-1}
+\end{equation}</p><h4 id=monte-carlo-policy-evaluation>monte-carlo policy evaluation</h4><p>Sometimes, we can&rsquo;t even get all trajectories to add them up, so we simply perform an average of \(m\) sample trajectories:</p><p>\begin{equation}
+U(\pi_{\theta}) = \frac{1}{m}\sum_{i=1}^{m} R(\tau^{i})
+\end{equation}</p><p>We start each trajectory using a probability-weighted sample of initial states. This is the <a href=#rollout-utility>Roll-out utility</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

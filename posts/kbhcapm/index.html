@@ -1,0 +1,83 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Capital-Asset Pricing Model</title>
+<meta name=description content="CAPM is a method of portfolio selection analysis which focuses on maximizing return given some fixed variance.
+It deals with optimal Capital Market Line, given here:
+\begin{equation}
+E[R_{p}] = r_{f}+\frac{\sigma_{p}}{\sigma_{T}}\qty(E[R_{T}]-r_{f})
+\end{equation}
+Which describes \(E[R_{p}]\), the expected return of an optimal portfolio in a market, given, \(R_{T}\) is the market return, \(r_{f}\) is the risk-free rate, \(\sigma_{p}\) is the portfolio returns, and \(\sigma_{t}\) is standard-deviation of the market returns.
+Sharpe Ratio
+The Sharpe Ratio is a measure of the risk-adjusted performance of an asset&mdash;given the rate of return of some risk-free asset."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Capital-Asset Pricing Model</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhcapm/>CAPM</a> is a method of portfolio selection analysis which focuses on <em>maximizing</em> <a href=/posts/kbhrandom_walk/#return--finmetrics>return</a> given some fixed variance.</p><p>It deals with optimal <a href=#capital-market-line>Capital Market Line</a>, given here:</p><p>\begin{equation}
+E[R_{p}] = r_{f}+\frac{\sigma_{p}}{\sigma_{T}}\qty(E[R_{T}]-r_{f})
+\end{equation}</p><p>Which describes \(E[R_{p}]\), the expected return of an optimal portfolio in a market, given, \(R_{T}\) is the market return, \(r_{f}\) is the risk-free rate, \(\sigma_{p}\) is the portfolio returns, and \(\sigma_{t}\) is standard-deviation of the market returns.</p><h2 id=sharpe-ratio>Sharpe Ratio</h2><p>The <a href=#sharpe-ratio>Sharpe Ratio</a> is a measure of the risk-adjusted performance of an asset&mdash;given the rate of return of some risk-free asset.</p><p>It is defined as:</p><p>\begin{equation}
+S_{a} = \frac{E[R_{a}-R_{b}]}{\sigma_{a}}
+\end{equation}</p><p>where, \(R_{a}\) is the raw <a href=/posts/kbhrandom_walk/#return--finmetrics>return</a> of the asset, \(R_{b}\) is the risk-free rate of <a href=/posts/kbhrandom_walk/#return--finmetrics>return</a>, and \(\sigma_{a}\) is the standard deviation of the asset &ldquo;excess&rdquo; return (i.e. standard deviation actual return - expected return&mdash;how much extra there is).</p><h2 id=minimum-variance-boundary>Minimum-Variance Boundary</h2><p>For a given a weighted-average portfolio of stocks their waited averages, and correlations between the stocks you can draw this curvy curve. Let pink dots represent the two securities in your portfolio, and various curves highlighting possible linear combinations thereof&mdash;</p><figure><img src=/ox-hugo/2022-10-29_16-04-23_screenshot.png></figure><p>Let&rsquo;s observe the boundary conditions of this curve.</p><p>If the two stocks are exactly negatively correlated, then the more risk you take the more return you have for one while less return you have for the other (hence, two straight divergent lines.)</p><p>If you have an exactly correlated portfolio, the two assets will will form a line.</p><p>The <a href=#minimum-variance-boundary>Effecient Frontier</a> is the top half of this curve (i.e. higher risk/higher return is not a fun place to be, so that&rsquo;s an inefficient frontier.)</p><h2 id=capital-market-line>Capital Market Line</h2><p>The <a href=#capital-market-line>Capital Market Line</a> is a line that uses the <a href=#sharpe-ratio>Sharpe Ratio</a> of a <strong>market</strong> as a whole (how the market is performing against the risk-free rate) to analyze the performance of portfolio. It plots the performance of an &ldquo;optimal portfolio&rdquo; in a given market.</p><p>Let&rsquo;s construct first the <a href=#sharpe-ratio>Sharpe Ratio</a> of a hypothetical market:</p><p>\begin{equation}
+\frac{R_{t}-r_{f}}{\sigma_{t}}
+\end{equation}</p><p>where \(R_{T}\) is the market return, \(r_{f}\) is the risk-free rate, and \(\sigma_{t}\) is standard-deviation of the market returns.</p><p>We will multiply this value by the standard-deviation of your portfolio to calculate what the market claims should be your expected return. Then, we shift the line by the risk-free rate (as you are expected also to get that rate back in your return.</p><p>So an &ldquo;effecient&rdquo; portfolio (getting the max expected return per unit risk as measured by the market <a href=#sharpe-ratio>Sharpe Ratio</a>) should behave like:</p><p>\begin{equation}
+E[R_{p}] = r_{f}+\frac{E[R_{T}]-r_{f}}{\sigma_{T}}\sigma_{p}
+\end{equation}</p><p>again, \(R_{T}\) is the market return, \(r_{f}\) is the risk-free rate, and \(\sigma_{t}\) is standard-deviation of the market returns.</p><p>The one liner is: &ldquo;the return of your portfolio should be the base return by risk-free rate, plus how much excess risk you are taking on (and therefore <a href=/posts/kbhrandom_walk/#return--finmetrics>return</a> you should be getting back by the <a href=#sharpe-ratio>Sharpe Ratio</a>)&rdquo;</p><p>(how much you are expected to get (i.e. market <a href=#sharpe-ratio>Sharpe Ratio</a> times your portfolio volatility), shifted back up by the risk-free rate.</p><h2 id=sharpe-lintner-capm>Sharpe-Lintner CAPM</h2><p>A linear formulation of CAPM base on market-excess return (i.e. if you want to beat the market, you will have to sustain proportionally the same amount of risk.)</p><figure><img src=/ox-hugo/2022-10-29_18-44-41_screenshot.png></figure><figure><img src=/ox-hugo/2022-10-29_18-45-03_screenshot.png></figure><h2 id=tangency-portfolio>Tangency Portfolio</h2><figure><img src=/ox-hugo/2022-10-27_10-35-03_screenshot.png></figure><p>There is a portfolio, which is named the <a href=#tangency-portfolio>Tangency Portfolio</a>. This portfolio is the tangent point between the <a href=#capital-market-line>Capital Market Line</a> and the <a href=#minimum-variance-boundary>Effecient Frontier</a>.</p><p>It represents the point where you can get the highest return given some risk, but also control the risk at the market&rsquo;s <a href=#sharpe-ratio>Sharpe Ratio</a>.</p><h2 id=black-s-capm>Black&rsquo;s CAPM</h2><p><a href=/posts/kbhcapm/>CAPM</a> depends on a risk-free asset. Black of <a href=/posts/kbhblack_scholes_formula/>Black-Scholes Formula</a> fame derived another formulation of CAPM which doesn&rsquo;t dependent on a risk-free asset.</p><h3 id=zero-beta-portfolio>Zero-Beta Portfolio</h3><p>To work with <a href=#black-s-capm>Black&rsquo;s CAPM</a>, we first define \(0m\), the <a href=#zero-beta-portfolio>Zero-Beta Portfolio</a> (used in the formula as \(R_{0m}\), the return of the <a href=#zero-beta-portfolio>Zero-Beta Portfolio</a>).</p><p>It is defined to be the portfolio with the minimum variance of all portfolios not correlated with \(m\).</p><figure><img src=/ox-hugo/2022-10-29_16-52-14_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

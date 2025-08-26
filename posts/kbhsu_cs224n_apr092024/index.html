@@ -1,0 +1,121 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS224N APR092024</title>
+<meta name=description content="Neural Networks are powerful because of self organization of the intermediate levels.
+Neural Network Layer
+\begin{equation}
+z = Wx + b
+\end{equation}
+for the output, and the activations:
+\begin{equation}
+a = f(z)
+\end{equation}
+where the activation function \(f\) is applied element-wise.
+Why are NNs Non-Linear?
+
+there&rsquo;s no representational power with multiple linear (though, there is better learning/convergence properties even with big linear networks!)
+most things are non-linear!
+
+Activation Function
+We want non-linear and non-threshold (0/1) activation functions because it has a slope&mdash;meaning we can perform gradient-based learning."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS224N APR092024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Neural Networks are powerful because of <strong>self organization</strong> of the intermediate levels.</p><h2 id=neural-network-layer>Neural Network Layer</h2><p>\begin{equation}
+z = Wx + b
+\end{equation}</p><p>for the output, and the activations:</p><p>\begin{equation}
+a = f(z)
+\end{equation}</p><p>where the activation function \(f\) is applied element-wise.</p><h2 id=why-are-nns-non-linear>Why are NNs Non-Linear?</h2><ol><li>there&rsquo;s no representational power with multiple linear (though, there is better learning/convergence properties even with big linear networks!)</li><li>most things are non-linear!</li></ol><h2 id=activation-function>Activation Function</h2><p>We want <strong>non-linear</strong> and <strong>non-threshold</strong> (0/1) activation functions because it has a <em>slope</em>&mdash;meaning we can perform gradient-based learning.</p><h3 id=sigmoid--kbhsigmoid-dot-md><a href=/posts/kbhsigmoid/>sigmoid</a></h3><p><a href=/posts/kbhsigmoid/>sigmoid</a>: it pushed stuff to 1 or 0.</p><p>\begin{equation}
+\frac{1}{1+e^{-z}}
+\end{equation}</p><h3 id=tanh>tanh</h3><p>\begin{equation}
+tanh(z) = \frac{e^{z}-e^{-z}}{e^{z}+e^{-z}}
+\end{equation}</p><p>this is just rescaled logistic: its twice as steep (tanh(z) = 2sigmoid(2z)-1)</p><h3 id=hard-tanh>hard tanh</h3><p>tanh but funny. because exp is hard to compute</p><p>\begin{equation}
+HTanh = \begin{cases}
+-1, if x &lt; -1 \\
+0, if -1 \leq x \leq 1 \\
+1, if x > 1\\
+\end{cases}
+\end{equation}</p><p>this motivates ReLU</p><h3 id=relu--kbhneural-networks-dot-md><a href=/posts/kbhneural_networks/#relu>relu</a></h3><p>slope is 1 so its easy to compute, etc.</p><p>\begin{equation}
+ReLU(z) = \max(z,0)
+\end{equation}</p><h3 id=leaky-relu>Leaky ReLU</h3><p>&ldquo;ReLU like but not actually dead&rdquo;</p><p>\begin{equation}
+LeakReLU = \begin{cases}
+x, if x>0 \\
+\epsilon x, if x &lt; 0
+\end{cases}
+\end{equation}</p><p>or slightly more funny ones</p><p>\begin{equation}
+swish = x \sigma(x)
+\end{equation}</p><p>(this is relu on positive like exp, or a negative at early bits)</p><hr><h2 id=vectorized-calculus>Vectorized Calculus</h2><p>Multi input function&rsquo;s gradient is a vector w.r.t. each input but has a single output</p><p>\begin{equation}
+f(\bold{x}) = f(x_1, \dots, x_{n})
+\end{equation}</p><p>where we have:</p><p>\begin{equation}
+\nabla f = \pdv{f}{\bold{x}} = \qty [ \pdv{f}{x_1}, \pdv{f}{x_2}, \dots]
+\end{equation}</p><p>if we have multiple outputs:</p><p>\begin{equation}
+\bold{f}(\bold{x}) = \qty[f_1(x_1, \dots, x_{n}), f_2(x_1, \dots, x_{n})\dots ]
+\end{equation}</p><p>\begin{equation}
+\nabla \bold{f} = \mqty[ \nabla f_1 \\ \nabla f_2 \\ \dots] = \mqty[ \pdv{f_1}{x_1} & \dots & \pdv{f_1}{x_{n}} \\ \nabla f_2 \\ \dots]
+\end{equation}</p><h3 id=transposes>Transposes</h3><p>Consider:</p><p>\begin{equation}
+\pdv u \qty(u^{\top} h) = h^{\top}
+\end{equation}</p><p>but because of shape conventions we call:</p><p>\begin{equation}
+\pdv u \qty(u^{\top} h) = h
+\end{equation}</p><h3 id=useful-jacobians>Useful Jacobians!</h3><figure><img src=/ox-hugo/2024-04-09_17-04-39_screenshot.png></figure><h4 id=why-is-the-middle-one>Why is the middle one?</h4><p>Because the activations \(f\) are applied elementwise, only the <strong>diagonal</strong> are values and the off-diagonals are all \(0\) (because \(\pdv{h(x_1)}{x_2} = 0\)).</p><h3 id=shape-convention>Shape Convention</h3><p>We will always by <strong>output shape</strong> as the same shape of the <strong>parameters</strong>.</p><figure><img src=/ox-hugo/2024-04-09_17-10-15_screenshot.png></figure><ul><li><strong>shape convention</strong>: derivatives of matricies are the shape</li><li><strong>Jacobian form</strong>: derivatives w.r.t. matricies are row vectors</li></ul><p>we use the first one</p><h2 id=actual-backprop>Actual Backprop</h2><ul><li>create a <a href=/posts/kbhtopological_sort/>topological sort</a> of your computation graph</li><li>calculate each variable in that order</li><li>calculate backwards pass in reverse order</li></ul><h2 id=check-gradient>Check Gradient</h2><p>\begin{equation}
+f&rsquo;(x) \approx \frac{f(x+h) - f(x-h)}{2h}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

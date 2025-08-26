@@ -1,0 +1,136 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>semantic analysis</title>
+<meta name=description content='lower things into LLVM IR, HLO, etc. &mdash; &ldquo;analyze the sentences&rdquo;
+
+check type
+catch inconsistency
+scoping rules, etc.
+
+Typical, we implement multiple passes for this because optimizing for multiple passes is quite hard. We need this because most grammars are not actually context free (for instance, scoping).
+what to check
+
+declaration of identifiers
+types
+inheritance relationships
+class efined once
+methods in a class defined only once
+reserved identifiers are not misused (i.e., inherits, etc.)
+
+example
+type errors
+let y: String <- "abc" in y+3
+variables that don&rsquo;t exist
+let y : Int in x + 3
+scope
+the scope of an identifier is the portion of a program in which a particular identifier is accessible.'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>semantic analysis</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>lower things into LLVM IR, HLO, etc. &mdash; &ldquo;analyze the sentences&rdquo;</p><ul><li>check type</li><li>catch inconsistency</li><li>scoping rules, etc.</li></ul><p>Typical, we implement multiple passes for this because optimizing for multiple passes is quite hard. We need this because most grammars are not actually context free (for instance, scoping).</p><h2 id=what-to-check>what to check</h2><ol><li>declaration of identifiers</li><li>types</li><li>inheritance relationships</li><li>class efined once</li><li>methods in a class defined only once</li><li>reserved identifiers are not misused (i.e., inherits, etc.)</li></ol><h2 id=example>example</h2><h3 id=type-errors>type errors</h3><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>let</span> <span style=color:#111>y</span><span style=color:#111>:</span> <span style=color:#111>String</span> <span style=color:#f92672>&lt;-</span> <span style=color:#d88200>&#34;abc&#34;</span> <span style=color:#111>in</span> <span style=color:#111>y</span><span style=color:#f92672>+</span><span style=color:#111>3</span>
+</span></span></code></pre></div><h3 id=variables-that-don-t-exist>variables that don&rsquo;t exist</h3><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>let</span> <span style=color:#111>y</span> <span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#111>in</span> <span style=color:#111>x</span> <span style=color:#f92672>+</span> <span style=color:#111>3</span>
+</span></span></code></pre></div><h3 id=scope>scope</h3><p>the <strong>scope</strong> of an identifier is the portion of a program in which a particular identifier is accessible.</p><ul><li>same identifier may refer to differet things</li><li>different scopes for the same name don&rsquo;t overlap</li><li>an identifier may have a restricted scope</li></ul><h4 id=static-scope>static scope</h4><p>The scope you think scope means.</p><h4 id=dynamic-scope>dynamic scope</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>g</span><span style=color:#111>(</span><span style=color:#111>y</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>let</span> <span style=color:#111>a</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>4</span> <span style=color:#111>in</span> <span style=color:#75af00>f</span><span style=color:#111>(</span><span style=color:#111>3</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span><span style=color:#111>f</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>a</span><span style=color:#111>;</span>
+</span></span></code></pre></div><p>so now the <code>a</code> within <code>f</code> differs due to the call stack. Older programming languages use this, modern languages don&rsquo;t use this largely.</p><h4 id=introduction-of-names-scopes>introduction of names/scopes</h4><ul><li>class declarations (class names)</li><li>method definitions (method names)</li><li>let expressions (objids)</li><li>formal parameters (objids)</li><li>attribute definitions (objids)</li><li>case expressions (objids)</li></ul><p>Different classes have different scopes rules; classes, for instance, are globally visible. Attribute names are global within the class (this makes sense).</p><p>Now, consider:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>x</span><span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>y</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>y</span><span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>x</span><span style=color:#f92672>+</span><span style=color:#111>1</span><span style=color:#111>;</span>
+</span></span></code></pre></div><p>this means <code>x=0</code>, <code>y=1</code>; why? this is because the <a href=/posts/kbhsu_cs242_oct152024/#structural-operational-semantics>operational semantics</a> gives that the objects are first initialized to default before their values/initalizers are used.</p><h3 id=shadowing>shadowing</h3><p>Needing to parse shadowing.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-c data-lang=c><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>int</span> <span style=color:#111>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>3</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>int</span> <span style=color:#111>i</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>4</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>cout</span> <span style=color:#f92672>&lt;&lt;</span> <span style=color:#111>i</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div><h2 id=implementing-scope>implementing scope</h2><p>most semantic analysis is a recursive AST descent</p><ul><li><strong>before</strong>: begin process AST node <code>n</code></li><li><strong>recurse</strong>: process children of <code>n</code></li><li><strong>after</strong>: finish processAST node <code>n</code></li></ul><p>that is, we have to descend down and then reprocess up each node based on information gathered by the children. think:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>let</span> <span style=color:#111>x</span><span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>0</span> <span style=color:#111>in</span> <span style=color:#111>....</span>
+</span></span></code></pre></div><p>to typecheck this node, we first have to type check the initializer, and then add <code>x</code> to a symbol table, then check that the initialized value is the same as that of <code>x</code> declared, and then the rest of the body can be typed.</p><p>A symbol table, therefore, has a common API:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#75af00>enter_scope</span><span style=color:#111>();</span> <span style=color:#75715e>// start a new tested scope; when you are done you will pop it off
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75af00>find_symbol</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>);</span> <span style=color:#75715e>// finds current x, or returns null
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75af00>add_symbol</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>);</span> <span style=color:#75715e>// add a symbol x to the table
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75af00>check_scope</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>);</span> <span style=color:#75715e>// true if x is defined in the current, *top* scope
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>                <span style=color:#75715e>// we have this because we can thereby check for duplicated variables within the same scope
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#75af00>exit_scope</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>);</span> <span style=color:#75715e>// exit the current scope
+</span></span></span></code></pre></div><h2 id=type>type</h2><p>There&rsquo;s only one type, a <code>class</code>, for OOP languages. Many operations don&rsquo;t make sense for a particular type:</p><ul><li>it doesn&rsquo;t make sense to adding a function pointer and an integer</li><li>it does make sense to add two integer</li></ul><p>so&mldr; you have to check for yourself. Type systems specifies <strong>which operations</strong> are valid for <strong>which types</strong>.</p><h3 id=sound--type-system>sound (type system)</h3><p>a sound type system is such that \(\vdash e: T\), then \(e\) evaluates to a value of type \(T\). We want sound rules, but not all sound rules are made the same</p><p>\begin{equation}
+\frac{\text{i is an int literal}}{\vdash i: \text{Object}}
+\end{equation}</p><p>is technically a correct rule, but it isn&rsquo;t the world&rsquo;s most precise one.</p><h3 id=statically-typed>statically typed</h3><p>All or almost all type checking is a part of compilation. C, Rust, etc.</p><p>Static typing makes stuff faster often, because type checking involves a lot of dynamic computation which can&rsquo;t be branch predicted, which is quite expensive.</p><p>Most of the time, most typed languages has a way to break the type system (i.e., unsafe casts) so its still sometimes run time checked types.</p><h3 id=dynamically-typed>dynamically typed</h3><p>Almost all checking is done as a part of program execution (Scheme, Python, JS, etc.) Optional type rules exists, too, in Python.</p><h3 id=untyped>untyped</h3><p>that is, assembly.</p><h3 id=types-in-cool>types in COOL</h3><p>There are only two types of types in COOL, since <a href=/posts/kbhsu_cs143_apr032025/#cool>COOL</a> is an OOP language:</p><ul><li>class names</li><li>SELF_TYPE</li></ul><p>you can only declare a new type by declaring a class. The cool compiler has 2 jobs</p><ol><li>check types</li><li>infer types for expressions (i.e., we will insert into the AST, on every single node, the type of the node&mdash;all inferred)</li></ol><p>Two main parts: 1) type checking &mdash; making sure that the programmers are not doing stuff they are not supposed to do 2) type inference &mdash; inferring the types of some constructs based on other constructs.</p><h4 id=rules-of-cool>rules of COOL</h4><p>booleans</p><p>\begin{equation}
+\frac{}{\vdash \text{false}: \text{Bool} }
+\end{equation}</p><p>new</p><p>\begin{equation}
+\frac{}{\vdash \text{new T} : \text{T}}
+\end{equation}</p><p>negation</p><p>\begin{equation}
+\frac{\vdash e: \text{Bool}}{\vdash !e : \text{Bool}}
+\end{equation}</p><p>while loop:</p><p>\begin{equation}
+\frac{\vdash e_1: \text{Bool}, \vdash e_2: T}{\vdash \text{ while } e_1 \text{ loop } e_2 \text{ pool }: \text{ Object}}
+\end{equation}</p><p>we report an error if nothing matches.</p><p>Environment lookups!</p><p>\begin{equation}
+\frac{O\qty(x) = T}{O \vdash x : T}
+\end{equation}</p><p>Let expressions</p><p>\begin{equation}
+\frac{O[T_0 / x] \vdash e_1: T_1}{O \vdash \text{let } x : T_0 \text{ in } e_1: T_1}
+\end{equation}</p><p>the notation \(O[T_0 / x]\) says &ldquo;if, in environment \(O\), we set \(x\) to have type \(T_0\)&rdquo;. This environment is implemented as a symbol table.</p><p>\begin{equation}
+\frac{O \vdash e_0: T_0, O[T / x] \vdash e_1: T_1}{O \vdash \text{let } x : T_0 \leftarrow e_0 \text{ in } e_1: T_1}
+\end{equation}</p><p>this is not quite great since subtyping is not allowed; let&rsquo;s try again:</p><p>\begin{equation}
+\frac{O \vdash e_0: T_0, O[T / x] \vdash e_1: T_1, T_0 \leq T}{ O \vdash \text{let } x: T \leftarrow e_0 \text{ in } e_1: T_1}
+\end{equation}</p><p>now let&rsquo;s think about assignments:</p><p>\begin{equation}
+\frac{O\qty(x) = T_0, O \vdash e_1: T_1, T_1 \leq T_0}{O \vdash x \leftarrow e_1: T_1}
+\end{equation}</p><p>which looks similar to attribute initalizaiton</p><p>\begin{equation}
+\frac{O\qty(x) = T_0, O \vdash e_1: T_1, T_1 \leq T_0}{O \vdash x \leftarrow e_1: T_1}
+\end{equation}</p><h4 id=example>example</h4><p>\begin{equation}
+\qty(e_1 : \text{Int} \wedge e_2: \text{Int}) \implies e_1 + e_2 : Int
+\end{equation}</p><p>In the bar notation:</p><p>\begin{equation}
+\frac{\vdash e_1: \text{Int}, \vdash e_2: \text{Int}}{\vdash e_1 + e_2 : \text{Int}}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

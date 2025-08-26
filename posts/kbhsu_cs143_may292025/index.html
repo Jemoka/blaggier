@@ -1,0 +1,96 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS143 MAY292025</title>
+<meta name=description content="Garbage Collection!
+Garbage Collection
+Very simple idea: when an object is created, unused space is automatically allocated. We leverage the observation that a program can use only the objects that it could find:
+for instance
+let x:A <- new A in { x <- y }
+
+allocate space as needed for new objects
+when spaces runs out&mldr;
+a) compute what objects might be used again (trace from &ldquo;root&rdquo;)
+b) free the space not found in
+
+Mark and Sweep
+when memory runs out&mldr;"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS143 MAY292025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=#garbage-collection>Garbage Collection</a>!</p><h2 id=garbage-collection>Garbage Collection</h2><p>Very simple idea: when an object is created, unused space is automatically allocated. We leverage the observation that a program can use only the objects that it could find:</p><p>for instance</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#00a8c8>let</span> <span style=color:#111>x</span><span style=color:#00a8c8>:A</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>new</span> <span style=color:#00a8c8>A</span> <span style=color:#00a8c8>in</span> <span style=color:#111>{</span> <span style=color:#111>x</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>y</span> <span style=color:#111>}</span>
+</span></span></code></pre></div><ol><li>allocate space as needed for new objects</li><li>when spaces runs out&mldr;
+a) compute what objects might be used again (trace from &ldquo;root&rdquo;)
+b) free the space not found in</li></ol><h3 id=mark-and-sweep>Mark and Sweep</h3><p>when memory runs out&mldr;</p><ol><li>mark: traces reachabel objects</li><li>sweep: collects garbage objects</li></ol><p>Every object has a new bit, the &ldquo;mark bit&rdquo;. Every object start with the mark bit set to 0, and we set it to 1 for reachable objects in the mark phase.</p><p>At the sweep phrase, we reset everything to 0.</p><h4 id=mark>mark</h4><p>BFS through starting at all roots.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>todo</span> <span style=color:#f92672>=</span> <span style=color:#111>graph_roots</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>while</span> <span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#111>todo</span><span style=color:#111>)</span> <span style=color:#f92672>&gt;</span> <span style=color:#ae81ff>0</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>mark</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span><span style=color:#111>:</span> <span style=color:#75715e># unmarked, but reachable</span>
+</span></span><span style=display:flex><span>       <span style=color:#111>set</span><span style=color:#960050;background-color:#1e0010>!</span><span style=color:#111>(</span><span style=color:#111>mark</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#111>)</span> <span style=color:#f92672>&lt;-</span> <span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>       <span style=color:#111>todo</span> <span style=color:#f92672>=</span> <span style=color:#111>todo</span> <span style=color:#f92672>++</span> <span style=color:#111>heap_ptrs</span><span style=color:#111>(</span><span style=color:#111>v</span><span style=color:#111>)</span>
+</span></span></code></pre></div><h4 id=sweep>sweep</h4><ul><li>scan the heap looking fort objects with mark bit 0</li><li>an object is added to the free list</li><li>the objects with a mark bit 1 have their mark bit reset to 0</li></ul><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>p</span> <span style=color:#f92672>=</span> <span style=color:#111>bottom</span> <span style=color:#111>of</span> <span style=color:#111>heap</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>while</span> <span style=color:#111>p</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>top</span> <span style=color:#111>of</span> <span style=color:#111>heap</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>mark</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>1</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>mark</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>else</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>freelist</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>p</span><span style=color:#111>,</span> <span style=color:#111>p</span><span style=color:#f92672>+</span><span style=color:#111>sizeof</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#111>)))</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>p</span> <span style=color:#f92672>+=</span> <span style=color:#111>sizeof</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#111>)</span>
+</span></span></code></pre></div><h4 id=catch>catch</h4><p>Noticeably, the mark phase requires an arbitrary-length todo list. We will therefore have to stick stuff onto the heap.</p><ol><li>free list: easy, just stick it onto the freed variables themselves</li><li>todo list: instead of storing an explicit todo list, reverse each pointer to come back and descent down new branches</li></ol><h4 id=con>con</h4><p>no object pointer updates during GC (pointers stay where they are).</p><h4 id=pros>pros</h4><p>Importantly, this prohibits parallel garbage collection.</p><p>Also, lots of fragmentation.</p><h3 id=stop-and-copy>Stop and Copy</h3><p>organize memory into two areas</p><ul><li>old space: used for allocation</li><li>new space: use as a reserve for GC</li></ul><p>no fragmentation!</p><ol><li>copy reachable objects into new space from old space</li><li>update pointers</li><li>reverse the roles of old space and new space</li></ol><p>as we copy an object, we save a &ldquo;forwarding pointer&rdquo; so we know stuff has been copied.</p><h4 id=catch>catch</h4><p>We still have to figure out how to implement reference counting. To do this, in the new space, we maintain two pointers scan and alloc. The distance between scan and alloc is our BFS list. We move alloc forward whenever we copy something (when we encounter a reference), and w</p><h4 id=pros>pros</h4><p>stop and copy is generally believed to be the fastest GC scheme.</p><ul><li>allocation is very cheap (we just use the new space)</li><li>collection is decently cheap (only need to touch reachable objects)</li></ul><h3 id=reference-counting>Reference Counting</h3><p>Instead of waiting for memory to be exhausted, collect an object when there are no more pointers to it.</p><p><strong>Insight</strong>: store in every object the number of pointers to that object.</p><p>On new, store in each object the number of references to it.</p><p>On assignment <code>x &lt;- y</code>, where x points to <code>p</code> and y points to <code>o</code>:</p><ul><li>rc(p) &lt;- rc(p) + 1</li><li>rc(o) &lt;- rc(o) - 1</li><li>if (rc(o) == 0), mark o as free</li><li>x &lt;- y</li></ul><h4 id=catch>catch</h4><p>Such scheme cannot delete stuff that is in a cycle. For instance, if an object points to another in a cycle, both of them will forever have a reference counter of 1.</p><p>To deal with this, we can just use another garbage collection scheme.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,79 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>demand paging</title>
+<meta name=description content='
+use efficient page maps too translate virtual to physical addresses
+kick things off to disk when memory runs out
+
+Every process has its own page map.
+demand paging
+Key idea: physical representation of virtual memory does not have to be on actual memory.
+
+if memory fills out, kick a page to disk
+if the program asks for memory again, kick another page to disk and load its memory back
+
+Keep in memory the information that&rsquo;s being used, kick the rest to swap space/"paging file". Ideally: we have a performance of main memory and capacity of disk.'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>demand paging</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><ol><li>use efficient <strong>page maps</strong> too translate virtual to physical addresses</li><li>kick things off to <strong>disk</strong> when memory runs out</li></ol><p>Every process has its own <a href=#page-map>page map</a>.</p><h2 id=demand-paging>demand paging</h2><p>Key idea: physical representation of virtual memory does <strong>not have to be on actual memory</strong>.</p><ol><li>if memory fills out, kick a page to disk</li><li>if the program asks for memory again, kick another page to disk and load its memory back</li></ol><p>Keep in memory the information that&rsquo;s being <strong>used</strong>, kick the rest to <a href=/posts/kbhdemand_paging/>swap space</a>/"<a href=/posts/kbhdemand_paging/>paging file</a>". Ideally: we have a performance of main memory and capacity of disk.</p><h3 id=demand-fetching>demand fetching</h3><p>most modern OSes start with <strong>no pages loaded</strong>&mdash;load pages only when referenced; this is tempered by the type of page that&rsquo;s needed:</p><ol><li>read only code pages (program code, doesn&rsquo;t change) &mdash;<ul><li>do <strong>NOT</strong> save to swap; executable will always be there so you can just reload from disk</li><li>program will expect code pages too contain executable data</li></ul></li><li>initialized data pages &mdash;<ul><li><strong>save to swap</strong> because contents may have changed frorm initial values</li><li>program expects them to contain data on load, so we need to load them ahead of time</li></ul></li><li>unitialized data pages<ul><li>save to swap</li><li>no initial content</li></ul></li></ol><table><thead><tr><th>Page Type</th><th>Need Content on First Load</th><th>Save to Swap (&ldquo;Swap?&rdquo;)</th></tr></thead><tbody><tr><td>code</td><td>yes</td><td>no (read from exe)</td></tr><tr><td>data</td><td>yes</td><td>yes</td></tr><tr><td>stack/heap</td><td>no</td><td>yes</td></tr></tbody></table><p>We only write to disk if its <strong>dirty</strong>.</p><h3 id=using-swap-to-get-extra-memory>using swap to get extra memory</h3><ol><li>pick a page to kick out</li><li>write kicked page to disk</li><li>mark the old page entry as not present</li><li>give the physical address to the new virtual page</li></ol><p>If we ever ask for the old page back, trigger <a href=#page-fault>page fault</a>:</p><h3 id=page-fault>page fault</h3><p>(to recover a page that&rsquo;s on swap)</p><ol><li>check with swap for the data</li><li>get new physical page (perhaps kicking out another page)</li><li>load data into page</li><li>update page map as present and with new address</li></ol><h3 id=choosing-what-to-swap>choosing what to swap</h3><h3 id=thrashing>thrashing</h3><p><strong><strong>downside of <a href=/posts/kbhdemand_paging/>demand paging</a></strong></strong></p><p>When the pages being actively used don&rsquo;t fit in memory: you will have to get the page, kick it out immediately, get it back again, etc. This basically make memory as fast as disk; which is really slow.</p><p>Solution: download more RAM. &ldquo;buy more memory, or use task manager&rdquo; - nick</p><h2 id=page-map>page map</h2><p>A <a href=#page-map>page map</a>, to keep track of something is valid/invalid, we have to store information about <strong>EVERY PAGE</strong> for <strong>EVERY PROCESS</strong>.</p><p>Each entry in the page:</p><table><thead><tr><th>Index</th><th>Physical Address</th><th>Writable</th><th>Present/Mapped?</th><th>Last Access</th><th>Kernel</th><th>Dirty</th></tr></thead><tbody><tr><td>0</td><td>0x2023</td><td>1</td><td>0</td><td>0</td><td>0</td><td>0</td></tr><tr><td>1</td><td>0x0023</td><td>1</td><td>1</td><td>1</td><td>0</td><td>0</td></tr></tbody></table><p><strong>Dirty</strong>: the content matters and it needs to be written out.</p><p>This is, of course, very big if stored densely. Consider 36 bit page numbers, 8 byte entries, it requires \(2^{36} \cdot 8 = 512GB\) worth of space per process. This is sad.</p><p><strong>PRESENT</strong> simply means if the segment of memory is <strong>MAPPED</strong>. ITs possible for a not present index to be in SWAP instead.</p><h3 id=page-map-tree-implementation>page map tree implementation</h3><p>To resolve this, we have entry for RANGES of virtual pages; there&rsquo;s about \(4\) levels. If everything is invalid in a range, we just consider the whole range invalid using one row.</p><p>Therefore, we lazily make space for this tree.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

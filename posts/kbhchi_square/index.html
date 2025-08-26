@@ -1,0 +1,105 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>chi-square</title>
+<meta name=description content="\(\chi^2\) is a test statistic for hypothesis testing.
+motivation for chi-square
+The motivation for chi-square is because t-test (means, &ldquo;is the value significantly different&rdquo;) and z-test (proportion, &ldquo;is the incidence percentage significantly different&rdquo;) all don&rsquo;t really cover categorical data samples: &ldquo;the categories are distributed in this way.&rdquo;
+Take, for instance, if we want to test the following null hypothesis:
+
+  
+      
+          Category
+          Expected
+          Actual
+      
+  
+  
+      
+          A
+          25
+          20
+      
+      
+          B
+          25
+          20
+      
+      
+          C
+          25
+          25
+      
+      
+          D
+          25
+          25
+      
+  
+
+\(\alpha = 0.05\). What do we use to test this??"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>chi-square</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>\(\chi^2\) is a test <a href=/posts/kbhstastistic/>statistic</a> for <a href=/posts/kbhhypothesis_testing/>hypothesis testing</a>.</p><h2 id=motivation-for-chi-square>motivation for chi-square</h2><p>The motivation for <a href=/posts/kbhchi_square/>chi-square</a> is because <a href=/posts/kbht_test/>t-test</a> (means, &ldquo;is the value significantly different&rdquo;) and <a href=/posts/kbhz_test/>z-test</a> (proportion, &ldquo;is the incidence percentage significantly different&rdquo;) all don&rsquo;t really cover categorical data samples: &ldquo;the categories are distributed in this way.&rdquo;</p><p>Take, for instance, if we want to test the following <a href=/posts/kbhhypothesis_testing/#null-hypothesis>null hypothesis</a>:</p><table><thead><tr><th>Category</th><th>Expected</th><th>Actual</th></tr></thead><tbody><tr><td>A</td><td>25</td><td>20</td></tr><tr><td>B</td><td>25</td><td>20</td></tr><tr><td>C</td><td>25</td><td>25</td></tr><tr><td>D</td><td>25</td><td>25</td></tr></tbody></table><p>\(\alpha = 0.05\). What do we use to test this??</p><p>(hint: we can&rsquo;t, unless&mldr;)</p><p>Enter <a href=/posts/kbhchi_square/>chi-square</a>.</p><h2 id=chi-square-test>chi-square test</h2><p><a href=#chi-square-test>chi-square test</a> is a <a href=/posts/kbhhypothesis_testing/>hypothesis test</a> for categorical data. It is responsible to translate differences in distributions into <a href=/posts/kbhhypothesis_testing/#p-value>p-value</a>s for significance.</p><p>Begin by <a href=#calculating-chi-square>calculating chi-square</a> after you confirmed that your experiment meets <a href=#conditions-for-inference--chi-square-test>conditions for inference (chi-square test)</a>.</p><p>Once you have that, look it up at a chi-square table to figure the appropriate <a href=/posts/kbhhypothesis_testing/#p-value>p-value</a>. Then, proceed with normal <a href=/posts/kbhhypothesis_testing/>hypothesis testing</a>.</p><p>Because of this categorical nature, <a href=#chi-square-test>chi-square test</a> can also be used as a homogeneity test.</p><h2 id=conditions-for-inference--chi-square-test>conditions for inference (chi-square test)</h2><ul><li>random sampling</li><li>expected value for data must be \(\geq 5\)</li><li>sampling should be \(&lt;10\%\) or independent</li></ul><h2 id=chi-square-test-for-homogeneity>chi-square test for homogeneity</h2><p>The <a href=#chi-square-test-for-homogeneity>chi-square test for homogeneity</a> is a test for <a href=/posts/kbhhomogeneity/>homogeneity</a> via the <a href=/posts/kbhchi_square/>chi-square</a> <a href=/posts/kbhstastistic/>statistic</a>.</p><p>To do this, we take the probability of a certain outcome happening&mdash;if distributed equally&mdash;and apply it to the samples to compare.</p><p>Take, for instance:</p><table><thead><tr><th>Subject</th><th>Right Hand</th><th>Left Hand</th><th><strong><strong>Total</strong></strong></th></tr></thead><tbody><tr><td>STEM</td><td>30</td><td>10</td><td>40</td></tr><tr><td>Humanities</td><td>15</td><td>25</td><td>40</td></tr><tr><td>Equal</td><td>15</td><td>5</td><td>20</td></tr><tr><td><strong><strong>Total</strong></strong></td><td>60</td><td>40</td><td>100</td></tr></tbody></table><p>We will then figure the expected outcomes:</p><table><thead><tr><th>Right</th><th>Left</th></tr></thead><tbody><tr><td>24</td><td>16</td></tr><tr><td>24</td><td>16</td></tr><tr><td>12</td><td>8</td></tr></tbody></table><p>Awesome! Now, <a href=#calculating-chi-square>calculate chi-square</a> with each cell of measured outcomes. Calculate degrees of freedom by (num_row-1)*(num_col-1).</p><h2 id=chi-square-test-for-independence>chi-square test for independence</h2><p>The <a href=#chi-square-test-for-independence>chi-square test for independence</a> is a test designed to accept-reject the null hypothesis of &ldquo;no association between two variables.&rdquo;</p><p>Essentially, you leverage the fact that &ldquo;AND&rdquo; relationships are multiplicative probabilities. Therefore, the expected outcomes are simply the multiplied/fraction of sums:</p><figure><img src=/ox-hugo/2022-04-20_22-37-43_screenshot.png></figure><h2 id=calculating-chi-square>calculating chi-square</h2><p>\begin{equation}
+\chi^2 = \frac{(\hat{x}_0-x_0)^2}{x_0} +\frac{(\hat{x}_1-x_1)^2}{x_1} + \cdots + \frac{(\hat{x}_n-x_n)^2}{x_n}
+\end{equation}</p><p>Where, \(\hat{x}_i\) is the measured value and \(x_i\) is the expected value.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

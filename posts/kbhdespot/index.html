@@ -1,0 +1,80 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Determinized Sparse Partially Observable Tree</title>
+<meta name=description content="key idea: let&rsquo;s build a tree such that, after taking the action, the observation is deterministic. Therefore, you get a belief tree with no branching on observations.
+DESPOT trees
+We make an assumption, that the actual observation given are fixed given belief. That is:
+\begin{equation}
+O(o|b,a) = 1
+\end{equation}
+for some specific \(o\), everything else is \(0\) for every b,a.
+Sample Scenarios
+To make such a tree, let&rsquo;s sample of set of scenarios: sequences of actions and observations (because, given a belief and action, we assume observation is fixed. So, given an initial belief and an action, you will always go down a single &ldquo;scenario&rdquo;)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Determinized Sparse Partially Observable Tree</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>key idea: let&rsquo;s build a tree such that, after taking the action, the <strong>observation is deterministic</strong>. Therefore, you get a <a href=/posts/kbhbelief/>belief</a> tree with no branching on observations.</p><h2 id=despot--kbhdespot-dot-md--trees><a href=/posts/kbhdespot/>DESPOT</a> trees</h2><p>We make an assumption, that the actual observation given are fixed given belief. That is:</p><p>\begin{equation}
+O(o|b,a) = 1
+\end{equation}</p><p>for some specific \(o\), everything else is \(0\) for every b,a.</p><h3 id=sample-scenarios>Sample Scenarios</h3><p>To make such a tree, let&rsquo;s sample of set of <a href=#despot--kbhdespot-dot-md--trees>scenarios</a>: sequences of actions and observations (because, given a belief and action, we assume observation is fixed. So, given an initial belief and an action, you will always go down a single &ldquo;scenario&rdquo;).</p><h3 id=build-tree>Build Tree</h3><p>Do a bunch of scenario sampling</p><h3 id=use-tree>Use Tree</h3><p>Starting at where you are in terms of initial belief, greedily choose the &ldquo;best action&rdquo;.</p><h3 id=evaluate-tree>Evaluate Tree</h3><p>Average discounted future reward of the scenarios that relate to your starting states.</p><h3 id=drawbacks>Drawbacks</h3><p>Normal <a href=/posts/kbhdespot/>DESPOT</a> is very very easy to overfit.</p><h2 id=regularized-despot--kbhdespot-dot-md>Regularized <a href=/posts/kbhdespot/>DESPOT</a></h2><p>Build a <a href=/posts/kbhdespot/>DESPOT</a> until depth \(D\), with \(K\) senarios, then, treat the resulting tree as a <a href=/posts/kbhconditional_plan/>conditional plan</a>, do bottom-up DP to optimize the plan.</p><p>Given a set of senarios \(\Phi\), we write:</p><figure><img src=/ox-hugo/2024-01-27_23-48-15_screenshot.png></figure><h2 id=anytime-despot>Anytime DESPOT</h2><p>We build up the despot tree by maintaining upper and lower bounds on the value function, and try to expand on <a href=#despot--kbhdespot-dot-md--trees>scenarios</a> that would help us lower the gap between them.</p><p>First, pick an upper and lower bound. The note on <a href=/posts/kbhhsvi/>HSVI</a> may help.</p><ol><li>Build and Optimize Bounded <a href=#despot--kbhdespot-dot-md--trees>DESPOT tree</a> (see below) starting at \(b_{0}\)</li><li>Compute the optimal policy using <a href=#regularized-despot--kbhdespot-dot-md>Regularized DESPOT</a> expression above</li><li>Execute best action</li><li>Get observation</li><li>\(update(b,a,o)\)</li></ol><h3 id=building-bounded-despot--kbhdespot-dot-md>Building Bounded <a href=/posts/kbhdespot/>DESPOT</a></h3><ol><li>sample a set of \(\Phi\) senarios at \(b_0\)</li><li>insert \(b_0\) into the tree as the root node</li><li>let \(b \leftarrow b_0\), and, as time permits:<ol><li>tighten bounds on \(b\)</li><li>back up the upper and lower bounds you found all the way up the tree as you would with <a href=/posts/kbhhsvi/>HSVI</a></li></ol></li></ol><h3 id=tightening-bounds>Tightening Bounds</h3><p>if \(b\) is a leaf on the tree, then add new belief nodes for every action and every observation as children of \(b\).</p><p>then,</p><p>\begin{equation}
+b \leftarrow update(b, a^{*}, o^{*})
+\end{equation}</p><p>where \(a^{*}\) and \(o^{*}\) are determined by&mldr;</p><ul><li>\(a^{*}\): <a href=/posts/kbhhsvi/#ie-max-heuristic>IE-MAX Heuristic</a>, where the original upper-bound is \(Q\)</li><li>\(o^{*}\): <a href=/posts/kbhhsvi/#weighted-excess-uncertainty>weighted excess uncertainty</a></li></ul><p><strong>If the <a href=/posts/kbhhsvi/#weighted-excess-uncertainty>weighted excess uncertainty</a> we got is non-zero, we repeat this tightening bounds process until it is zero.</strong></p><h2 id=despot-theoretic-guarantees>DESPOT Theoretic Guarantees</h2><p>It is near-optimal as a policy.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

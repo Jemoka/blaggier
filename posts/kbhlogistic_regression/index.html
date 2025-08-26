@@ -1,0 +1,115 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>logistic regression</title>
+<meta name=description content="Naive Bayes acts to compute \(P(Y|X)\) via the Bayes rule and using the Naive Bayes assumption. What if we can model the value of \(P(Y|X)\) directly?
+With \(\sigma\) as the sigmoid function:
+\begin{equation}
+P(Y=1|X=x) = \sigma (\theta^{\top}x)
+\end{equation}
+and we tune the parameters of \(\theta\) until this looks correct.
+We always want to introduce a BIAS parameter, which acts as an offset; meaning the first \(x\) should always be \(1\), which makes the first value in \(\theta\) as a &ldquo;bias&rdquo;."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>logistic regression</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhnaive_bayes/>Naive Bayes</a> acts to compute \(P(Y|X)\) via the <a href=/posts/kbhbayes_theorem/>Bayes rule</a> and using the <a href=/posts/kbhnaive_bayes/#id-6cdf74a2-2451-47d1-8a62-62aa6dff62c6-naive-bayes-assumption>Naive Bayes assumption</a>. What if we can model the value of \(P(Y|X)\) directly?</p><p>With \(\sigma\) as the <a href=/posts/kbhsigmoid/>sigmoid</a> function:</p><p>\begin{equation}
+P(Y=1|X=x) = \sigma (\theta^{\top}x)
+\end{equation}</p><p>and we tune the parameters of \(\theta\) until this looks correct.</p><p>We always want to introduce a BIAS parameter, which acts as an offset; meaning the first \(x\) should always be \(1\), which makes the first value in \(\theta\) as a &ldquo;bias&rdquo;.</p><p>For optimizing this function, we have:</p><p>\begin{equation}
+LL(\theta) = y \log \sigma(\theta^{\top} x) + (1-y) \log (1- \theta^{\top} x)
+\end{equation}</p><p>and if we took the derivative w.r.t. a particular parameter slot \(\theta_{j}\):</p><p>\begin{equation}
+\pdv{LL(\theta)}{\theta_{j}} = \sum_{i=1}^{n} \qty[y^{(i)} - \sigma(\theta^{\top}x^{(i)})] x_{j}^{(i)}
+\end{equation}</p><h2 id=logistic-regression-assumption>logistic regression assumption</h2><p>We assume that there exists that there are some \(\theta\) which, when multiplied to the input and squashed by th <a href=/posts/kbhsigmoid/>sigmoid</a> function, can model our underlying <a href=/posts/kbhprobability/>probability</a> distribution:</p><p>\begin{equation}
+\begin{cases}
+P(Y=1|X=x) = \sigma (\theta^{\top}x) \\
+P(Y=0|X=x) = 1- \sigma (\theta^{\top}x) \\
+\end{cases}
+\end{equation}</p><p>We then attempt to compute a set of \(\theta\) which:</p><p>\begin{equation}
+\theta_{MLE} = \arg\max_{\theta} P(y^{(1)}, \dots, y^{(n)} | \theta, x_1 \dots x_{n})
+\end{equation}</p><h2 id=log-likelihood-of-logistic-regression>Log Likelihood of Logistic Regression</h2><p>To actually perform <a href=/posts/kbhmaximum_likelihood_parameter_learning/>MLE</a> for the $θ$s, we need to do <a href=/posts/kbhparameter_learning/>parameter learning</a>. Now, recall that we defined, though the <a href=#logistic-regression-assumption>logistic regression assumption</a>:</p><p>\begin{equation}
+P(Y=1|X=x) = \sigma (\theta^{\top}x)
+\end{equation}</p><p>essentially, this is a Bernouli:</p><p>\begin{equation}
+(Y|X=x) \sim Bern(p=\sigma(\theta^{\top}x))
+\end{equation}</p><p>We desire to maximize:</p><p>\begin{equation}
+P(Y=y | \theta, X=x)
+\end{equation}</p><p>Now, recall the continous <a href=/posts/kbhprobability_distributions/#probability-density-function>PDF</a> of Bernouli:</p><p>\begin{equation}
+P(Y=y) = p^{y} (1-p)^{1-y}
+\end{equation}</p><p>we now plug in our expression for \(p\):</p><p>\begin{equation}
+P(Y=y|X=x) = \sigma(\theta^{\top}x)^{y} (1-\sigma(\theta^{\top}x))^{1-y}
+\end{equation}</p><p>for all \(x,y\).</p><h2 id=logistic-regression-in-general>Logistic Regression, in general</h2><p>For some input, output pair, \((x,y)\), we map each input \(x^{(i)}\) into a vector of length \(n\) where \(x^{(i)}_{1} &mldr; x^{(i)}_{n}\).</p><h3 id=training>Training</h3><p>We are going to learn weights \(w\) and \(b\) using stochastic gradient descent; and measure our performance using cross-entropy loss</p><h3 id=test>Test</h3><p>Given a test example \(x\), we compute \(p(y|x)\) for each \(y\), returning the label with the highest probability.</p><h2 id=logistic-regression-text-classification>Logistic Regression Text Classification</h2><p>Given a series of input/output pairs of text to labels, we want to assign a predicted class to a new input fair.</p><p>We represent each text in terms of features. Each feature \(x_{i}\) comes with some weight \(w_{i}\), informing us of the importance of feature \(x_{i}\).</p><p>So: input is a vector \(x_1 &mldr; x_{n}\), and some weights \(w_1 &mldr; w_{n}\), which will eventually gives us an output.</p><p>There is usually also a bias term \(b\). Eventually, classification gives:</p><p>\begin{equation}
+z = w \cdot x + b
+\end{equation}</p><p>However, this does <strong>not</strong> give a probability, which by default this does not. To fix this, we apply a squishing function \(\sigma\), which gives</p><p>\begin{equation}
+\sigma(z) = \frac{1}{1+\exp(-z)}
+\end{equation}</p><p>which ultimately yields:</p><p>\begin{equation}
+z = \sigma(w \cdot x+ b)
+\end{equation}</p><p>with the <a href=/posts/kbhsigmoid/>sigmoid</a> function.</p><p>To make this sum to \(1\), we write:</p><p>\begin{equation}
+p(y=1|x) = \sigma(w \cdot x + b)
+\end{equation}</p><p>and</p><p>\begin{equation}
+p(y=0|x) = 1- p(y=1|x)
+\end{equation}</p><p>Also, recall that \(\sigma(-x) = 1- \sigma(x)\), this gives:</p><p>\begin{equation}
+p(y=0|x) = \sigma(-w\cdot x-b)
+\end{equation}</p><p>the probability at which point we make a decision is called a <a href=#logistic-regression-text-classification>decision boundary</a>. Typically this is 0.5.</p><p>We can featurize by counts from a lexicon, by word counts, etc.</p><p>For instance:</p><figure><img src=/ox-hugo/2024-01-26_19-26-16_screenshot.png></figure><h3 id=logistic-regression-terms>logistic regression terms</h3><ul><li><strong>feature representation</strong>: each input \(x\) is represented by a vectorized lit of feature</li><li><strong>classification function</strong>: \(p(y|x)\), computing \(y\) using the estimated class</li><li><strong>objective function</strong>: the loss to minimize (i.e. cross entropy)</li><li><strong>optimizer</strong>: SGD, etc.</li><li><strong>decision boundary</strong>: the threshold at which classification decisions are made, with \(P(y=1|x) > N\).</li></ul><h3 id=binary-cross-entropy>binary cross entropy</h3><p>\begin{equation}
+\mathcal{L} = - \qty[y \log \sigmoid(w \cdot x + b) + (1-y) \log (1- \sigmoid(w \cdot x + b))]
+\end{equation}</p><p>or, for neural networks in general:</p><p>\begin{equation}
+\mathcal{L} = - \qty[y \log \hat{y} + (1-y) \log (1- \hat{y})]
+\end{equation}</p><h3 id=weight-gradient-for-logistic-regresison>Weight gradient for logistic regresison</h3><p>\begin{equation}
+\pdv{L_{CE}(\hat(y), y)}{w_{j}} = \qty[\sigma\qty(w \cdot x + b) -y] x_{j}
+\end{equation}</p><p>where \(x_{j}\) is feature \(j\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

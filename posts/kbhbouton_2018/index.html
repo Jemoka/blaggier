@@ -1,0 +1,81 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Bouton 2018</title>
+<meta name=description content="(Bouton et al. 2018)
+One-Liner
+Uses the single-user avoidance POMDP formulation presented in (Bouton, Cosgun, and Kochenderfer 2017) to extend to multiple road users
+Novelty
+Uses Single-User Model of Road Navigation to extend general POMDP formulation into multi-pedestrian/multi road user casesroad user cases
+
+
+
+Previous Work
+Imagine worst-case scenario always: set upper bound and always imagine it; could cause gridlock if situation never resolves.
+Notable Methods
+Uses QMDP and SARSOP to perform optimization
+Single-User Model of Road Navigation
+See Single-User Model of Road Navigation"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Bouton 2018</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>(<a href=#citeproc_bib_item_2>Bouton et al. 2018</a>)</p><h2 id=one-liner>One-Liner</h2><p>Uses the single-user avoidance POMDP formulation presented in (<a href=#citeproc_bib_item_1>Bouton, Cosgun, and Kochenderfer 2017</a>) to extend to multiple road users</p><h2 id=novelty>Novelty</h2><p>Uses <a href=#single-user-model-of-road-navigation>Single-User Model of Road Navigation</a> to extend general <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a> formulation into multi-pedestrian/multi road user casesroad user cases</p><figure><img src=/ox-hugo/2024-01-11_09-18-05_screenshot.png></figure><h2 id=previous-work>Previous Work</h2><p>Imagine worst-case scenario always: set upper bound and always imagine it; could cause gridlock if situation never resolves.</p><h2 id=notable-methods>Notable Methods</h2><p>Uses <a href=/posts/kbhqmdp/>QMDP</a> and <a href=/posts/kbhsarsop/>SARSOP</a> to perform optimization</p><h3 id=single-user-model-of-road-navigation--orgea079d6><a href=#single-user-model-of-road-navigation>Single-User Model of Road Navigation</a></h3><p>See <a href=#single-user-model-of-road-navigation>Single-User Model of Road Navigation</a></p><h3 id=scaling-to-multiple-road-users>Scaling to multiple road users</h3><ul><li>make an aggregate utility which is a function across all the single-user avoidance strategies (i.e. the aggregate utiltiy of mulitlpe road user is the utility of avoiding each individual user) \(U^{*}(b,a) = f(U^{*}(b_1, a) &mldr; U^{*}(b_{n}, a)\). this is called <a href=/posts/kbhutility_fusion/>utility fusion</a></li><li>two possible approaches: either minimum of all the utilities, or the sum of them; the former is more risk averse (we want to hit no one), and latter treats each user is independent.</li><li>further, the number of users in the road is modeled by a belief</li></ul><h3 id=evaluation>Evaluation</h3><p>&ldquo;the evaluation models are different to find the optimal policy, and are also higher fidelity&rdquo;</p><p>We want to evaluate our <a href=/posts/kbhpartially_observable_markov_decision_process/>POMDP</a> on a higher fidelity model to check if the system can generalize to harder environments.</p><p>Baselines: random actions, or hand crafted rules-based policy.</p><h2 id=key-figs>Key Figs</h2><figure><img src=/ox-hugo/2024-01-09_13-00-53_screenshot.png></figure><figure><img src=/ox-hugo/2024-01-11_09-35-15_screenshot.png></figure><h2 id=new-concepts>New Concepts</h2><h3 id=single-user-model-of-road-navigation>Single-User Model of Road Navigation</h3><p>POMDP formulation; we only care about <strong>one road user</strong></p><ol><li>action: a finite set of change in acceleration -4m/s2, -2m/s2, 0m/s2, 2m/s2, 4m/s2</li><li>states and transitions: poses (position + velocity) of the car and the road user; position are velocities are discretized</li><li>observation: measured position and velocity of the one other road user with a pm 1 meter variance for crosswalks and pm 2 meter variance for intersection<ul><li>users in non-occluded area will always be detected</li><li>user in an occluded area will not be detected</li><li>position and velocity of road users are uncertain pm 1 meter and pm 1 meter / second</li></ul></li><li>belief: categorical distribution over states</li><li>dynamics: physics + kinematics for car; pedestrians have stochastic velocity</li><li>reward: unit reward for final position, tuned penalty for collision</li></ol><h2 id=notes>Notes</h2></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

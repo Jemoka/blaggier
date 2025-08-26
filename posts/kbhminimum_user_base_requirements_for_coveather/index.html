@@ -1,0 +1,226 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>minimum user base requirements for coveather</title>
+<meta name=description content="How many disturbance users can coveather take without crashing? Let&rsquo;s find out.
+Code
+Util function to mapreduce a list:
+def multiplyList(l) :
+    # Multiply elements one by one
+    result = 1
+    for x in l:
+         result = result * x
+    return result
+We first set a user count:
+N = var(&#34;N&#34;)
+
+# Pool size
+val_percent = var(&#34;val_percent&#34;)
+
+# Pools
+val_pool = N*val_percent
+user_pool = N*(1-val_percent)
+
+# Disturbance
+disturbance_percent = var(&#34;disturbance_percent&#34;)
+
+# Validation Pools + Disburbance
+val_disturbance_pool = disturbance_percent*val_pool
+val_normal_pool = (1-disturbance_percent)*val_pool
+# Chance of three or more disturbance attestors
+# which is equal to one minus chance of zero, one, or two disturbance attesors
+no_disturbance_attestor = (val_normal_pool/val_pool)*((val_normal_pool-1)/(val_pool-1))*((val_normal_pool-2)/(val_pool-2))*((val_normal_pool-3)/(val_pool-3))
+
+one_disturbance = []
+for disturbance_point in range(0,4):
+    res = []
+    res.append((val_disturbance_pool)/(val_pool-disturbance_point))
+    for pre_disturbance in range(0,disturbance_point):
+        res.append((val_normal_pool-pre_disturbance)/(val_pool-pre_disturbance))
+    for post_disturbance in range(disturbance_point+1,4):
+        res.append((val_normal_pool-post_disturbance)/(val_pool-post_disturbance))
+
+    one_disturbance.append(multiplyList(res))
+one_disturbance_attestor = sum(one_disturbance)
+
+two_disturbance = []
+for disturbance_point_i in range(0,4):
+    for disturbance_point_j in range(disturbance_point_i+1,4):
+        res = []
+        res.append((val_disturbance_pool)/(val_pool-disturbance_point_i))
+        res.append((val_disturbance_pool-1)/(val_pool-disturbance_point_j))
+
+        for pre_i_disturbance in range(0,disturbance_point_i):
+            res.append((val_normal_pool-pre_disturbance)/(val_pool-pre_disturbance))
+        for sandwich in range(disturbance_point_i+1,disturbance_point_j):
+            res.append((val_normal_pool-post_disturbance)/(val_pool-sandwich))
+        for post_j_disturbance in range(disturbance_point_j+1,4):
+            res.append((val_normal_pool-post_disturbance)/(val_pool-post_j_disturbance))
+
+        two_disturbance.append(multiplyList(res))
+two_disturbance_attestor = sum(two_disturbance)
+
+distubrance_chance(N, val_percent, disturbance_percent) = expand(1-(no_disturbance_attestor+one_disturbance_attestor+two_disturbance_attestor))
+
+# no_disturbance_attestor
+(N*(disturbance_percent - 1)*val_percent + 3)*(N*(disturbance_percent - 1)*val_percent + 2)*(N*(disturbance_percent - 1)*val_percent + 1)*(disturbance_percent - 1)/((N*val_percent - 1)*(N*val_percent - 2)*(N*val_percent - 3))
+z = var(&#34;z&#34;)
+val_dist(val_percent, disturbance_percent) = distubrance_chance(100, val_percent, disturbance_percent)
+implicit_plot3d(val_dist-z, (val_percent,0.1,1), (disturbance_percent, 0,1), (z, 0,1) ,frame=True,axes_labels=['Validation','Disturbance', 'Chance'],axes=False, color=(val_dist,colormaps.Blues))
+Launched html viewer for Graphics3d Object
+z = var(&#34;z&#34;)
+n_dist(N, disturbance_percent) = distubrance_chance(N, 0.1, disturbance_percent)
+show(implicit_plot3d(n_dist-z, (N,100,100000), (disturbance_percent, 0,1), (z, 0,1) ,frame=True,axes_labels=['N','Disturbance', 'Chance'],axes=False, color=(n_dist,colormaps.Blues)), aspect_ratio=[1,100000,100000], plot_points=100)
+Launched html viewer for Graphics3d Object
+n_dir(N) = distubrance_chance(N, 0.1, 0.1)
+# plot(n_dir, (N,100,100000),axes_labels=['N', 'Disturbance'], thickness=1)
+# solve(distubrance_chance(100, N, 0.1)==0.01, N, to_poly_solve=True)
+# implicit_plot(distubrance_chance(100, N, 0.1)==0.01, (N, 0,1), (z, 0,
+# solve(distubrance_chance(N, val_perc, 0.1)==0.01, val_perc, to_poly_solve=True)
+# implicit_plot(solve(distubrance_chance(N, val_perc, 0.1)==0.01, val_perc)[0])
+
+# val_perc = var(&#34;var_perc&#34;)
+show(implicit_plot(distubrance_chance(N, val_perc, 0.1)==0.01, (N, 15, 1000), (val_perc, 0,1), plot_points=300,axes_labels=['N','Val Ratio'],axes=False), aspect_ratio=800)
+
+# solve(distubrance_chance(800, val_perc, 0.1)==0.01, val_perc, to_poly_solve=True)
+</Users/houliu/.sage/temp/baboon.jemoka.com/64368/tmp_9bdcu2si.pn>"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>minimum user base requirements for coveather</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>How many disturbance users can <a href=/posts/kbhcoveather/>coveather</a> take without crashing? Let&rsquo;s find out.</p><h2 id=code>Code</h2><p>Util function to mapreduce a list:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#00a8c8>def</span> <span style=color:#75af00>multiplyList</span><span style=color:#111>(</span><span style=color:#111>l</span><span style=color:#111>)</span> <span style=color:#111>:</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># Multiply elements one by one</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>result</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>for</span> <span style=color:#111>x</span> <span style=color:#f92672>in</span> <span style=color:#111>l</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>         <span style=color:#111>result</span> <span style=color:#f92672>=</span> <span style=color:#111>result</span> <span style=color:#f92672>*</span> <span style=color:#111>x</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>return</span> <span style=color:#111>result</span>
+</span></span></code></pre></div><p>We first set a user count:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>N</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;N&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Pool size</span>
+</span></span><span style=display:flex><span><span style=color:#111>val_percent</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;val_percent&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Pools</span>
+</span></span><span style=display:flex><span><span style=color:#111>val_pool</span> <span style=color:#f92672>=</span> <span style=color:#111>N</span><span style=color:#f92672>*</span><span style=color:#111>val_percent</span>
+</span></span><span style=display:flex><span><span style=color:#111>user_pool</span> <span style=color:#f92672>=</span> <span style=color:#111>N</span><span style=color:#f92672>*</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>-</span><span style=color:#111>val_percent</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Disturbance</span>
+</span></span><span style=display:flex><span><span style=color:#111>disturbance_percent</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;disturbance_percent&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># Validation Pools + Disburbance</span>
+</span></span><span style=display:flex><span><span style=color:#111>val_disturbance_pool</span> <span style=color:#f92672>=</span> <span style=color:#111>disturbance_percent</span><span style=color:#f92672>*</span><span style=color:#111>val_pool</span>
+</span></span><span style=display:flex><span><span style=color:#111>val_normal_pool</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>-</span><span style=color:#111>disturbance_percent</span><span style=color:#111>)</span><span style=color:#f92672>*</span><span style=color:#111>val_pool</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#75715e># Chance of three or more disturbance attestors</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># which is equal to one minus chance of zero, one, or two disturbance attesors</span>
+</span></span><span style=display:flex><span><span style=color:#111>no_disturbance_attestor</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>/</span><span style=color:#111>val_pool</span><span style=color:#111>)</span><span style=color:#f92672>*</span><span style=color:#111>((</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>))</span><span style=color:#f92672>*</span><span style=color:#111>((</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>-</span><span style=color:#ae81ff>2</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#ae81ff>2</span><span style=color:#111>))</span><span style=color:#f92672>*</span><span style=color:#111>((</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>-</span><span style=color:#ae81ff>3</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#ae81ff>3</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>one_disturbance</span> <span style=color:#f92672>=</span> <span style=color:#111>[]</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>disturbance_point</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>4</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>res</span> <span style=color:#f92672>=</span> <span style=color:#111>[]</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>val_disturbance_pool</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#111>disturbance_point</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>for</span> <span style=color:#111>pre_disturbance</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#111>disturbance_point</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>-</span><span style=color:#111>pre_disturbance</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#111>pre_disturbance</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>for</span> <span style=color:#111>post_disturbance</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>disturbance_point</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>4</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>-</span><span style=color:#111>post_disturbance</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#111>post_disturbance</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#111>one_disturbance</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>multiplyList</span><span style=color:#111>(</span><span style=color:#111>res</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span><span style=color:#111>one_disturbance_attestor</span> <span style=color:#f92672>=</span> <span style=color:#111>sum</span><span style=color:#111>(</span><span style=color:#111>one_disturbance</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>two_disturbance</span> <span style=color:#f92672>=</span> <span style=color:#111>[]</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>disturbance_point_i</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>4</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>for</span> <span style=color:#111>disturbance_point_j</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>disturbance_point_i</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>4</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>res</span> <span style=color:#f92672>=</span> <span style=color:#111>[]</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>val_disturbance_pool</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#111>disturbance_point_i</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>val_disturbance_pool</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#111>disturbance_point_j</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>for</span> <span style=color:#111>pre_i_disturbance</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#111>disturbance_point_i</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>-</span><span style=color:#111>pre_disturbance</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#111>pre_disturbance</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>for</span> <span style=color:#111>sandwich</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>disturbance_point_i</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#111>disturbance_point_j</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>-</span><span style=color:#111>post_disturbance</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#111>sandwich</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>for</span> <span style=color:#111>post_j_disturbance</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>disturbance_point_j</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>4</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>val_normal_pool</span><span style=color:#f92672>-</span><span style=color:#111>post_disturbance</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>val_pool</span><span style=color:#f92672>-</span><span style=color:#111>post_j_disturbance</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#111>two_disturbance</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>(</span><span style=color:#111>multiplyList</span><span style=color:#111>(</span><span style=color:#111>res</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span><span style=color:#111>two_disturbance_attestor</span> <span style=color:#f92672>=</span> <span style=color:#111>sum</span><span style=color:#111>(</span><span style=color:#111>two_disturbance</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>distubrance_chance</span><span style=color:#111>(</span><span style=color:#111>N</span><span style=color:#111>,</span> <span style=color:#111>val_percent</span><span style=color:#111>,</span> <span style=color:#111>disturbance_percent</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>expand</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>-</span><span style=color:#111>(</span><span style=color:#111>no_disturbance_attestor</span><span style=color:#f92672>+</span><span style=color:#111>one_disturbance_attestor</span><span style=color:#f92672>+</span><span style=color:#111>two_disturbance_attestor</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># no_disturbance_attestor</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>(N*(disturbance_percent - 1)*val_percent + 3)*(N*(disturbance_percent - 1)*val_percent + 2)*(N*(disturbance_percent - 1)*val_percent + 1)*(disturbance_percent - 1)/((N*val_percent - 1)*(N*val_percent - 2)*(N*val_percent - 3))
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>z</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;z&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>val_dist</span><span style=color:#111>(</span><span style=color:#111>val_percent</span><span style=color:#111>,</span> <span style=color:#111>disturbance_percent</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>distubrance_chance</span><span style=color:#111>(</span><span style=color:#ae81ff>100</span><span style=color:#111>,</span> <span style=color:#111>val_percent</span><span style=color:#111>,</span> <span style=color:#111>disturbance_percent</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>implicit_plot3d</span><span style=color:#111>(</span><span style=color:#111>val_dist</span><span style=color:#f92672>-</span><span style=color:#111>z</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#111>val_percent</span><span style=color:#111>,</span><span style=color:#ae81ff>0.1</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>),</span> <span style=color:#111>(</span><span style=color:#111>disturbance_percent</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>),</span> <span style=color:#111>(</span><span style=color:#111>z</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span> <span style=color:#111>,</span><span style=color:#111>frame</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>,</span><span style=color:#111>axes_labels</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#39;Validation&#39;</span><span style=color:#111>,</span><span style=color:#d88200>&#39;Disturbance&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;Chance&#39;</span><span style=color:#111>],</span><span style=color:#111>axes</span><span style=color:#f92672>=</span><span style=color:#00a8c8>False</span><span style=color:#111>,</span> <span style=color:#111>color</span><span style=color:#f92672>=</span><span style=color:#111>(</span><span style=color:#111>val_dist</span><span style=color:#111>,</span><span style=color:#111>colormaps</span><span style=color:#f92672>.</span><span style=color:#111>Blues</span><span style=color:#111>))</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>Launched html viewer for Graphics3d Object
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>z</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;z&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>n_dist</span><span style=color:#111>(</span><span style=color:#111>N</span><span style=color:#111>,</span> <span style=color:#111>disturbance_percent</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>distubrance_chance</span><span style=color:#111>(</span><span style=color:#111>N</span><span style=color:#111>,</span> <span style=color:#ae81ff>0.1</span><span style=color:#111>,</span> <span style=color:#111>disturbance_percent</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>show</span><span style=color:#111>(</span><span style=color:#111>implicit_plot3d</span><span style=color:#111>(</span><span style=color:#111>n_dist</span><span style=color:#f92672>-</span><span style=color:#111>z</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#111>N</span><span style=color:#111>,</span><span style=color:#ae81ff>100</span><span style=color:#111>,</span><span style=color:#ae81ff>100000</span><span style=color:#111>),</span> <span style=color:#111>(</span><span style=color:#111>disturbance_percent</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>),</span> <span style=color:#111>(</span><span style=color:#111>z</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span> <span style=color:#111>,</span><span style=color:#111>frame</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>,</span><span style=color:#111>axes_labels</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#39;N&#39;</span><span style=color:#111>,</span><span style=color:#d88200>&#39;Disturbance&#39;</span><span style=color:#111>,</span> <span style=color:#d88200>&#39;Chance&#39;</span><span style=color:#111>],</span><span style=color:#111>axes</span><span style=color:#f92672>=</span><span style=color:#00a8c8>False</span><span style=color:#111>,</span> <span style=color:#111>color</span><span style=color:#f92672>=</span><span style=color:#111>(</span><span style=color:#111>n_dist</span><span style=color:#111>,</span><span style=color:#111>colormaps</span><span style=color:#f92672>.</span><span style=color:#111>Blues</span><span style=color:#111>)),</span> <span style=color:#111>aspect_ratio</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>100000</span><span style=color:#111>,</span><span style=color:#ae81ff>100000</span><span style=color:#111>],</span> <span style=color:#111>plot_points</span><span style=color:#f92672>=</span><span style=color:#ae81ff>100</span><span style=color:#111>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>Launched html viewer for Graphics3d Object
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>n_dir</span><span style=color:#111>(</span><span style=color:#111>N</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>distubrance_chance</span><span style=color:#111>(</span><span style=color:#111>N</span><span style=color:#111>,</span> <span style=color:#ae81ff>0.1</span><span style=color:#111>,</span> <span style=color:#ae81ff>0.1</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># plot(n_dir, (N,100,100000),axes_labels=[&#39;N&#39;, &#39;Disturbance&#39;], thickness=1)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># solve(distubrance_chance(100, N, 0.1)==0.01, N, to_poly_solve=True)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># implicit_plot(distubrance_chance(100, N, 0.1)==0.01, (N, 0,1), (z, 0,</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># solve(distubrance_chance(N, val_perc, 0.1)==0.01, val_perc, to_poly_solve=True)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># implicit_plot(solve(distubrance_chance(N, val_perc, 0.1)==0.01, val_perc)[0])</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># val_perc = var(&#34;var_perc&#34;)</span>
+</span></span><span style=display:flex><span><span style=color:#111>show</span><span style=color:#111>(</span><span style=color:#111>implicit_plot</span><span style=color:#111>(</span><span style=color:#111>distubrance_chance</span><span style=color:#111>(</span><span style=color:#111>N</span><span style=color:#111>,</span> <span style=color:#111>val_perc</span><span style=color:#111>,</span> <span style=color:#ae81ff>0.1</span><span style=color:#111>)</span><span style=color:#f92672>==</span><span style=color:#ae81ff>0.01</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#111>N</span><span style=color:#111>,</span> <span style=color:#ae81ff>15</span><span style=color:#111>,</span> <span style=color:#ae81ff>1000</span><span style=color:#111>),</span> <span style=color:#111>(</span><span style=color:#111>val_perc</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>),</span> <span style=color:#111>plot_points</span><span style=color:#f92672>=</span><span style=color:#ae81ff>300</span><span style=color:#111>,</span><span style=color:#111>axes_labels</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#39;N&#39;</span><span style=color:#111>,</span><span style=color:#d88200>&#39;Val Ratio&#39;</span><span style=color:#111>],</span><span style=color:#111>axes</span><span style=color:#f92672>=</span><span style=color:#00a8c8>False</span><span style=color:#111>),</span> <span style=color:#111>aspect_ratio</span><span style=color:#f92672>=</span><span style=color:#ae81ff>800</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># solve(distubrance_chance(800, val_perc, 0.1)==0.01, val_perc, to_poly_solve=True)</span>
+</span></span></code></pre></div><p>&lt;/Users/houliu/.sage/temp/baboon.jemoka.com/64368/tmp_9bdcu2si.pn></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

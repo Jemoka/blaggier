@@ -1,0 +1,299 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-ECON320 Currency Arbitrage</title>
+<meta name=description content='Let&rsquo;s import some tools.
+import pandas as pd
+from scipy.optimize import minimize
+import numpy as np
+from datetime import datetime
+from tqdm import tqdm
+import torch
+tqdm.pandas()
+And load our data:
+df = pd.read_csv("./currency_signal.csv", index_col=0, header=None, parse_dates=[0])
+df
+Let&rsquo;s rename the headers
+df.index.rename("date", True)
+df.columns = ["value"]
+Awesome. For the rest of the calculations, we will hide the 2020 data from the model:
+data = df[df.index < datetime(2020, 1,1)]
+data
+               value
+date
+2006-03-01  0.000050
+2006-03-02  0.001778
+2006-03-03  0.000116
+2006-03-06 -0.001038
+2006-03-07 -0.001197
+...              ...
+2019-12-25 -0.010659
+2019-12-26 -0.000869
+2019-12-27  0.000075
+2019-12-30  0.000033
+2019-12-31  0.000944
+
+[3610 rows x 1 columns]
+we will add a column of randomness to this, to serve as the seed of our epsilon:'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-ECON320 Currency Arbitrage</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><main><article><div style=max-width:700px><p>Let&rsquo;s import some tools.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>pandas</span> <span style=color:#00a8c8>as</span> <span style=color:#111>pd</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>scipy.optimize</span> <span style=color:#f92672>import</span> <span style=color:#111>minimize</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>numpy</span> <span style=color:#00a8c8>as</span> <span style=color:#111>np</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>datetime</span> <span style=color:#f92672>import</span> <span style=color:#111>datetime</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>tqdm</span> <span style=color:#f92672>import</span> <span style=color:#111>tqdm</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>torch</span>
+</span></span><span style=display:flex><span><span style=color:#111>tqdm</span><span style=color:#f92672>.</span><span style=color:#111>pandas</span><span style=color:#111>()</span>
+</span></span></code></pre></div><p>And load our data:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>df</span> <span style=color:#f92672>=</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>read_csv</span><span style=color:#111>(</span><span style=color:#d88200>&#34;./currency_signal.csv&#34;</span><span style=color:#111>,</span> <span style=color:#111>index_col</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#111>header</span><span style=color:#f92672>=</span><span style=color:#00a8c8>None</span><span style=color:#111>,</span> <span style=color:#111>parse_dates</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>])</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span>
+</span></span></code></pre></div><p>Let&rsquo;s rename the headers</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>index</span><span style=color:#f92672>.</span><span style=color:#111>rename</span><span style=color:#111>(</span><span style=color:#d88200>&#34;date&#34;</span><span style=color:#111>,</span> <span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>columns</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;value&#34;</span><span style=color:#111>]</span>
+</span></span></code></pre></div><p>Awesome. For the rest of the calculations, we will hide the 2020 data from the model:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>data</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#111>[</span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>index</span> <span style=color:#f92672>&lt;</span> <span style=color:#111>datetime</span><span style=color:#111>(</span><span style=color:#ae81ff>2020</span><span style=color:#111>,</span> <span style=color:#ae81ff>1</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>)]</span>
+</span></span><span style=display:flex><span><span style=color:#111>data</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>               value
+</span></span><span style=display:flex><span>date
+</span></span><span style=display:flex><span>2006-03-01  0.000050
+</span></span><span style=display:flex><span>2006-03-02  0.001778
+</span></span><span style=display:flex><span>2006-03-03  0.000116
+</span></span><span style=display:flex><span>2006-03-06 -0.001038
+</span></span><span style=display:flex><span>2006-03-07 -0.001197
+</span></span><span style=display:flex><span>...              ...
+</span></span><span style=display:flex><span>2019-12-25 -0.010659
+</span></span><span style=display:flex><span>2019-12-26 -0.000869
+</span></span><span style=display:flex><span>2019-12-27  0.000075
+</span></span><span style=display:flex><span>2019-12-30  0.000033
+</span></span><span style=display:flex><span>2019-12-31  0.000944
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[3610 rows x 1 columns]
+</span></span></code></pre></div><p>we will add a column of randomness to this, to serve as the seed of our epsilon:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>data</span><span style=color:#111>[</span><span style=color:#d88200>&#34;epsilon&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>np</span><span style=color:#f92672>.</span><span style=color:#111>random</span><span style=color:#f92672>.</span><span style=color:#111>normal</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>shape</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>])</span>
+</span></span><span style=display:flex><span><span style=color:#111>data</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>               value   epsilon
+</span></span><span style=display:flex><span>date
+</span></span><span style=display:flex><span>2006-03-01  0.000050 -0.255699
+</span></span><span style=display:flex><span>2006-03-02  0.001778  0.157341
+</span></span><span style=display:flex><span>2006-03-03  0.000116  0.574378
+</span></span><span style=display:flex><span>2006-03-06 -0.001038 -1.319365
+</span></span><span style=display:flex><span>2006-03-07 -0.001197 -0.717148
+</span></span><span style=display:flex><span>...              ...       ...
+</span></span><span style=display:flex><span>2019-12-25 -0.010659  0.153559
+</span></span><span style=display:flex><span>2019-12-26 -0.000869 -1.066562
+</span></span><span style=display:flex><span>2019-12-27  0.000075  0.025730
+</span></span><span style=display:flex><span>2019-12-30  0.000033  0.760713
+</span></span><span style=display:flex><span>2019-12-31  0.000944 -0.427494
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[3610 rows x 2 columns]
+</span></span></code></pre></div><p>Awesome, we will now seed three parameter variables. Recall that the GARCH model we are dealing with is:</p><p>\begin{equation}
+\begin{cases}
+\eta_t = \sigma_{t}\epsilon_{t} \\
+{\sigma_{t}}^{2} = \alpha {\eta_{t}}^{2} + \beta {\sigma_{t-1}}^{2} + \gamma
+\end{cases}
+\end{equation}</p><p>Solving for explicit solutions of \(n_t\) and \(\sigma_t\), in terms of the others using computer algebra, we have:</p><p>\begin{equation}
+\sigma_{t}^{2} = -\frac{\beta \mathit{\sigma_{t-1}}^{2} + y}{\alpha \epsilon^{2} - 1}
+\end{equation}</p><p>The value of \(\eta_t\) is naturally \(\sigma_t \epsilon_t\) (i.e. \(\eta^{2} = (\sigma_{t})^{2}(\epsilon_{t})^{2}\)).</p><p>So, to make the squared results, we want to square both value and epsilon:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>data</span><span style=color:#111>[</span><span style=color:#d88200>&#34;value2&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>value</span><span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span><span style=color:#111>data</span><span style=color:#111>[</span><span style=color:#d88200>&#34;epsilon2&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>data</span><span style=color:#f92672>.</span><span style=color:#111>epsilon</span><span style=color:#f92672>**</span><span style=color:#ae81ff>2</span>
+</span></span><span style=display:flex><span><span style=color:#111>data</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>               value   epsilon        value2  epsilon2
+</span></span><span style=display:flex><span>date
+</span></span><span style=display:flex><span>2006-03-01  0.000050 -0.255699  2.450633e-09  0.065382
+</span></span><span style=display:flex><span>2006-03-02  0.001778  0.157341  3.162006e-06  0.024756
+</span></span><span style=display:flex><span>2006-03-03  0.000116  0.574378  1.334210e-08  0.329910
+</span></span><span style=display:flex><span>2006-03-06 -0.001038 -1.319365  1.076978e-06  1.740723
+</span></span><span style=display:flex><span>2006-03-07 -0.001197 -0.717148  1.432477e-06  0.514301
+</span></span><span style=display:flex><span>...              ...       ...           ...       ...
+</span></span><span style=display:flex><span>2019-12-25 -0.010659  0.153559  1.136119e-04  0.023580
+</span></span><span style=display:flex><span>2019-12-26 -0.000869 -1.066562  7.549935e-07  1.137555
+</span></span><span style=display:flex><span>2019-12-27  0.000075  0.025730  5.670657e-09  0.000662
+</span></span><span style=display:flex><span>2019-12-30  0.000033  0.760713  1.083948e-09  0.578684
+</span></span><span style=display:flex><span>2019-12-31  0.000944 -0.427494  8.913486e-07  0.182751
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[3610 rows x 4 columns]
+</span></span></code></pre></div><p>Now, we can now compute a column of these, based on the data we have. To be able to optimize this symbolically, we will leverage PyTorch.</p><p>Let&rsquo;s seed these constants all at \(1\), to be optimized later:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>a</span> <span style=color:#f92672>=</span> <span style=color:#111>torch</span><span style=color:#f92672>.</span><span style=color:#111>tensor</span><span style=color:#111>(</span><span style=color:#ae81ff>1e-10</span><span style=color:#111>,</span> <span style=color:#111>requires_grad</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>b</span> <span style=color:#f92672>=</span> <span style=color:#111>torch</span><span style=color:#f92672>.</span><span style=color:#111>tensor</span><span style=color:#111>(</span><span style=color:#ae81ff>1e-10</span><span style=color:#111>,</span> <span style=color:#111>requires_grad</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#111>torch</span><span style=color:#f92672>.</span><span style=color:#111>tensor</span><span style=color:#111>(</span><span style=color:#ae81ff>1e-10</span><span style=color:#111>,</span> <span style=color:#111>requires_grad</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>b</span><span style=color:#111>,</span><span style=color:#111>y</span><span style=color:#111>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>(tensor(1.0000e-10, requires_grad=True), tensor(1.0000e-10, requires_grad=True), tensor(1.0000e-10, requires_grad=True))
+</span></span></code></pre></div><p>We use the complex data type here to make the subtract operation work. We will eventually project it down to real space without much trouble.</p><p>Awesome, let us compute this series of \(\sigma\), and optimize for the loss.</p><p>Here is a gradient descent optimizer:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># we will use the gradient descent scheme</span>
+</span></span><span style=display:flex><span><span style=color:#111>optimizer</span> <span style=color:#f92672>=</span> <span style=color:#111>torch</span><span style=color:#f92672>.</span><span style=color:#111>optim</span><span style=color:#f92672>.</span><span style=color:#111>SGD</span><span style=color:#111>([</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>b</span><span style=color:#111>,</span><span style=color:#111>y</span><span style=color:#111>],</span> <span style=color:#111>lr</span><span style=color:#f92672>=</span><span style=color:#ae81ff>3e-3</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>optimizer</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>SGD (
+</span></span><span style=display:flex><span>Parameter Group 0
+</span></span><span style=display:flex><span>    dampening: 0
+</span></span><span style=display:flex><span>    differentiable: False
+</span></span><span style=display:flex><span>    foreach: None
+</span></span><span style=display:flex><span>    lr: 0.003
+</span></span><span style=display:flex><span>    maximize: False
+</span></span><span style=display:flex><span>    momentum: 0
+</span></span><span style=display:flex><span>    nesterov: False
+</span></span><span style=display:flex><span>    weight_decay: 0
+</span></span><span style=display:flex><span>)
+</span></span></code></pre></div><p>And now, for 1000 steps, we will minimize the difference between the computed \(n\) and actual value against \(\alpha, \beta, \gamma\). We will run the scheme for 50 steps.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>_</span> <span style=color:#f92672>in</span> <span style=color:#111>tqdm</span><span style=color:#111>(</span><span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>500</span><span style=color:#111>)):</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>prev_sigma_2</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># # for each row</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>len</span><span style=color:#111>(</span><span style=color:#111>data</span><span style=color:#111>)):</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># get previous value, or seed at 0</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># if it doesn&#39;t exist</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>sigma_2</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#f92672>-</span><span style=color:#111>(</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>prev_sigma_2</span><span style=color:#f92672>+</span><span style=color:#111>y</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#f92672>*</span><span style=color:#111>data</span><span style=color:#111>[</span><span style=color:#d88200>&#34;epsilon2&#34;</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>iloc</span><span style=color:#111>[</span><span style=color:#111>i</span><span style=color:#111>]</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>n_2</span> <span style=color:#f92672>=</span> <span style=color:#111>sigma_2</span><span style=color:#f92672>*</span><span style=color:#111>data</span><span style=color:#111>[</span><span style=color:#d88200>&#34;epsilon2&#34;</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>iloc</span><span style=color:#111>[</span><span style=color:#111>i</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>((</span><span style=color:#111>n_2</span><span style=color:#f92672>-</span><span style=color:#111>data</span><span style=color:#111>[</span><span style=color:#d88200>&#34;value2&#34;</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>iloc</span><span style=color:#111>[</span><span style=color:#111>i</span><span style=color:#111>])</span><span style=color:#f92672>**</span><span style=color:#ae81ff>2</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>backward</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>prev_sigma_2</span> <span style=color:#f92672>=</span> <span style=color:#111>sigma_2</span><span style=color:#f92672>.</span><span style=color:#111>detach</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>optimizer</span><span style=color:#f92672>.</span><span style=color:#111>step</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>optimizer</span><span style=color:#f92672>.</span><span style=color:#111>zero_grad</span><span style=color:#111>()</span>
+</span></span></code></pre></div><p>Awesome, now, let&rsquo;s see the fitted results:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>b</span><span style=color:#111>,</span><span style=color:#111>y</span><span style=color:#111>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>(tensor(611584.9375, requires_grad=True), tensor(37750.6133, requires_grad=True), tensor(-26.5902, requires_grad=True))
+</span></span></code></pre></div><p>We will now work to validate these results in the entire dataset.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>data_val</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>copy</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span><span style=color:#111>data_val</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>               value
+</span></span><span style=display:flex><span>date
+</span></span><span style=display:flex><span>2006-03-01  0.000050
+</span></span><span style=display:flex><span>2006-03-02  0.001778
+</span></span><span style=display:flex><span>2006-03-03  0.000116
+</span></span><span style=display:flex><span>2006-03-06 -0.001038
+</span></span><span style=display:flex><span>2006-03-07 -0.001197
+</span></span><span style=display:flex><span>...              ...
+</span></span><span style=display:flex><span>2020-05-18  0.000264
+</span></span><span style=display:flex><span>2020-05-19  0.001434
+</span></span><span style=display:flex><span>2020-05-20  0.000995
+</span></span><span style=display:flex><span>2020-05-21  0.000120
+</span></span><span style=display:flex><span>2020-05-22  0.000424
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[3713 rows x 1 columns]
+</span></span></code></pre></div><p>Now, we will use these values to compute the variance and the predicted variance on the data.</p><p>Recall that:</p><p>\begin{equation}
+\sigma_{t}^{2} = -\frac{\beta \mathit{\sigma_{t-1}}^{2} + y}{\alpha \epsilon^{2} - 1}
+\end{equation}</p><p>So:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>data_val</span><span style=color:#111>[</span><span style=color:#d88200>&#34;epsilon&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>np</span><span style=color:#f92672>.</span><span style=color:#111>random</span><span style=color:#f92672>.</span><span style=color:#111>normal</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#111>data_val</span><span style=color:#f92672>.</span><span style=color:#111>shape</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>])</span>
+</span></span><span style=display:flex><span><span style=color:#111>data_val</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>               value   epsilon
+</span></span><span style=display:flex><span>date
+</span></span><span style=display:flex><span>2006-03-01  0.000050  0.018859
+</span></span><span style=display:flex><span>2006-03-02  0.001778  1.943619
+</span></span><span style=display:flex><span>2006-03-03  0.000116  0.397312
+</span></span><span style=display:flex><span>2006-03-06 -0.001038  1.025379
+</span></span><span style=display:flex><span>2006-03-07 -0.001197  0.081920
+</span></span><span style=display:flex><span>...              ...       ...
+</span></span><span style=display:flex><span>2020-05-18  0.000264 -0.976598
+</span></span><span style=display:flex><span>2020-05-19  0.001434 -0.357048
+</span></span><span style=display:flex><span>2020-05-20  0.000995 -1.230387
+</span></span><span style=display:flex><span>2020-05-21  0.000120  0.972614
+</span></span><span style=display:flex><span>2020-05-22  0.000424 -0.199802
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[3713 rows x 2 columns]
+</span></span></code></pre></div><p>Now, we will generate a column of sigma squared</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>i</span><span style=color:#111>,</span> <span style=color:#111>date</span> <span style=color:#f92672>in</span> <span style=color:#111>enumerate</span><span style=color:#111>(</span><span style=color:#111>data_val</span><span style=color:#f92672>.</span><span style=color:#111>index</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>prev_sigma_2</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>sigma_2</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#f92672>-</span><span style=color:#111>(</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>prev_sigma_2</span><span style=color:#f92672>+</span><span style=color:#111>y</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#f92672>*</span><span style=color:#111>(</span><span style=color:#111>data_val</span><span style=color:#111>[</span><span style=color:#d88200>&#34;epsilon&#34;</span><span style=color:#111>]</span><span style=color:#f92672>**</span><span style=color:#ae81ff>2</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>iloc</span><span style=color:#111>[</span><span style=color:#111>i</span><span style=color:#111>]</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>))</span><span style=color:#f92672>.</span><span style=color:#111>detach</span><span style=color:#111>()</span><span style=color:#f92672>.</span><span style=color:#111>numpy</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># get previous value, or seed at 0</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># if it doesn&#39;t exist</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>data_val</span><span style=color:#f92672>.</span><span style=color:#111>loc</span><span style=color:#111>[</span><span style=color:#111>date</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;sigma&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>sigma_2</span><span style=color:#f92672>**</span><span style=color:#ae81ff>0.5</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>prev_sigma_2</span> <span style=color:#f92672>=</span> <span style=color:#111>sigma_2</span>
+</span></span><span style=display:flex><span><span style=color:#111>data_val</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>               value   epsilon     sigma
+</span></span><span style=display:flex><span>date
+</span></span><span style=display:flex><span>2006-03-01  0.000050  0.018859  0.350442
+</span></span><span style=display:flex><span>2006-03-02  0.001778  1.943619  0.003393
+</span></span><span style=display:flex><span>2006-03-03  0.000116  0.397312  0.016596
+</span></span><span style=display:flex><span>2006-03-06 -0.001038  1.025379  0.006431
+</span></span><span style=display:flex><span>2006-03-07 -0.001197  0.081920  0.080500
+</span></span><span style=display:flex><span>...              ...       ...       ...
+</span></span><span style=display:flex><span>2020-05-18  0.000264 -0.976598  0.006752
+</span></span><span style=display:flex><span>2020-05-19  0.001434 -0.357048  0.018468
+</span></span><span style=display:flex><span>2020-05-20  0.000995 -1.230387  0.005359
+</span></span><span style=display:flex><span>2020-05-21  0.000120  0.972614  0.006779
+</span></span><span style=display:flex><span>2020-05-22  0.000424 -0.199802  0.033002
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[3713 rows x 3 columns]
+</span></span></code></pre></div><p>And finally, let us generate the eta column:</p><p>Recall that \(\eta_t = \sigma_{t}\epsilon_{t}\), so:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>data_val</span><span style=color:#111>[</span><span style=color:#d88200>&#34;eta&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>data_val</span><span style=color:#f92672>.</span><span style=color:#111>sigma</span> <span style=color:#f92672>*</span> <span style=color:#111>data_val</span><span style=color:#f92672>.</span><span style=color:#111>epsilon</span>
+</span></span><span style=display:flex><span><span style=color:#111>data_val</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>               value   epsilon     sigma       eta
+</span></span><span style=display:flex><span>date
+</span></span><span style=display:flex><span>2006-03-01  0.000050  0.018859  0.350442  0.006609
+</span></span><span style=display:flex><span>2006-03-02  0.001778  1.943619  0.003393  0.006594
+</span></span><span style=display:flex><span>2006-03-03  0.000116  0.397312  0.016596  0.006594
+</span></span><span style=display:flex><span>2006-03-06 -0.001038  1.025379  0.006431  0.006594
+</span></span><span style=display:flex><span>2006-03-07 -0.001197  0.081920  0.080500  0.006595
+</span></span><span style=display:flex><span>...              ...       ...       ...       ...
+</span></span><span style=display:flex><span>2020-05-18  0.000264 -0.976598  0.006752 -0.006594
+</span></span><span style=display:flex><span>2020-05-19  0.001434 -0.357048  0.018468 -0.006594
+</span></span><span style=display:flex><span>2020-05-20  0.000995 -1.230387  0.005359 -0.006594
+</span></span><span style=display:flex><span>2020-05-21  0.000120  0.972614  0.006779  0.006594
+</span></span><span style=display:flex><span>2020-05-22  0.000424 -0.199802  0.033002 -0.006594
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[3713 rows x 4 columns]
+</span></span></code></pre></div><p>And finally, let us compute the log loss:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>data_val</span><span style=color:#111>[</span><span style=color:#d88200>&#34;loss&#34;</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#111>data_val</span><span style=color:#f92672>.</span><span style=color:#111>eta</span><span style=color:#f92672>-</span><span style=color:#111>data_val</span><span style=color:#f92672>.</span><span style=color:#111>value</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>abs</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span><span style=color:#111>data_val</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>               value   epsilon     sigma       eta      loss
+</span></span><span style=display:flex><span>date
+</span></span><span style=display:flex><span>2006-03-01  0.000050  0.018859  0.350442  0.006609  0.006559
+</span></span><span style=display:flex><span>2006-03-02  0.001778  1.943619  0.003393  0.006594  0.004816
+</span></span><span style=display:flex><span>2006-03-03  0.000116  0.397312  0.016596  0.006594  0.006478
+</span></span><span style=display:flex><span>2006-03-06 -0.001038  1.025379  0.006431  0.006594  0.007632
+</span></span><span style=display:flex><span>2006-03-07 -0.001197  0.081920  0.080500  0.006595  0.007791
+</span></span><span style=display:flex><span>...              ...       ...       ...       ...       ...
+</span></span><span style=display:flex><span>2020-05-18  0.000264 -0.976598  0.006752 -0.006594  0.006857
+</span></span><span style=display:flex><span>2020-05-19  0.001434 -0.357048  0.018468 -0.006594  0.008028
+</span></span><span style=display:flex><span>2020-05-20  0.000995 -1.230387  0.005359 -0.006594  0.007589
+</span></span><span style=display:flex><span>2020-05-21  0.000120  0.972614  0.006779  0.006594  0.006474
+</span></span><span style=display:flex><span>2020-05-22  0.000424 -0.199802  0.033002 -0.006594  0.007018
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[3713 rows x 5 columns]
+</span></span></code></pre></div><p>Saving the data:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>data_val</span><span style=color:#f92672>.</span><span style=color:#111>to_csv</span><span style=color:#111>(</span><span style=color:#d88200>&#34;currency_arbitrage.csv&#34;</span><span style=color:#111>)</span>
+</span></span></code></pre></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

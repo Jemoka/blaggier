@@ -1,0 +1,127 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS361 APR182024</title>
+<meta name=description content="constraint
+recall constraint; our general constraints means that we can select \(f\) within a feasible set \(x \in \mathcal{X}\).
+active constraint
+an &ldquo;active constraint&rdquo; is a constraint which, upon application, changes the solution to be different than the non-constrainted solution. This is always true at the equality constraint, and not necessarily with inequality constraints.
+types of constraints
+We can write all types of optimization problems into two types of constraints; we will use these conventions EXACTLY:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS361 APR182024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=constraint--kbhsu-cs361-apr022024-dot-md><a href=/posts/kbhsu_cs361_apr022024/#constraint>constraint</a></h2><p>recall <a href=/posts/kbhsu_cs361_apr022024/#constraint>constraint</a>; our general constraints means that we can select \(f\) within a <a href=/posts/kbhsu_cs361_apr022024/#formal-formulation-of-optimization>feasible set</a> \(x \in \mathcal{X}\).</p><h2 id=active-constraint>active constraint</h2><p>an &ldquo;<a href=#active-constraint>active constraint</a>&rdquo; is a constraint which, upon application, changes the solution to be different than the non-constrainted solution. This is always true at the equality constraint, and not necessarily with inequality constraints.</p><h2 id=types-of-constraints>types of constraints</h2><p>We can write all types of optimization problems into two types of constraints; we will use these conventions EXACTLY:</p><h3 id=equality>equality</h3><p>situations where:</p><p>\begin{equation}
+h(\bold{x}) = 0
+\end{equation}</p><p>&ldquo;some transformation on \(x\) must result in \(0\)&rdquo;</p><p>we can transform all constraints to this type trivially:</p><p>\begin{equation}
+h(x) = \bold{1}\qty(x \not\in \mathcal{X}) = 0
+\end{equation}</p><h3 id=inequality>inequality</h3><p>situations where:</p><p>\begin{equation}
+g(\bold{x}) \leq 0
+\end{equation}</p><p>&ldquo;some transformation on \(x\) must be non-positive&rdquo;</p><h2 id=region-based-constraints>region-based constraints</h2><p>if we want \(x \in [a,b]\), we can transform this into an unconstrained optimization problem by substituting the rescaled version into the input:</p><p>\begin{equation}
+x\qty(\hat{x}) = \frac{b+a}{2} + \frac{b-a}{2} \qty( \frac{2 \hat{x}}{1+ \hat{x}^{2}})
+\end{equation}</p><p>you can choose any transformation that keeps you into the you can choose any transformation that keeps you into the you can choose any transformation that keeps you into the you can choose any transformation that keeps you into the feasible set (say, sigmoid).</p><h2 id=lagrange-multiplier>Lagrange multiplier</h2><p>&ldquo;the gradient of the objective function has to be perpendicular to the gradient of the constraints&rdquo;</p><h3 id=for-equality-constraints>For Equality constraints</h3><p>Assume we only have an equality constraint:</p><p>\begin{align}
+\min_{x}&\ f(x)\\
+s.t.&\ h(x) = 0
+\end{align}</p><p>We are going to create a <a href=/posts/kbhlagrangian_mechanics/>Lagrangian</a> of this system:</p><p>\begin{equation}
+\mathcal{L}(x, \lambda) = f(x) - \lambda h(x)
+\end{equation}</p><p>Setting the gradient of this to \(0\):</p><p>\begin{equation}
+\nabla \mathcal{L} = 0 = f&rsquo;(x) - \lambda h&rsquo;(x)
+\end{equation}</p><p>meaning:</p><p>\begin{equation}
+f&rsquo;(x) = \lambda h&rsquo;(x)
+\end{equation}</p><p>We can now also recall that \(h(x) = 0\). We now have a system:</p><p>\begin{equation}
+\begin{cases}
+f&rsquo;(x) = \lambda h&rsquo;(x) \\
+h(x) = 0
+\end{cases}
+\end{equation}</p><p>We can go now to solve for \(x, \lambda\).</p><h3 id=for-inequality-constraints>For Inequality constraints</h3><p>\begin{align}
+\min_{x}&\ f(x)\\
+s.t.&\ g(x) \leq 0
+\end{align}</p><p>We have (we switched the signs, but it doesn&rsquo;t matter):</p><p>\begin{equation}
+\mathcal{L}(x, \mu) = f(x) + \mu g(x)
+\end{equation}</p><h3 id=combined>Combined</h3><p>\begin{equation}
+\mathcal{L}(x, \mu, \lambda) = f(x) + \mu g(x) + \lambda h(x)
+\end{equation}</p><h3 id=infinite-step-function>Infinite step function</h3><p>We now formulate this such that boundaries outside of the constraints is infinitely large; recall that our constraint have \(g(x) \leq 0\). Meaning:</p><p>\begin{equation}
+f_{\infty} = \max_{\mu \geq 0} \mathcal{L}(x, \mu) = \max_{\mu \geq 0} \qty(f(x) + \mu g(x))
+\end{equation}</p><p>this uses the fact that, at feasible \(g\) (i.e. non-positive \(g\)), the most optimal choice of \(\mu\) is \(0\), whereas at non-feasible \(g\), the optimal is \(\mu \to \infty\).</p><p>Meaning, our problem becomes:</p><h3 id=primal-problem>primal problem</h3><p>\begin{equation}
+\min_{x} \max_{\mu \geq 0, \lambda} \mathcal{L}(x,\mu, \lambda)
+\end{equation}</p><h4 id=kkt-conditions>KKT Conditions</h4><ul><li><p>feasibility</p><p>\begin{equation}
+\begin{cases}
+g(x^{*}) \leq 0 \\
+h(x^{*}) = 0
+\end{cases}
+\end{equation}</p></li></ul><ul><li><p>dual feasibility</p><p>\begin{equation}
+\mu \geq 0
+\end{equation}</p></li></ul><ul><li><p>complementary slackness</p><p>\begin{equation}
+u \cdot g = 0
+\end{equation}</p></li></ul><ul><li><p>stationarity</p><p>objective function is tangent to each constraint</p><p>\begin{equation}
+\nabla f(x) + \mu \nabla g(x) + \lambda \nabla h(x) = 0
+\end{equation}</p></li></ul><h4 id=dual-form-of-the-primal-problem>dual form of the primal problem</h4><p>we can incorporate our active constraint term to write:</p><p>\begin{equation}
+\mathcal{L}(x, \mu, \lambda) = f(x) + \mu \cdot g(x) + \lambda \cdot h(x)
+\end{equation}</p><p>by the same principle above, we can write:</p><p>\begin{equation}
+\min_{x} \max_{\mu \geq 0, \lambda} \mathcal{L}(x,\mu, \lambda)
+\end{equation}</p><p>we now write the DUAL of this function:</p><p>\begin{equation}
+\mathcal{D} = \max_{\mu \geq 0, \lambda} \min_{x} \mathcal{L}(x,\mu, \lambda)
+\end{equation}</p><p>by the <a href=#min-max-duality-theorem>min-max duality theorem</a>, we now that solutions to this will bound the actual primal problem. The difference between \(\mathcal{D}\) and the primal problem is called the <a href=#dual-form-of-the-primal-problem>duality gap</a>.</p><ul><li><p>min-max duality theorem</p><p>\begin{align}
+\max_{a} \min_{b} f(a,b) \leq \min_{b} \max_{a} f(a,b)
+\end{align}</p><p>for any function \(f(a,b)\). Therefore, the solution to the dual problem is a <strong>lower bound</strong> to the primal solution.</p></li></ul><h2 id=penalty-methods>Penalty Methods</h2><p>We use these methods if we are outside of the <a href=#kkt-conditions>KKT Conditions</a>, which will bring us into those conditinos. We can use the <a href=#lagrange-multiplier>Lagrange multiplier</a> conditions to reshape a constrained problem into a unconstrained one to satisfy the <a href=#kkt-conditions>KKT Conditions</a>.</p><p>count penalty, quadratic penalty, and mixed penalty.</p><p>We just write it:</p><p>\begin{equation}
+\min_{x} f(x) + \rho p
+\end{equation}</p><p>where \(p\) comes from</p><figure><img src=/ox-hugo/2024-04-18_09-59-29_screenshot.png></figure><p>over time for solving the function, we slowly rachet up \(\rho\) until \(\rho \to \infty\) until we reach it as a hard limit.</p><h2 id=interior-point-method>Interior Point Method</h2><p>if we are within the feasible set already, we can do these to prevent us form getting out:</p><figure><img src=/ox-hugo/2024-04-18_10-01-44_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,198 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>singular value decomposition</title>
+<meta name=description content="Singular value decomposition is a factorization of a matrix, which is a generalization of the eigendecomposition of normal matricies (i.e. where \(A = V^{-1} D V\) when \(A\) is diagonalizable, i.e. by the spectral theorem possible when matricies are normal).
+Definitions
+Singular value decomposition Every \(m \times n\) matrix has a factorization of the form:
+\begin{equation}
+M = U D^{\frac{1}{2}} V^{*}
+\end{equation}
+where, \(U\) is an unitary matrix, \(D^{\frac{1}{2}}\) a diagonalish (i.e. rectangular diagonal) matrix with non-negative numbers on its diagonal called singular values, which are the positive square roots of eigenvalues of \(M^{* }M\) &mdash; meaning the diagonal of \(D^{\frac{1}{2}}\) is non-negative (\(\geq 0\)). Finally, \(V\) is formed columns of orthonormal bases of eigenvectors of \(M^{*}M\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>singular value decomposition</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhsingular_value_decomposition/>Singular value decomposition</a> is a factorization of a <a href=/posts/kbhmatricies/>matrix</a>, which is a generalization of the <a href=/posts/kbhnus_math530_similar_to_diagonal/>eigendecomposition</a> of <a href=/posts/kbhaxler_7_a/#normal>normal</a> <a href=/posts/kbhmatricies/>matricies</a> (i.e. where \(A = V^{-1} D V\) when \(A\) is <a href=/posts/kbhdiagonal_matrix/#properties-of-diagonal-matrices>diagonalizable</a>, i.e. by the <a href=/posts/kbhaxler_7_a/#complex-spectral-theorem>spectral theorem</a> possible when matricies are <a href=/posts/kbhaxler_7_a/#normal>normal</a>).</p><h2 id=definitions>Definitions</h2><p><strong>Singular value decomposition</strong> Every \(m \times n\) matrix has a factorization of the form:</p><p>\begin{equation}
+M = U D^{\frac{1}{2}} V^{*}
+\end{equation}</p><p>where, \(U\) is an <a href=/posts/kbhaxler_7_a/#unitary>unitary</a> matrix, \(D^{\frac{1}{2}}\) a <a href=/posts/kbhdiagonal_matrix/>diagonal</a>ish (i.e. rectangular diagonal) matrix with non-negative numbers on its diagonal called <strong>singular values</strong>, which are the positive square roots of eigenvalues of \(M^{* }M\) &mdash; meaning the diagonal of \(D^{\frac{1}{2}}\) is non-negative (\(\geq 0\)). Finally, \(V\) is formed columns of orthonormal bases of eigenvectors of \(M^{*}M\).</p><p><a href=/posts/kbhsingular_value_decomposition/>SVD</a> is not technically unique, but we like to force a specific (convenient, see proof for why) ordering: where \(D^{\frac{1}{2}}\) (and the corresponding values in \(V^{*}\)) is sorted such that the zero values are to the right.</p><h2 id=doing-it>Doing It</h2><p>Doing SVD is not actually super duper hard, but it takes some thinking on why it works, which we shall do below.</p><p>Recall that \(V^{* }\) is the conjugate transpose of the orthonormal eigenvectors of \(M^{*} M\). Then, we construct the square roots of the corresponding eigenvalues and arrange them into \(D^{\frac{1}{2}}\).</p><hr><p><strong>Tangent</strong>:</p><p>Why is it we can take square roots of these values (i.e. the eigenvalues are guaranteed positive or zero?) Recall the definition of adjoint:</p><p>\begin{equation}
+\langle Tv, w \rangle = \langle v, T^{*}w \rangle
+\end{equation}</p><p>Applying it here, we have</p><p>\begin{equation}
+\langle M^{*}M v, v \rangle = \langle M v, M v \rangle
+\end{equation}</p><p>And recall that, by definition of inner product, \(\langle Mv, Mv \rangle \geq 0\), and so \(\|Mv\|^{2} \geq 0\) and so \(\|Mv\| \geq 0\) so \(\| \lambda v \| \geq 0\).</p><hr><p>And so you can take the square roots of those singular values (i.e. square roots of eigenvalues of \(M^{*}M\)).</p><p>How do we get \(U\)? Well recall:</p><p>\begin{equation}
+M = U D^{\frac{1}{2}} V^{*}
+\end{equation}</p><p>And \(V\) is an operator lined with orthornomal eigenbases so it is unitary and so \(V = (V^{*})^{-1}\).</p><p>And therefore, we apply \(V\) on both sides:</p><p>\begin{equation}
+MV = UD^{\frac{1}{2}}
+\end{equation}</p><p>As \(D\) is diagonal, and we know the left side, we can then easily recover \(U\) by staring at it (and norming the vectors).</p><h2 id=motivation-and-proof>Motivation and Proof</h2><h3 id=beginning-motivation>Beginning Motivation</h3><p>We have a matrix \(M\) of shape \(m \times n\), it sucks: it may not be <a href=/posts/kbhaxler_7_a/#normal>normal</a>, it may not even be an <a href=/posts/kbhoperator/>operator</a>.</p><p>So consider now:</p><p>\begin{equation}
+M^{*} M
+\end{equation}</p><p>you will note that this is now an <em>operator (\((n \times m)(m \times n) = n \times n\))!!</em> Not only that, \(M^{*}M\) is <a href=/posts/kbhaxler_7_a/#self-adjoint>self-adjoint</a> (\((M^{*}M)^{*} = M^{*}(M^{*})^{*} = M^{*}M\)). Of course <a href=/posts/kbhaxler_7_a/#self-adjoint>self-adjoint</a> matricies are <a href=/posts/kbhaxler_7_a/#normal>normal</a>, which is nice, so <a href=/posts/kbhaxler_7_a/#complex-spectral-theorem>spectral theorem</a> applies here (even the real version because <a href=/posts/kbhaxler_7_a/#self-adjoint>self-adjoint</a>!)</p><h3 id=eigendecomposition--kbhnus-math530-similar-to-diagonal-dot-md--of-m-m><a href=/posts/kbhnus_math530_similar_to_diagonal/>Eigendecomposition</a> of \(M^{*}M\)</h3><p>So, by the <a href=/posts/kbhaxler_7_a/#complex-spectral-theorem>spectral theorem</a>, there are a basis of orthonormal <a href=/posts/kbheigenvalue/>eigenvector</a>s \(v_1, \dots v_{n}\) of \(M^{*}M\) such that:</p><p>Given:</p><p>\begin{equation}
+V = \mqty(v_1 & \dots & v_{n})
+\end{equation}</p><p>we have</p><p>\begin{equation}
+M^{*}M = V D_0 V^{-1}
+\end{equation}</p><p>i.e. this is the <a href=/posts/kbhnus_math530_similar_to_diagonal/>eigendecomposition</a> (&ldquo;similar to diagonal&rdquo;) result we had from before, where \(D_0\) is a <a href=/posts/kbhdiagonal_matrix/>Diagonal Matrix</a> of <a href=/posts/kbheigenvalue/>eigenvalue</a>s on the diagonal.</p><p>Swapping the direction of conjugation, to expose the diagonal matrix by itself, we have:</p><p>\begin{equation}
+D_0 = V^{-1} M^{*} M V
+\end{equation}</p><p>You will NOTICE! The <a href=/posts/kbhaxler_7_a/#complex-spectral-theorem>spectral theorem</a> gives us that \(v_1, &mldr; v_{n}\) is not only a <a href=/posts/kbhbasis/>basis</a> of <a href=/posts/kbheigenvalue/>eigenvector</a>s, but an <strong>ORTHONORMAL</strong> basis of eigenvectors. So \(V\) is an <a href=/posts/kbhoperator/>operator</a> with <a href=/posts/kbhorthogonal/>orthogonal</a> columns. And so, because of <a href=/posts/kbhnus_math530_matrix_adjectives/#an-unitary-operator-is-invertible-and-the-inverse-of-its-matrix-representation-is-its-transpose>this result</a>, we have that: \(V^{*} = V^{-1}\).</p><p>Substituting this in, we have:</p><p>\begin{equation}
+D_0 = V^{*} M^{*} M V
+\end{equation}</p><h3 id=aside-1-zero-eigenvalue-eigenvector-ordering>Aside #1: zero-eigenvalue eigenvector ordering</h3><p>To make this better, we can order \(v_1, \dots v_{n}\) such that eigenvectors vectors corresponding to \(\lambda = 0\) comes last.</p><p>And so we make a \(V\):</p><p>\begin{equation}
+V = \mqty(v_1 &\dots &amp;v_{n-p} & v_{n-p+1} &\dots &amp;v_{n})
+\end{equation}</p><p>So we have two sub-matricies: an matrix \(V_1\) of shape \((n, n-p)\) which is filled by <a href=/posts/kbheigenvalue/>eigenvector</a>s corresponding to <a href=/posts/kbheigenvalue/>eigenvalue</a>s not \(=0\), and the other matrix \(V_2\) of shape \((n,p)\) which is made of <a href=/posts/kbheigenvalue/>eigenvector</a>s corresponding to zero <a href=/posts/kbheigenvalue/>eigenvalue</a>s.</p><p>That is:</p><p>\begin{equation}
+\begin{cases}
+V_1 = \mqty(v_1 & \dots & v_{n-p}) \\
+V_1 = \mqty(v_{n-p+1} & \dots & v_{n}) \\
+\end{cases}
+\end{equation}</p><p>and</p><p>\begin{equation}
+V = \mqty(V_1 & V_2)
+\end{equation}</p><p>where, \(v_1, &mldr;, v_{n-p}\) are orthonormal <a href=/posts/kbheigenvalue/>eigenvector</a>s corresponding to non-zero <a href=/posts/kbheigenvalue/>eigenvalue</a>s, and \(v_{n-p+1}, &mldr;, v_{n}\) are that corresponding to <a href=/posts/kbhzero/>zero</a> <a href=/posts/kbheigenvalue/>eigenvalue</a>.</p><p>Furthermore, this ordering of the eigenvectors can help us better clarify what \(D_0\) is:</p><p>\begin{equation}
+D_0 = \mqty(D & 0 \\ 0 & 0)
+\end{equation}</p><p>Where, \(D\) is a <a href=/posts/kbhdiagonal_matrix/>Diagonal Matrix</a> with a strictly positive <a href=/posts/kbhdiagonal_matrix/>diagonal</a> as the non-diagonals are zero by definition, the lower-right quadrant is \(0\) because the sub-part of \(V_2\) are eigenvectors corresponding to the zero eigenvalue.</p><h3 id=applying-v-1-v-2-breakup-from-aside-above>Applying \(V_1, V_2\) breakup from aside above</h3><p>Ok, recall where we were:</p><p>\begin{equation}
+D_0 = V^{*} M^{*} M V
+\end{equation}</p><p>Applying the substitutions from above:</p><p>\begin{equation}
+\mqty(V_1^{*} \\ V_2^{*}) M^{*} M \mqty(V_1\ V_2) = \mqty(D & 0 \\ 0 & 0)
+\end{equation}</p><p>Now, recall how matricies multiply:</p><p>\begin{align}
+&\mqty(V_1^{*} \\ V_2^{*}) M^{*} M \mqty(V_1\ V_2) = \mqty(D & 0 \\ 0 & 0)\\
+\Rightarrow\ &\mqty(V_1^{*} \\ V_2^{*}) \mqty(M^{*} M V_1\ M^{*} M V_2) = \mqty(D & 0 \\ 0 & 0) \\
+\Rightarrow\ & \mqty(V_1^{*} M^{*} M V_1 & V_1^{*} M^{*} M V_2 \\ V_2^{*}M^{*} M V_1 & V_2^{*} M^{*} M V_2) = \mqty(D & 0 \\ 0 & 0)
+\end{align}</p><h3 id=aside-2-a-a-0-implies-a-0>Aside #2: \(A^{*} A = 0 \implies A=0\)</h3><p>Take the construction:</p><p>\begin{equation}
+A^{*} A = 0
+\end{equation}</p><p>we desire that \(A = 0\).</p><p>Recall the definition of \(A^{*}\):</p><p>\begin{equation}
+\langle Av, w \rangle = \langle v, A^{*}w \rangle
+\end{equation}</p><p>for all \(v,w\).</p><p>Now, consider:</p><p>\begin{equation}
+\langle A^{*} Av, w \rangle = \langle A^{*} (Av), w \rangle = \langle Av, (A^{*})^{*}w \rangle = \langle Av, Aw \rangle
+\end{equation}</p><p>Applying the above, finally, consider:</p><p>\begin{equation}
+\|Av\|^{2} = \langle Av, Av \rangle = \langle A^{*}A v, v \rangle
+\end{equation}</p><p>Recall that \(A^{*}A = 0\), so:</p><p>\begin{equation}
+\|Av\|^{2} = \langle A^{*}A v, v \rangle = \langle 0v,v \rangle = 0
+\end{equation}</p><p>So, the norm of \(Av = 0\) for all \(v \in V\), which means \(A\) produces only \(0\) vectors, which means \(A=0\), as desired.</p><h3 id=breaking-v-j-m-m-v-j-up>Breaking \(V_{j}^{*} M^{*}M V_{j}\) up</h3><p>Recall where we ended up at:</p><p>\begin{equation}
+\mqty(V_1^{*} M^{*} M V_1 & V_1^{*} M^{*} M V_2 \\ V_2^{*}M^{*} M V_1 & V_2^{*} M^{*} M V_2) = \mqty(D & 0 \\ 0 & 0)
+\end{equation}</p><p>Consider its diagonals:</p><p>\begin{equation}
+\begin{cases}
+V_1^{*} M^{*} M V_1 = D \\
+V_2^{*} M^{*} M V_2 = 0
+\end{cases}
+\end{equation}</p><p>Now, for the second expression, we have: \(V_2^{*}M^{*}MV_{2} = (M V_2)^{*} (M V_2) = 0\). So, from the result above (that \(A^{*}A = 0 \implies A=0\)), we have that \(MV_{2} = 0\).</p><h3 id=aside-3-v-1-v-1-plus-v-2v-2-i>Aside #3: \(V_1 V_1^{*} + V_2V_2^{*} = I\)</h3><p>Consider:</p><p>\begin{equation}
+V_1 V_1^{*}
+\end{equation}</p><p>The matrix \(V_1\) has shape \((n, n-p)\), and this makes \(V_1^{* }\) have shape \((n-p, n)\). You will, therefore, note that \(V_{1}^{* }\) is a map from a vector space of dimension \(n\) to that in a dimension \(n-p\). This map, then, is not <a href=/posts/kbhinjectivity/>injective</a> when \(p\neq 0\). Therefore, the overall operator \(V_1 V_1^{* }\) is also not going to be <a href=/posts/kbhinjectivity/>injective</a> because non-zero is going to be sent by \(V_1^{* }\) to \(0\), then sent still by \(V_1\) to \(0\). This also means that \(V_1 V_1^{*}\) is not <a href=/posts/kbhinvertability/>invertable</a>.</p><p>Yet, we are trying to show \(V_1 V_1^{*} + V_2 V_2^{*} = I\), which is the sum of these two noninvertible map, is \(I\): the grandaddy of all invertible maps. What gives?</p><p>Recall that:</p><p>\begin{equation}
+\begin{cases}
+\mqty(V_1 & V_2) = V \\
+V V^{*} = I
+\end{cases}
+\end{equation}</p><p>The first result is by definition, the second because \(V\) is an orthonormal operator so it is <a href=/posts/kbhaxler_7_a/#unitary>unitary</a>.</p><p>Let us begin with:</p><p>\begin{align}
+I &= V V^{*} \\
+&= \mqty(V_1 & V_2) \mqty(V_1 & V_2)^{*} \\
+&= \mqty(V_1 & V_2) \mqty(V_1^{*} \\ V_2^{*}) \\
+&= V_1V_1^{*} + V_2 V_2^{*}
+\end{align}</p><p>And the last equation simply comes from how matrices multiply: row by column. And so, weirdly, we can confirm that adding non-full rank matricies and end up to be the identity. So, again:</p><p>\begin{equation}
+V_1 V_1^{*} + V_2V_2^{*} = I
+\end{equation}</p><h3 id=constructing-u-1>Constructing \(U_1\)</h3><p>With the result above, we are finally close to doing what we want to do. Recall our last set of conclusions:</p><p>one, that:</p><p>\begin{equation}
+\begin{cases}
+V_1^{*} M^{*} M V_1 = D \\
+V_2^{*} M^{*} M V_2 = 0
+\end{cases}
+\end{equation}</p><p>and specifically, that \(MV_{2} = 0\).</p><p>and two, that:</p><p>\begin{align}
+&amp;V_1 V_1^{* } + V_2V_2^{* } = I \\
+\Rightarrow\ & V_1 V_1^{* } = I - V_2V_2^{* }
+\end{align}</p><p>Let&rsquo;s now turn our attention to \(D\) above. It has all non-zero diagonals, because we cropped out the zero already (<a href=#aside-1-zero-eigenvalue-eigenvector-ordering>see above</a> during the definition of \(D\) vis a vi \(D_0\)). This means it is invertible because <a href=/posts/kbhupper_triangular_matrix/#operator-is-only-invertible-if-id-c38ed162-6861-420c-a812-6d25ac539ea9-diagonal-of-its-id-af53dbd7-0421-4039-a9f9-9080ea6e1c42-upper-triangular-matrix-is-nonzero>operator is only invertible if diagonal of its upper-triangular matrix is nonzero</a>. For a diagonal matrix, this is particularly easy; let us construct:</p><p>\begin{equation}
+D = D^{\frac{1}{2}} D^{\frac{1}{2}}
+\end{equation}</p><p>where, \(D^{\frac{1}{2}}\) is just the same <a href=/posts/kbhdiagonal_matrix/>diagonal</a> matrix as \(D\) except we take the square root of everything in the diagonal. The above could be shown then to be true by calculation (\(\sqrt{a}\sqrt{a} = a\) on every element in the diagonal).</p><p>Let us also make:</p><p>\begin{equation}
+I = D^{-\frac{1}{2}} D^{\frac{1}{2}}
+\end{equation}</p><p>where, \(D^{-\frac{1}{2}}\) is \(\frac{1}{\sqrt{a}}\) for event element \(a\) in the diagonal. Again, the above could be shown to be true by calculation by \(\sqrt{a} \frac{1}{\sqrt{a}} = 1\).</p><p>Given the diagonal of \(D\) contains the <a href=/posts/kbheigenvalue/>eigenvalue</a>s of \(M^{*}M\), by calculation \(D^{\frac{1}{2}}\) contains the square roots of these <a href=/posts/kbheigenvalue/>eigenvalue</a>s, which means that it should contain on its <a href=/posts/kbhdiagonal_matrix/>diagonal</a> the <a href=/posts/kbhsingular_value_decomposition/>singular value</a>s of \(M\), which is rather nice (because we have corollaries below that show concordance between <a href=/posts/kbhsingular_value_decomposition/>singular value</a>s of \(M\) and its <a href=/posts/kbheigenvalue/>eigenvalue</a>s, see below).</p><p>Consider, finally, the matrix \(M\):</p><p>\begin{align}
+M &= M - 0 \\
+&= M - 0 V_2^{* } \\
+&= M - (M V_2) V_2^{* } \\
+&= M (I - V_2 V_2^{* }) \\
+&= M V_1V_1^{*} \\
+&= M V_1 I V_1^{*} \\
+&= M V_1 (D^{-\frac{1}{2}} D^{\frac{1}{2}}) V_1^{*} \\
+&= (M V_1 D^{-\frac{1}{2}}) D^{\frac{1}{2}} V_1^{*}
+\end{align}</p><p>We now define a matrix \(U_1\):</p><p>\begin{equation}
+U_1 = M V_1 D^{-\frac{1}{2}}
+\end{equation}</p><p>We now have:</p><p>\begin{equation}
+M = U_1 D^{\frac{1}{2}} V_1^{*}
+\end{equation}</p><p>Were \(U_1\) is a matrix of shape \((m \times n)(n \times n-p)(n-p \times n-p) = m \times n-p\), \(D^{\frac{1}{2}}\) is a <a href=/posts/kbhdiagonal_matrix/>diagonal</a> matrix of shape \(n-p \times n-p\) with <a href=/posts/kbhsingular_value_decomposition/>singular values</a> on the diagonal, and \(V_1^{*}\) is a matrix with orthonormal rows of shape \(n-p \times n\).</p><p>This is a <strong>compact svd</strong>. We are sandwitching a <a href=/posts/kbhdiagonal_matrix/>diagonal</a> matrix of <a href=/posts/kbhsingular_value_decomposition/>singular values</a> between two rectangular matricies to recover \(M\). Ideally, we want the left and right matricies too to have nice properties (like, say, be an <a href=/posts/kbhoperator/>operator</a> or have <a href=/posts/kbhaxler_7_a/#unitary>unitarity</a>). So we work harder.</p><h3 id=aside-4-u-1-is-orthonormal>Aside #4: \(U_1\) is orthonormal</h3><p>We can&rsquo;t actually claim \(U_1\) is <a href=/posts/kbhaxler_7_a/#unitary>unitary</a> because its not an <a href=/posts/kbhoperator/>operator</a>. However, we like to show its columns are <a href=/posts/kbhorthonormal/>orthonormal</a> so far so we can extend it into a fully, actually, <a href=/posts/kbhaxler_7_a/#unitary>unitary</a> matrix.</p><p>One sign that a matrix is <a href=/posts/kbhorthonormal/>orthonormal</a> is if \(T^{*}T = I\). Because of the way that matricies multiply, this holds IFF each column yields a \(1\) when its own conjugate transpose is applied, and \(0\) otherwise. This is also the definition of <a href=/posts/kbhorthonormal/>orthonormal</a>ity.</p><p>Therefore, we desire \(U_{1}^{*} U_1 = I\). We hence consider:</p><p>\begin{equation}
+U_1^{*} U_1
+\end{equation}</p><p>We have by substitution of \(U_1 = M V_1 D^{-\frac{1}{2}}\):</p><p>\begin{equation}
+(M V_1 D^{-\frac{1}{2}})^{*}(M V_1 D^{-\frac{1}{2}})
+\end{equation}</p><p>Given the property that \((AB)^{*} = B^{*}A^{*}\), we have that:</p><p>\begin{equation}
+(M V_1 D^{-\frac{1}{2}})^{*}(M V_1 D^{-\frac{1}{2}}) = {D^{-\frac{1}{2}}}^{*} V_1^{*} M^{*}M V_1 D^{-\frac{1}{2}}
+\end{equation}</p><p>Recall now that, from way before, we have:</p><p>\begin{equation}
+V_1^{*} M^{*} M V_1 = D
+\end{equation}</p><p>Substituting that in:</p><p>\begin{align}
+{D^{-\frac{1}{2}}}^{*} V_1^{*} M^{*}M V_1 D^{-\frac{1}{2}} &= {D^{-\frac{1}{2}}}^{*} (V_1^{*} M^{*}M V_1) D^{-\frac{1}{2}} \\
+&= {D^{-\frac{1}{2}}}^{*} D D^{-\frac{1}{2}}
+\end{align}</p><p>Recall now that the multiplication of diagonal matricies are commutative (by calculation), and that diagonal real matricies are self-adjoint (try conjugate-transposing a real diagonal matrix). We know that \(D^{-\frac{1}{2}}\) is real (because its filled with the square roots of the <a href=/posts/kbheigenvalue/>eigenvalue</a>s of \(M^{*}M\), which is <a href=/posts/kbhaxler_7_a/#self-adjoint>self-adjoint</a>, and <a href=/posts/kbhaxler_7_a/#eigenvalues-of-id-04577953-b953-4ac0-8102-fe9b804bdfc9-self-adjoint-matricies-are-real>eigenvalues of self-adjoint matricies are real</a>) and is by definition diagonal. So we have that \(D^{-\frac{1}{2}}\) is self-adjoint.</p><p>Taking those facts in mind, we can now rewrite this expression:</p><p>\begin{align}
+{D^{-\frac{1}{2}}}^{*} V_1^{*} M^{*}M V_1 D^{-\frac{1}{2}} &= {D^{-\frac{1}{2}}}^{*} D D^{-\frac{1}{2}} \\
+&= D^{-\frac{1}{2}} D D^{-\frac{1}{2}} \\
+&= D^{-\frac{1}{2}}D^{-\frac{1}{2}} D \\
+&= D^{-1} D \\
+&= I
+\end{align}</p><p>Therefore, \(U_1^{*} U_1 = I\) as desired, so the columns of \(U_1\) is orthonormal.</p><h3 id=svd-fully>SVD, fully</h3><p>Recall that, so far, we have:</p><p>\begin{equation}
+M = U_1 D^{\frac{1}{2}} V_1^{*}
+\end{equation}</p><p>where</p><p>\begin{equation}
+U_1 = M V_1 D^{-\frac{1}{2}}
+\end{equation}</p><p>So far, \(U_1\) and \(V_1^{*}\) are both disappointingly not <a href=/posts/kbhoperator/>operator</a>s. However, we know that \(U_1\) and \(V_1\) are both orthonormal (the former per aside #4 above, the latter by the <a href=/posts/kbhaxler_7_a/#complex-spectral-theorem>spectral theorem</a> and <a href=#aside-1-zero-eigenvalue-eigenvector-ordering>construction above</a>). So wouldn&rsquo;t it be doubleplusgood for both of them to be <a href=/posts/kbhaxler_7_a/#unitary>unitary</a> <a href=/posts/kbhoperator/>operator</a>s?</p><p>To make this happen, we need to change the shapes of things a little without changing how the matricies behave. That is: we want \(U\) and \(V^{* }\) to both be <a href=/posts/kbhoperator/>operator</a>s, and yet still have \(U D^{\frac{1}{2}} V^{*} = M\).</p><h4 id=padding-out-d-and-v>Padding out \(D\) and \(V\)</h4><p>There are immediate and direct ways of padding out \(D^{\frac{1}{2}}\) and \(V_{1}^{*}\): let us replace \(V_1 \implies V\), and just shove enough zeros into \(D\) such that the dimensions work out (changing it from shape \(n-p \times n-p\) to \(m \times n\), but do this by just adding enough zeros on the edges until it works).</p><p>So first, \(D^{\frac{1}{2}}\) becomes:</p><p>\begin{equation}
+D^{\frac{1}{2}}_{new} = \mqty(D^{\frac{1}{2}}_{orig} & 0 &\dots \\ 0 & 0 &\dots \\ 0&amp;0&\dots)
+\end{equation}</p><p>(the number of zeros on the edge vary based on the proportions of \(n, p, m\)).</p><p>Why would this always be padding? i.e. why is \(n-p \leq m\)? Here&rsquo;s a hand-wavy proof that the reader can choose to fill in the gaps of: consider the fact that \(M\)&rsquo;s shape is \(m \times n\). Specifically, this means that \(M: V \to W\) where \(\dim V = n\) and \(\dim W = m\). Say for the sake of argument \(n> m\) (otherwise naturally \(n-p \leq m\) because \(n\leq m\)). Consider \(null\ M\); given it is a map from a larger space to a smaller space, <a href=/posts/kbhlinear_map/#map-to-smaller-space-is-not-id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injective>there&rsquo;s going to be a non-trivial null space</a>. This non-trivial null space is going to be as large or larger than \(m-n\); and the null space of \(M^{*}M\) will be at least as large as \(m-n\) as well because everything is sent through \(M\) first. And then applying rank nullity can show that \(m \geq \dim\ range\ M^{ *}M\). Therefore, the number of non-zero eigenvalues of \(M^{ *}M\), which also corresponds to the number of non-zero columns of \(D\), which also is \(n-p\), must be smaller than or equal to \(m\) because otherwise the diagonal representation would have too many linearly independent columns (i.e. more lin. indp. columns that the rank which is impossible).</p><p>Now, we have</p><p>\begin{equation}
+V = \mqty(V_1 & V_2)
+\end{equation}</p><p>where \(V_1\) is a matrix whose columns are the non-zero <a href=/posts/kbheigenvalue/>eigenvalue</a> correlated <a href=/posts/kbheigenvalue/>eigenvector</a>s, and the columns of \(V_1\) the zero-eigenvalue related ones.</p><p>Note, now that:</p><p>\(D^{\frac{1}{2}}_{new} V^{* }\) is an \(m \times n\) matrix that behaves almost exactly like \(D^{\frac{1}{2}}_{orig} V_1^{*}\), a \(n-p \times n\) matrix. The last \(m-(n-p)\) (as we established before, \(m \geq n-p\)) dimensions of the new, padded matrix&rsquo;s output will simply be \(0\): because recall that \(DT\) for some diagonal matrix \(D\) scales the <em>rows</em> of \(T\): and the first \(n-p\) rows (corresponding to the columns of \(V_1\), because recall we are applying \(V\) not \(V^{ *}\) to \(D\)) will be scaled normally, and the last \(m-(n-p)\) rows will be scaled by \(0\) as they are a part of the padded zero-diagonal.</p><h4 id=padding-out-u>Padding out \(U\)</h4><p>With \(D\) and \(V\) padded, its time to deal with \(U\). Fortunately, recall that the last bit of the output of \(DV\) will just be \(0\): so whatever we stick in terms of columns of \(V\) for those slots will never actually be added to the final output. In a sense, they don&rsquo;t really matter.</p><p>The first \(n-p\) of \(U\) (i.e. \(U_{1}\)) we already have a well-defined answer: recall from before \(U_1 = M D^{-\frac{1}{2}} V_{1}^{*}\). So the last bit we can just stick on literally whatever to make it work.</p><p>And by &ldquo;making it work&rdquo;, we literally just mean extending the columns of \(U_1\) until you have \(m\) linearly-independent of them, then <a href=/posts/kbhgram_schmidt/>Gram-Schmidt</a>ting to make it all orthonormal. The first \(n-p\) columns will not be affected by <a href=/posts/kbhgram_schmidt/>Gram-Schmidt</a>ting, as we have established before <a href=#aside-4-u-1-is-orthonormal>\(U_1\) is orthonormal</a>.</p><p>Again, these are basically arbitrary: no one cares because these columns will always be scaled by \(0\) as they are part of the &ldquo;padding columns&rdquo; from padding \(D^{\frac{1}{2}}\) out.</p><h4 id=and-so-finally>and so, finally</h4><p>Finally, we now have:</p><p>\begin{equation}
+M = U D^{\frac{1}{2}} V^{*}
+\end{equation}</p><p>where, \(U\) is an \(m \times m\) <a href=/posts/kbhaxler_7_a/#unitary>unitary</a> <a href=/posts/kbhoperator/>operator</a>, \(D^{\frac{1}{2}}\) is an \(m \times n\) semidiagonal matrix (diagonal \(n-p \times n-p\) part, then \(0\) padding all around) filled with <a href=/posts/kbhsingular_value_decomposition/>singular value</a>s of \(M\) on the diagonal, and \(V^{*}\) is an \(n \times n\) <a href=/posts/kbhaxler_7_a/#unitary>unitary</a> <a href=/posts/kbhoperator/>operator</a> filled with orthonormal rows of right singular-vectors (i.e. <a href=/posts/kbheigenvalue/>eigenvector</a>s of \(M^{ *}M\)).</p><h2 id=useful-corollaries>Useful corollaries</h2><h3 id=if-lambda-is-an-non-negative-real-eigenvalue-of-m-then-lambda-is-sometimes-a-singular-value-of-m>If \(\lambda\) is an non-negative real eigenvalue of \(M\), then \(\lambda\) is sometimes a singular value of \(M\)</h3><p>Consider the matrix:</p><p>\begin{equation}
+\mqty(1 & 1 \\0 & 0)
+\end{equation}</p><ul><li><a href=/posts/kbhsingular_value_decomposition/>singular value</a>s: \(\sqrt{2},0\)</li><li><a href=/posts/kbheigenvalue/>eigenvalue</a>s: \(1,0\)</li></ul><p>However, the statement is the case if \(M\) is already <a href=/posts/kbhdiagonal_matrix/#properties-of-diagonal-matrices>diagonalizable</a>, then in which case you can imagine constructing \(M^{* }M\) to be vis a vi the eigenbasis of \(M\), which means that the resulting diagonal representation of \(M^{*}M\) would just be the eigenvalues of \(M\) squared as you are multiplying a diagonal matrix by itself.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,79 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Tuning Fork</title>
+<meta name=description content="Tuning Forks (funing torks!) is a Tuning Fork. You smack it and it goes &ldquo;biiing!&rdquo;
+
+
+
+Let&rsquo;s figure out how it works. For us to be one same page, let&rsquo;s define some vocab:
+Vocab
+
+&ldquo;Tine&rdquo;: one of the two prongs of the fork
+
+A Cursory Explanation
+Source: here and here. Both are not very scientific but a good first step.
+From a very basic perspective, hiting a tuning fork creates a transverse wave on the tine you hit, which vibrates and then compresses the air around it in a longitudinal fashion at a set frequency, which we hear as a sound."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Tuning Fork</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhtuning_forks/>Tuning Forks</a> (funing torks!) is a <a href=/posts/kbhtuning_forks/>Tuning Fork</a>. You smack it and it goes &ldquo;biiing!&rdquo;</p><figure><img src=/ox-hugo/2022-08-27_14-02-11_screenshot.png></figure><p>Let&rsquo;s figure out how it works. For us to be one same page, let&rsquo;s define some vocab:</p><h2 id=vocab>Vocab</h2><ul><li>&ldquo;Tine&rdquo;: one of the two prongs of the fork</li></ul><h2 id=a-cursory-explanation>A Cursory Explanation</h2><p>Source: <a href=https://science.howstuffworks.com/tuning-fork2.htm>here</a> and <a href=https://americanhistory.si.edu/science/tuningfork.htm>here</a>. Both are not very scientific but a good first step.</p><p>From a very basic perspective, hiting a tuning fork creates a transverse wave on the tine you hit, which vibrates and then compresses the air around it in a longitudinal fashion at a set frequency, which we hear as a sound.</p><p>Ok but then this raises the question of why there&rsquo;s two tines. The explanation this website gives is essentially that the actual mechanism of the <a href=/posts/kbhtuning_forks/>Tuning Fork</a> is in squishing the air <strong>immediately around</strong> the fork, so&mldr;</p><ol><li>if the tines are push towards together, it creates a void in the space it just was; this creates a low pressure <strong><strong>rarefaction</strong></strong> area</li><li>if the tines snap back apart, it compresses the air creating <strong><strong>compression</strong></strong> by squishing the air around it</li></ol><p>And therefore, the air around the <a href=/posts/kbhtuning_forks/>funing tork</a> is essentially being played like a two-way slingy. To adjust the pitch of the <a href=/posts/kbhtuning_forks/>Tuning Fork</a>, you lengthen or shorten it: longer tuning forks have larger tines, which vibrate more slowly.</p><h2 id=ok-but-now-many-many-questions>Ok but now many, many questions</h2><ol><li>why does smacking one side of the <a href=/posts/kbhtuning_forks/>Tuning Fork</a> make both sides vibrate</li><li>presumably the base is not vibrating; hence, how does the downward-bendy vibration cause perpendicular oscillation (does it?)</li></ol><h2 id=a-detour-on-rigid-body-harmonic-motion>A Detour on Rigid Body Harmonic Motion</h2><p>Let&rsquo;s talk about <a href=/posts/kbhbending/>Bending.</a></p><ol><li>How does this relate to springs/slinkies? <a href=https://ccrma.stanford.edu/~jos/pasp/Young_s_Modulus_Spring_Constant.html>read this.</a></li></ol><h2 id=a-better-detour-on-cantilever-beams>A Better Detour on Cantilever Beams</h2><p><a href=/posts/kbhcantilever_beams/>Cantilever Beams</a></p><h2 id=a-detour-on-the-temperature>A Detour on the Temperature</h2><p>We are really worried about two different things here.</p><ol><li>Metal expands/contracts based on the temperature</li><li>Temperature affects speed of sound</li></ol><h2 id=a-detour-on-material-science>A Detour on Material Science</h2><h2 id=why-are-our-tuning-fork--kbhtuning-forks-dot-md--s-out-of-tune>Why are our <a href=/posts/kbhtuning_forks/>Tuning Fork</a>s out of tune?</h2><h2 id=fun-relevant-factoids-about-the-world>Fun, Relevant Factoids About the World</h2><ul><li>The range of human hearing from a youngen is about 20Hz to 20,000Hz.</li></ul><h2 id=look-into>Look into</h2><ul><li><p>Young&rsquo;s Modulus</p><ul><li>Density</li><li>Second</li></ul></li><li><p>overtones: six and a quarter; why?</p></li><li><p>prove the equations given in <a href=/posts/kbhrossing_1990/>Rossing 1990</a></p></li><li><p>why do high frequencies die faster?</p></li><li><p>Why are they FORKS? What&rsquo;s wrong with one prong</p><figure><img src=/ox-hugo/2022-09-25_16-17-35_screenshot.png></figure></li></ul><p><a href=/posts/kbhlagrangian_mechanics/>Lagrangian Mechanics</a></p><h2 id=experiments-to-do-in-the-end>experiments to do in the end</h2><ul><li>measuring in water</li><li>measuring</li></ul><h2 id=questions-to-ask>questions to ask</h2><ul><li>why no free vibrations just standing?</li><li>do the various tuning fork modes compose</li><li>what happened to the harmonics of the fundimental? I know the overotens are 6/14, but where did the harmonics go? do they compose?</li><li>what if we did it in a vaccume? of course the tuning fork is not going to be heard, but will it keep vibrating forever?</li><li>Nyquist limit (FFT is only accurate to half the sampling rate; 10000 hz sampling (default on logger pro) means max is 5000 Hz)</li></ul><h2 id=things>things</h2><ul><li>we can use far field because the wavelength is much mucm much much larger than the seperation between the two tines; what is the wavelength? function of frequency and hertz</li></ul><h2 id=questions-for-mark>Questions for Mark</h2><ul><li>cuw tuning forks&rsquo; freq is not the predicted freq of its shortest tine. urg how</li><li>driven oscellation. how would it actually work?</li></ul><h2 id=last-minute-tuning-forks>last minute tuning forks</h2><ul><li>easy explanation of FFT &ldquo;wrapping around circle&rdquo;</li><li>backup slide on octahedral scress</li><li>explain beta</li><li>how to get wavelength from sinusoidal equation</li><li>how does wavelength change with temp; how does our ear compensate?</li><li><a href=https://en.wikipedia.org/wiki/Residual_stress>https://en.wikipedia.org/wiki/Residual_stress</a></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

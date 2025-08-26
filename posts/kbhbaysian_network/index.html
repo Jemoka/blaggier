@@ -1,0 +1,100 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Baysian Network</title>
+<meta name=description content="A Baysian Network is composed of:
+
+a directed, acyclic graph
+a set of conditional probabilities acting as factors.
+
+You generally want arrows to go in the direction of causality.
+
+
+
+Via the chain rule of Bayes nets, we can write this equivalently as:
+\begin{equation}
+(P(B) \cdot P(S)) \cdot P(E \mid B,S) \cdot P(D \mid E) \cdot P(C \mid E)
+\end{equation}
+generally, for \(n\) different variables,
+\begin{equation}
+\prod_{i=1}^{n} p(X_{i} \mid pa(x_{i}))
+\end{equation}
+where, \(pa(x_{i})\) are the parent values of \(x_{i}\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Baysian Network</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhbaysian_network/>Baysian Network</a> is composed of:</p><ol><li>a directed, acyclic graph</li><li>a set of <a href=/posts/kbhprobability/#conditional-probability>conditional probabilities</a> acting as <a href=/posts/kbhfactor/>factor</a>s.</li></ol><p>You generally want arrows to go in the direction of causality.</p><figure><img src=/ox-hugo/2023-09-28_10-20-23_screenshot.png></figure><p>Via the chain rule of Bayes nets, we can write this equivalently as:</p><p>\begin{equation}
+(P(B) \cdot P(S)) \cdot P(E \mid B,S) \cdot P(D \mid E) \cdot P(C \mid E)
+\end{equation}</p><p>generally, for \(n\) different variables,</p><p>\begin{equation}
+\prod_{i=1}^{n} p(X_{i} \mid pa(x_{i}))
+\end{equation}</p><p>where, \(pa(x_{i})\) are the parent values of \(x_{i}\).</p><h2 id=conditional-independence>conditional independence</h2><p>\(X\) and \(Y\) are <a href=#conditional-independence>conditionally independent</a> given \(Z\) IFF:</p><p>\begin{equation}
+P(X, Y|Z) = P(X|Z) \cdot P(Y|Z)
+\end{equation}</p><p>(&ldquo;two variables are <a href=#conditional-independence>conditionally independent</a> if they exhibit <a href=/posts/kbhprobability/#independence>independence</a> conditioned on \(Z\)&rdquo;)</p><p>this is equivalent to saying:</p><p>\begin{equation}
+P(X|Z) = P(X|Y,Z)
+\end{equation}</p><p>(&ldquo;two variables are <a href=#conditional-independence>conditionally independent</a> if the inclusion of the evidence of another set into the condition doesn&rsquo;t influence the outcome if they are both conditioned on \(Z\)&rdquo;)</p><p>We write:</p><p>\begin{equation}
+X \perp Y \mid Z
+\end{equation}</p><p>The network above has an important property: conditions \(B\) and \(S\) are independent; and conditions \(D\) and \(C\) are independent. Though they all depended on \(E\), each pair is <a href=#conditional-independence>conditionally independent</a>.</p><h3 id=checking-for-conditional-independence>checking for conditional independence</h3><p>\((A \perp B \mid C)\) IFF ALL undirected paths from \(A\) to \(B\) on a <a href=/posts/kbhbaysian_network/>Baysian Network</a> exhibits <a href=#checking-for-conditional-independence>d seperation</a>, whose conditions are below:</p><p>A path is d-seperated by \(C\), the set of evidence if ANY of the following:</p><ol><li>the path contains a chain of nodes: \(X \to Y \to Z\) where \(Y \in C\)</li><li>the path contains a fork: \(X \leftarrow C \to Z\), where \(Y \in C\)</li><li>the path contains a <a href=#checking-for-conditional-independence>inverted fork</a>: \(X \to Y \leftarrow Z\), where \(Y\) is <strong>not</strong> in \(C\) and no descendent of \(Y\) is in \(C\).</li></ol><p>Note that \(C\) can be empty. This is why, \(B,S\) is <a href=#conditional-independence>conditionally independent</a> on <strong>nothing</strong> on that graph above, so they are just actually independent.</p><p>If the structure does not imply <a href=#conditional-independence>conditional independence</a>, it does <strong>NOT</strong> mean that the structure is conditionally dependent. It could still be <a href=#conditional-independence>conditionally independent</a>.
+end{equation}</p><h4 id=markov-blanket>markov blanket</h4><p>the <a href=#markov-blanket>markov blanket</a> of node \(X\) is the minimal set of nodes on a <a href=/posts/kbhbaysian_network/>Baysian Network</a> which renders \(X\) <a href=#conditional-independence>conditionally independent</a> from all other nodes not in the blanket.</p><p>It includes, at most:</p><ul><li>node&rsquo;s parenst</li><li>node&rsquo;s chlidren</li><li>other parents of node&rsquo;s children</li></ul><p>Check that you need all of these values: frequently, you don&rsquo;t&mdash;simply selecting a subset of this often d-seperates the node from everyone else.</p><h2 id=parameter-learning--kbhparameter-learning-dot-md--in-baysian-network--kbhbaysian-network-dot-md><a href=/posts/kbhparameter_learning/>parameter learning</a> in <a href=/posts/kbhbaysian_network/>Baysian Network</a></h2><p>Let:</p><ul><li>\(x_{1:n}\) be variables</li><li>\(o_1, &mldr;, o_{m}\) be the \(m\) observations we took</li><li>\(G\) is the graph</li><li>\(r_{i}\) is the number of instantiations in \(X_{i}\) (for boolean variables, this would be \(2\))</li><li>\(q_{i}\) is the number of parental instantiations of \(X_{i}\) (if parent 1 can take on 10 values, parent 2 can take 3 values, then child&rsquo;s \(q_{i}=10\cdot 3=30\)) &mdash; if a node has no parents it has a \(q_{i}\) is \(1\)</li><li>\(\pi_{i,j}\) is \(j\) instantiation of parents of \(x_{i}\) (the \(j\) th combinator)</li></ul><p>What we want to learn from the graph, is:</p><p>\begin{equation}
+P(x_{i}=k | \pi_{i,j}) = \theta_{i,j,k}
+\end{equation}</p><p>&ldquo;what&rsquo;s the probability that \(x_{i}\) takes on value \(k\), given the state of \(x_{i}\)&rsquo;s parents are \(\pi_{i,j}\) right now?&rdquo;</p><hr><p>Let us first make some observations. We use \(m_{i,j,k}\) to denote the COUNT of the number of times \(x_{i}\) took a value \(k\) when \(x_{i}\) parents took instantiation \(j\). This is usually represented programmatically as a set of matrices:</p><figure><img src=/ox-hugo/2023-10-10_09-47-04_screenshot.png></figure><p>To learn the parameter as desired, we use:</p><p>\begin{equation}
+MLE\ \hat{\theta}_{i,j,k} = \frac{m_{i,j,k}}{\sum_{k&rsquo;} m_{i,j,k&rsquo;}}
+\end{equation}</p><p>In that: we want to sum up all possible value \(x_{i}\) takes on, and check how many times it takes on a certain value, given the conditions are the same.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

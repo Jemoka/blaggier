@@ -1,0 +1,131 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>type theory</title>
+<meta name=description content="type theory was originally aimed creating a basis of all of mathematics. it got out-competed in math by set theory. it formalizes&mldr;
+
+programs
+propositions (types)
+proofs that programs satisfies these propositions
+
+and does so in one system.
+key features
+
+it creates an isomorphism between programs/types with proofs/propositions
+it creates a hierarchy which allows defining types, type operations, proofs into the same system at different levels
+it allows possibly-undecidable expressive dependent types to be constructed
+
+musing
+
+this is a foundation of mathematics, and in particular constructive mathematics
+its pretty powerful to prove anything we want to prove&mdash;so can be used to verify the correctness of all sofware
+
+properties of type systems
+type stratification
+Consider a type of all types Type,"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>type theory</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhtype_theory/>type theory</a> was originally aimed creating a basis of all of mathematics. it got out-competed in math by set theory. it formalizes&mldr;</p><ol><li>programs</li><li>propositions (types)</li><li>proofs that programs satisfies these propositions</li></ol><p>and does so in one system.</p><h2 id=key-features>key features</h2><ul><li>it <strong>creates an isomorphism</strong> between programs/types with proofs/propositions</li><li>it creates a <strong>hierarchy</strong> which allows defining types, type operations, proofs into the same system at different levels</li><li>it allows possibly-undecidable <strong>expressive dependent types</strong> to be constructed</li></ul><h2 id=musing>musing</h2><ul><li>this is a foundation of mathematics, and in particular <strong>constructive mathematics</strong></li><li>its pretty powerful to prove anything we want to prove&mdash;so can be used to verify the correctness of all sofware</li></ul><h2 id=properties-of-type-systems>properties of type systems</h2><h3 id=type-stratification>type stratification</h3><p>Consider a type of all types <code>Type</code>,</p><p>\begin{equation}
+\text{Type} = \qty {\text{Int}, \text{Bool}, \text{Int}\to \text{Int}, \dots }
+\end{equation}</p><p>so is \(\text{Type} \in \text{Type}\)? Since the set contains all types, should it contain itself? <strong>no</strong>. We need this set to be <a href=/posts/kbhwell_founded/>well-founded</a> because of <a href=/posts/kbhthere_are_non_recognizable_languages/#russell-s-paradox>Russell&rsquo;s Paradox</a> (<a href=/posts/kbhthere_are_non_recognizable_languages/#russell-s-paradox>Diagonalization Arguments</a>).</p><p>So, instead, we need a specific type hierarchy.</p><h4 id=stratum-0-ordinary-type>stratum 0: ordinary type</h4><p>standard type like <code>int</code>, <code>int->int</code>, etc.</p><ul><li>0: int</li><li>f: int -> int -> int</li><li>true: bool</li><li>&mldr;</li></ul><h4 id=stratum-1-set-of-types>stratum 1: set of types</h4><p>the type of types <code>Type</code>; this makes <code>and</code> (which operates on Types) and <code>-></code> which operates on types &ldquo;level 1 functions&rdquo;</p><ul><li>int: Type</li></ul><h3 id=inductively-defined-types>inductively defined types</h3><p>like <a href=/posts/kbhsu_cs242_oct032024/#algebraic-data-type>Algebraic Data Type</a>s with recursion; these systems are &ldquo;<a href=#inductively-defined-types>Dependent Type Theories</a>&rdquo;</p><h3 id=pi-types>Pi types</h3><p>notice that our type functions can&rsquo;t currently express type functions that depended on their arguments</p><p>\begin{equation}
+\text{cons}: \alpha \to \text{{List}}\qty(\alpha)\to \text{{List}}\qty(\alpha)
+\end{equation}</p><p>this creates a (two views) 1) <strong>parameterized</strong> type or 2) a <strong>family</strong> of types.</p><p>To do this, we simply define a structure that acts like \(\forall\), but its \(\Pi\) for types:</p><ul><li>\(\text{List}: \text{Type} \to \text{Type}\)</li><li>\(\text{Cons}: \Pi \alpha : \text{Type}. \alpha \to \text{List}\qty(\alpha) \to List\qty(\alpha)\)</li><li>\(\text{Nil}: \Pi \alpha : \text{Type}. \text{List}\qty(\alpha)\)</li></ul><p>that is, \(\Pi \alpha: \text{Type}\) means for all \(\alpha\) that is a Type, we can be generic over them. these are <strong>dependent types</strong>. You can think of this either as a function input or a conjuction of types.</p><p>Aside: \(\forall\) is actually a special case of \(\Pi\), in particular \(\forall \alpha\) assumes its \(\Pi \alpha : \text{Type}\).</p><p>To be more general, consider typed fixed length arrays</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-rust data-lang=rust><span style=display:flex><span><span style=color:#111>x</span>: <span style=color:#00a8c8>&amp;</span><span style=color:#111>[</span><span style=color:#111>Type</span><span style=color:#111>;</span> <span style=color:#ae81ff>6</span><span style=color:#111>]</span>
+</span></span></code></pre></div><p>so we can type the thing that makes this as</p><p>for:</p><p>\begin{equation}
+\text{Array}: \text{Type} \to \text{Int}\to \text{Type}
+\end{equation}</p><p>\begin{equation}
+\text{mkarray}: \Pi \alpha : \text{Type}. \Pi \beta : \text{Int} . \alpha \to \beta \to \text{Array}\qty(\alpha, \beta)
+\end{equation}</p><p>where your length type \(\beta\) is a property of the <strong>type</strong></p><p>Just fyi introducing this is often un<a href=/posts/kbhturing_machinea/#decidable>decidable</a>.</p><h2 id=programs-as-proofs>programs as proofs</h2><p>We can consider programs as type relations.</p><p>To prove that there is something of type \(t \to t&rsquo;\), all we have to do is to show that \(e_1: t \to t&rsquo;\)</p><p>Programs therefore, are <strong>evidence</strong> that proofs can be satisfied.</p><h3 id=lambda-application>lambda application</h3><p>\begin{equation}
+\frac{A \vdash e_1 : t \to t&rsquo;, A \vdash e_2 : t }{A \vdash e_1e_2: t&rsquo;}
+\end{equation}</p><p><strong>elimination rule</strong>&mdash;it takes a construct (the \(e_{1}\) function constructor) and eliminates it</p><p>This is <a href=#implication-elimination>implication elimination</a>.</p><h2 id=abstraction-rule>abstraction rule</h2><p>\begin{equation}
+\frac{A,x:t \vdash e : t&rsquo;}{A \vdash \lambda x . e : t \to t&rsquo;}
+\end{equation}</p><p><strong>introduction rule</strong>&mdash;it constructs a construct (the function space type \(t \to t&rsquo;\))</p><p>This is <a href=#implication-introduction>implication introduction</a>.</p><h2 id=proof-statements>proof statements</h2><h3 id=implication-elimination>implication elimination</h3><p><strong>elimination</strong> asks for a proof of \(t \to t&rsquo;\) and a proof of \(t\), and gives us a proof for \(t&rsquo;\).</p><h3 id=implication-introduction>implication introduction</h3><p><strong>introduction rule</strong> asks for a proof of \(t&rsquo;\) while assuming \(t\), and gives a proof for \(t \to t&rsquo;\).</p><h3 id=curry-howard-isomorphism>Curry-Howard Isomorphism</h3><p>there is an <a href=/posts/kbhisomorphism/>isomorphism</a> between programs/types and proofs/propositions.</p><p>\begin{equation}
+\vdash e: t
+\end{equation}</p><p>means&mldr;</p><ul><li>we have a proof that the program \(e\) has type \(t\), so \(\to\) is a constructor for function types</li><li>\(e\) is a proof of statement \(t\), so \(\to\) is a logical implication sign</li></ul><h3 id=constructive-logic>constructive logic</h3><p>our goal here is to encode standard logic now into this program-based type scheme; in particular, we want to use a program \(e_{j}\) as a witness for a proof of a certain type \(t\) for \(e_{j} : t\)</p><h4 id=and>AND</h4><ul><li><p>introduction</p><p>\begin{equation}
+\frac{A \vdash e_1 : t_1, A \vdash e_2: t_2}{A \vdash \qty(e_1, e_2) : t_1 \wedge t_2}
+\end{equation}</p></li></ul><ul><li><p>eliminate left</p><p>\begin{equation}
+\frac{A \vdash e: t_1 \wedge t_2}{A \vdash e.0: t_1}
+\end{equation}</p></li></ul><ul><li><p>eliminate right</p><p>\begin{equation}
+\frac{A \vdash e: t_1 \wedge t_2}{A \vdash e.1: t_2}
+\end{equation}</p></li></ul><h4 id=or>OR</h4><p><strong>important</strong>: this is the <em>constructive</em> or&mdash;meaning we construct <strong>evidence</strong> for everything we prove (i.e. we have to exhibit a program that has the type we want to shown)</p><p>therefore, \(t \vee \neg t\) is <strong>NOT</strong> axiomatically true in this system. both \(t\) and \(\neg t\) may be true or not true.</p><ul><li><p>introduction left</p><p>\begin{equation}
+\frac{A \vdash e : t_1}{A \vdash e : t_1 \vee t_2}
+\end{equation}</p></li></ul><ul><li><p>introduction right</p><p>\begin{equation}
+\frac{A \vdash e : t_2}{A \vdash e : t_1 \vee t_2}
+\end{equation}</p></li></ul><ul><li><p>eliminate</p><p>This is very hard, but this makes sense: once we are handed something of a compound &ldquo;of&rdquo; type, we can&rsquo;t do anything other than using conditional logic to check which arm of the compound our thing is.</p><p>\begin{equation}
+\frac{A \vdash e : t_1 \vee t_2, A, x: t_1 \vdash e_1 : t_0, A,x: t_2 \vdash e_2: t_0}{A \vdash \qty(\lambda x . \text{case } x \text{ of } t_1 \to e_1; t_2 \to e_2 ) e_0: t_0}
+\end{equation}</p><p>&ldquo;create two branches, both of which returns type \(t_0\); however, each of them gets to that type \(t_0\) in a different way (either \(e_1\) or \(e_2\)) based on what type \(x\) is (either \(t_1\) or \(t_2\))&rdquo;</p></li></ul><h4 id=not>NOT</h4><p>\begin{equation}
+\neg p:= p\to \text{false}
+\end{equation}</p><p>that is, \(p\) implies &ldquo;false&rdquo;, having no elements at all. that is, the set of things \(p\) implies (i.e. &ldquo;false&rdquo;) either has no content at all, or its content is only filled with non-terminating functions.</p><p>this is useful for&mldr;</p><ul><li>negation</li><li>proof by contradiction (i.e. when we are trying to formalize mathematics)</li></ul><h4 id=continuation--kbhcontinuation-dot-md--s><a href=/posts/kbhcontinuation/>continuation</a>s</h4><p>we can actually use NOT to sketch <a href=/posts/kbhcontinuation/>continuation</a>s.</p><p>in lambda calculus, you can&rsquo;t have a thing of type \(\neg p\), because false has no elements.</p><p>but, with continuations, the continuation function doesn&rsquo;t actually return when it is called&mdash;it just finishes the program and exits.</p><p>So, continuations really have a type of \(p \to \text{false}\).</p><h2 id=constructive-vs-classical-logic>constructive vs classical logic</h2><p><strong>constructive logic</strong> gives us programs that we can run</p><p>we can give axioms as well in constructive logic, but in classical logic we have to witness in the form of programs at all.</p><h2 id=bootstrapping-type-theory>bootstrapping type theory</h2><p>we should be able to define type checking, boolean logic, etc. all within the same framework of type theory.</p><h3 id=some-primitives>some primitives</h3><p>let&rsquo;s first define a type <code>Type</code> which contains the set of all types:</p><p>\begin{equation}
+\text{Type} = \qty(\text{Int}, \text{Bool}, \text{Int} \to \text{Int}, \dots)
+\end{equation}</p><p>we also should define inference rules, which quires a type <code>Proof</code>.</p><h3 id=boolean-connectives>boolean connectives</h3><p>\begin{equation}
+\text{and}: \text{Type} \to \text{Type} \to \text{Type}
+\end{equation}</p><p>\blankbegin{equation}
+\text{or}: \text{Type} → \text{Type} → \text{Type}
+\end{equation}</p><p>\begin{equation}
+\text{not}: \text{Type} \to \text{Type} \to \text{Type}
+\end{equation}</p><p>these are now functions on types, which means that we can define functions themselves. for instance, and should form the pair.</p><h3 id=inference-rules>inference rules</h3><p>now, we can then write inference rules in terms of <code>Proof</code> (its a function that takes in zero or more hypotheses&mdash;<code>Proof</code>&mdash;and then checks that they are correct)</p><p>\begin{equation}
+\text{{And-Intro}}: \text{Proof} \to \text{Proof} \to \text{Proof}
+\end{equation}</p><p>\begin{equation}
+\text{{And-Elim-Left}}: \text{Proof} \to \text{Proof}
+\end{equation}</p><p>\begin{equation}
+\text{{And-Elim-Right}}: \text{Proof}\to \text{Proof}
+\end{equation}</p><p>that is, we should construct machines that takes proofs and manipulate them to get other proofs, etc.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

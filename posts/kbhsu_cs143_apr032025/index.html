@@ -1,0 +1,153 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS143 APR032025</title>
+<meta name=description content="how to design a language: &ldquo;why don&rsquo;t we just make a truing machine?&rdquo; tl;dr: &ldquo;writing code in a Turing Machine takes a while, writing it in C++ takes a little less while.&rdquo;
+
+languages fills a void: makes something previously difficult/impossible easy
+good languages vs. language design needs are orthogonal things
+
+why do we not change languages?
+
+rewriting code is hard
+languages with many users are replaced rarely &mdash; popular languages are ossified
+so people just go start new niches
+
+language vs. ends
+
+SQL: query optimizations by separating data query vs. access pattern (inserting indexes w/o rewrite code)
+Python: library composition / FFI
+Haskell: proofs and type safety
+Rust: security
+
+language design
+
+no universally accepted metrics for design
+claim: &ldquo;a good language is the one that people use&rdquo; (&ldquo;I don&rsquo;t really buy that, because otherwise PHP would be the best language&rdquo; - Fred 2025)
+
+abstraction
+abstraction &mdash; detaching high level problems from functional details, &ldquo;selective ignorance&rdquo;."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS143 APR032025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><strong>how to design a language</strong>: &ldquo;why don&rsquo;t we just make a truing machine?&rdquo; tl;dr: &ldquo;writing code in a Turing Machine takes a while, writing it in C++ takes a little less while.&rdquo;</p><ul><li>languages fills a void: makes something previously difficult/impossible easy</li><li>good languages vs. language design needs are orthogonal things</li></ul><h2 id=why-do-we-not-change-languages>why do we not change languages?</h2><ul><li>rewriting code is hard</li><li>languages with many users are replaced rarely &mdash; popular languages are ossified</li><li>so people just go start new niches</li></ul><h2 id=language-vs-dot-ends>language vs. ends</h2><ul><li>SQL: query optimizations by separating data query vs. access pattern (inserting indexes w/o rewrite code)</li><li>Python: library composition / FFI</li><li>Haskell: proofs and type safety</li><li>Rust: security</li></ul><h2 id=language-design>language design</h2><ul><li>no universally accepted metrics for design</li><li>claim: &ldquo;a good language is the one that people use&rdquo; (&ldquo;I don&rsquo;t really buy that, because otherwise PHP would be the best language&rdquo; - Fred 2025)</li></ul><h3 id=abstraction>abstraction</h3><p><strong>abstraction</strong> &mdash; detaching high level problems from functional details, &ldquo;selective ignorance&rdquo;.</p><ul><li>key is <strong>information hiding</strong>: expose only the essential things</li><li>leave <strong>high level properties</strong></li></ul><p>To create abstractions, we&mldr;</p><ul><li><strong>use languages and compilers</strong>: create high level code with few dependencies specific to machines</li><li><strong>use functions</strong>: allows users to create interfaces to behavior</li><li><strong>use modules</strong>: export interfaces and hide implementations</li><li><strong>use classes / ADTs</strong>: bundle data with its operations</li></ul><h3 id=some-good-ideas>some good ideas</h3><h4 id=types>types</h4><p>&ldquo;types is used to enforce abstractions&rdquo;</p><ul><li>FORTRAN: scalars, arrays, and that&rsquo;s it</li><li>LISP: no static type distinctions</li></ul><p><strong>insight</strong>: types are helpful!</p><ul><li>they let you express and enforce your own abstractions</li><li>they let the compiler report frequent errors</li><li>&mldr;up to complete safety (Java, Haskell, Lean, etc.)</li><li>helps guide optimization</li></ul><h4 id=reuse>reuse</h4><p>Exploit common platter in software systems (to get mass-produced components and reuse).</p><ul><li>type parameterizations: (List[int], List[double])</li><li>classes and inheritance: derived classes</li><li>C++ and Java has both!</li></ul><p>During class derivations, good approaches mostly emit the code multiple times for each specialization. Inheritance allows:</p><ul><li>specialization of existing abstraction</li><li>extension, modification, hidden behavior, etc.</li></ul><h2 id=cool>COOL</h2><p>We will implement <a href=#cool>COOL</a> in this class; written by Alex in the 90s.</p><ul><li>abstraction</li><li>static typing</li><li>inheritance</li><li>strict object orientation (everything is in a class)</li><li>memory management (with GC (oh no)!)</li><li>light metaprograming</li></ul><h3 id=a-tour>A Tour</h3><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>Point</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>x</span> <span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>y</span> <span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>};</span>
+</span></span></code></pre></div><p>Inside class <code>Main</code>, there&rsquo;s a special method <code>main</code>. All COOL code lives inside this evaluation.</p><ul><li>class = {attributes, methods}</li><li>instances of classes are objects</li></ul><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>Point</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>x</span> <span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;</span> <span style=color:#f92672>-</span> <span style=color:#111>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>y</span> <span style=color:#111>:</span> <span style=color:#111>Int</span><span style=color:#111>;</span> <span style=color:#111>(</span><span style=color:#f92672>*</span> <span style=color:#111>could</span> <span style=color:#111>have</span> <span style=color:#00a8c8>default</span> <span style=color:#111>values</span> <span style=color:#f92672>*</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>};</span>
+</span></span></code></pre></div><p>Objects are thought of as records</p><pre tabindex=0><code class=language-dot data-lang=dot>digraph {
+graph [bgcolor=transparent];
+node [fontcolor=white, color=white, shape=none];
+edge [fontcolor=white, color=white];
+
+a [label=&#34;{{x|y} | {0|0}}&#34;, shape=&#34;record&#34;];
+}
+</code></pre><figure><img src=/ox-hugo/cool_obj.svg></figure><h4 id=classes>classes</h4><p>Classes can only contain features = {attributes, methods}. Here&rsquo;s a class both types of features:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>Point</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>x</span> <span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>y</span> <span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>movePoint</span><span style=color:#111>(</span><span style=color:#111>newx</span> <span style=color:#111>:</span> <span style=color:#111>Int</span><span style=color:#111>,</span> <span style=color:#111>newy</span> <span style=color:#111>:</span> <span style=color:#111>Int</span><span style=color:#111>)</span> <span style=color:#111>:</span> <span style=color:#111>Point</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>x</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>newx</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>y</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>newy</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>            <span style=color:#111>self</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>}</span> <span style=color:#f92672>---</span> <span style=color:#00a8c8>this</span> <span style=color:#111>is</span> <span style=color:#111>a</span> <span style=color:#111>block</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>};</span>
+</span></span><span style=display:flex><span><span style=color:#111>};</span>
+</span></span></code></pre></div><p>Cool, therefore, is a an <strong>expression based language</strong> (a la Rust).</p><p>Key: one block per expression; notice how we had to surround the block in additinal curlies.</p><p>Some facts:</p><ul><li>shadowing is allowed</li><li>methods are all <strong>GLOBAL/PUBLIC</strong></li><li>attributes are all <strong>LOCAL/PRIVATE</strong> (make getters)</li><li>all attributes of a class are visible to all methods of that class (just use the name)</li></ul><h4 id=allocation>allocation</h4><p>When we have a method, we put in the field a pointer to the actual function.</p><pre tabindex=0><code class=language-dot data-lang=dot>digraph {
+graph [bgcolor=transparent];
+node [fontcolor=white, color=white, shape=none];
+edge [fontcolor=white, color=white];
+
+obj [label=&#34;{{x|y| }|{0|0|&lt;here&gt;*}}&#34;, shape=&#34;record&#34;];
+
+obj:here:e -&gt; movePoint;
+}
+</code></pre><figure><img src=/ox-hugo/cool_inheritance.svg></figure><p>As an optimization, if multiple instances exist, we create a method table or a <strong>vtable</strong> which points to all methods.</p><pre tabindex=0><code class=language-dot data-lang=dot>digraph {
+graph [bgcolor=transparent];
+node [fontcolor=white, color=white, shape=none];
+edge [fontcolor=white, color=white];
+
+obj [label=&#34;{{x|y| }|{0|0|&lt;here&gt;*}}&#34;, shape=&#34;record&#34;];
+methods [label=&#34;{methods|*}&#34;, shape=&#34;record&#34;]
+
+obj:here:e -&gt; methods:e -&gt; movePoint;
+}
+</code></pre><figure><img src=/ox-hugo/cool_inheritance.svg></figure><h4 id=inheritance>inheritance</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#00a8c8>class</span> <span style=color:#75af00>ColorPoint</span> <span style=color:#111>inherits</span> <span style=color:#111>Point</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>color</span> <span style=color:#111>:</span> <span style=color:#111>Int</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>movePoint</span><span style=color:#111>(</span><span style=color:#111>newx</span> <span style=color:#111>:</span> <span style=color:#111>Int</span><span style=color:#111>,</span> <span style=color:#111>newy</span> <span style=color:#111>:</span> <span style=color:#111>Int</span><span style=color:#111>):</span> <span style=color:#111>Point</span> <span style=color:#111>{{</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>color</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>x</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>newx</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>y</span> <span style=color:#f92672>&lt;-</span> <span style=color:#111>newy</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>self</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}};</span>
+</span></span><span style=display:flex><span><span style=color:#111>};</span>
+</span></span></code></pre></div><p>notice how <code>movePoint</code> still returns a <code>Point</code> because we don&rsquo;t have multiple dispatch.</p><h4 id=types>types</h4><p>Every class is a type.</p><ul><li>base classes: Int, Bool, String, Object (root of the hierachy)</li><li>everything must be declared (the complier infers types)</li></ul><h4 id=type-checking>type checking</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>x</span> <span style=color:#111>:</span> <span style=color:#111>A</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>x</span> <span style=color:#f92672>&lt;-</span> <span style=color:#00a8c8>new</span> <span style=color:#111>B</span><span style=color:#111>:</span>
+</span></span></code></pre></div><p>is well typed if <code>A</code> is an ancestor of <code>B</code>.</p><h4 id=invocation>invocation</h4><p>Consider:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>p</span> <span style=color:#111>:</span> <span style=color:#111>Point</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>p</span> <span style=color:#f92672>&lt;-</span> <span style=color:#00a8c8>new</span> <span style=color:#111>ColorPoint</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>...</span>
+</span></span><span style=display:flex><span><span style=color:#111>p</span><span style=color:#111>.</span><span style=color:#75af00>movePoint</span><span style=color:#111>(</span><span style=color:#111>1</span><span style=color:#111>,</span><span style=color:#111>2</span><span style=color:#111>);</span> <span style=color:#f92672>--</span> <span style=color:#00a8c8>this</span> <span style=color:#111>should</span> <span style=color:#111>invoke</span> <span style=color:#111>the</span> <span style=color:#111>ColorPoint</span> <span style=color:#111>version</span>
+</span></span></code></pre></div><p>So, consider:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-java data-lang=java><span style=display:flex><span><span style=color:#111>e</span><span style=color:#111>.</span><span style=color:#75af00>m</span><span style=color:#111>(</span><span style=color:#111>a</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>the evaluation semantics:</p><ol><li>evaluate arguments <code>a</code></li><li>evaluate <code>e</code>, the receiver</li><li>find the class of <code>e</code></li><li>find code of <code>m</code> (to jump through the method table to the methods of <code>e</code> to find <code>m</code>) &mdash; we have to do this dynamically because we don&rsquo;t know (see example above) whether this is a point or color point or whatever</li><li>bind <code>self</code> and arguments (such as <code>a</code>, the formal parameter, to the actual parameter, x)</li><li>jump and run the actual method</li></ol><h4 id=expression-language-so>expression language, so</h4><figure><img src=/ox-hugo/2025-04-03_11-49-56_screenshot.png></figure><p>we don&rsquo;t have&mldr;</p><ul><li>arrays</li><li>floats</li><li>exceptions</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

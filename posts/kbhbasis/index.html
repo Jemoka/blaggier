@@ -1,0 +1,100 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>basis</title>
+<meta name=description content="A basis is a list of vectors in \(V\) that spans \(V\) and is linearly independent
+constituents
+
+a LIST! of vectors in vector space \(V\)
+
+requirements
+
+the list is&mldr;
+
+linear independent
+spans \(V\)
+
+
+
+additional information
+criteria for basis
+A list \(v_1, \dots v_{n}\) of vectors in \(V\) is a basis of \(V\) IFF every \(v \in V\) can be written uniquely as:
+\begin{equation}
+v = a_1v_1+ \dots + a_{n}v_{n}
+\end{equation}
+where \(a_1, \dots, a_{n} \in \mathbb{F}\).
+forward direction
+Suppose we have \(v_1, \dots, v_{n}\) as the basis in \(V\). We desire that \(v_1, \dots v_{n}\) uniquely constructs each \(v \in V\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>basis</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A basis is a list of <a href=/posts/kbhvector/>vector</a>s in \(V\) that <a href=/posts/kbhspan/#spans>spans</a> \(V\) and is <a href=/posts/kbhlinear_independence/>linearly independent</a></p><h2 id=constituents>constituents</h2><ul><li>a LIST! of <a href=/posts/kbhvector/>vector</a>s in <a href=/posts/kbhvector_space/>vector space</a> \(V\)</li></ul><h2 id=requirements>requirements</h2><ul><li>the list is&mldr;<ul><li><a href=/posts/kbhlinear_independence/>linear independent</a></li><li><a href=/posts/kbhspan/#spans>spans</a> \(V\)</li></ul></li></ul><h2 id=additional-information>additional information</h2><h3 id=criteria-for-basis--kbhbasis-dot-md>criteria for <a href=/posts/kbhbasis/>basis</a></h3><p>A list \(v_1, \dots v_{n}\) of vectors in \(V\) is a <a href=/posts/kbhbasis/>basis</a> of \(V\) <a href=/posts/kbhequivalence/>IFF</a> every \(v \in V\) can be written uniquely as:</p><p>\begin{equation}
+v = a_1v_1+ \dots + a_{n}v_{n}
+\end{equation}</p><p>where \(a_1, \dots, a_{n} \in \mathbb{F}\).</p><h4 id=forward-direction>forward direction</h4><p>Suppose we have \(v_1, \dots, v_{n}\) as the <a href=/posts/kbhbasis/>basis</a> in \(V\). We desire that \(v_1, \dots v_{n}\) uniquely constructs each \(v \in V\).</p><p>By definition, they <a href=/posts/kbhspan/>span</a> \(V\) and are <a href=/posts/kbhlinear_independence/>linear independent</a> in \(V\).</p><p>Because of the <a href=/posts/kbhspan/#spans>spanning</a> quality, there exists <em>at least</em> one set of \(a_1, \dots, a_{n} \in \mathbb{F}\) such that we can write:</p><p>\begin{equation}
+v \in V = a_1v_1+ \dots + a_{n}v_{n}
+\end{equation}</p><p>Suppose now that we have another representation of \(v\) via scalars \(c_1, \dots, c_{n}\) and our same list of vectors:</p><p>\begin{equation}
+v \in V =^{?} c_1v_1+ \dots + c_{n}v_{n}
+\end{equation}</p><p>Subtracting the two expressions, we have that:</p><p>\begin{equation}
+0 = (a_1-c_1)v_1 + \dots +(a_{n}-c_{n}) v_{n}
+\end{equation}</p><p>By definition that \(v_1 \dots v_{n}\) is <a href=/posts/kbhlinear_independence/>linearly independent</a>, we have that \(a_j-c_j=0 \implies a_{j}=c_{j}\). Therefore, there is only one unique representation for \(v\) as a <a href=/posts/kbhlinear_combination/>linear combination</a> of vectors \(v_1, \dots v_{n}\).</p><p>(to be honest, we could have just applied that as the definition of <a href=/posts/kbhlinear_independence/>linear independence</a> that the scalars in a linear combo of linearly independent list is unique but this is the more careful definition.)</p><h4 id=backward-direction>backward direction</h4><p>Suppose we have a list \(v_1, \dots v_{n}\) which uniquely constructs each \(v \in V\). We desire that \(v_1, \dots v_{n}\) is a <a href=/posts/kbhbasis/>basis</a> in \(V\). Given a linear combination thereof can construct all \(v \in V\), we can say that \(v_1, \dots v_{n}\) <a href=/posts/kbhspan/#spans>spans</a> \(V\).</p><p>As \(V\) is a <a href=/posts/kbhvector_space/>vector space</a>, we have \(0 \in V\). Therefore, there exists some scalars \(a_1, \dots a_{n}\) for which:</p><p>\begin{equation}
+0 = a_1v_1 + \dots +a_{n}v_{n}
+\end{equation}</p><p>(as we already established \(v_1, \dots, v_{n}\) <a href=/posts/kbhspan/#spans>spans</a> \(V\) and \(0 \in V\))</p><p>Of course, we are given that \(v_1, \dots v_{n}\) uniquely constructs each \(v \in V\). As the trivial solution <em>does</em> exist: that \(a_1 = \dots = a_{n} = 0\), it is the only solution.</p><p>By definition of <a href=/posts/kbhlinear_independence/>linear independence</a>, then, \(v_1, \dots v_{n}\) is <a href=/posts/kbhlinear_independence/>linearly independent</a>. Having constructed that \(v_1, \dots v_{n}\) is both a <a href=/posts/kbhspan/#spans>spanning</a> set in \(V\) and are <a href=/posts/kbhlinear_independence/>linearly independent</a>, we have that they are a <a href=/posts/kbhbasis/>basis</a> of \(V\). \(\blacksquare\)</p><h3 id=dualing-basis-construction>Dualing Basis Construction</h3><p>These are two results that says: &ldquo;you can build up a <a href=/posts/kbhlinear_independence/>linearly independent</a> list to a <a href=/posts/kbhbasis/>basis</a> or you can pluck away a <a href=/posts/kbhspan/#spans>spanning</a> list to a <a href=/posts/kbhbasis/>basis</a>&rdquo;.</p><h4 id=all-spanning--kbhspan-dot-md--lists-contains-a-basis--kbhbasis-dot-md--of-which-you-are-spanning--kbhspan-dot-md>all <a href=/posts/kbhspan/#spans>spanning</a> lists contains a <a href=/posts/kbhbasis/>basis</a> of which you are <a href=/posts/kbhspan/#spans>spanning</a></h4><p>Every <a href=/posts/kbhspan/#spans>spanning</a> list in \(V\) contains the <a href=/posts/kbhbasis/>basis</a> (and possibly some more) in \(V\).</p><p>Read: &ldquo;apply <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a> your way to success&rdquo;.</p><p>Begin with a <a href=/posts/kbhspan/#spans>spanning</a> list \(v_1, \dots v_{m}\) of \(V\). We run a for loop for the list.</p><ul><li><p>Step 0:</p><p>If \(v_1=0\) (i.e. \(v_1 \in span(\{\})\)), delete \(v_1\). Otherwise, do nothing.</p></li></ul><ul><li><p>Step \(j\):</p><p>If \(v_{j}\) is in \(span(v_1, \dots v_{j-1})\), \(v_{j}\) satisfies the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a>&rsquo;s first condition, and therefore naturally satisfies the second condition (removal from list keeps the same <a href=/posts/kbhspan/>span</a> because \(v_{j}\) can just be rewritten from \(v_1, \dots v_{j-1}\)).</p><p>So we remove \(v_{j}\) if it is indeed in the span of the previous vectors. By the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a>, the new list <a href=/posts/kbhspan/#spans>spans</a> the same space the old list.</p></li></ul><ul><li><p>Conclusion</p><p>By the end of this process, no vectors left in the list will satisfy the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a> (read: we got rid of all of them.) Therefore, the list is <a href=/posts/kbhlinear_independence/>linearly independent</a>. However, every step of the way the <a href=/posts/kbhlinear_dependence_lemma/>Linear Dependence Lemma</a> ensures that the new list <a href=/posts/kbhspan/#spans>spans</a> the same space; therefore, the new list still <a href=/posts/kbhspan/#spans>spans</a> \(V\). Having constructed a <a href=/posts/kbhlinear_independence/>linearly independent</a> list that <a href=/posts/kbhspan/#spans>spans</a> \(V\), we declare the new list as a <a href=/posts/kbhbasis/>basis</a> of \(V\).</p><p>As all we did was pluck vectors out of the old list, the new list is a sublist of the old list. This means that the <a href=/posts/kbhspan/#spans>spanning</a> list (old list) contains the new list, which is a basis. \(\blacksquare\)</p></li></ul><h4 id=a-linearly-independent--kbhlinear-independence-dot-md--list-expends-to-a-basis--kbhbasis-dot-md>a <a href=/posts/kbhlinear_independence/>linearly independent</a> list expends to a <a href=/posts/kbhbasis/>basis</a></h4><p>Every <a href=/posts/kbhlinear_independence/>linearly independent</a> list of <a href=/posts/kbhvector/>vector</a>s in <a href=/posts/kbhfinite_dimensional_vector_space/>finite-dimensional vector space</a>s can be extended to a basis.</p><p>Recall first that <a href=/posts/kbhfinite_dimensional_vector_space/#every-id-4ed27ed5-4edc-4ef4-afd7-9b8e3bcd9b96-finite-dimensional-vector-space-has-a-id-f88170b1-08b5-48a7-a7b5-1ace768e7b28-basis>every finite-dimensional vector space has a basis</a>.</p><p>Let&rsquo;s begin with a <a href=/posts/kbhlinear_independence/>linearly independent</a> list in \(V\) \(u_1, \dots u_{m}\). Let&rsquo;s recruit also a <a href=/posts/kbhbasis/>basis</a> of \(V\): \(w_{1}, \dots w_{m}\).</p><p>Naturally: \(u_1, \dots u_{m}, w_1, \dots w_{m}\) <a href=/posts/kbhspan/#spans>spans</a> \(V\) (as the \(w\) vectors already <a href=/posts/kbhspan/>span</a> \(V\)). We will now apply the fact that <a href=#all-spanning--kbhspan-dot-md--lists-contains-a-basis--kbhbasis-dot-md--of-which-you-are-spanning--kbhspan-dot-md>all spanning lists contains a basis of which you are spanning</a> (the order of \(u\) vectors first and \(w\) vectors second ensuring that you try to remove the \(w\), and, as \(u\) are <a href=/posts/kbhlinear_independence/>linearly independent</a>, none of them will be removed) to get back a <a href=/posts/kbhbasis/>basis</a> in \(V\) consisting of all \(u\) and some \(w\). \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

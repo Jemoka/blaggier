@@ -1,0 +1,97 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>dispatching</title>
+<meta name=description content="&ldquo;how does an operating system track threads and processes&rdquo;
+see process control block
+traps and interrups
+Bad problem: the operating system can&rsquo;t be running when a user thread is running. We can&rsquo;t do thread bookeeping if a user thread is running.
+trap
+a trap is a scheme to request OS attention explicitly from the user thread, swapping the user process off the CPU.
+
+system calls
+errors
+page fault (memory errors)
+
+interrupt
+a interrupt takes place outside the current thread, it forces the OS&rsquo; attention even if the user thread isn&rsquo;t asking for it"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>dispatching</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>&ldquo;how does an operating system track threads and processes&rdquo;</p><p>see <a href=/posts/kbhprocess_control_block/>process control block</a></p><h2 id=traps-and-interrups>traps and interrups</h2><p>Bad problem: <strong>the operating system can&rsquo;t be running when a user thread is running</strong>. We can&rsquo;t do thread bookeeping if a user thread is running.</p><h3 id=trap>trap</h3><p>a <a href=#trap>trap</a> is a scheme to request OS attention explicitly from the user thread, swapping the user process off the CPU.</p><ol><li>system calls</li><li>errors</li><li>page fault (memory errors)</li></ol><h3 id=interrupt>interrupt</h3><p>a <a href=#interrupt>interrupt</a> takes place outside the current thread, it forces the OS&rsquo; attention even if the user thread isn&rsquo;t asking for it</p><ol><li>character typed at keyboard</li><li>completion of a disk operations</li><li>a hardware timer that fires an interrupt</li></ol><p><a href=#interrupt>interrupt</a>s enable <a href=/posts/kbhpreemption/>preemption</a> to happen, so see also <a href=/posts/kbhpreemption/>preemption</a> for interrupt handling pattern.</p><h4 id=what-if-a-timer-goes-off-during-an-interrupt--orge7a39af>what if a timer goes off during an <a href=#interrupt>interrupt</a></h4><p><strong>interrupts are disabled during interrupt handling</strong>, otherwise, this causes an infinite loop.</p><p>solution: <em>interrupts are disabled during timer handling</em>.</p><p>this causes a problem: if you <a href=/posts/kbhpreemption/#preempting-into-a-brand-new-thread>preempt into a brand new thread</a></p><h4 id=main-idea>main idea</h4><ul><li>there are <a href=/posts/kbhmultithreading/#race-condition>race condition</a> we cannot solve with <a href=/posts/kbhmultithreading/#mutex>mutex</a>es because we are the OS</li><li>so, <strong>we</strong> implement mutexes by enabling/disabling <a href=#interrupt>interrupt</a>s</li></ul><h2 id=dispatcher>dispatcher</h2><p>a <a href=#dispatcher>dispatcher</a> performs a <a href=#context-switch>context switch</a>, which</p><h3 id=context-switch>context switch</h3><ol><li>(in asm) push <strong>all <a href=/posts/kbhassembly/#register>register</a>s</strong> except <code>%rsp</code> into the bottom of the old thread&rsquo;s <a href=/posts/kbhstack/>stack</a></li><li>store the <a href=/posts/kbhassembly/#stack-pointer>stack pointer</a> <code>%rsp</code> into the <a href=/posts/kbhprocess_control_block/>process control block</a> for that process corresponding to thread</li><li>read the new thread&rsquo;s stack pointer from the <a href=/posts/kbhprocess_control_block/>process control block</a>, and load that into <code>%rsp</code></li><li>(in asm) pop <strong>all <a href=/posts/kbhassembly/#register>register</a>s</strong> stored on the bottom of our new stack back onto the registers</li></ol><p>remember to push and pop the <a href=/posts/kbhassembly/#register>register</a>s in the same order&mldr;. otherwise the registers won&rsquo;t be in the right order.</p><p>this makes a <a href=#context-switch>context switch</a> a function that <strong>calls on one thread</strong> and <strong>returns on another thread</strong>&mdash;&ldquo;we start executing from one stack, and end executing from another&rdquo;.</p><p>Example:</p><p>context switch</p><p>Notice that we only store <strong>callee saved registers</strong> because its the responsibility of whomever called context switch to save the register of the <strong>caller saved registers</strong>.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-asm data-lang=asm><span style=display:flex><span>    <span style=color:#75af00>pushq</span> <span style=color:#111>%rbp</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>pushq</span> <span style=color:#111>%rbx</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>pushq</span> <span style=color:#111>%r14</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>pushq</span> <span style=color:#111>%r15</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>;; pushq all of em callee saved ...
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75af00>movq</span> <span style=color:#111>%rsp</span><span style=color:#111>,</span> <span style=color:#111>[</span><span style=color:#00a8c8>somewhere</span> <span style=color:#00a8c8>in</span> <span style=color:#00a8c8>PCB</span><span style=color:#111>,</span> <span style=color:#00a8c8>thread</span> <span style=color:#ae81ff>1</span><span style=color:#111>]</span>                  <span style=color:#75715e>; the process control block
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75af00>movq</span> <span style=color:#111>[</span><span style=color:#00a8c8>somewhere</span> <span style=color:#00a8c8>else</span> <span style=color:#00a8c8>in</span> <span style=color:#00a8c8>PCB</span><span style=color:#111>,</span> <span style=color:#00a8c8>thread</span> <span style=color:#ae81ff>2</span><span style=color:#111>],</span> <span style=color:#111>%rsp</span>             <span style=color:#75715e>; the stack is now somewhere else
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>;; now we pop backwards up from the stack
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>;; popq all of em calee saved ...
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75af00>popq</span> <span style=color:#111>%r15</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>popq</span> <span style=color:#111>%r14</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>popq</span> <span style=color:#111>%rbx</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>popq</span> <span style=color:#111>%rbp</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>;; this will RETURN to the last call *or* top of context_switch() of the
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>;; **THREAD 2**, because we moved the stack pointer by movq into
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>;; %rsp, we will return to the NEW thread&#39;s last executed position
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75af00>ret</span>
+</span></span></code></pre></div><h4 id=what-if-the-thread-is-new>what if the thread is new?</h4><p>We can&rsquo;t <code>ret</code> to a function that never called <code>context_switch</code>, which is the case for <strong>new threads</strong>.</p><p>To do this, we create a fake freeze frame on the stack for that new thread which looks like you are just about to call the thread function, and calls <code>context_switch</code> normally.</p><h3 id=yield>yield</h3><p><a href=#yield>yield</a> is a user function that one could implement, which acts like a blocking action, but instead of doing that we just add ourselves directly to the end of the ready queue again. (i.e. give up CPU voluntarily, but don&rsquo;t block0.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

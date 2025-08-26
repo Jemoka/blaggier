@@ -1,0 +1,211 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Finance (Eigen)</title>
+<meta name=description content="We have a system of differential equations:
+\begin{equation}
+\begin{cases}
+\dv{I}{t} = -0.73 U(t) + 0.0438 + 0.4 \dv{M}{t} \\
+\dv{U}{t} = 0.4I-0.012 \\
+\dv{G}{t} = \dv{M}{t} - I(t)
+\end{cases}
+\end{equation}
+where, \(M\) is a sinusoidal function which we can control.
+We hope for this system to be as stable as possible.
+First, let&rsquo;s try to get a general solution of the system. The linearized(ish) solution takes the shape of:
+\begin{equation}
+\dv t \mqty(I \\ U \\ G) = \mqty(0 & -x_1 & 0 \\ x_4 & 0 & 0 \\ -1 & 0 & 0 ) \mqty(I \\ U \\ G)+ \dv{M}{t}\mqty(x_3 \\ 0 \\ 1) + \mqty(x_2 \\ x_5 \\ 0)
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Finance (Eigen)</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>We have a system of differential equations:</p><p>\begin{equation}
+\begin{cases}
+\dv{I}{t} = -0.73 U(t) + 0.0438 + 0.4 \dv{M}{t} \\
+\dv{U}{t} = 0.4I-0.012 \\
+\dv{G}{t} = \dv{M}{t} - I(t)
+\end{cases}
+\end{equation}</p><p>where, \(M\) is a sinusoidal function which we can control.</p><p>We hope for this system to be as stable as possible.</p><p>First, let&rsquo;s try to get a general solution of the system. The linearized(ish) solution takes the shape of:</p><p>\begin{equation}
+\dv t \mqty(I \\ U \\ G) = \mqty(0 & -x_1 & 0 \\ x_4 & 0 & 0 \\ -1 & 0 & 0 ) \mqty(I \\ U \\ G)+ \dv{M}{t}\mqty(x_3 \\ 0 \\ 1) + \mqty(x_2 \\ x_5 \\ 0)
+\end{equation}</p><p>With:</p><p>\begin{equation}
+\begin{cases}
+x_1 = 0.73 \\
+x_2 = 0.0438 \\
+x_3 = 0.4 \\
+x_4 = 0.4 \\
+x_5 = 0.012
+\end{cases}
+\end{equation}</p><p>as input parameters. We will follow the method of underdetermined coefficients: taking the homogeneous solution first and then using it to get the general solution.</p><h2 id=homogeneous-system>Homogeneous System</h2><p>To get the characteristic equation of the <a href=/posts/kbhhomogeneity/>homogeneous</a> system, we take the <a href=/posts/kbheigenvalue/>eigenvalue</a> of the system:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>x1</span><span style=color:#111>,</span><span style=color:#111>x2</span><span style=color:#111>,</span><span style=color:#111>x3</span><span style=color:#111>,</span><span style=color:#111>x4</span><span style=color:#111>,</span><span style=color:#111>x5</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;x1 x2 x3 x4 x5&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>matrix</span> <span style=color:#f92672>=</span> <span style=color:#111>matrix</span><span style=color:#111>([[</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#f92672>-</span><span style=color:#111>x1</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#111>[</span><span style=color:#111>x4</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#111>[</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span><span style=color:#ae81ff>0</span><span style=color:#111>]])</span>
+</span></span><span style=display:flex><span><span style=color:#111>matrix</span><span style=color:#f92672>.</span><span style=color:#111>eigenvalues</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[-sqrt(-x1*x4), sqrt(-x1*x4), 0]
+</span></span></code></pre></div><p>Awesome. So we can see that our characteristic equation will be:</p><p>\begin{align}
+\mqty(I \\ U \\ G)_{h} &= \vec{c_0} e^{0t} + \vec{c_1} e^{\sqrt{-x_1x_4}t} + \vec{c_2} e^{-\sqrt{-x_1x_4}t} \\
+&= \vec{c_0} + \vec{c_1}e^{i \sqrt{x_1x_4}t} + \vec{c_2} e^{-i \sqrt{x_1x_4}t}
+\end{align}</p><p>Now, the two \(e^{ix}\) functions, one positive and one negative, inspires us to the following results:</p><p>\begin{equation}
+\begin{cases}
+\cos x = \frac{e^{ix}+e^{-ix}}{2}\\
+\sin x = \frac{e^{ix}-e^{-ix}}{2i}\\
+\end{cases}
+\end{equation}</p><p>Treating \(\frac{1}{2}\) and \(\frac{1}{2i}\) (which we can do, because the constants can be defined on any space desired), we have:</p><p>\begin{align}
+\cos x + \sin x &= \frac{e^{ix}+e^{-ix}}{2} + \frac{e^{ix}-e^{-ix}}{2i} \\
+&= A_1e^{ix}+A_2e^{-ix}
+\end{align}</p><p>for some constant scalars \(A_1\) and \(A_2\)</p><p>&ldquo;Wait, doesn&rsquo;t the \(e^{-ix}\) and \(-e^{-ix}\) subtract each other out on the numerator? No, notice the denominator is different, so we will have \((A-B)e^{-ix}\) after we add the two expressions for some constants \(A\) and \(B\), it doesn&rsquo;t cancel out.&rdquo;</p><p>Performing this substitution allows us to reveal the sinusoidal nature of our characteristic equation, and get rid of those pesky \(i\).</p><p>\begin{align}
+\mqty(I \\ U \\ G)_{h} &= \vec{c_0} e^{0t} + \vec{c_1} e^{\sqrt{-x_1x_4}t} + \vec{c_2} e^{-\sqrt{-x_1x_4}t} \\
+&= \vec{c_0} + \vec{c_1}e^{i \sqrt{x_1x_4}t} + \vec{c_2} e^{-i \sqrt{x_1x_4}t} \\
+&= \vec{c_0} + \vec{c_1&rsquo;} \cos (\sqrt{x_1x_4} t)+ \vec{c_2&rsquo;} \sin (\sqrt{x_1x_4} t)
+\end{align}</p><p>The primes here indicate that \(\vec{c_1} \neq \vec{c_1&rsquo;}\) because the initial conditions shift when we move to sinusoidal functions.</p><p>Writing this out completely, ditching the vector expressions, we have</p><p>\begin{equation}
+\begin{cases}
+I_{h}(t) = I_0 + I_1\cos(\sqrt{x_1x_4}t) + I_2\sin (\sqrt{x_1x_4}t) \\
+U_{h}(t) = U_0 + U_1\cos(\sqrt{x_1x_4}t) + U_2\sin (\sqrt{x_1x_4}t) \\
+G_{h}(t) = G_0 + G_1\cos(\sqrt{x_1x_4}t) + G_2\sin (\sqrt{x_1x_4}t)
+\end{cases}
+\end{equation}</p><p>as the homogenous solutions for the equation.</p><h2 id=underdetermined-coefficients>Underdetermined Coefficients</h2><p>Recall the expression we are trying to solve is:</p><p>\begin{equation}
+\begin{cases}
+\dv{I}{t} = -0.73 U(t) + 0.0438 + 0.4 \dv{M}{t} \\
+\dv{U}{t} = 0.4I-0.012 \\
+\dv{G}{t} = \dv{M}{t} - I(t)
+\end{cases}
+\end{equation}</p><p>We dealt with the homongenous part&mldr; but <em>not</em> the next two parts! Let&rsquo;s do that.</p><p>In order to do that, we will use the method of underdetermined coefficients. Recall that:</p><p>\begin{equation}
+\dv t \mqty(I \\ U \\ G) = \mqty(0 & -x_1 & 0 \\ x_4 & 0 & 0 \\ -1 & 0 & 0 ) \mqty(I \\ U \\ G)+ \dv{M}{t}\mqty(x_3 \\ 0 \\ 1) + \mqty(x_2 \\ x_5 \\ 0)
+\end{equation}</p><p>For now, we will add the extra \(\dv{M}{t}\) term explicitly later. Let us solve for the undetermined coefficients based on the assumption that each function (except for the attenuation by \(M\)) is linear:</p><p>\begin{equation}
+y(t) = at
+\end{equation}</p><p>(&ldquo;it linearly changes over time&rdquo;)</p><p>Its derivative by time is:</p><p>\begin{equation}
+y&rsquo;(t) = a
+\end{equation}</p><p>Plugging that into our expressions above:</p><p>\begin{equation}
+\mqty(a_{I} \\ a_{U} \\ a_{G} ) = \mqty(0 & -x_1 & 0 \\ x_4 & 0 & 0 \\ -1 & 0 & 0 ) \mqty(a_{I}t \\ a_{U}t \\ a_{G} t) + \dv{M}{t} \mqty(x_3 \\ 0 \\ 1) + \mqty(x_2 \\ x_5 \\ 0)
+\end{equation}</p><p>And now, arranging the right expressions such that we can clearly see each coefficient line up, relegating \(M\) to the side, and actually multiplying:</p><p>\begin{equation}
+\mqty(a_{I} \\ a_{U} \\ a_{G} ) = \mqty(0 & -x_1 & 0 \\ x_4 & 0 & 0 \\ -1 & 0 & 0 ) \mqty(a_{I}t + x_2 \\ a_{U}t + x_5 \\ a_{G} t) + \dv{M}{t} \mqty(x_3 \\ 0 \\ 1)
+\end{equation}</p><p>\begin{equation}
+\mqty(a_{I} \\ a_{U} \\ a_{G} ) = \mqty(-x_1 (a_{U}t + x_5) \\ x_4 (a_{I}t + x_2 )\\ 1 a_{G} t) + \dv{M}{t} \mqty(x_3 \\ 0 \\ 1)
+\end{equation}</p><p>Awesome, so now, matching coefficients, we have:</p><p>\begin{equation}
+\begin{cases}
+a_{I} = -x_1x_5 \\
+a_{U} = x_4x_2 \\
+a_{G} = 0
+\end{cases}
+\end{equation}</p><p>Which I honestly could have told you by&mldr;. Just staring at the equations. furthermore, we will add the requisite shift of \(\dv{M}{t}\) to the right equations when appropriate.</p><p>So, adding the \(M(t)\) in place, our particular solutions are:</p><p>\begin{equation}
+\begin{cases}
+I_{p}(t) = -x_1x_5 t + x_3 M(t) \\
+U_{p}(t) = x_4x_2t \\
+G_{p}(t) = M(t)
+\end{cases}
+\end{equation}</p><p>as the homogenous solutions for the equation.</p><h2 id=general-solution>General Solution</h2><p>Let us know put the general and particular solutions together:</p><p>Recall that:</p><p>\begin{equation}
+\begin{cases}
+I_{h}(t) = I_0 + I_1\cos(\sqrt{x_1x_4}t) + I_2\sin (\sqrt{x_1x_4}t) \\
+U_{h}(t) = U_0 + U_1\cos(\sqrt{x_1x_4}t) + U_2\sin (\sqrt{x_1x_4}t) \\
+G_{h}(t) = G_0 + G_1\cos(\sqrt{x_1x_4}t) + G_2\sin (\sqrt{x_1x_4}t)
+\end{cases}
+\end{equation}</p><p>\begin{equation}
+\begin{cases}
+I_{p}(t) = -x_1x_5 t + 0.4M(t) \\
+U_{p}(t) = x_4x_2t \\
+G_{p}(t) = M(t)
+\end{cases}
+\end{equation}</p><p>So, by linear additivity, we have:</p><p>\begin{equation}
+\begin{cases}
+I}(t) = I_0 + I_1\cos(\sqrt{x_1x_4}t) + I_2\sin (\sqrt{x_1x_4}t) -x_1x_5 t + 0.4M(t) \\
+U}(t) = U_0 + U_1\cos(\sqrt{x_1x_4}t) + U_2\sin (\sqrt{x_1x_4}t) + x_4x_2t\\
+G}(t) = G_0 + G_1\cos(\sqrt{x_1x_4}t) + G_2\sin (\sqrt{x_1x_4}t) + M(t)
+\end{cases}
+\end{equation}</p><h2 id=simplification>Simplification</h2><p>Recall that our function \(M(t)\) is a sinusoidal function. And it is being added to some linear combination of sinusoidal functions in each term of our general solution above. Meaning, each of our equations are of the shape:</p><p>[some vertical shift] + [cosine something] + [sine something] + [optional linear drift] + [M(t)]</p><p>For us to use \(M(t)\) to attenuate/stabilize the system, the best we can do is to dampen the sinusoidal part (because \(M\) itself is sinusoidal). We can&rsquo;t do much of anything else.</p><p>To do this, we want ideally \(M(t)\) be \(\pi\) ahead of the \(\cos + \sin\) waves in each of the functions; that is, we want \(M\) to be out of phase exactly.</p><p>\(\cos +\sin\) is harder to be out of phase than just \(\sin\); if the latter, we can just figure out its frequency and shift, and be \(\pi\) ahead of it.</p><p>Fortunately, our \(\cos\) and \(\sin\) terms have exactly the same contents; therefore, their sum form just another shifted sine wave (don&rsquo;t believe me, plot it!). Therefore, we will now endeavor to combine them.</p><h3 id=aside-a-cos--x--plus-b-sin--x>Aside: \(A\cos (x)+B\sin (x)\)</h3><p>Here&rsquo;s how you go about the combination. We desire that \(A\cos (x) + B \sin (x)\) be a single shifted sine function; we know this is true (by plottingish or using imaginary numbers), so we will set the sum to some arbitrary sine function and solve for its correct coefficients to mimic the sum; that is:</p><p>\begin{equation}
+r \sin (x + \alpha) := A\cos (x) + B \sin (x)
+\end{equation}</p><p>we know desire the coefficients \(r, \alpha\) that would make this true.</p><p>Recall \(\sin a+b = \cos a\sin b + \sin a\cos b\); so:</p><p>\begin{align}
+r \sin (x+\alpha) & = r(\cos x \sin \alpha + \sin x \cos \alpha ) \\
+&= r \sin x \cos \alpha + r \cos x \sin \alpha \\
+&= (r \sin \alpha) \cos x + (r \cos \alpha) \sin x
+\end{align}</p><p>Now, we have:</p><p>\begin{equation}
+(r \sin \alpha) \cos x + (r \cos \alpha) \sin x := A\cos (x) + B \sin (x)
+\end{equation}</p><p>Therefore:</p><p>\begin{equation}
+\begin{cases}
+r\sin \alpha = A \\
+r \cos \alpha = B
+\end{cases}
+\end{equation}</p><p>And we desire correct coefficients \(r, \alpha\) in terms of \(A, B\).</p><p>Dividing the two expressions:</p><p>\begin{equation}
+\frac{\sin \alpha }{\cos \alpha } = \frac{A}{B}
+\end{equation}</p><p>Therefore, \(\alpha = \tan^{-1}\qty(\frac{A}{B})\).</p><p>Finally, recall that \(\sin^{2} x +\cos^{2} x =1\) for any \(x\). We will use this fact to get \(r\).</p><p>\begin{align}
+&\sin^{2} \alpha + \cos^{2} \alpha = 1 \\
+\Rightarrow\ & \qty(\frac{A}{r})^{2} + \qty(\frac{B}{r})^{2} =1
+\end{align}</p><p>By rearranging our pair of expressions above to get \(\sin \alpha\) and \(\cos \alpha\) by itself.</p><p>Finally, we have:</p><p>\begin{align}
+1 &= \qty(\frac{A}{r})^{2} + \qty(\frac{B}{r})^{2} \\
+&= \frac{A^{2} + B^{2}}{r^{2}}
+\end{align}</p><p>So:</p><p>\begin{equation}
+r^{2} = \sqrt{A^{2}+B^{2}}
+\end{equation}</p><p>Finally, we have that:</p><p>\begin{equation}
+A\cos (x)+B\sin (x) = \sqrt{A^{2}+B^{2}} \sin \qty(x + \tan^{-1}\qty(\frac{A}{B}))
+\end{equation}</p><h3 id=using-the-above-result>Using the above result</h3><p>Recall we are working with:</p><p>\begin{equation}
+\begin{cases}
+{I}(t) = I_0 + I_1\cos(\sqrt{x_1x_4}t) + I_2\sin (\sqrt{x_1x_4}t) -x_1x_5 t + 0.4M(t) \\
+{U}(t) = U_0 + U_1\cos(\sqrt{x_1x_4}t) + U_2\sin (\sqrt{x_1x_4}t) + x_4x_2t\\
+{G}(t) = G_0 + G_1\cos(\sqrt{x_1x_4}t) + G_2\sin (\sqrt{x_1x_4}t) + M(t)
+\end{cases}
+\end{equation}</p><p>And we desire to use the above to simplify it. Plugging this expression directly in, for instance, to the first expression, we have:</p><p>\begin{equation}
+I(t) = I_0 + \sqrt{ {I_{1}}^{2} + {I_{2}}^{2} } \sin \qty(\sqrt{x_1x_4}t + \tan^{-1} \qty(\frac{I_1}{I_2})) -x_1x_5 t + 0.4M(t)
+\end{equation}</p><p>Notice! Even if the shift changes based on each function, the <em>frequency</em> of the oscillation of each function is the same&mdash;</p><p>as each \(\cos x + \sin x\) sinusoidal, after applying the identity derived above, takes the form of:</p><p>\begin{equation}
+A\sin (\sqrt{x_1x_4}t + \tan^{-1}(B))
+\end{equation}</p><p>we can see that they all oscillate with frequency of</p><p>\begin{equation}
+\frac{\sqrt{x_1x_4}}{2\pi}
+\end{equation}</p><p>&ldquo;how many \(2\pi\) can our function go in \(1\) second?&rdquo;</p><p>Therefore, the control mechanism must work in frequencies of \(\frac{\sqrt{x_1x_4}}{2\pi}\) (and best be exactly or as best as possible out of phase by being phase shifted by \(\tan^{-1}(B) + \pi\)) to be able to attenuate the sinusoidal the best.</p><p>We can allow \(M(t)\) to go to any sinusoidal function, and compose them together:</p><p>\begin{equation}
+I(t) = I_0 + \sqrt{ {I_{1}}^{2} + {I_{2}}^{2} } \sin \qty(\sqrt{x_1x_4}t + \tan^{-1} \qty(\frac{I_1}{I_2})) -x_1x_5 t + 0.4 (c \sin(ax+b))
+\end{equation}</p><p>Ok, let us now spend another aside to figure out the frequency and amplitude of this new curve, which will be our target upon which we are optimizing:</p><h4 id=attenuating-the-sums-of-sinusoidals>Attenuating the Sums of Sinusoidals</h4><p>We now have:</p><p>\begin{equation}
+a_1\sin (b_1t + c_1) + a_2 \sin (b_2t+c_2)
+\end{equation}</p><p>The question is how we can make the first wave destructively interfere with the second one.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

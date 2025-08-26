@@ -1,0 +1,129 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS361 APR042024</title>
+<meta name=description content="optimization inequalities cannot be strict
+Consider:
+\begin{align}
+\min_{x}&\ x \\
+s.t.\ & x > 1
+\end{align}
+this has NO SOLUTION. (1,1) wouldn&rsquo;t actually be in feasible set. So, we usually specify optimization without a strict inequality.
+So, instead, we write:
+\begin{align}
+\min_{x}&\ x \\
+s.t.\ & x \geq  1
+\end{align}
+Univariate Conditions
+First order Necessary Condition
+\begin{equation}
+\nabla f(x^{*}) = 0
+\end{equation}
+Second order necessary condition
+\begin{equation}
+\nabla^{2}f(x^{*}) \geq 0
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS361 APR042024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=optimization-inequalities-cannot-be-strict>optimization inequalities cannot be strict</h2><p>Consider:</p><p>\begin{align}
+\min_{x}&\ x \\
+s.t.\ & x > 1
+\end{align}</p><p>this has <strong>NO SOLUTION</strong>. (1,1) wouldn&rsquo;t actually be in <a href=/posts/kbhsu_cs361_apr022024/#formal-formulation-of-optimization>feasible set</a>. So, we usually specify optimization without a strict inequality.</p><p>So, instead, we write:</p><p>\begin{align}
+\min_{x}&\ x \\
+s.t.\ & x \geq 1
+\end{align}</p><h2 id=univariate-conditions>Univariate Conditions</h2><h3 id=first-order-necessary-condition>First order Necessary Condition</h3><p>\begin{equation}
+\nabla f(x^{*}) = 0
+\end{equation}</p><h3 id=second-order-necessary-condition>Second order necessary condition</h3><p>\begin{equation}
+\nabla^{2}f(x^{*}) \geq 0
+\end{equation}</p><h2 id=derivative>Derivative</h2><p>\begin{equation}
+f&rsquo;(x) = \frac{\Delta f(x)}{\Delta x}
+\end{equation}</p><p>Or gradient; our convention is that gradients are a <strong>COLUMN</strong> vector&mdash;</p><p>\begin{equation}
+\nabla f(x) = \mqty(\pdv{f(x)}{x_1} \\ \pdv{f(x)}{x_2} \\ \dots \\ \pdv{f(x)}{x_{n}})
+\end{equation}</p><p>Hessian matrix (2nd order partial); its just this, where columns are the second index and rows are the first index.</p><h2 id=directional-derivative>Directional Derivative</h2><p>\begin{align}
+\nabla_{s} f(x) &= \lim_{h \to 0} \frac{f(x+hs) - f(x)}{h} \\
+&= \lim_{h \to 0} \frac{f(x+\frac{hs}{2}) - f(x- \frac{hs}{2})}{h}
+\end{align}</p><p>i.e. this is &ldquo;derivative along a direction&rdquo;</p><h2 id=numerical-method>Numerical Method</h2><h3 id=finite-difference-method>Finite-Difference Method</h3><p>All of these methods suffer from the fact that \(f(x+h) - f(x)\) cancels out at small values of \(x\) and \(h\), because of <strong>floating point errors</strong>. To fix this, use <a href=#complex-difference-method>Complex-Difference Method</a>.</p><h4 id=forward-difference>Forward Difference</h4><p>Recall the Taylor Series about \(f(x+h)\):</p><p>\begin{equation}
+f(x+h) = f(x) + \frac{f&rsquo;(x)}{1} h + \frac{f&rsquo;&rsquo;(x)}{2!} h^{2} + \dots
+\end{equation}</p><p>Moving it around to get \(f&rsquo;(x)\) by itself:</p><p>\begin{equation}
+f&rsquo;(x)h = f(x+h) - f(x) - \frac{f&rsquo;&rsquo;(x)}{2!} h^{2} - \dots
+\end{equation}</p><p>So:</p><p>\begin{equation}
+f&rsquo;(x) \approx \frac{f(x+h)-f(x)}{h}
+\end{equation}</p><p>where $&mldr;$ errors in the end at \(O(h)\). So:</p><p>\begin{equation}
+f&rsquo;(x) = \lim_{h \to 0}\frac{f(x+h)-f(x)}{h}
+\end{equation}</p><ul><li><p>Error Analysis</p><p>\(\frac{f&rsquo;&rsquo;(x)}{2!}h + &mldr; h^{n}\), the biggest error term lives with \(h\), so this scheme has asymtotic error at \(O(h)\).</p></li></ul><h4 id=central-difference>Central Difference</h4><p>Slightly different formulation, which gives quadratic error \(O(h^{2})\), because the non-squared \(h\) term cancels out:</p><p>\begin{equation}
+f&rsquo;(x)= \lim_{h \to 0}\frac{f\qty(x+\frac{h}{2})-f\qty(x-\frac{h}{2})}{h}
+\end{equation}</p><h4 id=backward-difference>Backward Difference</h4><p>Forward difference, backward:</p><p>\begin{equation}
+f&rsquo;(x) = \lim_{h \to 0} \frac{f(x)-f(x-h)}{h}
+\end{equation}</p><h3 id=complex-difference-method>Complex-Difference Method</h3><p>Consider a Taylor approximation of complex difference:</p><p>\begin{equation}
+f(x + ih) = f(x) + ih f&rsquo;(x) - h^{2} \frac{f&rsquo;&rsquo;(x)}{2!} - ih^{3} \frac{f&rsquo;&rsquo;&rsquo;(x)}{3!} + \dots
+\end{equation}</p><p>Let&rsquo;s again try to get \(f&rsquo;(x)\) by itself; rearranging and thinking for a bit, we will get every other term on the expression above:</p><p>\begin{equation}
+f&rsquo;(x) = \frac{\Im (f(x+ih))}{h} + \dots
+\end{equation}</p><p>Where the $&mldr;$ errors is at \(O(h^{2})\)</p><p><strong>NOTICE</strong>: we no longer have the cancellation error because we no longer have subtraction.</p><h2 id=automatic-differentiation--kbhautomatic-differentiation-dot-md><a href=/posts/kbhautomatic_differentiation/>Automatic Differentiation</a></h2><p>See <a href=/posts/kbhautomatic_differentiation/>Automatic Differentiation</a></p><h2 id=bracketing>Bracketing</h2><p>Given a unimodal function, the global minimum is guaranteed to be within \([a,c]\) with \(b \in [a,c]\) if we have that \(f(a) > f(b) &lt; f( c)\).</p><p>So let&rsquo;s find this bracket.</p><h3 id=unimodality>Unimodality</h3><p>A function \(f\) is unimodal if:</p><p>\(\exists\) unique \(x^{*}\) such that \(f\) is monotonically decreasing for \(x \leq x^{*}\) and monotonically increasing for \(x \geq x^{*}\)</p><h3 id=bracketing-procedure>Bracketing Procedure</h3><p>If we don&rsquo;t know anything, we might as well start with \(a=-1, b=0, c=1\).</p><p>One of three things:</p><ul><li>we already satisfy \(f(a) > f(b) &lt; f( c)\), well, we are done</li><li>if our left side \(f(a)\) is too low, we will move \(a\) to the left without moving $c$&mdash;doubling the step size every time until it works</li><li>if our right side is too low to the other thing, move it too, &mldr;</li></ul><h4 id=fibonacci-search>Fibonacci Search</h4><p>Say you wanted to evaluate your sequence a finite number of times to maximally lower the interval for bracketing.</p><ul><li><p>Two Evaluations</p><p>At two evaluations, you should pick two points right down the middle very close together; this will cut your interval in half.</p></li></ul><ul><li><p>\(n\) evaluations</p><p>Evaluate intervals with lengths</p><p>\begin{equation}
+F_{n} =
+\begin{cases}
+1, n\leq 2 \\
+F_{n-1} + F_{n-2}
+\end{cases}
+\end{equation}</p><p>as in; say you are allowed \(n\) evaluations; figure the sequence \(\{F_1, \dots, F_{n}\}\), and then partition your space between \(a\) and \(b\) into \(F_{n}\) slices; evaluate at locations \(\frac{F_{n-1}}{F_{n}}\) and \(1- \frac{F_{n-1}}{F_{n}}\), and lop off the half-line which is to the extrema of the higher point.</p></li></ul><h4 id=golden-section-search>Golden Section Search</h4><p>Because of <a href>Binet&rsquo;s Formula</a>, we can write:</p><p>\begin{equation}
+\lim_{n \to \infty} \frac{F_{n-1}}{F_{n}} = \frac{1}{\varphi}
+\end{equation}</p><p>the inverse of the the golden ratio. So just shrink intervals by that instead.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

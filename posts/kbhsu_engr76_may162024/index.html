@@ -1,0 +1,98 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-ENGR76 MAY162024</title>
+<meta name=description content="
+an is a collection of binary strings such that the minimum between any two codes is some distance \(d\).
+This code allows you to correct up to:
+
+\(t = \left\lfloor \frac{d_{c}-1}{2}\right\rfloor\) one bit errors
+and can detect up to \(d-1\) errors (otherwise we can&rsquo;t get up to a minimum size codeword
+
+minimum length
+what is the largest \(M\) we can have for a code with each codeword of length \(L\) and minimum inter-codeword \(d_{c} = 3\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-ENGR76 MAY162024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=d41d8c></h2><p>an is a collection of binary strings such that the minimum between any two codes is some distance \(d\).</p><p>This code allows you to correct up to:</p><ul><li>\(t = \left\lfloor \frac{d_{c}-1}{2}\right\rfloor\) one bit errors</li><li>and can detect up to \(d-1\) errors (otherwise we can&rsquo;t get up to a minimum size codeword</li></ul><h2 id=minimum-length>minimum length</h2><p>what is the largest \(M\) we can have for a code with each codeword of length \(L\) and minimum inter-codeword \(d_{c} = 3\).</p><p>This means that we can correct up to \(t = \frac{d_{c}-1}{t} = \frac{3-1}{2} = 1\) one bit of error by taking a nearest-neighbor decoding approach.</p><p>To make distinct sequences that satisfy these constants, we need \(M\) codes, each with \(L+1\) possible distinct nearest codewords that can be correctly decoded (\(1\) for the actual codeword, \(L\) for each of the one-bit of error toleration).</p><p>This means that we need \(M(L+1) \leq 2^{L}\), because otherwise we can&rsquo;t make that many distinct sequences. When above is to equality, a code is called a <a href=#minimum-length>perfect code</a>. This is called the <a href=#minimum-length>sphere packing bound</a>.</p><h2 id=hamming-code>Hamming Code</h2><p><a href=#hamming-code>Hamming Code</a> is a <a href=#minimum-length>perfect code</a> with \(L = 7\), \(d = 3\); it has \(16\) codewords&mdash;meaning it can encode \(4\) bits at a time.</p><ul><li>consider our information sequence with four bits \(b_1, b_2, b_3, b_4\)</li><li>and our codeword computes four parity bits: \(p_1, p_2, p_3, p_4\)</li></ul><p>the way that the parity bits are created is by a venn diagram</p><figure><img src=/ox-hugo/2024-05-24_19-23-39_screenshot.png></figure><p>choose the parity bits such that the total number of 1s in each circle has to be even.</p><h3 id=decoding>Decoding</h3><p>ASSUME: there was only one bit flip. Whenever you receive a codeword, return it to the Venn diagram.</p><ol><li>if only one circle is wrong, the parity bit was flipped (because otherwise it should show up elsewhere)</li><li>if two circles are wrong, the data bit between them is wrong</li><li>if all circels are wrong, the middle data bit was wrong</li></ol><h3 id=hamming-code-rate>Hamming Code Rate</h3><p>There exists a <a href=#hamming-code>Hamming Code</a> for which for all \(M = 2^{k}\) and \(L\) such that the code is satisfied with \(d_{c} = 3\). This makes every hamming code an integer power of \(2\). Remember that a <a href=#minimum-length>perfect code</a> requires</p><p>\begin{equation}
+M(L+1) = 2^{L}
+\end{equation}</p><p>Which makes:</p><p>\begin{equation}
+2^{k}(L+1) = 2^{L}
+\end{equation}</p><p>so \(L+1\) must also be a power of \(2\), specifically:</p><p>\begin{equation}
+L+1 = 2^{L-k}
+\end{equation}</p><p>which also gives:</p><p>\begin{equation}
+\log_{2} (L+1) = L-k
+\end{equation}</p><p>specifically \(L-k\) is the number of parity bits for that specific choice of \(L\).</p><p>Recall now that \(M = 2^{k}\), so:</p><p>\begin{equation}
+R = \frac{\log_{2}M}{L} = \frac{k}{L} = \frac{L - \log_{2}(L+1)}{L}
+\end{equation}</p><p>This means that rate approaches \(1\) as your code length increases.</p><h2 id=hadamard-code>Hadamard Code</h2><p>Create a Hadamard matrix, such that:</p><p>\begin{equation}
+W_{n} = \mqty[W_{n-1} & W_{n-1} \\ W_{n-1} & \~W_{n-1}]
+\end{equation}</p><p>Where \(\tilde{W}\) is the inverse of \(W\).</p><p>For instance:</p><p>\begin{equation}
+W_0 = \mqty[0]
+\end{equation}</p><p>and:</p><p>\begin{equation}
+W_{1} = \mqty[0 & 0 \\ 0 & 1]
+\end{equation}</p><p>and</p><p>\begin{equation}
+W_{2} = \mqty[0 & 0 & 0 & 0 \\ 0& 1 & 0 & 1 \\ 0 & 0 & 1 & 1 \\ 0 & 1 & 1 & 0]
+\end{equation}</p><p>and so fourth. Each row of these matrices is a codeword.</p><p>Each row will be the same amount of \(1\) and $0$s. This means that each row is the same distance to all \(0\). Any two codewords is also the same distance away from each other, which is the distance to \(0\).</p><p>The size of the <a href=#hadamard-code>Hadamard Code</a> is \(M = 2^{h}\), \(L = 2^{h}\), \(d=2^{h-1}\) where \(h\) is the Hadamard matrix you used.</p><p>You will note the rate of this code is quite small:</p><p>\begin{equation}
+R = \frac{h}{2^{h}}
+\end{equation}</p><p>but it can correct a lot of errors:</p><p>\begin{equation}
+t = \frac{2^{h-1}-1}{2}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

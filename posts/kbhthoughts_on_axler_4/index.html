@@ -1,0 +1,73 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Thoughts on Axler 4</title>
+<meta name=description content="
+Because this chapter is not about linear algebra, your instructor may go through it rapidly. You may not be asked to scrutinize all the proofs. Make sure, however, that you at least read and understand the statements of all the results in this chapter—they will be used in later chapters.
+So we are not going to go through everything very very carefully. Instead, I&rsquo;m just going to go through some interesting results at my own leisure. This also means that this note is not very complete."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Thoughts on Axler 4</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><blockquote><p>Because this chapter is not about linear algebra, your instructor may go through it rapidly. You may not be asked to scrutinize all the proofs. Make sure, however, that you at least read and understand the statements of all the results in this chapter—they will be used in later chapters.</p></blockquote><p>So we are not going to go through everything very very carefully. Instead, I&rsquo;m just going to go through some interesting results at my own leisure. This also means that this note is not very complete.</p><h2 id=facts>facts</h2><ul><li><p>&ldquo;you can factor out every root&rdquo;: \(p(\alpha) = 0 \implies p(z)=(z-\alpha)q(z)\)</p></li><li><p><a href>fundamental theorem of algebra</a>: &ldquo;if you have an nth-degree polynomial, you can factor it into n factors&rdquo; (over the complex numbers, you have as many roots as the degree of the polynomials)</p><ul><li>these coefficients are unique barring ordering</li><li>factoring real polynomials can be treated in two pieces: one piece, the reals, which can be treated usually; then one other piece, the complexes, can be multiplied pairwise together (as over real coeffs they always come in conjugate pairs) into quadratics. This is why all real polynormials can always be factored as \((x-\lambda)(x-\lambda) \dots (x^{2}+ax+b) (x^{2}+ax+b)\dots\)</li><li>the number of complex polynomials has to be even</li></ul></li><li><p>complex polynomials have \(deg\ p\) factors</p></li><li><p>real polynomials have \(deg\ p\) real/complex factors, but complex factors come in pairs</p></li><li><p>we can squish the complex part of the real polynomials together, and get&mdash;wlog $m$&mdash;first-degree real roots and \(\frac{deg\ p - m}{2}\) second-degree real roots where \(b^{2} &lt; 4c\)</p></li><li><p>\(x^{2} + bx + c\) has a factor of \((x-\lambda_{1})(x-\lambda_{2})\) under reals \(b^{2} \geq 4c\)</p></li></ul><h2 id=key-sequence>key sequence</h2><h3 id=complex-numbers>complex numbers</h3><ul><li>we defined: complex numbers, conjugates, and absolute value<ul><li>9 properties of complexes (see below)</li></ul></li></ul><h3 id=polynomial-coefficients>polynomial coefficients</h3><ul><li><strong>polynomial coefficients are unique</strong>; namely, if a polynomial is the zero function, all of its coefficients have to be \(0\)</li></ul><h3 id=division-zero-and-factoring>division, zero, and factoring</h3><ul><li><strong>polynomial division</strong>: given two polynomials \(p,s \in \mathcal{P}(\mathbb{F})\), with \(s\neq 0\), then \(\exists q,r \in \mathcal{P}(\mathbb{F})\) such that: \(p = s q +r\); that is, given two polynomials, you can always divide one by the other with some remainder as long as the &ldquo;other&rdquo; is not \(0\)</li><li>we defined <strong>zero</strong> (\(p \lambda =0\), then \(\lambda\) is a &ldquo;zero&rdquo;) and <strong>factor</strong> which is some polynomial \(s \in \mathcal{P}(\mathbb{F})\) for another polynomial \(p\) such that there exists some \(q \in \mathcal{P}(\mathbb{F})\) such that \(p = s q\)<ul><li>we show that each zero corresponds to a factor of the shape \(p(z) = (z-\lambda)q(z)\)</li></ul></li><li>we show that a polynomial with degree \(m\) has at most \(m\) distinct zeros</li></ul><h3 id=ftoa-and-corollaries>FToA and corollaries</h3><ul><li><strong>FToA</strong>: every non-constant polynomial under the complexes has a zero</li><li>and that means every polynomial over the complexes has a unique factorization \(p(z) = c(z-\lambda_{1})(z-\lambda_{2}) \dots (z-\lambda_{m})\)</li><li>polynomials with zero coefficients have zeros in pairs: if \(\lambda \in \mathbb{C}\) is a factor of the polynomial, so is \(\bar{\lambda}\)</li></ul><h3 id=is-a-real-polynomial-factorable>Is a real polynomial factorable?</h3><ul><li>A polynomial \(x^{2}+bx+c\) is factorable into \((x-\lambda_{1})(x-\lambda_{2})\) IFF \(b^{2} > 4c\).</li><li>All polynomials over the reals can be factored into at least second degree polynomials<ul><li>\(p(z) = c(z-\lambda_{1})(z-\lambda_{2}) \dots (z-\lambda_{m}) \dots (x^{2}+b_{M}x+c_{M})\)</li></ul></li></ul><h2 id=first-review-complex-number--kbhcomplex-number-dot-md--s>first, review <a href=/posts/kbhcomplex_number/>complex number</a>s</h2><ul><li>\(z+\bar{z} = 2 \text{Re}\ z\)</li><li>\(z-\bar{z} =2(\text{Im}\ z)i\)</li><li>\(z\bar{z} = |z|^{2}\)</li><li>\(\bar{x+z} = \bar{w}+\bar{z}\), \(\bar{wz} = \bar{w}\bar{z}\)</li><li>\(\bar{\bar{z}} = z\)</li><li>\(| \text{\{Re,Im\}}\ z| \leq |z|\) both real and imaginary components are smaller than the actual absolute value</li><li>\(|\bar{z}| = |z|\)</li><li>\(|wz| = |w| |z|\)</li><li>\(|w+z| \leq |w| + |z|\), the <a href=#triangle-inequality--complexes>triangle inequality</a></li></ul><h2 id=triangle-inequality--complexes>triangle inequality (complexes)</h2><p>For \(w, z \in \mathbb{C}\), we do route algebra:</p><figure><img src=/ox-hugo/2023-01-30_20-46-35_screenshot.png></figure><h2 id=polynomial-division>polynomial division</h2><p>Suppose \(p,s \in \mathcal{P}(\mathbb{F}), s\neq 0\), then, \(\exists\) polynomials \(q,r \in \mathcal{P(\mathbb{F})}\) such that:</p><p>\begin{equation}
+p = s q +r
+\end{equation}</p><p>and \(\deg r &lt; \deg s\).</p><p>Proof:</p><p>Let: \(n = \deg p\), and \(m = \deg s\). So, if \(n &lt; m\) (i.e. it is not a division), then take \(q=0\) and \(r=p\).</p><p>Now, let&rsquo;s make
+???</p><h2 id=factoring>Factoring</h2><p>A polynomial \(s \in \mathcal{P}(\mathbb{F})\) is a <strong>factor</strong> of \(p \in \mathcal{P}(\mathbb{F})\) if \(\exists\) \(q \in \mathcal{P}(\mathbb{F})\) such that \(p=s q\).</p><h2 id=questions>questions</h2><ul><li>proofs: wut</li><li>if the FToA holds, isn&rsquo;t the polynomials over the reals a &ldquo;subset&rdquo;(ish) of the polynomials over the complexes? so there is going to be at least complex roots to all polynormials always no?</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,106 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>complex number</title>
+<meta name=description content="A complex number is a type of number. They are usually written as \(a+bi\).
+Formally&mdash;
+\begin{equation}
+\mathbb{C} = \left\{a+bi\ \middle |\ a,b \in \mathbb{R} \right\}
+\end{equation}
+This set generates solutions to every single polynomial with unique solutions. Its plane looks like \(\mathbb{R}^{2}\).
+constituents
+an order pair of two elements \((a,b)\) where \(a,b\in \mathbb{R}\).
+properties of complex arithmetic
+there are 6. For all statements below, we assume \(\alpha = a+bi\) and \(\beta=c+di\), \(\lambda = e+fi\), where \(a,b,c,d,e,f \in \mathbb{R}\) and therefore \(\alpha, \beta,\lambda \in \mathbb{C}\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>complex number</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A <a href=/posts/kbhcomplex_number/>complex number</a> is a type of <a href=/posts/kbhnumber/>number</a>. They are usually written as \(a+bi\).</p><p>Formally&mdash;</p><p>\begin{equation}
+\mathbb{C} = \left\{a+bi\ \middle |\ a,b \in \mathbb{R} \right\}
+\end{equation}</p><p>This set generates solutions to every single polynomial with unique solutions. Its plane looks like \(\mathbb{R}^{2}\).</p><h2 id=constituents>constituents</h2><p>an order pair of two elements \((a,b)\) where \(a,b\in \mathbb{R}\).</p><h2 id=properties-of-complex-arithmetic>properties of complex arithmetic</h2><p>there are 6. For all statements below, we assume \(\alpha = a+bi\) and \(\beta=c+di\), \(\lambda = e+fi\), where \(a,b,c,d,e,f \in \mathbb{R}\) and therefore \(\alpha, \beta,\lambda \in \mathbb{C}\).</p><h3 id=commutativity--kbhcommutivity-dot-md><a href=/posts/kbhcommutivity/>commutativity</a></h3><p>\(\alpha + \beta = \beta + \alpha\) and \(\alpha\beta = \beta\alpha\) for all \(\alpha,\beta \in \mathbb{C}\).</p><h4 id=proof-of-complex-number--kbhcomplex-number-dot-md--commutativity--kbhcommutivity-dot-md>Proof of <a href=/posts/kbhcomplex_number/>complex number</a> <a href=/posts/kbhcommutivity/>commutativity</a></h4><p>We desire \(\alpha + \beta = \beta + \alpha\).</p><p>\begin{align}
+\alpha + \beta &= (a+bi)+(c+di) \\
+&=(a+c)+(b+d)i \\
+&=(c+a)+(d+b)i \\
+&=(c+di) + (a+bi) \\
+&=\beta+\alpha\ \blacksquare
+\end{align}</p><p>leveraging the <a href=/posts/kbhcommutivity/>commutativity</a> inside <a href=/posts/kbhreal_number/>real number</a>s.</p><ul><li><p>Insights: combining and splitting</p><p>This proof has the feature of combining, operating (commuting, here), the splitting.</p></li></ul><h3 id=associativity--kbhassociative-dot-md><a href=/posts/kbhassociative/>associativity</a></h3><p>\((\alpha +\beta) + \lambda = \alpha + (\beta +\lambda)\) and \((\alpha\beta) \lambda = (\alpha \beta) \lambda\)</p><p>Proven via the same trick from last time</p><h3 id=identities--kbhidentity-dot-md><a href=/posts/kbhidentity/>identities</a></h3><p>\(\lambda + 0 = \lambda\), \(\lambda 1 = \lambda\)</p><h4 id=proof-of-complex-number--kbhcomplex-number-dot-md--additive-identity--kbhadditive-identity-dot-md>Proof of <a href=/posts/kbhcomplex_number/>complex number</a> <a href=/posts/kbhadditive_identity/>additive identity</a></h4><p>We desire that \(\lambda + 0 = 0\).</p><p>\begin{align}
+\lambda + 0 &= (e+fi) + (0+0i) \\
+&= (e+0) + (f+0)i \\
+&= e+fi\ \blacksquare
+\end{align}</p><p><a href=/posts/kbhmultiplicative_identity/>multiplicative identity</a> is proven in the same way</p><h3 id=additive-inverse--kbhinverses-dot-md>additive <a href=/posts/kbhinverses/>inverse</a></h3><p>\(\forall \alpha \in \mathbb{C}, \exists !\ \beta \in \mathbb{C}: \alpha + \beta = 0\)</p><h4 id=proof-of-complex-number--kbhcomplex-number-dot-md--additive-inverse--kbhinverses-dot-md>Proof of <a href=/posts/kbhcomplex_number/>complex number</a> additive <a href=/posts/kbhinverses/>inverse</a></h4><p>We desire to claim that \(\forall \alpha \in \mathbb{C}, \exists !\ \beta \in \mathbb{C}: \alpha + \beta = 0\), specifically that there <em>is</em> a <em>unique</em> \(\beta\) which is the additive <a href=/posts/kbhinverses/>inverse</a> of every \(\alpha\).</p><p>Take a number \(\alpha \in \mathbb{C}\). We have that \(\alpha\) would then by definition be some \((a+bi)\) where \(a,b \in \mathbb{R}\).</p><p>Take some \(\beta\) for which \(\alpha + \beta = 0\); by definition we again have \(\beta\) equals some \((c+di)\) where \(c,d \in \mathbb{R}\).</p><ul><li>\(\because \alpha + \beta =0\), \(\therefore (a+bi) + (c+di) = 0\).</li><li>\(\therefore (a+c) + (b+d)i = 0\)</li><li>\(\therefore a+c = 0, b+d = 0\)</li><li>\(\therefore c = -a, d = -b\)</li></ul><p>We have created a unique definition of \(c,d\) and therefore \(\beta\) given any \(\alpha\), implying both uniqueness and existence.</p><ul><li><p>Insights: construct then generalize</p><p>In this case, the cool insight is the construct and generalize pattern. We are taking a single case \(\alpha\), manipulating it, and wrote the result we want in terms of the constituents of \(\alpha\). This creates both an existence and uniqueness proof.</p></li></ul><h3 id=multiplicative-inverse>multiplicative inverse</h3><p>\(\forall \alpha \in \mathbb{C}, \alpha \neq 0, \exists!\ \beta \in \mathbb{C} : \alpha\beta =1\)</p><p>This is proven exactly in the same way as before.</p><h3 id=distributive-property>distributive property</h3><p>\(\lambda(\alpha+\beta) = \lambda \alpha + \lambda \beta\ \forall\ \lambda, \alpha, \beta \in \mathbb{C}\)</p><h4 id=proof-of-complex-number--kbhcomplex-number-dot-md--distributive-property>Proof of <a href=/posts/kbhcomplex_number/>complex number</a> distributive property</h4><p>We desire to claim that \(\lambda(\alpha+\beta) = \lambda \alpha + \lambda \beta\).</p><p>\begin{align}
+\lambda(\alpha+\beta) &= (e+fi)((a+bi)+(c+di))\\
+&=(e+fi)((a+c)+(b+d)i)\\
+&=((ea+ec)-(fb+fd))+((eb+ed)+(fa+fc))i\\
+&=ea+ec-fb-fd+(eb+ed+fa+fc)i\\
+&=ea-fb+ec-fd+(eb+fa+ed+fc)i\\
+&=(ea-fb)+(ec-fd)+((eb+fa)+(ed+fc))i\\
+&=((ea-fb)+(eb+fa)i) + ((ec-fd)+(ed+fc)i)\\
+&=(e+fi)(a+bi) + (e+fi)(c+di)\\
+&=\lambda \alpha + \lambda \beta\ \blacksquare
+\end{align}</p><ul><li><p>Insights: try to remember to go backwards</p><p>At some point in this proof I had to reverse complex addition then multiplication, which actually tripped me up for a bit (&ldquo;how does <code>i</code> distribute!!!&rdquo;, etc.) Turns out, there was already a definition for <a href=#addition-and-multiplication-of-complex-number--kbhcomplex-number-dot-md--s>addition and multiplication of complex numbers</a> so we just needed to use that.</p></li></ul><h2 id=additional-information>additional information</h2><h3 id=addition-and-multiplication-of-complex-number--kbhcomplex-number-dot-md--s>addition and multiplication of <a href=/posts/kbhcomplex_number/>complex number</a>s</h3><p>\begin{align}
+(a+bi) + (c+di) &= (a+c)+(b+d)i \\
+(a+bi)(c+di) &= (ac-bd)+(ad+bc)i
+\end{align}</p><p>where, \(a,b,c,d\in\mathbb{R}\).</p><h3 id=subtraction-and-division-of-complex-number--kbhcomplex-number-dot-md--s>subtraction and division of <a href=/posts/kbhcomplex_number/>complex number</a>s</h3><p>Let \(\alpha, \beta \in \mathbb{C}\), and \(-a\) be the additive inverse of \(\alpha\) and \(\frac{1}{\alpha}\) be the multiplicative inverse of \(\alpha\).</p><ul><li><strong><strong>subtraction</strong></strong>: \(\beta-\alpha = \beta + (-\alpha)\)</li><li><strong><strong>division</strong></strong>: \(\frac{\beta}{\alpha} = \beta\frac{1}{\alpha}\)</li></ul><p>Simple enough, <a href=#subtraction-and-division-of-complex-number--kbhcomplex-number-dot-md--s>subtraction and division of complex numbers</a> is just defined by applying the inverses of a number to a different number.</p><h3 id=complex-number--kbhcomplex-number-dot-md--s-form-a-field--kbhfield-dot-md><a href=/posts/kbhcomplex_number/>complex number</a>s form a <a href=/posts/kbhfield/>field</a></h3><p>See <a href=#properties-of-complex-arithmetic>properties of complex arithmetic</a>, how we proved that it satisfies a <a href=/posts/kbhfield/>field</a>.</p><h3 id=complex-conjugate>complex conjugate</h3><p>The <a href=#complex-conjugate>complex conjugate</a> of a <a href=/posts/kbhcomplex_number/>complex number</a> is defined as</p><p>\begin{equation}
+\bar{z} = \text{Re}\ z - (\text{Im}\ z)i
+\end{equation}</p><p>i.e. taking the complex part to be negative. Say, \(z = 3+2i\), then \(\bar{z}=3-2i\).</p><h3 id=absolute-value--complex-number-kbhcomplex-number-dot-md--s>absolute value (<a href=/posts/kbhcomplex_number/>complex number</a>s)</h3><p>The <a href=#absolute-value--complex-number-kbhcomplex-number-dot-md--s>absolute value (complex numbers)</a> of a <a href=/posts/kbhcomplex_number/>complex number</a> is:</p><p>\begin{equation}
+|z| = \sqrt{{(\text{Re}\ z)^{2} + (\text{Im}\ z)^{2}}}
+\end{equation}</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

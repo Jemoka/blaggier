@@ -1,0 +1,82 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 SEP242024</title>
+<meta name=description content="&ldquo;the ways in which one can dividing the original program together depends on the way people can glue problems together. one must provide new kinds of glue in teh programming language&rdquo;
+Goals of PL
+balancing between:
+
+productivity&mdash;Python
+safety&mdash;Coq, Lean
+performance&mdash;C,
+
+Edges:
+
+safety+performance&mdash;Rust (not really productive)
+productivity+safety&mdash;ML, Maskell (not very performant)
+productivity+performance&mdash;Matlab (not very safe)
+
+Java and C++ tries to do all three, but makes them more contradictory systems because you can&rsquo;t get optimality on all three"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 SEP242024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>&ldquo;the ways in which one can dividing the original program together depends on the way people can glue problems together. one must provide new kinds of glue in teh programming language&rdquo;</p><h2 id=goals-of-pl>Goals of PL</h2><p>balancing between:</p><ul><li>productivity&mdash;Python</li><li>safety&mdash;Coq, Lean</li><li>performance&mdash;C,</li></ul><p>Edges:</p><ul><li>safety+performance&mdash;Rust (not really productive)</li><li>productivity+safety&mdash;ML, Maskell (not very performant)</li><li>productivity+performance&mdash;Matlab (not very safe)</li></ul><p>Java and C++ tries to do all three, but makes them more contradictory systems because you can&rsquo;t get optimality on all three</p><h2 id=key-challenges-of-pl>key challenges of PL</h2><ul><li>developers are reading, not writing</li><li>hardware is changing + software doesn&rsquo;t exploit it well</li><li>memory bloat is getting worse</li><li>bugs aren&rsquo;t getting any better</li><li>software systems are complex at all scales</li><li>developers mostly comprehend/debug code</li></ul><h3 id=end-of-the-moore-s-law>end of the Moore&rsquo;s law</h3><ul><li>to get more performance: you have to build the hardware differently</li><li>software ways of performance improvement becomes much more important</li></ul><h2 id=history-of-programming-evolution-evolution>history of programming evolution evolution</h2><h3 id=theory>theory</h3><ul><li><a href=/posts/kbhturing_machine/>turing machine</a>s designed for studying logic first showed that it is possible to show that some procedural systems don&rsquo;t halt</li><li><a href=/posts/kbhlambda_calculus/>lambda calculus</a> designed for formal logic systems</li></ul><h3 id=evolution-of-turing-type-languages>evolution of Turing-type languages</h3><h4 id=initial-implementation>initial implementation</h4><ul><li>Von Neumann designed the idea of <a href=/posts/kbhturing_machine/>turing machine</a>s being able to be implemented</li><li>Grace hopper designed the idea of higher-level programming abstractions (i.e. tape code, etc.)</li></ul><h4 id=fortran>FORTRAN</h4><p>John Backus got quick adoption of FORTRAN, replacing much of assembly</p><h4 id=algol>Algol</h4><p>Derivation of FORTRAN, very European theory work: decoration, conditionals, global/local variables, block programming, etc.</p><h4 id=c>C</h4><p>The OS community took Algol and try to strip it down to bare basics for low-level features, and also try to make it type safe</p><h4 id=simula>SIMULA</h4><p>New simulation language: the first object-oriented system&mdash;inspired by ALGOL and other such efforts. This was super duper slow.</p><h4 id=c-plus-plus>C++</h4><p>C++ was C&rsquo;s reaction to SIMULA.</p><h4 id=java>Java</h4><p>This was near the advent of Internet.</p><p>Java was a reaction to C++&rsquo;s lack of garbage collection, manual memory collection, made it aggressively more objective oriented, and tried to fix its lack of portability, security, distributed programming, and threading.</p><h4 id=python>Python</h4><p>Python is a reaction to C++ and a desire</p><h3 id=evolution-of-church-type-languages>evolution of Church-type languages</h3><h4 id=lisp>LISP</h4><p>&ldquo;I didn&rsquo;t understand the rest of [Chruch&rsquo;s] book&rdquo;</p><p>but took lambda calculus</p><h4 id=iswim>ISWIM</h4><p>ISWIM&mdash;a typed-ish LISP</p><h4 id=ml>ML</h4><p>a formal, basic functional language , supporting ideas of induction, etc.</p><h4 id=haskell>Haskell</h4><p>lazy evaluation, call by name lambda calculus, infinite structures, etc.</p><h2 id=why-hasn-t-church-languages-taken-over>why hasn&rsquo;t church languages taken over?</h2><ul><li>computers, for the most part, are Turing machines</li><li>church languages, back in the day, didn&rsquo;t fit and didn&rsquo;t finish in a long time</li></ul><p>Alex protip of making a new programming language: you can throw away all the semantics, but keep syntax the same.</p><p>But, machines don&rsquo;t like <a href=/posts/kbhturing_machine/>turing machine</a>s any more: Turing languages are actually pretty bad at that.</p><h2 id=change>change!</h2><ul><li>software systems tend to be big, slow, and buggy</li><li>broad forces are having compelling changes<ul><li>security is a problems => <strong>let&rsquo;s design better verification systems</strong></li><li>revolution is happening in underlying hardware (they are not <a href=/posts/kbhturing_machine/>turing machine</a>s) => <strong>let&rsquo;s move beyond Turing languages</strong></li><li>we have a shortage of skilled programmers => <strong>let&rsquo;s automate programming</strong></li></ul></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,105 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS224N APR042024</title>
+<meta name=description content="stochastic gradient descent
+See stochastic gradient descent
+Word2Vec
+see word2vec
+Or, we can even use a simpler approach, window-based co-occurance
+GloVe
+
+goal: we want to capture linear meaning components in a word vector space correct
+insight: the ratio of co-occurrence probabilities are linear meaning components
+
+Therefore, GloVe vectors comes from a log-bilinear:
+\begin{equation}
+w_{i} \cdot w_{j} = \log  P(i|j)
+\end{equation}
+such that:
+\begin{equation}
+w_{x} \cdot (w_{a} - w_{b}) = \log  \frac{P(x|a)}{P(x|b)}
+\end{equation}
+Evaluating a NLP System
+Intrinsic
+
+evaluate on the specific target task the system is trained on
+evaluate speed
+evaluate understandability
+
+Extrinsic
+
+real task + attempt to replace older system with new system
+maybe expensive to compute
+
+Word Sense Ambiguity
+Each word may have multiple different meanings; each of those separate word sense should live in a different place. However, words with polysemy have related senses, so we usually average:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS224N APR042024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=stochastic-gradient-descent--kbhstochastic-gradient-descent-dot-md><a href=/posts/kbhstochastic_gradient_descent/>stochastic gradient descent</a></h2><p>See <a href=/posts/kbhstochastic_gradient_descent/>stochastic gradient descent</a></p><h2 id=word2vec>Word2Vec</h2><p>see <a href=/posts/kbhword2vec/>word2vec</a></p><p>Or, we can even use a simpler approach, <a href=/posts/kbhwindow_based_co_occurance/>window-based co-occurance</a></p><h2 id=glove>GloVe</h2><ul><li><strong>goal</strong>: we want to capture linear meaning components in a word vector space correct</li><li><strong>insight</strong>: the <em>ratio</em> of co-occurrence probabilities are linear meaning components</li></ul><p>Therefore, <a href=#glove>GloVe</a> vectors comes from a log-bilinear:</p><p>\begin{equation}
+w_{i} \cdot w_{j} = \log P(i|j)
+\end{equation}</p><p>such that:</p><p>\begin{equation}
+w_{x} \cdot (w_{a} - w_{b}) = \log \frac{P(x|a)}{P(x|b)}
+\end{equation}</p><h2 id=evaluating-a-nlp-system>Evaluating a NLP System</h2><h3 id=intrinsic>Intrinsic</h3><ul><li>evaluate on the specific target task the system is trained on</li><li>evaluate speed</li><li>evaluate understandability</li></ul><h3 id=extrinsic>Extrinsic</h3><ul><li>real task + attempt to replace older system with new system</li><li>maybe expensive to compute</li></ul><h2 id=word-sense-ambiguity>Word Sense Ambiguity</h2><p>Each word may have multiple different meanings; each of those separate word sense should live in a different place. However, words with polysemy have related senses, so we usually average:</p><p>\begin{equation}
+v = a_1 v_1 + a_2v_2 + a_3v_3
+\end{equation}</p><p>where \(a_{j}\) is the frequency for the \(j\) th sense of the word, and \(v_1 &mldr; v_{3}\) are separate word senses.</p><h3 id=sparse-coding>sparse coding</h3><p>if each sense is relatively common, at <strong>high enough dimensions</strong>, <a href=#sparse-coding>sparse coding</a> allows you to recover the component sense vectors from the average word vectors because of the general sparsity of the vector space.</p><h2 id=word-vector-ner>Word-Vector NER</h2><p>Create a window +- n words next to each word to classify; feed the entire sequence&rsquo;s embeddings concatenated into a neural classifier, and use a target to say whether the center word is a entity/person/no label, etc.</p><p>These simplest classifiers usually use <a href=/posts/kbhsoftmax/>softmax</a>, which, without other activations, gives a linear decision boundary.</p><p>With a neural classifier, we can add enough nonlinearity in the middle to make the entire representation, but the final output layer will still contain a linear classifier.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

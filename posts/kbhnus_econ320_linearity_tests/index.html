@@ -1,0 +1,466 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-ECON320 Linearity Tests</title>
+<meta name=description content="Let&rsquo;s begin. We want to create test for the linearity of a few assets, for whether or not they follow the CAPM.
+Note that we will be using the Sharpe-Linter version of CAPM:
+\begin{equation}
+E[R_{i}-R_{f}] = \beta_{im} E[(R_{m}-R_{f})]
+\end{equation}
+\begin{equation}
+\beta_{im} := \frac{Cov[(R_{i}-R_{f}),(R_{m}-R_{f})]}{Var[R_{m}-R_{f}]}
+\end{equation}
+Recall that we declare \(R_{f}\) (the risk-free rate) to be non-stochastic.
+Let us begin. We will create a generic function to analyze some given stock.
+We will first import our utilities"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-ECON320 Linearity Tests</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Let&rsquo;s begin. We want to create test for the linearity of a few assets, for whether or not they follow the CAPM.</p><p>Note that we will be using the Sharpe-Linter version of CAPM:</p><p>\begin{equation}
+E[R_{i}-R_{f}] = \beta_{im} E[(R_{m}-R_{f})]
+\end{equation}</p><p>\begin{equation}
+\beta_{im} := \frac{Cov[(R_{i}-R_{f}),(R_{m}-R_{f})]}{Var[R_{m}-R_{f}]}
+\end{equation}</p><p>Recall that we declare \(R_{f}\) (the risk-free rate) to be non-stochastic.</p><p>Let us begin. We will create a generic function to analyze some given stock.</p><p>We will first import our utilities</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>pandas</span> <span style=color:#00a8c8>as</span> <span style=color:#111>pd</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>numpy</span> <span style=color:#00a8c8>as</span> <span style=color:#111>np</span>
+</span></span></code></pre></div><p>Let&rsquo;s load the data from our market (NYSE) as well as our 10 year t-bill data.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>t_bill</span> <span style=color:#f92672>=</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>read_csv</span><span style=color:#111>(</span><span style=color:#d88200>&#34;./linearity_test_data/10yrTBill.csv&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>nyse</span> <span style=color:#f92672>=</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>read_csv</span><span style=color:#111>(</span><span style=color:#d88200>&#34;./linearity_test_data/NYSEComposite.csv&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>nyse</span><span style=color:#f92672>.</span><span style=color:#111>head</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                  Date     Close
+</span></span><span style=display:flex><span>0   11/7/2013 16:00:00   9924.37
+</span></span><span style=display:flex><span>1   11/8/2013 16:00:00  10032.14
+</span></span><span style=display:flex><span>2  11/11/2013 16:00:00  10042.95
+</span></span><span style=display:flex><span>3  11/12/2013 16:00:00  10009.84
+</span></span><span style=display:flex><span>4  11/13/2013 16:00:00  10079.89
+</span></span></code></pre></div><p>Excellent. Let&rsquo;s load in the data for that stock.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#00a8c8>def</span> <span style=color:#75af00>load_stock</span><span style=color:#111>(</span><span style=color:#111>stock</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>return</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>read_csv</span><span style=color:#111>(</span><span style=color:#d88200>f</span><span style=color:#d88200>&#34;./linearity_test_data/</span><span style=color:#d88200>{</span><span style=color:#111>stock</span><span style=color:#d88200>}</span><span style=color:#d88200>.csv&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>load_stock</span><span style=color:#111>(</span><span style=color:#d88200>&#34;LMT&#34;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>head</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                  Date   Close
+</span></span><span style=display:flex><span>0   11/7/2013 16:00:00  136.20
+</span></span><span style=display:flex><span>1   11/8/2013 16:00:00  138.11
+</span></span><span style=display:flex><span>2  11/11/2013 16:00:00  137.15
+</span></span><span style=display:flex><span>3  11/12/2013 16:00:00  137.23
+</span></span><span style=display:flex><span>4  11/13/2013 16:00:00  137.26
+</span></span></code></pre></div><p>And now, let&rsquo;s load all three stocks, then concatenate them all into a big-ol DataFrame.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># load data</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span> <span style=color:#d88200>&#34;Date&#34;</span><span style=color:#111>:</span> <span style=color:#111>nyse</span><span style=color:#f92672>.</span><span style=color:#111>Date</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>       <span style=color:#d88200>&#34;NYSE&#34;</span><span style=color:#111>:</span> <span style=color:#111>nyse</span><span style=color:#f92672>.</span><span style=color:#111>Close</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>       <span style=color:#d88200>&#34;TBill&#34;</span><span style=color:#111>:</span> <span style=color:#111>t_bill</span><span style=color:#f92672>.</span><span style=color:#111>Close</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>       <span style=color:#d88200>&#34;LMT&#34;</span><span style=color:#111>:</span> <span style=color:#111>load_stock</span><span style=color:#111>(</span><span style=color:#d88200>&#34;LMT&#34;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>Close</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>       <span style=color:#d88200>&#34;TWTR&#34;</span><span style=color:#111>:</span> <span style=color:#111>load_stock</span><span style=color:#111>(</span><span style=color:#d88200>&#34;TWTR&#34;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>Close</span><span style=color:#111>,</span>
+</span></span><span style=display:flex><span>       <span style=color:#d88200>&#34;MCD&#34;</span><span style=color:#111>:</span> <span style=color:#111>load_stock</span><span style=color:#111>(</span><span style=color:#d88200>&#34;MCD&#34;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>Close</span> <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># convert to dataframe</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span> <span style=color:#f92672>=</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>DataFrame</span><span style=color:#111>(</span><span style=color:#111>df</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># drop empty</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>dropna</span><span style=color:#111>(</span><span style=color:#111>inplace</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                     Date      NYSE  TBill     LMT   TWTR     MCD
+</span></span><span style=display:flex><span>0      11/7/2013 16:00:00   9924.37  26.13  136.20  44.90   97.20
+</span></span><span style=display:flex><span>1      11/8/2013 16:00:00  10032.14  27.46  138.11  41.65   97.01
+</span></span><span style=display:flex><span>2     11/11/2013 16:00:00  10042.95  27.51  137.15  42.90   97.09
+</span></span><span style=display:flex><span>3     11/12/2013 16:00:00  10009.84  27.68  137.23  41.90   97.66
+</span></span><span style=display:flex><span>4     11/13/2013 16:00:00  10079.89  27.25  137.26  42.60   98.11
+</span></span><span style=display:flex><span>...                   ...       ...    ...     ...    ...     ...
+</span></span><span style=display:flex><span>2154  10/24/2022 16:00:00  14226.11  30.44  440.11  39.60  252.21
+</span></span><span style=display:flex><span>2155  10/25/2022 16:00:00  14440.69  31.56  439.30  39.30  249.28
+</span></span><span style=display:flex><span>2156  10/26/2022 16:00:00  14531.69  33.66  441.11  39.91  250.38
+</span></span><span style=display:flex><span>2157  10/27/2022 16:00:00  14569.90  34.83  442.69  40.16  248.36
+</span></span><span style=display:flex><span>2158  10/28/2022 16:00:00  14795.63  33.95  443.41  39.56  248.07
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[2159 rows x 6 columns]
+</span></span></code></pre></div><p>Excellent. Now, let&rsquo;s convert all of these values into daily log-returns (we don&rsquo;t really care about the actual pricing.)</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>log_returns</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#111>[[</span><span style=color:#d88200>&#34;NYSE&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;TBill&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;LMT&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;TWTR&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;MCD&#34;</span><span style=color:#111>]]</span><span style=color:#f92672>.</span><span style=color:#111>apply</span><span style=color:#111>(</span><span style=color:#111>np</span><span style=color:#f92672>.</span><span style=color:#111>log</span><span style=color:#111>,</span> <span style=color:#111>inplace</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>loc</span><span style=color:#111>[:,</span> <span style=color:#111>[</span><span style=color:#d88200>&#34;NYSE&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;TBill&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;LMT&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;TWTR&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;MCD&#34;</span><span style=color:#111>]]</span> <span style=color:#f92672>=</span> <span style=color:#111>log_returns</span>
+</span></span><span style=display:flex><span><span style=color:#111>df</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                     Date      NYSE     TBill       LMT      TWTR       MCD
+</span></span><span style=display:flex><span>0      11/7/2013 16:00:00  9.202749  3.263084  4.914124  3.804438  4.576771
+</span></span><span style=display:flex><span>1      11/8/2013 16:00:00  9.213549  3.312730  4.928050  3.729301  4.574814
+</span></span><span style=display:flex><span>2     11/11/2013 16:00:00  9.214626  3.314550  4.921075  3.758872  4.575638
+</span></span><span style=display:flex><span>3     11/12/2013 16:00:00  9.211324  3.320710  4.921658  3.735286  4.581492
+</span></span><span style=display:flex><span>4     11/13/2013 16:00:00  9.218298  3.305054  4.921877  3.751854  4.586089
+</span></span><span style=display:flex><span>...                   ...       ...       ...       ...       ...       ...
+</span></span><span style=display:flex><span>2154  10/24/2022 16:00:00  9.562834  3.415758  6.087025  3.678829  5.530262
+</span></span><span style=display:flex><span>2155  10/25/2022 16:00:00  9.577805  3.451890  6.085183  3.671225  5.518577
+</span></span><span style=display:flex><span>2156  10/26/2022 16:00:00  9.584087  3.516310  6.089294  3.686627  5.522980
+</span></span><span style=display:flex><span>2157  10/27/2022 16:00:00  9.586713  3.550479  6.092870  3.692871  5.514879
+</span></span><span style=display:flex><span>2158  10/28/2022 16:00:00  9.602087  3.524889  6.094495  3.677819  5.513711
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[2159 rows x 6 columns]
+</span></span></code></pre></div><p>We will now calculate the log daily returns. But before&mdash;the dates are no longer relavent here so we drop them.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>df</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                     Date      NYSE     TBill       LMT      TWTR       MCD
+</span></span><span style=display:flex><span>0      11/7/2013 16:00:00  9.202749  3.263084  4.914124  3.804438  4.576771
+</span></span><span style=display:flex><span>1      11/8/2013 16:00:00  9.213549  3.312730  4.928050  3.729301  4.574814
+</span></span><span style=display:flex><span>2     11/11/2013 16:00:00  9.214626  3.314550  4.921075  3.758872  4.575638
+</span></span><span style=display:flex><span>3     11/12/2013 16:00:00  9.211324  3.320710  4.921658  3.735286  4.581492
+</span></span><span style=display:flex><span>4     11/13/2013 16:00:00  9.218298  3.305054  4.921877  3.751854  4.586089
+</span></span><span style=display:flex><span>...                   ...       ...       ...       ...       ...       ...
+</span></span><span style=display:flex><span>2154  10/24/2022 16:00:00  9.562834  3.415758  6.087025  3.678829  5.530262
+</span></span><span style=display:flex><span>2155  10/25/2022 16:00:00  9.577805  3.451890  6.085183  3.671225  5.518577
+</span></span><span style=display:flex><span>2156  10/26/2022 16:00:00  9.584087  3.516310  6.089294  3.686627  5.522980
+</span></span><span style=display:flex><span>2157  10/27/2022 16:00:00  9.586713  3.550479  6.092870  3.692871  5.514879
+</span></span><span style=display:flex><span>2158  10/28/2022 16:00:00  9.602087  3.524889  6.094495  3.677819  5.513711
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[2159 rows x 6 columns]
+</span></span></code></pre></div><p>And now, the log returns! We will shift this data by one column and subtract.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>returns</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>drop</span><span style=color:#111>(</span><span style=color:#111>columns</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#34;Date&#34;</span><span style=color:#111>])</span> <span style=color:#f92672>-</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>drop</span><span style=color:#111>(</span><span style=color:#111>columns</span><span style=color:#f92672>=</span><span style=color:#111>[</span><span style=color:#d88200>&#34;Date&#34;</span><span style=color:#111>])</span><span style=color:#f92672>.</span><span style=color:#111>shift</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>dropna</span><span style=color:#111>(</span><span style=color:#111>inplace</span><span style=color:#f92672>=</span><span style=color:#00a8c8>True</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>returns</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>          NYSE     TBill       LMT      TWTR       MCD
+</span></span><span style=display:flex><span>1     0.010801  0.049646  0.013926 -0.075136 -0.001957
+</span></span><span style=display:flex><span>2     0.001077  0.001819 -0.006975  0.029570  0.000824
+</span></span><span style=display:flex><span>3    -0.003302  0.006161  0.000583 -0.023586  0.005854
+</span></span><span style=display:flex><span>4     0.006974 -0.015657  0.000219  0.016568  0.004597
+</span></span><span style=display:flex><span>5     0.005010 -0.008476  0.007476  0.047896 -0.005622
+</span></span><span style=display:flex><span>...        ...       ...       ...       ...       ...
+</span></span><span style=display:flex><span>2154  0.005785  0.004940 -0.023467 -0.014291  0.001349
+</span></span><span style=display:flex><span>2155  0.014971  0.036133 -0.001842 -0.007605 -0.011685
+</span></span><span style=display:flex><span>2156  0.006282  0.064420  0.004112  0.015402  0.004403
+</span></span><span style=display:flex><span>2157  0.002626  0.034169  0.003575  0.006245 -0.008100
+</span></span><span style=display:flex><span>2158  0.015374 -0.025590  0.001625 -0.015053 -0.001168
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[2158 rows x 5 columns]
+</span></span></code></pre></div><p>We are now ready to run the correlation study.</p><p>Let&rsquo;s now subtract everything by the risk-free rate (dropping the rfr itself):</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>risk_free_excess</span> <span style=color:#f92672>=</span> <span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>drop</span><span style=color:#111>(</span><span style=color:#111>columns</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;TBill&#34;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>apply</span><span style=color:#111>(</span><span style=color:#00a8c8>lambda</span> <span style=color:#111>x</span><span style=color:#111>:</span> <span style=color:#111>x</span><span style=color:#f92672>-</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>TBill</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>risk_free_excess</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>          NYSE       LMT      TWTR       MCD
+</span></span><span style=display:flex><span>1    -0.038846 -0.035720 -0.124783 -0.051603
+</span></span><span style=display:flex><span>2    -0.000742 -0.008794  0.027751 -0.000995
+</span></span><span style=display:flex><span>3    -0.009463 -0.005577 -0.029747 -0.000307
+</span></span><span style=display:flex><span>4     0.022630  0.015875  0.032225  0.020254
+</span></span><span style=display:flex><span>5     0.013486  0.015952  0.056372  0.002854
+</span></span><span style=display:flex><span>...        ...       ...       ...       ...
+</span></span><span style=display:flex><span>2154  0.000845 -0.028406 -0.019231 -0.003591
+</span></span><span style=display:flex><span>2155 -0.021162 -0.037975 -0.043738 -0.047818
+</span></span><span style=display:flex><span>2156 -0.058138 -0.060308 -0.049017 -0.060017
+</span></span><span style=display:flex><span>2157 -0.031543 -0.030593 -0.027924 -0.042269
+</span></span><span style=display:flex><span>2158  0.040964  0.027215  0.010537  0.024422
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>[2158 rows x 4 columns]
+</span></span></code></pre></div><h2 id=actual-regression>Actual Regression</h2><p>It is now time to perform the actual linear regression!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>statsmodels.api</span> <span style=color:#00a8c8>as</span> <span style=color:#111>sm</span>
+</span></span></code></pre></div><p>Let&rsquo;s work with Lockheed Martin first, fitting an ordinary least squares. Remember that the OLS functions reads the <em>endogenous</em> variable first (for us, the return of the asset.)</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># add a column of ones to our input market excess returns</span>
+</span></span><span style=display:flex><span><span style=color:#111>nyse_with_bias</span> <span style=color:#f92672>=</span> <span style=color:#111>sm</span><span style=color:#f92672>.</span><span style=color:#111>add_constant</span><span style=color:#111>(</span><span style=color:#111>risk_free_excess</span><span style=color:#f92672>.</span><span style=color:#111>NYSE</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># perform linreg</span>
+</span></span><span style=display:flex><span><span style=color:#111>lmt_model</span> <span style=color:#f92672>=</span> <span style=color:#111>sm</span><span style=color:#f92672>.</span><span style=color:#111>OLS</span><span style=color:#111>(</span><span style=color:#111>risk_free_excess</span><span style=color:#f92672>.</span><span style=color:#111>LMT</span><span style=color:#111>,</span> <span style=color:#111>nyse_with_bias</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>fit</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>lmt_model</span><span style=color:#f92672>.</span><span style=color:#111>summary</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                            OLS Regression Results
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>Dep. Variable:                    LMT   R-squared:                       0.859
+</span></span><span style=display:flex><span>Model:                            OLS   Adj. R-squared:                  0.859
+</span></span><span style=display:flex><span>Method:                 Least Squares   F-statistic:                 1.312e+04
+</span></span><span style=display:flex><span>Date:                Mon, 31 Oct 2022   Prob (F-statistic):               0.00
+</span></span><span style=display:flex><span>Time:                        10:39:24   Log-Likelihood:                 6318.9
+</span></span><span style=display:flex><span>No. Observations:                2158   AIC:                        -1.263e+04
+</span></span><span style=display:flex><span>Df Residuals:                    2156   BIC:                        -1.262e+04
+</span></span><span style=display:flex><span>Df Model:                           1
+</span></span><span style=display:flex><span>Covariance Type:            nonrobust
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+</span></span><span style=display:flex><span>------------------------------------------------------------------------------
+</span></span><span style=display:flex><span>const          0.0004      0.000      1.311      0.190      -0.000       0.001
+</span></span><span style=display:flex><span>NYSE           0.9449      0.008    114.552      0.000       0.929       0.961
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>Omnibus:                      423.969   Durbin-Watson:                   1.965
+</span></span><span style=display:flex><span>Prob(Omnibus):                  0.000   Jarque-Bera (JB):            11575.074
+</span></span><span style=display:flex><span>Skew:                          -0.160   Prob(JB):                         0.00
+</span></span><span style=display:flex><span>Kurtosis:                      14.341   Cond. No.                         29.6
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Notes:
+</span></span><span style=display:flex><span>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</span></span></code></pre></div><p>Based on the constants row, we can see that&mdash;within \(95\%\) confidence&mdash;the intercept is generally \(0\) and CAPM applies. However, we do see a slight positive compared to the market. Furthermore, we can see that the regression has a beta value of \(0.9449\) &mdash; according the CAPM model, it being <em>slightly</em> undervarying that the market.</p><p>We can continue with the other stocks.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># perform linreg</span>
+</span></span><span style=display:flex><span><span style=color:#111>mcd_model</span> <span style=color:#f92672>=</span> <span style=color:#111>sm</span><span style=color:#f92672>.</span><span style=color:#111>OLS</span><span style=color:#111>(</span><span style=color:#111>risk_free_excess</span><span style=color:#f92672>.</span><span style=color:#111>MCD</span><span style=color:#111>,</span> <span style=color:#111>nyse_with_bias</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>fit</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>mcd_model</span><span style=color:#f92672>.</span><span style=color:#111>summary</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                            OLS Regression Results
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>Dep. Variable:                    MCD   R-squared:                       0.887
+</span></span><span style=display:flex><span>Model:                            OLS   Adj. R-squared:                  0.887
+</span></span><span style=display:flex><span>Method:                 Least Squares   F-statistic:                 1.697e+04
+</span></span><span style=display:flex><span>Date:                Mon, 31 Oct 2022   Prob (F-statistic):               0.00
+</span></span><span style=display:flex><span>Time:                        10:39:24   Log-Likelihood:                 6551.1
+</span></span><span style=display:flex><span>No. Observations:                2158   AIC:                        -1.310e+04
+</span></span><span style=display:flex><span>Df Residuals:                    2156   BIC:                        -1.309e+04
+</span></span><span style=display:flex><span>Df Model:                           1
+</span></span><span style=display:flex><span>Covariance Type:            nonrobust
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+</span></span><span style=display:flex><span>------------------------------------------------------------------------------
+</span></span><span style=display:flex><span>const          0.0003      0.000      1.004      0.315      -0.000       0.001
+</span></span><span style=display:flex><span>NYSE           0.9651      0.007    130.287      0.000       0.951       0.980
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>Omnibus:                      323.911   Durbin-Watson:                   1.988
+</span></span><span style=display:flex><span>Prob(Omnibus):                  0.000   Jarque-Bera (JB):             3032.550
+</span></span><span style=display:flex><span>Skew:                           0.395   Prob(JB):                         0.00
+</span></span><span style=display:flex><span>Kurtosis:                       8.753   Cond. No.                         29.6
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Notes:
+</span></span><span style=display:flex><span>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</span></span></code></pre></div><p>Same thing as before, we are within \(95\%\) confidence having a intercept of \(0\) (with a slight positive edge), and it looks like MacDonald&rsquo;s vary a little bit more than Lockheed Martin. The food industry is probably a tougher business than that in defense.</p><p>Lastly, to analyze the recently delisted Twitter!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># perform linreg</span>
+</span></span><span style=display:flex><span><span style=color:#111>twtr_model</span> <span style=color:#f92672>=</span> <span style=color:#111>sm</span><span style=color:#f92672>.</span><span style=color:#111>OLS</span><span style=color:#111>(</span><span style=color:#111>risk_free_excess</span><span style=color:#f92672>.</span><span style=color:#111>TWTR</span><span style=color:#111>,</span> <span style=color:#111>nyse_with_bias</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>fit</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>twtr_model</span><span style=color:#f92672>.</span><span style=color:#111>summary</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                            OLS Regression Results
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>Dep. Variable:                   TWTR   R-squared:                       0.522
+</span></span><span style=display:flex><span>Model:                            OLS   Adj. R-squared:                  0.522
+</span></span><span style=display:flex><span>Method:                 Least Squares   F-statistic:                     2357.
+</span></span><span style=display:flex><span>Date:                Mon, 31 Oct 2022   Prob (F-statistic):               0.00
+</span></span><span style=display:flex><span>Time:                        10:39:24   Log-Likelihood:                 4307.1
+</span></span><span style=display:flex><span>No. Observations:                2158   AIC:                            -8610.
+</span></span><span style=display:flex><span>Df Residuals:                    2156   BIC:                            -8599.
+</span></span><span style=display:flex><span>Df Model:                           1
+</span></span><span style=display:flex><span>Covariance Type:            nonrobust
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+</span></span><span style=display:flex><span>------------------------------------------------------------------------------
+</span></span><span style=display:flex><span>const         -0.0002      0.001     -0.346      0.730      -0.002       0.001
+</span></span><span style=display:flex><span>NYSE           1.0173      0.021     48.549      0.000       0.976       1.058
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>Omnibus:                      661.205   Durbin-Watson:                   1.986
+</span></span><span style=display:flex><span>Prob(Omnibus):                  0.000   Jarque-Bera (JB):            15925.609
+</span></span><span style=display:flex><span>Skew:                          -0.883   Prob(JB):                         0.00
+</span></span><span style=display:flex><span>Kurtosis:                      16.191   Cond. No.                         29.6
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Notes:
+</span></span><span style=display:flex><span>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</span></span></code></pre></div><p>Evidently, Twitter is <em>much</em> more variable. It looks like it has a nontrivial bias (the intercept being -0.001 being within the \(95\%\) confidence band &mdash; that the security is possibly significantly underperforming the CAPM expectation in the market.) Furthermore, we have a positive beta value: that the asset is more variable than the market.</p><h2 id=manual-regression>manual regression</h2><p>We can also use the betas formula to manually calculate what we <em>expect</em> for the beta values (i.e. as if they were one IID random variable.)</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>risk_free_cov</span> <span style=color:#f92672>=</span> <span style=color:#111>risk_free_excess</span><span style=color:#f92672>.</span><span style=color:#111>cov</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span><span style=color:#111>risk_free_cov</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>          NYSE       LMT      TWTR       MCD
+</span></span><span style=display:flex><span>NYSE  0.001143  0.001080  0.001163  0.001103
+</span></span><span style=display:flex><span>LMT   0.001080  0.001188  0.001116  0.001083
+</span></span><span style=display:flex><span>TWTR  0.001163  0.001116  0.002264  0.001155
+</span></span><span style=display:flex><span>MCD   0.001103  0.001083  0.001155  0.001200
+</span></span></code></pre></div><p>Finally, to construct the beta values. Recall that:</p><p>\begin{equation}
+\beta_{im} := \frac{Cov[(R_{i}-R_{f}),(R_{m}-R_{f})]}{Var[R_{m}-R_{f}]}
+\end{equation}</p><p>and that:</p><p>\begin{equation}
+Var[X] = Cov[X,X], \forall X
+\end{equation}</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># get the market variance (covariance with itself)</span>
+</span></span><span style=display:flex><span><span style=color:#111>market_variation</span> <span style=color:#f92672>=</span> <span style=color:#111>risk_free_cov</span><span style=color:#f92672>.</span><span style=color:#111>NYSE</span><span style=color:#f92672>.</span><span style=color:#111>NYSE</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># calculate betas</span>
+</span></span><span style=display:flex><span><span style=color:#111>betas</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span><span style=color:#d88200>&#34;LMT&#34;</span><span style=color:#111>:</span> <span style=color:#111>(</span><span style=color:#111>risk_free_cov</span><span style=color:#f92672>.</span><span style=color:#111>LMT</span><span style=color:#f92672>.</span><span style=color:#111>NYSE</span><span style=color:#f92672>/</span><span style=color:#111>market_variation</span><span style=color:#111>),</span>
+</span></span><span style=display:flex><span>         <span style=color:#d88200>&#34;TWTR&#34;</span><span style=color:#111>:</span> <span style=color:#111>(</span><span style=color:#111>risk_free_cov</span><span style=color:#f92672>.</span><span style=color:#111>TWTR</span><span style=color:#f92672>.</span><span style=color:#111>NYSE</span><span style=color:#f92672>/</span><span style=color:#111>market_variation</span><span style=color:#111>),</span>
+</span></span><span style=display:flex><span>         <span style=color:#d88200>&#34;MCD&#34;</span><span style=color:#111>:</span> <span style=color:#111>(</span><span style=color:#111>risk_free_cov</span><span style=color:#f92672>.</span><span style=color:#111>MCD</span><span style=color:#f92672>.</span><span style=color:#111>NYSE</span><span style=color:#f92672>/</span><span style=color:#111>market_variation</span><span style=color:#111>)}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># and make dataframe</span>
+</span></span><span style=display:flex><span><span style=color:#111>betas</span> <span style=color:#f92672>=</span> <span style=color:#111>pd</span><span style=color:#f92672>.</span><span style=color:#111>Series</span><span style=color:#111>(</span><span style=color:#111>betas</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>betas</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>LMT     0.944899
+</span></span><span style=display:flex><span>TWTR    1.017294
+</span></span><span style=display:flex><span>MCD     0.965081
+</span></span><span style=display:flex><span>dtype: float64
+</span></span></code></pre></div><p>Apparently, all of our assets swing less than the overall NYSE market! Especially Lockheed&mdash;it is only \(94.4\%\) of the market variation. Furthermore, it is interesting to see that Twitter swings much more dramatically compared to the market.</p><h2 id=fund-creation>Fund creation</h2><p>We will now create two funds with the three securities, one with equal parts and one which attempts to maximizes the bias (max returns) while minimizing the beta variance value compared to the market.</p><h3 id=equal-parts-fund--fund-1>&ldquo;Equal-Parts Fund&rdquo; (&ldquo;Fund 1&rdquo;)</h3><p>We will now create a fund in equal parts. Here it is:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>fund_1_returns</span> <span style=color:#f92672>=</span> <span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>LMT</span> <span style=color:#f92672>+</span> <span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>TWTR</span> <span style=color:#f92672>+</span> <span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>MCD</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_1_returns</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>1      -0.063167
+</span></span><span style=display:flex><span>2       0.023420
+</span></span><span style=display:flex><span>3      -0.017149
+</span></span><span style=display:flex><span>4       0.021384
+</span></span><span style=display:flex><span>5       0.049750
+</span></span><span style=display:flex><span>          ...
+</span></span><span style=display:flex><span>2154   -0.036409
+</span></span><span style=display:flex><span>2155   -0.021132
+</span></span><span style=display:flex><span>2156    0.023917
+</span></span><span style=display:flex><span>2157    0.001720
+</span></span><span style=display:flex><span>2158   -0.014596
+</span></span><span style=display:flex><span>Length: 2158, dtype: float64
+</span></span></code></pre></div><p>We will calculate the excess returns of this fund:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>fund_1_excess</span> <span style=color:#f92672>=</span> <span style=color:#111>fund_1_returns</span><span style=color:#f92672>-</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>TBill</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_1_excess</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>1      -0.112813
+</span></span><span style=display:flex><span>2       0.021600
+</span></span><span style=display:flex><span>3      -0.023310
+</span></span><span style=display:flex><span>4       0.037041
+</span></span><span style=display:flex><span>5       0.058226
+</span></span><span style=display:flex><span>          ...
+</span></span><span style=display:flex><span>2154   -0.041349
+</span></span><span style=display:flex><span>2155   -0.057265
+</span></span><span style=display:flex><span>2156   -0.040503
+</span></span><span style=display:flex><span>2157   -0.032449
+</span></span><span style=display:flex><span>2158    0.010994
+</span></span><span style=display:flex><span>Length: 2158, dtype: float64
+</span></span></code></pre></div><p>And then perform a regression</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># perform linreg</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_1_model</span> <span style=color:#f92672>=</span> <span style=color:#111>sm</span><span style=color:#f92672>.</span><span style=color:#111>OLS</span><span style=color:#111>(</span><span style=color:#111>fund_1_excess</span><span style=color:#111>,</span> <span style=color:#111>nyse_with_bias</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>fit</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_1_model</span><span style=color:#f92672>.</span><span style=color:#111>summary</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>                            OLS Regression Results
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>Dep. Variable:                      y   R-squared:                       0.473
+</span></span><span style=display:flex><span>Model:                            OLS   Adj. R-squared:                  0.473
+</span></span><span style=display:flex><span>Method:                 Least Squares   F-statistic:                     1935.
+</span></span><span style=display:flex><span>Date:                Mon, 31 Oct 2022   Prob (F-statistic):          3.01e-302
+</span></span><span style=display:flex><span>Time:                        10:39:24   Log-Likelihood:                 3869.5
+</span></span><span style=display:flex><span>No. Observations:                2158   AIC:                            -7735.
+</span></span><span style=display:flex><span>Df Residuals:                    2156   BIC:                            -7724.
+</span></span><span style=display:flex><span>Df Model:                           1
+</span></span><span style=display:flex><span>Covariance Type:            nonrobust
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>                 coef    std err          t      P&gt;|t|      [0.025      0.975]
+</span></span><span style=display:flex><span>------------------------------------------------------------------------------
+</span></span><span style=display:flex><span>const          0.0007      0.001      0.841      0.401      -0.001       0.002
+</span></span><span style=display:flex><span>NYSE           1.1290      0.026     43.993      0.000       1.079       1.179
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>Omnibus:                      600.456   Durbin-Watson:                   2.022
+</span></span><span style=display:flex><span>Prob(Omnibus):                  0.000   Jarque-Bera (JB):             8416.514
+</span></span><span style=display:flex><span>Skew:                          -0.914   Prob(JB):                         0.00
+</span></span><span style=display:flex><span>Kurtosis:                      12.501   Cond. No.                         29.6
+</span></span><span style=display:flex><span>==============================================================================
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>Notes:
+</span></span><span style=display:flex><span>[1] Standard Errors assume that the covariance matrix of the errors is correctly specified.
+</span></span></code></pre></div><p>Surprisingly, we have now created a <strong>significantly</strong> riskier investment that, though riskier, generates a much higher probability of reward (\(+0.001\) is now within the \(99\%\) band!)</p><h3 id=a-better-fund>A Better Fund</h3><p>To me, this is the payoff of this assignment. We will now use CAPM to create the &ldquo;best&rdquo; fund combination&mdash;given some variance, the funds which match CAPM. To do this, let&rsquo;s create a generic linear combination of the assets.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>sympy</span> <span style=color:#00a8c8>as</span> <span style=color:#111>sym</span>
+</span></span><span style=display:flex><span><span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>Symbol</span><span style=color:#111>(</span><span style=color:#d88200>&#39;x&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>Symbol</span><span style=color:#111>(</span><span style=color:#d88200>&#39;y&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>z</span> <span style=color:#f92672>=</span> <span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>Symbol</span><span style=color:#111>(</span><span style=color:#d88200>&#39;z&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_2_returns</span> <span style=color:#f92672>=</span> <span style=color:#111>x</span><span style=color:#f92672>*</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>LMT</span> <span style=color:#f92672>+</span> <span style=color:#111>y</span><span style=color:#f92672>*</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>TWTR</span> <span style=color:#f92672>+</span> <span style=color:#111>z</span><span style=color:#f92672>*</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>MCD</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_2_returns</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>1       0.0139260753744255*x - 0.0751364261353569*y - ...
+</span></span><span style=display:flex><span>2       -0.00697525170622448*x + 0.0295704573211193*y ...
+</span></span><span style=display:flex><span>3       0.000583132897928884*x - 0.0235859990058791*y ...
+</span></span><span style=display:flex><span>4       0.000218587198947517*x + 0.016568426347233*y +...
+</span></span><span style=display:flex><span>5       0.00747599199607762*x + 0.0478955096700351*y -...
+</span></span><span style=display:flex><span>                              ...
+</span></span><span style=display:flex><span>2154    -0.0234665578621085*x - 0.0142913301107561*y +...
+</span></span><span style=display:flex><span>2155    -0.00184214468578059*x - 0.0076045993852194*y ...
+</span></span><span style=display:flex><span>2156    0.00411172646842317*x + 0.0154024001854269*y +...
+</span></span><span style=display:flex><span>2157    0.00357547337231878*x + 0.0062445563228315*y -...
+</span></span><span style=display:flex><span>2158    0.00162509910496933*x - 0.0150529686289622*y -...
+</span></span><span style=display:flex><span>Length: 2158, dtype: object
+</span></span></code></pre></div><p>Excellent. We will also calculate the excess returns of this fund:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>fund_2_excess</span> <span style=color:#f92672>=</span> <span style=color:#111>fund_2_returns</span><span style=color:#f92672>-</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>TBill</span>
+</span></span><span style=display:flex><span><span style=color:#111>Y</span> <span style=color:#f92672>=</span> <span style=color:#111>fund_2_excess</span><span style=color:#f92672>.</span><span style=color:#111>to_numpy</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span><span style=color:#111>Y</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[0.0139260753744255*x - 0.0751364261353569*y - 0.00195664549320096*z - 0.0496463208073039
+</span></span><span style=display:flex><span> -0.00697525170622448*x + 0.0295704573211193*y + 0.000824317408861575*z - 0.00181917459665826
+</span></span><span style=display:flex><span> 0.000583132897928884*x - 0.0235859990058791*y + 0.00585367525146019*z - 0.00616055581298536
+</span></span><span style=display:flex><span> ...
+</span></span><span style=display:flex><span> 0.00411172646842317*x + 0.0154024001854269*y + 0.00440300114913317*z - 0.0644196927849867
+</span></span><span style=display:flex><span> 0.00357547337231878*x + 0.0062445563228315*y - 0.0081004573348249*z - 0.0341688956152497
+</span></span><span style=display:flex><span> 0.00162509910496933*x - 0.0150529686289622*y - 0.00116834209450634*z + 0.0255902303732043]
+</span></span></code></pre></div><p>We cast this type to a numpy array because we are about to perform some matrix operations upon it.</p><p>Now, let us perform the actual linear regression ourselves. Recall that the pseudoinverse linear regression estimator is:</p><p>\begin{equation}
+\beta = (X^{T}X)^{-1}X^{T}Y
+\end{equation}</p><p>We have already our \(Y\) as a vector (above), and our \(X\) is:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>X</span> <span style=color:#f92672>=</span> <span style=color:#111>nyse_with_bias</span><span style=color:#f92672>.</span><span style=color:#111>to_numpy</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span><span style=color:#111>X</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[[ 1.00000000e+00 -3.88457302e-02]
+</span></span><span style=display:flex><span> [ 1.00000000e+00 -7.42217926e-04]
+</span></span><span style=display:flex><span> [ 1.00000000e+00 -9.46284244e-03]
+</span></span><span style=display:flex><span> ...
+</span></span><span style=display:flex><span> [ 1.00000000e+00 -5.81378271e-02]
+</span></span><span style=display:flex><span> [ 1.00000000e+00 -3.15429207e-02]
+</span></span><span style=display:flex><span> [ 1.00000000e+00  4.09643405e-02]]
+</span></span></code></pre></div><p>We now have our matrices, let&rsquo;s perform the linear regression!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>linear_model</span> <span style=color:#f92672>=</span> <span style=color:#111>np</span><span style=color:#f92672>.</span><span style=color:#111>linalg</span><span style=color:#f92672>.</span><span style=color:#111>inv</span><span style=color:#111>((</span><span style=color:#111>X</span><span style=color:#f92672>.</span><span style=color:#111>transpose</span><span style=color:#111>()</span><span style=color:#75af00>@X</span><span style=color:#111>))</span><span style=color:#75af00>@X.transpose</span><span style=color:#111>()</span><span style=color:#75af00>@Y</span>
+</span></span><span style=display:flex><span><span style=color:#111>linear_model</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[0.000544056413840724*x - 6.62061061591867e-5*y + 0.000429966553373172*z - 0.000178620725465344
+</span></span><span style=display:flex><span> 0.0457830563134785*x + 0.118178191274045*y + 0.0659651260604729*z + 0.899115719100281]
+</span></span></code></pre></div><p>Excellent. So we now have two rows; the top row represents the &ldquo;bias&rdquo;&mdash;how much deviation there is from CAPM, and the bottom row represents the &ldquo;rate&rdquo;&mdash;the &ldquo;beta&rdquo; value which represents how much excess variance there is.</p><p>We can will solve for a combination of solutions to give us specific values of returns vs risk. We will set the asset to learn exactly as much as the market (i.e. no bias).</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>deviance_expr</span> <span style=color:#f92672>=</span> <span style=color:#111>linear_model</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span><span style=color:#111>deviance_expr</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>0.000544056413840724*x - 6.62061061591867e-5*y + 0.000429966553373172*z - 0.000178620725465344
+</span></span></code></pre></div><p>We will now try to make variance exactly as much as that in the market.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>risk_expr</span> <span style=color:#f92672>=</span> <span style=color:#111>linear_model</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]</span> <span style=color:#f92672>-</span> <span style=color:#ae81ff>1</span>
+</span></span><span style=display:flex><span><span style=color:#111>risk_expr</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>0.0457830563134785*x + 0.118178191274045*y + 0.0659651260604729*z - 0.100884280899719
+</span></span></code></pre></div><p>Let us now calculate the boundary condition of our optimization problem by solving an expression in these two expressions.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>solution</span> <span style=color:#f92672>=</span> <span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>solvers</span><span style=color:#f92672>.</span><span style=color:#111>solve</span><span style=color:#111>([</span><span style=color:#111>deviance_expr</span><span style=color:#111>,</span> <span style=color:#111>risk_expr</span><span style=color:#111>],</span> <span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>y</span><span style=color:#111>,</span><span style=color:#111>z</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>solution</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>{x: 0.412737013327711 - 0.819584899551304*z, y: 0.693765220909132 - 0.24067066980814*z}
+</span></span></code></pre></div><p>Excellent. Let us recalculate our optimization objective (&ldquo;deviance&rdquo;&mdash;return) in terms of these new solutions. We aim now to maximize this expression by <em>minimizing</em> (i.e. our optimizer minimizes) the negative thereof&mdash;recalling that scypy works as a minimizer.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>optim_objective</span> <span style=color:#f92672>=</span> <span style=color:#111>deviance_expr</span><span style=color:#f92672>.</span><span style=color:#111>subs</span><span style=color:#111>(</span><span style=color:#111>solution</span><span style=color:#111>)</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1e2</span>
+</span></span><span style=display:flex><span><span style=color:#111>optim_objective</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>-5.04831636563563e-19*z - 100.0
+</span></span></code></pre></div><p>We can now use this value to solve for a \(z\) value.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>optim_solution</span> <span style=color:#f92672>=</span> <span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>solvers</span><span style=color:#f92672>.</span><span style=color:#111>solve</span><span style=color:#111>([</span><span style=color:#111>optim_objective</span><span style=color:#111>],</span> <span style=color:#111>z</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>optim_solution</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>{z: -1.98085842402250e+20}
+</span></span></code></pre></div><p>Excellent. We can now solve for the rest of our values.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>z0</span> <span style=color:#f92672>=</span> <span style=color:#111>float</span><span style=color:#111>(</span><span style=color:#111>optim_solution</span><span style=color:#111>[</span><span style=color:#111>z</span><span style=color:#111>])</span>
+</span></span><span style=display:flex><span><span style=color:#111>x0</span> <span style=color:#f92672>=</span> <span style=color:#111>solution</span><span style=color:#111>[</span><span style=color:#111>x</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>subs</span><span style=color:#111>(</span><span style=color:#111>z</span><span style=color:#111>,</span> <span style=color:#111>z0</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>y0</span> <span style=color:#f92672>=</span> <span style=color:#111>solution</span><span style=color:#111>[</span><span style=color:#111>y</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>subs</span><span style=color:#111>(</span><span style=color:#111>z</span><span style=color:#111>,</span> <span style=color:#111>z0</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>(</span><span style=color:#111>x0</span><span style=color:#111>,</span><span style=color:#111>y0</span><span style=color:#111>,</span><span style=color:#111>z0</span><span style=color:#111>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>(1.62348165247784e+16, 4.76734523704593e+15, -1.980858424022502e+16)
+</span></span></code></pre></div><p>This would create the following plan:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#75715e># solution</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_2_nobias</span> <span style=color:#f92672>=</span> <span style=color:#111>x0</span><span style=color:#f92672>*</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>LMT</span> <span style=color:#f92672>+</span> <span style=color:#111>y0</span><span style=color:#f92672>*</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>TWTR</span> <span style=color:#f92672>+</span> <span style=color:#111>z0</span><span style=color:#f92672>*</span><span style=color:#111>returns</span><span style=color:#f92672>.</span><span style=color:#111>MCD</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_2_nobias</span><span style=color:#f92672>.</span><span style=color:#111>mean</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>0.009168283711770158
+</span></span></code></pre></div><p>Recall that this is the performance of the balanced portfolio:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#111>fund_1_returns</span><span style=color:#f92672>.</span><span style=color:#111>mean</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>0.0009224705380695683
+</span></span></code></pre></div><p>Finally, let&rsquo;s plot the <em>prices</em> of our various funds:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>matplotlib.pyplot</span> <span style=color:#00a8c8>as</span> <span style=color:#111>plt</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>matplotlib.dates</span> <span style=color:#00a8c8>as</span> <span style=color:#111>mdates</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>seaborn</span> <span style=color:#00a8c8>as</span> <span style=color:#111>sns</span>
+</span></span><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>datetime</span> <span style=color:#f92672>import</span> <span style=color:#111>datetime</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>sns</span><span style=color:#f92672>.</span><span style=color:#111>set</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_2_price</span> <span style=color:#f92672>=</span> <span style=color:#111>x0</span><span style=color:#f92672>*</span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>LMT</span> <span style=color:#f92672>+</span> <span style=color:#111>y0</span><span style=color:#f92672>*</span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>TWTR</span> <span style=color:#f92672>+</span> <span style=color:#111>z0</span><span style=color:#f92672>*</span><span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>MCD</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_1_price</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>LMT</span> <span style=color:#f92672>+</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>TWTR</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_l_price</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>LMT</span>
+</span></span><span style=display:flex><span><span style=color:#111>fund_t_price</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>TWTR</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>dates</span> <span style=color:#f92672>=</span> <span style=color:#111>df</span><span style=color:#f92672>.</span><span style=color:#111>Date</span><span style=color:#f92672>.</span><span style=color:#111>apply</span><span style=color:#111>(</span><span style=color:#00a8c8>lambda</span> <span style=color:#111>x</span><span style=color:#111>:</span><span style=color:#111>datetime</span><span style=color:#f92672>.</span><span style=color:#111>strptime</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;%m/</span><span style=color:#d88200>%d</span><span style=color:#d88200>/%Y %H:%M:%S&#34;</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>sns</span><span style=color:#f92672>.</span><span style=color:#111>lineplot</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>=</span><span style=color:#111>dates</span><span style=color:#111>,</span> <span style=color:#111>y</span><span style=color:#f92672>=</span><span style=color:#111>fund_2_price</span><span style=color:#f92672>.</span><span style=color:#111>apply</span><span style=color:#111>(</span><span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>Float</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>astype</span><span style=color:#111>(</span><span style=color:#111>float</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span><span style=color:#111>sns</span><span style=color:#f92672>.</span><span style=color:#111>lineplot</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>=</span><span style=color:#111>dates</span><span style=color:#111>,</span> <span style=color:#111>y</span><span style=color:#f92672>=</span><span style=color:#111>fund_1_price</span><span style=color:#f92672>.</span><span style=color:#111>apply</span><span style=color:#111>(</span><span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>Float</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>astype</span><span style=color:#111>(</span><span style=color:#111>float</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span><span style=color:#111>sns</span><span style=color:#f92672>.</span><span style=color:#111>lineplot</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>=</span><span style=color:#111>dates</span><span style=color:#111>,</span> <span style=color:#111>y</span><span style=color:#f92672>=</span><span style=color:#111>fund_l_price</span><span style=color:#f92672>.</span><span style=color:#111>apply</span><span style=color:#111>(</span><span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>Float</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>astype</span><span style=color:#111>(</span><span style=color:#111>float</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span><span style=color:#111>sns</span><span style=color:#f92672>.</span><span style=color:#111>lineplot</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>=</span><span style=color:#111>dates</span><span style=color:#111>,</span> <span style=color:#111>y</span><span style=color:#f92672>=</span><span style=color:#111>fund_t_price</span><span style=color:#f92672>.</span><span style=color:#111>apply</span><span style=color:#111>(</span><span style=color:#111>sym</span><span style=color:#f92672>.</span><span style=color:#111>Float</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>astype</span><span style=color:#111>(</span><span style=color:#111>float</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>plt</span><span style=color:#f92672>.</span><span style=color:#111>gca</span><span style=color:#111>()</span><span style=color:#f92672>.</span><span style=color:#111>xaxis</span><span style=color:#f92672>.</span><span style=color:#111>set_major_locator</span><span style=color:#111>(</span><span style=color:#111>mdates</span><span style=color:#f92672>.</span><span style=color:#111>YearLocator</span><span style=color:#111>())</span>
+</span></span><span style=display:flex><span><span style=color:#111>plt</span><span style=color:#f92672>.</span><span style=color:#111>gca</span><span style=color:#111>()</span><span style=color:#f92672>.</span><span style=color:#111>xaxis</span><span style=color:#f92672>.</span><span style=color:#111>set_major_formatter</span><span style=color:#111>(</span><span style=color:#111>mdates</span><span style=color:#f92672>.</span><span style=color:#111>DateFormatter</span><span style=color:#111>(</span><span style=color:#d88200>&#39;%Y&#39;</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span><span style=color:#111>plt</span><span style=color:#f92672>.</span><span style=color:#111>gca</span><span style=color:#111>()</span><span style=color:#f92672>.</span><span style=color:#111>set_ylabel</span><span style=color:#111>(</span><span style=color:#d88200>&#34;Price&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>plt</span><span style=color:#f92672>.</span><span style=color:#111>show</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>None
+</span></span></code></pre></div><figure><img src=/ox-hugo/2022-10-29_23-33-46_screenshot.png></figure><p>Recall that we didn&rsquo;t actually buy any MacDonald&rsquo;s. So, we have&mdash;blue, being our &ldquo;optimal&rdquo; portfolio, yellow, our balanced portfolio, green, being Lockheed, and red, being Twitter.</p><p>Our portfolio works surprisingly well!</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

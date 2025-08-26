@@ -1,0 +1,73 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>relaxation (algorithms)</title>
+<meta name=description content="background info
+Recall asymtotic analysis. We remember that:
+constant time < logarithmic time < linear time < polynomial time < exponential time
+The question? What happens if dynamic programming is too slow/not good enough for the problem? What if dynamic programming is not needed; instead, why don&rsquo;t we just settle for a pretty good solution?
+Take, for instance, Nueva Courses. The optimal solution is &ldquo;most students get their highest possible preferences.&rdquo; However, this is impractical and pretty much impossible. Instead, what if we endeavor to figure a schedule that generally maximize happiness?"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>relaxation (algorithms)</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=background-info>background info</h2><p>Recall <a href=/posts/kbhasymtotic_analysis/>asymtotic analysis</a>. We remember that:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>constant time &lt; logarithmic time &lt; linear time &lt; polynomial time &lt; exponential time
+</span></span></code></pre></div><p>The question? What happens if <a href=/posts/kbhdynamic_programming/>dynamic programming</a> is too slow/not good enough for the problem? What if <a href=/posts/kbhdynamic_programming/>dynamic programming</a> is not needed; instead, why don&rsquo;t we just settle for a pretty good solution?</p><p>Take, for instance, <a href=/posts/kbhnueva_courses_index/>Nueva Courses</a>. The optimal solution is &ldquo;most students get their highest possible preferences.&rdquo; However, this is impractical and pretty much impossible. Instead, what if we endeavor to figure a schedule that generally maximize happiness?</p><h2 id=relaxation-methods>relaxation methods</h2><h3 id=constraint-relaxation>constraint relaxation</h3><p><a href=#constraint-relaxation>constraint relaxation</a> is a <a href=/posts/kbhrelaxation_algorithums/>relaxation</a> method to remove extra constraints.</p><p>Motivating problem: traveling salesman problem</p><ul><li>Visit all towns in a given location</li><li>Travel the minimal distance to do so</li><li>Cannot visit any town more than once</li></ul><p>Calculating the basic, naive solution to find all roads is \(O(n!)\). Best known solution is \(O(2^nn^2)\), which is still slow. Its also an \(NP\) hard problem.</p><p>Hence, to actually solve it in a reasonable time, we are going to make two relaxations.</p><ol><li>The salesmen can visit a town more than once</li><li>The salesmen can teleport to visited towns</li></ol><p>By these two relations, we convert traveling salesmen to the <a href=/posts/kbhminimum_spanning_tree/>minimum spanning tree</a> problem.</p><p>We now (how?) that solving MST is no worse than optimal TSP. We will solve MST, then use that problem as the upper bound of solution to TSP.</p><h3 id=continuous-relaxation>continuous relaxation</h3><p><a href=#continuous-relaxation>continuous relaxation</a> is a <a href=/posts/kbhrelaxation_algorithums/>relaxation</a> method to convert difficult discrete problems into continuous ones.</p><p>Motivating problem: set cover</p><p>You are having a party, and you want your friends to get a nice paper invite.</p><ul><li>you will send invitations to some subsets of your friends</li><li>tell them to send invitations to all your mutual friends with them</li></ul><p>What&rsquo;s the minimum number of friends to invite, and who?</p><p>Set-cover is also hard, and also NP hard. The problem is that sending invitation is discrete.</p><p>Hence, to solve, we make it possible to solve for fractions of invitations. Hence, we can prove that our solution is guaranteed to be within bounds</p><h3 id=lagrangian-relaxation>Lagrangian relaxation</h3><p><a href=#lagrangian-relaxation>Lagrangian relaxation</a> is a <a href=/posts/kbhrelaxation_algorithums/>relaxation</a> method to convert hard-limit constrains into flexible penalization (negative values).</p><p>Motivating problem: shortest paths problem with a constraint.</p><p>You need to drive the shortest number of miles as well as doing it in a hard constraint to complete the solution in a certain time.</p><p>We can instead relax the problem into overtime driving being a negative value in the solution.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

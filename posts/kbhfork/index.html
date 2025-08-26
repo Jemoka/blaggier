@@ -1,0 +1,120 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>fork</title>
+<meta name=description content="fork creates a second process that is an exact clone from the first.
+The original process is called the parent, the child process is called the child. The child comes in at the next instruction after fork. This means that fork calls once, returns twice. After fork, the execution order between both processes is completely up to the OS. After fork, we cannot assume execution order.
+Fork&rsquo;s return value is different between parent and child:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>fork</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhfork/>fork</a> creates a second process that is an exact <strong>clone</strong> from the first.</p><p>The original process is called the <strong>parent</strong>, the child process is called the <strong>child</strong>. The <strong>child</strong> comes in at the next instruction after fork. This means that fork <strong>calls once, returns twice</strong>. <strong>After <code>fork</code>, the execution order between both processes is completely up to the OS.</strong> After fork, we cannot assume execution order.</p><p>Fork&rsquo;s <strong>return value</strong> is different between parent and child:</p><ul><li>in parent, fork will return the PID of the child process</li><li>in the child, fork will return \(0\), you can get PID by calling <code>getpid</code>, and get parent ID through <code>getppid</code>.</li><li>if its \(-1\), something failed</li></ul><h2 id=things-that-are-duplicated>things that are duplicated</h2><ul><li>fire descriptor table</li><li>mapped memory regions (both stack and heap)</li></ul><h2 id=shell>shell</h2><p>a <a href=#shell>shell</a> forks off a child to run the command.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C++ data-lang=C++><span style=display:flex><span><span style=color:#00a8c8>while</span> <span style=color:#111>(</span><span style=color:#111>true</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>command</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span> <span style=color:#d88200>&#34;ls&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;things&#34;</span> <span style=color:#111>};</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#111>pid_t</span> <span style=color:#111>child_pid</span> <span style=color:#f92672>=</span> <span style=color:#111>fork</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#f92672>!</span><span style=color:#111>child_pid</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// this is the child; execvp will check PATH for you
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#111>execvp</span><span style=color:#111>(</span><span style=color:#111>command</span><span style=color:#111>.</span><span style=color:#111>argv</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#111>command</span><span style=color:#111>.</span><span style=color:#111>argv</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e>// if we got here, the PID didn&#39;t do well
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>        <span style=color:#00a8c8>throw</span> <span style=color:#75af00>STSHException</span><span style=color:#111>(</span><span style=color:#111>string</span><span style=color:#111>(</span><span style=color:#111>command</span><span style=color:#111>.</span><span style=color:#111>argv</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>])</span><span style=color:#f92672>+</span><span style=color:#d88200>&#34;: not found or didn&#39;t succeed to fork.&#34;</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#111>waitpid</span><span style=color:#111>(</span><span style=color:#111>child_pid</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// do cleanup
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span><span style=color:#111>}</span>
+</span></span></code></pre></div><p>This is because the act of running a subprogram from a program requires <strong>taking over the current PID with a different program</strong>. If we don&rsquo;t fork, once the takeover happens, we don&rsquo;t have a shell anymore.</p><h2 id=execvp>execvp</h2><p><a href=#execvp>execvp</a> takes over the current PID with another executable.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#75af00>execvp</span><span style=color:#111>(</span><span style=color:#00a8c8>const</span> <span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>path</span><span style=color:#111>,</span> <span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>argv</span><span style=color:#111>[]);</span>
+</span></span></code></pre></div><p>if <a href=#execvp>execvp</a> works, obviously it never returns. If it is unsuccessful, it returns <code>-1</code>.</p><p>The arguments list have to <strong>BEGIN WITH EXECUTABLE NAME</strong> and <strong>END WITH NULL</strong>.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>char</span> <span style=color:#f92672>*</span><span style=color:#111>args</span><span style=color:#111>[]</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span> <span style=color:#d88200>&#34;/bin/ls&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;-l&#34;</span><span style=color:#111>,</span> <span style=color:#d88200>&#34;~/hewo&#34;</span><span style=color:#111>,</span> <span style=color:#111>NULL</span> <span style=color:#111>};</span>
+</span></span><span style=display:flex><span><span style=color:#75af00>execvp</span><span style=color:#111>(</span><span style=color:#111>args</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#111>args</span><span style=color:#111>);</span>
+</span></span></code></pre></div><p>This is how we run other programs. After this happens, recall that the process is the <strong>SAME PROCESS</strong>, so we can still wait on this process.</p><p><strong>execvp LEAVES THE FILE DESCRIPTOR TABLE</strong>.</p><h2 id=waitpid>waitpid</h2><p><a href=#waitpid>waitpid</a> waits for a subprocess and frees information from the OS to store the information about the child process&rsquo; exit code. <a href=#waitpid>waitpid</a> can <strong>ONLY ALLOW YOU TO WAIT ON DIRECT CHILDREN*</strong>.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>pid_t</span> <span style=color:#75af00>waitpid</span><span style=color:#111>(</span><span style=color:#00a8c8>pid_t</span> <span style=color:#111>pid</span><span style=color:#111>,</span> <span style=color:#00a8c8>int</span> <span style=color:#f92672>*</span><span style=color:#111>status</span><span style=color:#111>,</span> <span style=color:#00a8c8>int</span> <span style=color:#111>options</span><span style=color:#111>);</span>
+</span></span></code></pre></div><ul><li>pid</li><li>status: pointer to store return about the child</li><li>options (0 for now)</li></ul><p>if the PID has died, this returns immediately. Otherwise, this blocks.</p><h3 id=the-status-int>the <code>status</code> int</h3><p>is a bitmap with a bunch of stuff, which we can check with a series of macros</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#75af00>WIFEXISTED</span><span style=color:#111>(</span><span style=color:#111>status</span><span style=color:#111>))</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// child normal exit
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>int</span> <span style=color:#111>statuscode</span> <span style=color:#f92672>=</span> <span style=color:#75af00>WEXITSTATUS</span><span style=color:#111>(</span><span style=color:#111>status</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span> <span style=color:#111>}</span> <span style=color:#00a8c8>else</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// abnormal exist
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span> <span style=color:#111>}</span>
+</span></span></code></pre></div><h3 id=wait-on-any-children>wait on any children</h3><p>If want to deal with the children as they exit, whichever one finishes first, you can write:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#111>pid</span> <span style=color:#f92672>=</span> <span style=color:#75af00>waitpid</span><span style=color:#111>(</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>,</span> <span style=color:#111>...);</span>
+</span></span></code></pre></div><p>which will wait on any of the process&rsquo; direct children, returning whichever one finishes first and returning its PID. If <code>pid</code>-1= and errcode is ECHILD, this means that there&rsquo;s no more children to be waited on.</p><h2 id=words>words</h2><h3 id=zombie>zombie</h3><p>a child process which exists which hasn&rsquo;t been blocked by a parent process using <code>waitpid</code>, where its exit code is stored and taking up resources forever.</p><h3 id=orphan>orphan</h3><p>a child process whose parent exited; which the bootloader takes care of.</p><h2 id=fork-mechanics>fork mechanics</h2><p>The act of copying stack and heap sounds really really expensive. So&mldr;. Whapppens?</p><p>Each program thinks its is given all memory addresses to use; the OS maps the &ldquo;virtual addresses&rdquo; to the main address. So, when the fork happens, the virtual address space stays the same. The child will map the parent&rsquo;s memory addresses to <strong>different</strong> physical addresses than for the parent.</p><p>The copies are <strong>LAZY</strong>&mdash;if the child writes to an area in memory, its virtual address are mapped to different addresses. If no writes by the child happen, the virtual address are mapped to the same address.</p><p>during file reading, the file descriptors gets cloned, the underlying <a href=/posts/kbhmultiprocessing/#open-file-table>open file table</a> doesn&rsquo;t close.</p><h2 id=typical-mp-pattern>typical mp pattern</h2><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-C data-lang=C><span style=display:flex><span><span style=color:#00a8c8>int</span> <span style=color:#75af00>main</span><span style=color:#111>()</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// fork off first child
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>pid_t</span> <span style=color:#111>f1</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fork</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>f1</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75af00>dispatch_1</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// fork off the process, if
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// we are still in main (meaning we are not a child)
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#00a8c8>pid_t</span> <span style=color:#111>f2</span> <span style=color:#f92672>=</span> <span style=color:#75af00>fork</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>if</span> <span style=color:#111>(</span><span style=color:#111>f2</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#111>{</span>
+</span></span><span style=display:flex><span>        <span style=color:#75af00>dispatch_2</span><span style=color:#111>();</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>}</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e>// this is equivalent to .join()
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// recall that even if f1 returns later
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75715e>// its ok, becasue we can let f2 be zombie for a bit
+</span></span></span><span style=display:flex><span><span style=color:#75715e></span>    <span style=color:#75af00>waitpid</span><span style=color:#111>(</span><span style=color:#111>f1</span><span style=color:#111>,</span> <span style=color:#111>NULL</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>    <span style=color:#75af00>waitpid</span><span style=color:#111>(</span><span style=color:#111>f2</span><span style=color:#111>,</span> <span style=color:#111>NULL</span><span style=color:#111>,</span> <span style=color:#ae81ff>0</span><span style=color:#111>);</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>return</span> <span style=color:#ae81ff>0</span><span style=color:#111>;</span>
+</span></span><span style=display:flex><span><span style=color:#111>}</span>
+</span></span></code></pre></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

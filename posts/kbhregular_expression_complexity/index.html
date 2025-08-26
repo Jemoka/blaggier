@@ -1,0 +1,77 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>regular expression (complexity)</title>
+<meta name=description content="Regular expressions express computation as a simple, logical discretion, through closure properties (such as properties of regular languages). a family of languages which satisfy closure properties of DFA regular languages, which turns out to be exactly the set of languages that DFA and NFA both recognize.
+&ldquo;What is the complexity of describing the strings in a language?&rdquo;
+definition
+Let \(\Sigma\) be an alphabet, we define the regular expressions over \(\Sigma\):
+
+for all \(\sigma \in \Sigma\), \(\sigma\) is a regexp
+\(\varepsilon\) (empty string) is a regexp
+\(\emptyset\) (empty set) is a regexp
+
+If \(R_1\), \(R_2\) are regexps, then:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>regular expression (complexity)</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhregular_expression_complexity/>Regular expression</a>s express computation as a simple, logical discretion, through closure properties (such as <a href=/posts/kbhregular_language/#properties-of-id-a8a2a1e4-9bb8-4a06-8218-5002136bab87-regular-language-s>properties of regular languages</a>). a family of languages which satisfy closure properties of <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> <a href=/posts/kbhdeterministic_finite_automata/>regular languages</a>, which turns out to be exactly the set of languages that <a href=/posts/kbhdeterministic_finite_automata/>DFA</a> and <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> both recognize.</p><p>&ldquo;What is the complexity of <strong>describing</strong> the strings in a language?&rdquo;</p><h2 id=definition>definition</h2><p>Let \(\Sigma\) be an alphabet, we define the <a href=/posts/kbhregular_expression_complexity/>regular expression</a>s over \(\Sigma\):</p><ul><li>for all \(\sigma \in \Sigma\), \(\sigma\) is a regexp</li><li>\(\varepsilon\) (empty string) is a regexp</li><li>\(\emptyset\) (empty set) is a regexp</li></ul><p>If \(R_1\), \(R_2\) are regexps, then:</p><ul><li>\(R_1 \cdot R_2\) (concat) is a regexp</li><li>\(R_1 + R_2\) (plus) is a regexp</li><li>\((R_1)^{*}\) (set of all subsets)</li></ul><p>Operator precidence:</p><ul><li>then . then +</li></ul><h2 id=additional-information>additional information</h2><h3 id=regexp-representing-language--kbhalphabet-dot-md--s>regexp representing <a href=/posts/kbhalphabet/>language</a>s</h3><p>The regexp \(\sigma \in \Sigma\) represents the language \(\qty {\sigma}\), the regexp \(\varepsilon\) represents the language \(\qty {\epsilon }\), the regexp \(\emptyset\) represents the language \(\emptyset\).</p><p>for \(R_1, R_2\) being <a href=/posts/kbhregular_expression_complexity/>regular expression</a>s representing a particular <a href=/posts/kbhregular_language/>regular language</a> \(L_1, L_2\dots\)</p><ul><li>\((R_1 \cdot R_2)\) represents concatenation \(L_2 \cdot L_2\) in the language</li><li>\((R_1 + R_2)\) represents union \(L_1 \cup L_2\) in the language</li><li>\((R_1)^{*}\) represents the clean star of \(L_1\) in the language</li></ul><h4 id=l--r>L(R)</h4><p>we refer \(L( R)\) to be the language that \(R\) represents.</p><h4 id=accept>accept</h4><p>a string \(w \in \Sigma\) is <strong>accepted</strong> by \(R\) (&ldquo;w <strong>matches</strong> R&rdquo;) if \(w \in L( R)\).</p><h3 id=regular-expressions-are-equivalent-to-regular-languages>regular expressions are equivalent to regular languages</h3><p>another double containment</p><h4 id=any-regexp-can-be-an-nfa>any regexp can be an NFA</h4><p>given any regexp \(R\), we will construct an <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> such that \(N\) accepts exactly that in \(R\).</p><p><strong>base cases</strong>: \(R\) has length \(1\); \(R = \sigma\), \(R = \varepsilon\), and \(R = \emptyset\), each of which has a <a href=/posts/kbhnondeterministic_finite_automata/>NFA</a> (only one symbol, directly to the accept state, or no accept state at all)</p><p><strong>invariant</strong>: every regexp of length \(k\) represents some <a href=/posts/kbhregular_language/>regular language</a></p><p><strong>induction</strong>: consider \(R\) of length \(k+1\); here are the three possibilities: \(R = R_1 + R_2\), \(R = R_1R_2\), and \(R = (R_{1})^{*}\), where all \(|R_{j}| \leq |k|\). note that this means that each of the mappings map directly to a <a href=/posts/kbhregular_language/#properties-of-id-a8a2a1e4-9bb8-4a06-8218-5002136bab87-regular-language-s>properties of regular languages</a> (union theorem, concatenation theorem, clean star) respectively.</p><h4 id=any-nfa-can-be-a-regexp>any NFA can be a regexp</h4><p>remove states and re-labeling arcs with regular expressions&mdash;meaning we can then read substrings at a time; this operation gives us a <a href=#any-nfa-can-be-a-regexp>Generalized NFA</a>&mdash;</p><figure><img src=/ox-hugo/2024-09-30_23-30-27_screenshot.png></figure><p>each edge can read not just a single symbol, but any string that corresponds to a regular expression</p><p>proof idea: constructions</p><figure><img src=/ox-hugo/2024-09-30_23-34-36_screenshot.png></figure><ul><li>add unique start and accept states</li><li>for every path of length 2 that goes between the unique start and end states, pick and internal state, rip it out, and re-label arrows</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

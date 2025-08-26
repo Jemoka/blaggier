@@ -1,0 +1,77 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS224N APR112024</title>
+<meta name=description content="Linguistic Structure
+Humans somehow turn linear into complex meaning with bigger, non-linear units. We need to make explicit this structural complexity. Sometimes, this is even ambiguous.
+We can use this to extract information from human languages.
+Why is this hard?
+
+coding: global clarity, local ambiguity (number of white spaces doesn&rsquo;t matter, but code always have one exact meaning)
+speaking: global ambiguity, local clarity (words are always clearly said, but what they refer to maybe unclear)
+
+Prepositional Ambiguity
+Why? &mdash; Prepositional Phrase does not have clear attachment. The sequence of possible attachments grows exponentially."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS224N APR112024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=linguistic-structure>Linguistic Structure</h2><p>Humans somehow turn linear into complex meaning with bigger, non-linear units. We need to make explicit this structural complexity. Sometimes, this is even ambiguous.</p><p>We can use this to extract information from human languages.</p><h3 id=why-is-this-hard>Why is this hard?</h3><ul><li>coding: <strong>global clarity, local ambiguity</strong> (number of white spaces doesn&rsquo;t matter, but code always have one exact meaning)</li><li>speaking: <strong>global ambiguity, local clarity</strong> (words are always clearly said, but what they refer to maybe unclear)</li></ul><h4 id=prepositional-ambiguity>Prepositional Ambiguity</h4><p>Why? &mdash; Prepositional Phrase does not have clear attachment. The sequence of possible attachments grows exponentially.</p><h4 id=coordination-scope-ambiguity>Coordination Scope Ambiguity</h4><h3 id=two-representations>Two Representations</h3><h4 id=phrase-structure-grammar>Phrase-Structure Grammar</h4><p><a href=#phrase-structure-grammar>Phrase-Structure Grammar</a> uses <a href=/posts/kbhcontext_free_grammar/>Context-Free Grammar</a>s to represent language into broken phrases (nobody actually does this unless you want to go build a <a href=#phrase-structure-grammar>Constituency Parsing</a>.)</p><ol><li>starting with word units (perform <a href=/posts/kbhpos_tagging/>POS Tagging</a>)</li><li>combine words into phrase units (create NPs, VPs, etc.)</li><li>combine phrases into bigger phrases (build up sentences with phrase-level grammars)</li></ol><p>With this parsing information, you can force a <a href=/posts/kbhcontext_free_grammar/>Context-Free Grammar</a> based on what could be possible:</p><p>And you can use this CFG to parse our text (not very well&mldr;. because of ambiguity).</p><h4 id=dependency-grammar>Dependency Grammar</h4><p>Dependency structure uses a graph between words to represents relationship directly on the world level.</p><p>&ldquo;Which word is the head word, and what does it modify?&rdquo;</p><ol><li>find head word</li><li>which things modify the head word</li></ol><p>repeat</p><ul><li><p>Dependency Structure</p><p>We begin with the headword of a sentence (usually the verb); and then, we go through the text and connect the head to each dependent; this forms a tree with the head word on top, and each word POINTS to its dependent (i.e. headword on top).</p><p>Sometimes people point from dependent to head, but that&rsquo;s lame. So we point from HEAD to dependent (ROOT => Verb, and so on).</p></li></ul><ul><li><p>Sources of Dependency Information</p><ol><li>Bilexical affinities &mdash; is a particular pairwise dependency possible?</li><li>Dependency distance &mdash; most, but not all dependencies are between nearby words</li><li>Intervening material &mdash; dependencies rarely span intervening words or punctuations</li><li>valency &mdash;- how many dependencies on which side are usual for a head?</li></ol></li></ul><ul><li><p>Non-Projective Dependencies</p><p>Dependencies can sometimes cross each other</p></li></ul><ul><li><p>Parsing Mechanism</p><ul><li><p>Greedy Transition-Based Parsing</p><ul><li>take a stack, \(\sigma\), written with top tot the right</li><li>take a buffer, \(\beta\), written with to to the left</li><li>a set of dependency arcs \(A\), which we predict</li></ul><p>Three operations: push one word into the stack (&ldquo;shift&rdquo;), link last word on stack to second to last word (&ldquo;arc-left&rdquo;), link second to last word on stack to last word on stack (&ldquo;arc-right&rdquo;)</p></li></ul><ul><li><p>Graph Based Parsing</p><p>ask each word &ldquo;what am I a dependent of?&rdquo; So, it becomes a classification problem per word vs. other adjacent words. this is what Stanza uses</p></li></ul><ul><li><p>Evaluating Depparse</p><p>We assess whether or not we have a good parser by checking whether or not the parsed arcs are good.</p><ul><li><p>Unlabeled Dependency Score</p><p>We consider the P/R/A/F of tuples of (head, dep, word, word), considering only exact matches as positive.</p></li></ul><ul><li><p>Labeled Dependency Score</p><p>We consider the P/R/A/F of tuples of (head, dep, word, word, arc-label), considering only exact matches as positive.</p></li></ul></li></ul></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

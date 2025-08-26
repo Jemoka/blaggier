@@ -1,0 +1,283 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NUS-ECON320 Inter-Temporal Choice</title>
+<meta name=description content="We want to construct a combined agent
+\begin{equation}
+(k_1+k_2)x^{*}(k_1+k_2, \gamma^{*}) = x^{*}(k_1,\gamma_{1})k_1+x^{*}(k_2, \gamma_{2})k_2
+\end{equation}
+which combines the relative risk of \(\gamma_{1}, \gamma_{2}\) into some new \(\gamma^{*}\), which produces the same combined consumption of both agents \(k_1+k_2\).
+Let us create some CAS tools to solve the inter-temporal choice problem generically for 10 steps in the past.
+We do this by solving backwards. We will create a variable \(k\) to measure asset, and \(k_{t}\) the remaining asset at time \(t\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NUS-ECON320 Inter-Temporal Choice</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>We want to construct a combined agent</p><p>\begin{equation}
+(k_1+k_2)x^{*}(k_1+k_2, \gamma^{*}) = x^{*}(k_1,\gamma_{1})k_1+x^{*}(k_2, \gamma_{2})k_2
+\end{equation}</p><p>which combines the relative risk of \(\gamma_{1}, \gamma_{2}\) into some new \(\gamma^{*}\), which produces the same combined consumption of both agents \(k_1+k_2\).</p><p>Let us create some CAS tools to solve the inter-temporal choice problem generically for 10 steps in the past.</p><p>We do this by solving backwards. We will create a variable \(k\) to measure asset, and \(k_{t}\) the remaining asset at time \(t\).</p><p>Let us first declare the function for <a href=/posts/kbhpower_utility/>power utility</a>. \(k\) is our asset holding, \(\gamma\) our relative margin of risk, and \(U\) the power utility.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#75715e># risk aversion</span>
+</span></span><span style=display:flex><span><span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;y&#34;</span><span style=color:#111>,</span> <span style=color:#111>latex_name</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;\gamma&#34;</span><span style=color:#111>,</span> <span style=color:#111>domain</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;real&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># discount factor</span>
+</span></span><span style=display:flex><span><span style=color:#111>d</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;d&#34;</span><span style=color:#111>,</span> <span style=color:#111>latex_name</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;\delta&#34;</span><span style=color:#111>,</span> <span style=color:#111>domain</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;real&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># final value at time t=f</span>
+</span></span><span style=display:flex><span><span style=color:#111>k_f</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;k_f&#34;</span><span style=color:#111>,</span> <span style=color:#111>latex_name</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;k_f&#34;</span><span style=color:#111>,</span> <span style=color:#111>domain</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;real&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># the instrument&#39;s percentage return over a period: i.e. (1+mu)*I_t = k_{t+1}</span>
+</span></span><span style=display:flex><span><span style=color:#111>m</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;m&#34;</span><span style=color:#111>,</span> <span style=color:#111>latex_name</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;\mu&#34;</span><span style=color:#111>,</span> <span style=color:#111>domain</span><span style=color:#f92672>=</span><span style=color:#d88200>&#39;real&#39;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># boundary conditions</span>
+</span></span><span style=display:flex><span><span style=color:#111>assume</span><span style=color:#111>(</span><span style=color:#111>y</span><span style=color:#f92672>&gt;</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>assume</span><span style=color:#111>(</span><span style=color:#111>y</span><span style=color:#f92672>&lt;</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>assume</span><span style=color:#111>(</span><span style=color:#111>d</span><span style=color:#f92672>&gt;</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>assume</span><span style=color:#111>(</span><span style=color:#111>d</span><span style=color:#f92672>&lt;</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># power utility</span>
+</span></span><span style=display:flex><span><span style=color:#111>u</span><span style=color:#111>(</span><span style=color:#111>c</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>((</span><span style=color:#111>c</span><span style=color:#f92672>^</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>-</span><span style=color:#111>y</span><span style=color:#111>)</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>-</span><span style=color:#111>y</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span><span style=color:#111>u</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>c |--&gt; -(c^(-y + 1) - 1)/(y - 1)
+</span></span></code></pre></div><p>At the final time stamp, we desire to consume all of our assets. Therefore, we will seed our investment amount at \(I=0\). We will optimize for eventual global utility, therefore, we will talley our utility; starting this talley at \(0\).</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#75715e># at the final time, leave nothing for investment</span>
+</span></span><span style=display:flex><span><span style=color:#111>I</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>;</span> <span style=color:#111>u_total</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span></code></pre></div><p>From every step from here, we will discount this utility by \(d\), then solve for the <em>previous</em> step&rsquo;s target consumption that would maximize utility. That is, at every step, we desire:</p><p>\begin{equation}
+k_{t-1} = I_{t} + c_{t} \implies c_{t} = k_{t-1}-I_{t}
+\end{equation}</p><p>&ldquo;we want to consume all we have that needed&rsquo;t to be invested&rdquo;</p><p>and</p><p>\(\max u(c_{t})\)</p><p>Recall also that \((1+\mu)I_{t} = k_{t+1}\) (as \(\mu\) is the mean log-return, 1+that times \(I\), how much was invested at time \(t\), is the expected capital one time period from then.) Therefore, to make sure that \(k_{f}\) gets back in the final period, we solve for our seed value for \(I\), how much to invest would be:</p><p>\begin{equation}
+I_{t-1} = \frac{k_t}{(1+m)}
+\end{equation}</p><p>Enough talk, let&rsquo;s get to it:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#75715e># create an dictionary to keep track of all the capital variables</span>
+</span></span><span style=display:flex><span><span style=color:#111>k</span> <span style=color:#f92672>=</span> <span style=color:#111>{}</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># we will iterate time stamps 1-10</span>
+</span></span><span style=display:flex><span><span style=color:#111>T</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>10</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># a variable for captial at that time</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>T</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>k_t</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>f</span><span style=color:#d88200>&#34;k_</span><span style=color:#d88200>{</span><span style=color:#111>T</span><span style=color:#f92672>-</span><span style=color:#111>i</span><span style=color:#d88200>}</span><span style=color:#d88200>&#34;</span><span style=color:#111>,</span> <span style=color:#111>latex_name</span><span style=color:#f92672>=</span><span style=color:#d88200>f</span><span style=color:#d88200>&#34;k_</span><span style=color:#d88200>{</span><span style=color:#111>T</span><span style=color:#f92672>-</span><span style=color:#111>i</span><span style=color:#d88200>}</span><span style=color:#d88200>&#34;</span><span style=color:#111>)</span> <span style=color:#75715e># t-i becasue we are solving backwards; i0 = T10</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># what can be consumed at every time stamp</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># is the k of the previous timestamp, minus</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># what needs to be left over</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># we multiply here by d because we want to</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># discount future utility</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>u_total</span> <span style=color:#f92672>=</span> <span style=color:#111>d</span><span style=color:#f92672>*</span><span style=color:#111>u_total</span> <span style=color:#f92672>+</span> <span style=color:#111>u</span><span style=color:#111>(</span><span style=color:#111>k_t</span><span style=color:#f92672>-</span><span style=color:#111>I</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># add the current variable to dictionary</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>k</span><span style=color:#111>[</span><span style=color:#111>T</span><span style=color:#f92672>-</span><span style=color:#111>i</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>k_t</span> <span style=color:#75715e># recall again i0=T10 because backwards</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># solve for the next investment amount</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>I</span> <span style=color:#f92672>=</span> <span style=color:#111>k_t</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>+</span><span style=color:#111>m</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>u_total</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>-(((((((d*(d*(k_10^(-y + 1) - 1)/(y - 1) + ((k_9 - k_10/(m + 1))^(-y + 1) - 1)/(y - 1)) + ((k_8 - k_9/(m + 1))^(-y + 1) - 1)/(y - 1))*d + ((k_7 - k_8/(m + 1))^(-y + 1) - 1)/(y - 1))*d + ((k_6 - k_7/(m + 1))^(-y + 1) - 1)/(y - 1))*d + ((k_5 - k_6/(m + 1))^(-y + 1) - 1)/(y - 1))*d + ((k_4 - k_5/(m + 1))^(-y + 1) - 1)/(y - 1))*d + ((k_3 - k_4/(m + 1))^(-y + 1) - 1)/(y - 1))*d + ((k_2 - k_3/(m + 1))^(-y + 1) - 1)/(y - 1))*d - ((k_1 - k_2/(m + 1))^(-y + 1) - 1)/(y - 1)
+</span></span></code></pre></div><p>We can now use the scipy numerical optimizer to minimize this target. Recall that we can recover the actual value of consumption at each step as \(c=k-\frac{k}{m+1}\).</p><p>We will set some initial conditions:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>_m</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.01</span> <span style=color:#75715e># 1% period-to-period increase</span>
+</span></span><span style=display:flex><span><span style=color:#111>_k</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1000</span> <span style=color:#75715e># $1000 capital</span>
+</span></span><span style=display:flex><span><span style=color:#111>_y</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.8</span> <span style=color:#75715e># generally risk averse</span>
+</span></span><span style=display:flex><span><span style=color:#111>_d</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.9</span> <span style=color:#75715e># the future matters slightly less</span>
+</span></span></code></pre></div><p>Recall that the scipy optimizer MINIMIZES, so we will make the loss the negative of utility. Before we finally start, we need to make the actual, numerical loss function that performs the substitution:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#75715e># we reverse the k_* variables because it is stored in the dictionary</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># in reverse, because we knew the reverse condition first</span>
+</span></span><span style=display:flex><span><span style=color:#111>optim_variables</span> <span style=color:#f92672>=</span> <span style=color:#111>list</span><span style=color:#111>(</span><span style=color:#111>k</span><span style=color:#f92672>.</span><span style=color:#111>values</span><span style=color:#111>())</span>
+</span></span><span style=display:flex><span><span style=color:#111>optim_variables</span><span style=color:#f92672>.</span><span style=color:#111>reverse</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># this function is also the callback, so it returning</span>
+</span></span><span style=display:flex><span><span style=color:#75715e># True terminates execution</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>def</span> <span style=color:#75af00>u_total_loss</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># the optimizer&#39;s current step</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># we want to take [1:], because we need to keep k1 the same at _k the</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># initial value</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>substitution_dict</span> <span style=color:#f92672>=</span> <span style=color:#111>{</span><span style=color:#111>key</span><span style=color:#111>:</span> <span style=color:#111>val</span> <span style=color:#00a8c8>for</span> <span style=color:#111>key</span><span style=color:#111>,</span> <span style=color:#111>val</span> <span style=color:#f92672>in</span> <span style=color:#111>zip</span><span style=color:#111>(</span><span style=color:#111>optim_variables</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>:],</span> <span style=color:#111>x</span><span style=color:#111>)}</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># initial conditions</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>substitution_dict</span><span style=color:#111>[</span><span style=color:#111>m</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>_m</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>substitution_dict</span><span style=color:#111>[</span><span style=color:#111>y</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>_y</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>substitution_dict</span><span style=color:#111>[</span><span style=color:#111>d</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>_d</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>substitution_dict</span><span style=color:#111>[</span><span style=color:#111>d</span><span style=color:#111>]</span> <span style=color:#f92672>=</span> <span style=color:#111>_d</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># we want to keep the initial value k1 the same</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>substitution_dict</span><span style=color:#111>[</span><span style=color:#111>k</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>]]</span> <span style=color:#f92672>=</span> <span style=color:#111>_k</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>try</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># get value</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>content</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#f92672>*</span><span style=color:#111>u_total</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>subs</span><span style=color:#111>(</span><span style=color:#111>substitution_dict</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># recall we multiply by -1 because we are MINIMIZING, so the loss is</span>
+</span></span><span style=display:flex><span>        <span style=color:#75715e># the inverse of the maximization utility target</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#111>float</span><span style=color:#111>(</span><span style=color:#111>content</span><span style=color:#f92672>.</span><span style=color:#111>n</span><span style=color:#111>()),</span> <span style=color:#00a8c8>False</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>except</span><span style=color:#111>:</span>
+</span></span><span style=display:flex><span>        <span style=color:#00a8c8>return</span> <span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#00a8c8>True</span>
+</span></span></code></pre></div><p>Finally, we are ready to start. We will now create the other initial conditions k1&mldr;k10 and : we will set the initial value to all be 1000 (i.e. do nothing) and have the optimizer work it out from there:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#f92672>from</span> <span style=color:#111>scipy.optimize</span> <span style=color:#f92672>import</span> <span style=color:#111>minimize</span>
+</span></span><span style=display:flex><span><span style=color:#111>target</span> <span style=color:#f92672>=</span> <span style=color:#111>minimize</span><span style=color:#111>(</span><span style=color:#00a8c8>lambda</span> <span style=color:#111>x</span><span style=color:#111>:</span><span style=color:#111>u_total_loss</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)[</span><span style=color:#ae81ff>0</span><span style=color:#111>],</span> <span style=color:#111>[</span><span style=color:#111>_k</span> <span style=color:#00a8c8>for</span> <span style=color:#111>_</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>T</span><span style=color:#f92672>-</span><span style=color:#ae81ff>1</span><span style=color:#111>)],</span> <span style=color:#111>callback</span><span style=color:#f92672>=</span><span style=color:#00a8c8>lambda</span> <span style=color:#111>x</span><span style=color:#111>:</span><span style=color:#111>u_total_loss</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)[</span><span style=color:#ae81ff>1</span><span style=color:#111>])</span>
+</span></span><span style=display:flex><span><span style=color:#111>target</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>      fun: -50.71592850322347
+</span></span><span style=display:flex><span> hess_inv: array([[ 9518.97596212,  7617.14636381,  5964.42171873,  4433.87331935,
+</span></span><span style=display:flex><span>         4253.91810669,  3528.72923763,  2329.61846616,  1769.85078017,
+</span></span><span style=display:flex><span>         1126.51562458],
+</span></span><span style=display:flex><span>       [ 7617.14636381, 14333.33933517, 11251.71278723,  8073.31207641,
+</span></span><span style=display:flex><span>         7444.53071922,  6481.03236385,  4347.35353474,  2644.39855553,
+</span></span><span style=display:flex><span>         1359.86586059],
+</span></span><span style=display:flex><span>       [ 5964.42171873, 11251.71278723, 15011.27497355, 10093.46973099,
+</span></span><span style=display:flex><span>         9229.06386286,  8371.07459024,  5510.14654004,  3480.74298654,
+</span></span><span style=display:flex><span>         1639.19265606],
+</span></span><span style=display:flex><span>       [ 4433.87331935,  8073.31207641, 10093.46973099, 12434.28059884,
+</span></span><span style=display:flex><span>        11689.33288295, 10711.57399875,  7440.7461982 ,  4810.57094062,
+</span></span><span style=display:flex><span>         2255.16306648],
+</span></span><span style=display:flex><span>       [ 4253.91810669,  7444.53071922,  9229.06386286, 11689.33288295,
+</span></span><span style=display:flex><span>        14840.59602968, 12519.06872583,  8708.9160148 ,  5688.83339388,
+</span></span><span style=display:flex><span>         2598.27394651],
+</span></span><span style=display:flex><span>       [ 3528.72923763,  6481.03236385,  8371.07459024, 10711.57399875,
+</span></span><span style=display:flex><span>        12519.06872583, 14999.44881857, 10630.30739223,  6512.62254338,
+</span></span><span style=display:flex><span>         2293.45506703],
+</span></span><span style=display:flex><span>       [ 2329.61846616,  4347.35353474,  5510.14654004,  7440.7461982 ,
+</span></span><span style=display:flex><span>         8708.9160148 , 10630.30739223, 12147.11811342,  7149.37937935,
+</span></span><span style=display:flex><span>         2657.8129831 ],
+</span></span><span style=display:flex><span>       [ 1769.85078017,  2644.39855553,  3480.74298654,  4810.57094062,
+</span></span><span style=display:flex><span>         5688.83339388,  6512.62254338,  7149.37937935,  7260.90962516,
+</span></span><span style=display:flex><span>         2422.66762041],
+</span></span><span style=display:flex><span>       [ 1126.51562458,  1359.86586059,  1639.19265606,  2255.16306648,
+</span></span><span style=display:flex><span>         2598.27394651,  2293.45506703,  2657.8129831 ,  2422.66762041,
+</span></span><span style=display:flex><span>         2911.30717272]])
+</span></span><span style=display:flex><span>      jac: array([ 0.00000000e+00, -3.81469727e-06,  2.38418579e-06,  0.00000000e+00,
+</span></span><span style=display:flex><span>        8.58306885e-06, -5.24520874e-06,  2.86102295e-06, -1.43051147e-06,
+</span></span><span style=display:flex><span>       -5.24520874e-06])
+</span></span><span style=display:flex><span>  message: &#39;Optimization terminated successfully.&#39;
+</span></span><span style=display:flex><span>     nfev: 1360
+</span></span><span style=display:flex><span>      nit: 130
+</span></span><span style=display:flex><span>     njev: 136
+</span></span><span style=display:flex><span>   status: 0
+</span></span><span style=display:flex><span>  success: True
+</span></span><span style=display:flex><span>        x: array([841.22097906, 699.82556541, 573.89912346, 461.63474591,
+</span></span><span style=display:flex><span>       361.51493714, 272.10309839, 192.29084196, 120.94057011,
+</span></span><span style=display:flex><span>        57.12129925])
+</span></span></code></pre></div><p><em>Awesome!</em> We now can recover \(c\) at each point by a nice helpful function:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>c</span><span style=color:#111>(</span><span style=color:#111>k0</span><span style=color:#111>,</span> <span style=color:#111>k1</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>k0</span> <span style=color:#f92672>-</span> <span style=color:#111>k1</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>_m</span><span style=color:#f92672>+</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+</span></span></code></pre></div><p>&ldquo;Consumption is how much we have, minus how much we would be investing&rdquo;</p><p>So, let us translate our list to the actual values consumed:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>capital_over_time</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#111>_k</span><span style=color:#111>]</span><span style=color:#f92672>+</span><span style=color:#111>target</span><span style=color:#f92672>.</span><span style=color:#111>x</span><span style=color:#f92672>.</span><span style=color:#111>tolist</span><span style=color:#111>()</span> <span style=color:#75715e># we need to add the initial condition _k back to the</span>
+</span></span><span style=display:flex><span>                                           <span style=color:#75715e># inventory list</span>
+</span></span><span style=display:flex><span><span style=color:#111>consumption_over_time</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#111>c</span><span style=color:#111>(</span><span style=color:#111>i</span><span style=color:#111>,</span><span style=color:#111>j</span><span style=color:#111>)</span> <span style=color:#00a8c8>for</span> <span style=color:#111>i</span><span style=color:#111>,</span><span style=color:#111>j</span> <span style=color:#f92672>in</span> <span style=color:#111>zip</span><span style=color:#111>(</span><span style=color:#111>capital_over_time</span><span style=color:#111>,</span> <span style=color:#111>capital_over_time</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>:])]</span>
+</span></span><span style=display:flex><span><span style=color:#111>consumption_over_time</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[167.107941529699,
+</span></span><span style=display:flex><span> 148.324379643989,
+</span></span><span style=display:flex><span> 131.608611479784,
+</span></span><span style=display:flex><span> 116.835018601197,
+</span></span><span style=display:flex><span> 103.699164584812,
+</span></span><span style=display:flex><span> 92.1059288329209,
+</span></span><span style=display:flex><span> 81.7161261514775,
+</span></span><span style=display:flex><span> 72.5477032414004,
+</span></span><span style=display:flex><span> 64.3848282779261]
+</span></span></code></pre></div><h2 id=examples-of-output>Examples of Output</h2><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>_m</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.01</span> <span style=color:#75715e># 1% period-to-period increase</span>
+</span></span><span style=display:flex><span><span style=color:#111>_k</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1000</span> <span style=color:#75715e># $1000 capital</span>
+</span></span><span style=display:flex><span><span style=color:#111>_y</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.8</span> <span style=color:#75715e># generally risk averse</span>
+</span></span><span style=display:flex><span><span style=color:#111>_d</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.9</span> <span style=color:#75715e># the future matters slightly less</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[167.107941529699,
+</span></span><span style=display:flex><span> 148.324379643989,
+</span></span><span style=display:flex><span> 131.608611479784,
+</span></span><span style=display:flex><span> 116.835018601197,
+</span></span><span style=display:flex><span> 103.699164584812,
+</span></span><span style=display:flex><span> 92.1059288329209,
+</span></span><span style=display:flex><span> 81.7161261514775,
+</span></span><span style=display:flex><span> 72.5477032414004,
+</span></span><span style=display:flex><span> 64.3848282779261]
+</span></span></code></pre></div><hr><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>_m</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.1</span> <span style=color:#75715e># 1% period-to-period increase</span>
+</span></span><span style=display:flex><span><span style=color:#111>_k</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1000</span> <span style=color:#75715e># $1000 capital</span>
+</span></span><span style=display:flex><span><span style=color:#111>_y</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.8</span> <span style=color:#75715e># generally risk averse</span>
+</span></span><span style=display:flex><span><span style=color:#111>_d</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.9</span> <span style=color:#75715e># the future matters slightly less</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[154.860597149863,
+</span></span><span style=display:flex><span> 152.989432556196,
+</span></span><span style=display:flex><span> 151.010433069881,
+</span></span><span style=display:flex><span> 149.201249715528,
+</span></span><span style=display:flex><span> 147.329750167852,
+</span></span><span style=display:flex><span> 145.539019666462,
+</span></span><span style=display:flex><span> 143.739371599600,
+</span></span><span style=display:flex><span> 141.984228587213,
+</span></span><span style=display:flex><span> 140.243839963791]
+</span></span></code></pre></div><hr><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>_m</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.01</span> <span style=color:#75715e># 1% period-to-period increase</span>
+</span></span><span style=display:flex><span><span style=color:#111>_k</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1000</span> <span style=color:#75715e># $1000 capital</span>
+</span></span><span style=display:flex><span><span style=color:#111>_y</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.2</span> <span style=color:#75715e># generally risky</span>
+</span></span><span style=display:flex><span><span style=color:#111>_d</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.9</span> <span style=color:#75715e># the future matters slightly less</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[388.525041338376,
+</span></span><span style=display:flex><span> 241.124420093987,
+</span></span><span style=display:flex><span> 149.632568775223,
+</span></span><span style=display:flex><span> 92.8644259086613,
+</span></span><span style=display:flex><span> 57.6330459746870,
+</span></span><span style=display:flex><span> 35.7667230511026,
+</span></span><span style=display:flex><span> 22.1970017374152,
+</span></span><span style=display:flex><span> 13.7754327365677,
+</span></span><span style=display:flex><span> 8.54930907023498]
+</span></span></code></pre></div><hr><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>_m</span> <span style=color:#f92672>=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>0.01</span> <span style=color:#75715e># this is a loosing stock</span>
+</span></span><span style=display:flex><span><span style=color:#111>_k</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1000</span> <span style=color:#75715e># $1000 capital</span>
+</span></span><span style=display:flex><span><span style=color:#111>_y</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.9</span> <span style=color:#75715e># very safe</span>
+</span></span><span style=display:flex><span><span style=color:#111>_d</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.9</span> <span style=color:#75715e># the future matters</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>      fun: 0
+</span></span><span style=display:flex><span> hess_inv: array([[1, 0, 0, 0, 0, 0, 0, 0, 0],
+</span></span><span style=display:flex><span>       [0, 1, 0, 0, 0, 0, 0, 0, 0],
+</span></span><span style=display:flex><span>       [0, 0, 1, 0, 0, 0, 0, 0, 0],
+</span></span><span style=display:flex><span>       [0, 0, 0, 1, 0, 0, 0, 0, 0],
+</span></span><span style=display:flex><span>       [0, 0, 0, 0, 1, 0, 0, 0, 0],
+</span></span><span style=display:flex><span>       [0, 0, 0, 0, 0, 1, 0, 0, 0],
+</span></span><span style=display:flex><span>       [0, 0, 0, 0, 0, 0, 1, 0, 0],
+</span></span><span style=display:flex><span>       [0, 0, 0, 0, 0, 0, 0, 1, 0],
+</span></span><span style=display:flex><span>       [0, 0, 0, 0, 0, 0, 0, 0, 1]])
+</span></span><span style=display:flex><span>      jac: array([0., 0., 0., 0., 0., 0., 0., 0., 0.])
+</span></span><span style=display:flex><span>  message: &#39;Optimization terminated successfully.&#39;
+</span></span><span style=display:flex><span>     nfev: 10
+</span></span><span style=display:flex><span>      nit: 0
+</span></span><span style=display:flex><span>     njev: 1
+</span></span><span style=display:flex><span>   status: 0
+</span></span><span style=display:flex><span>  success: True
+</span></span><span style=display:flex><span>        x: array([1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000., 1000.])
+</span></span></code></pre></div><p>Evidently: do nothing if we have a loosing cause.</p><hr><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>_m</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1.00</span> <span style=color:#75715e># this is SUPER winning stock</span>
+</span></span><span style=display:flex><span><span style=color:#111>_k</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1000</span> <span style=color:#75715e># $1000 capital</span>
+</span></span><span style=display:flex><span><span style=color:#111>_y</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.9</span> <span style=color:#75715e># very safe</span>
+</span></span><span style=display:flex><span><span style=color:#111>_d</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.9</span> <span style=color:#75715e># the future matters</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[125.667556437602,
+</span></span><span style=display:flex><span> 241.474827418105,
+</span></span><span style=display:flex><span> 460.068836905327,
+</span></span><span style=display:flex><span> 868.972817783791,
+</span></span><span style=display:flex><span> 4540.45893314523,
+</span></span><span style=display:flex><span> 4219.93058738029,
+</span></span><span style=display:flex><span> 3988.05775624984,
+</span></span><span style=display:flex><span> 3996.89431939885,
+</span></span><span style=display:flex><span> 3615.74982832315]
+</span></span></code></pre></div><p>We made so much money that we are spending a lot of it and still spending it.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

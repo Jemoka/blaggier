@@ -1,0 +1,132 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Axler 1.A</title>
+<meta name=description content="Key sequence
+
+In this chapter, we defined complex numbers, their definition, their closeness under addition and multiplication, and their properties
+These properties make them a field: namely, they have, associativity, commutativity, identities, inverses, and distribution.
+notably, they are different from a group by having 1) two operations 2) additionally, commutativity and distributivity. We then defined \(\mathbb{F}^n\), defined addition, additive inverse, and zero.
+These combined (with some algebra) shows that \(\mathbb{F}^n\) under addition is a commutative group.
+Lastly, we show that there is this magical thing called scalar multiplication in \(\mathbb{F}^n\) and that its associative, distributive, and has an identity. Technically scalar multiplication in \(\mathbb{F}^n\) commutes too but extremely wonkily so we don&rsquo;t really think about it.
+
+New Definitions
+
+complex number
+
+addition and multiplication of complex numbers
+subtraction and division of complex numbers
+
+
+field: \(\mathbb{F}\) is \(\mathbb{R}\) or \(\mathbb{C}\)
+
+power
+
+
+list
+\(\mathbb{F}^n\): F^n
+
+coordinate
+addition in \(\mathbb{F}^n\)
+additive inverse of \(\mathbb{F}^n\)
+\(0\): zero
+scalar multiplication in \(\mathbb{F}^n\)
+
+
+
+Results and Their Proofs
+
+properties of complex arithmetic
+
+commutativity
+associativity
+identities
+additive inverse
+multiplicative inverse
+distributive property
+
+
+properties of \(\mathbb{F}^n\)
+
+addition in \(\mathbb{F}^n\) is associative
+addition in \(\mathbb{F}^n\) is commutative
+addition in \(\mathbb{F}^n\) has an identity (zero)
+addition in \(\mathbb{F}^n\) has an inverse
+scalar multiplication in \(\mathbb{F}^n\) is associative
+scalar multiplication in \(\mathbb{F}^n\) has an identity (one)
+scalar multiplication in \(\mathbb{F}^n\) is distributive
+
+
+
+Question for Jana
+
+ No demonstration in exercises or book that scalar multiplication is commutative, why?
+
+Interesting Factoids
+
+You can take a field, look at an operation, and take that (minus the other op&rsquo;s identity), and call it a group
+(groups (vector spaces (fields )))
+"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Axler 1.A</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=key-sequence>Key sequence</h2><ol><li>In this chapter, we defined <a href=/posts/kbhcomplex_number/>complex number</a>s, their definition, their closeness under <a href=/posts/kbhadding/>addition</a> and <a href=/posts/kbhmultiplying/>multiplication</a>, and their <a href=/posts/kbhcomplex_number/#requirements>properties</a></li><li>These properties make them a <a href=/posts/kbhfield/>field</a>: namely, they have, <a href=/posts/kbhassociative/>associativity</a>, <a href=/posts/kbhcommutivity/>commutativity</a>, <a href=/posts/kbhidentity/>identities</a>, <a href=/posts/kbhinverses/>inverse</a>s, and distribution.</li><li>notably, they are different from a <a href=/posts/kbhgroup/>group</a> by having 1) two operations 2) additionally, <a href=/posts/kbhcommutivity/>commutativity</a> and distributivity. We then defined \(\mathbb{F}^n\), defined <a href=/posts/kbhlists_over_fields/#addition-in-mathbb-f-n>addition</a>, <a href=/posts/kbhlists_over_fields/#additive-inverse-of-mathbb-f-n>additive inverse</a>, and <a href=/posts/kbhzero/>zero</a>.</li><li>These combined (with some <a href=/posts/kbhalgebra/>algebra</a>) shows that \(\mathbb{F}^n\) under <a href=/posts/kbhadding/>addition</a> is a <a href=/posts/kbhcommutivity/>commutative</a> <a href=/posts/kbhgroup/>group</a>.</li><li>Lastly, we show that there is this magical thing called <a href=/posts/kbhlists_over_fields/#scalar-multiplication-in-mathbb-f-n>scalar multiplication in \(\mathbb{F}^n\)</a> and that its <a href=/posts/kbhassociative/>associative</a>, distributive, and has an <a href=/posts/kbhidentity/>identity</a>. Technically <a href=/posts/kbhlists_over_fields/#scalar-multiplication-in-mathbb-f-n>scalar multiplication in \(\mathbb{F}^n\)</a> commutes too but extremely wonkily so we don&rsquo;t really think about it.</li></ol><h2 id=new-definitions>New Definitions</h2><ul><li><a href=/posts/kbhcomplex_number/>complex number</a><ul><li><a href=/posts/kbhcomplex_number/#addition-and-multiplication-of-id-7c982e7e-b8be-4053-a71e-fc0dba7a5da5-complex-number-s>addition and multiplication of complex numbers</a></li><li><a href=/posts/kbhcomplex_number/#subtraction-and-division-of-id-7c982e7e-b8be-4053-a71e-fc0dba7a5da5-complex-number-s>subtraction and division of complex numbers</a></li></ul></li><li><a href=/posts/kbhfield/>field</a>: \(\mathbb{F}\) is \(\mathbb{R}\) or \(\mathbb{C}\)<ul><li><a href=/posts/kbhpower_math/>power</a></li></ul></li><li><a href=/posts/kbhlist/>list</a></li><li>\(\mathbb{F}^n\): <a href=/posts/kbhlists_over_fields/>F^n</a><ul><li><a href=/posts/kbhlists_over_fields/>coordinate</a></li><li><a href=/posts/kbhlists_over_fields/#addition-in-mathbb-f-n>addition in \(\mathbb{F}^n\)</a></li><li><a href=/posts/kbhlists_over_fields/#additive-inverse-of-mathbb-f-n>additive inverse of \(\mathbb{F}^n\)</a></li><li>\(0\): <a href=/posts/kbhzero/>zero</a></li><li><a href=/posts/kbhlists_over_fields/#scalar-multiplication-in-mathbb-f-n>scalar multiplication in \(\mathbb{F}^n\)</a></li></ul></li></ul><h2 id=results-and-their-proofs>Results and Their Proofs</h2><ul><li><a href=/posts/kbhcomplex_number/#requirements>properties of complex arithmetic</a><ul><li>commutativity</li><li>associativity</li><li>identities</li><li>additive inverse</li><li>multiplicative inverse</li><li>distributive property</li></ul></li><li>properties of \(\mathbb{F}^n\)<ul><li>addition in \(\mathbb{F}^n\) is <a href=/posts/kbhassociative/>associative</a></li><li><a href=/posts/kbhlists_over_fields/#addition-in-mathbb-f-n-is-commutative>addition in \(\mathbb{F}^n\) is commutative</a></li><li><a href=/posts/kbhadding/>addition</a> in \(\mathbb{F}^n\) has an <a href=/posts/kbhidentity/>identity</a> (<a href=/posts/kbhzero/>zero</a>)</li><li><a href=/posts/kbhlists_over_fields/#additive-inverse-of-mathbb-f-n>addition in \(\mathbb{F}^n\) has an inverse</a></li><li><a href=/posts/kbhlists_over_fields/#scalar-multiplication-in-mathbb-f-n>scalar multiplication in \(\mathbb{F}^n\)</a> is <a href=/posts/kbhassociative/>associative</a></li><li>scalar multiplication in \(\mathbb{F}^n\) has an <a href=/posts/kbhidentity/>identity</a> (one)</li><li><a href=/posts/kbhlists_over_fields/#scalar-multiplication-in-mathbb-f-n>scalar multiplication in \(\mathbb{F}^n\)</a> is distributive</li></ul></li></ul><h2 id=question-for-jana>Question for Jana</h2><ul><li><input disabled type=checkbox> No demonstration in exercises or book that scalar <a href=/posts/kbhmultiplying/>multiplication</a> is commutative, why?</li></ul><h2 id=interesting-factoids>Interesting Factoids</h2><ul><li>You can take a field, look at an operation, and take that (minus the other op&rsquo;s identity), and call it a group</li><li>(groups (vector spaces (fields )))</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

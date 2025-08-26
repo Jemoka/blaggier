@@ -1,0 +1,82 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>mapping reduction</title>
+<meta name=description content="A language \(A\) is mapping reducible to language \(B\), written as \(A \leq_{m} B\), if there is a computable function \(f: \Sigma^{*} \to \Sigma ^{ *}\) such that for every \(w\), \(w \in A \Leftrightarrow f(w) \in B\).
+This is sometimes called a &ldquo;many-to-one&rdquo; reduction because often times you want to have multiple \(w\) mapping to the same \(f(w)\).
+We remember this as &ldquo;A is weaker (&ldquo;not stronger&rdquo;) than B&rdquo;; or &ldquo;A is reducable to B&rdquo;"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>mapping reduction</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>A language \(A\) is mapping reducible to language \(B\), written as \(A \leq_{m} B\), if there is a computable function \(f: \Sigma^{*} \to \Sigma ^{ *}\) such that for every \(w\), \(w \in A \Leftrightarrow f(w) \in B\).</p><p>This is sometimes called a &ldquo;many-to-one&rdquo; reduction because often times you want to have multiple \(w\) mapping to the same \(f(w)\).</p><p>We remember this as &ldquo;A is weaker (&ldquo;not stronger&rdquo;) than B&rdquo;; or &ldquo;A is reducable to B&rdquo;</p><h2 id=recipe>Recipe</h2><p>For some \(A \leq_{M} B\), we have three mechanical parts:</p><p>there exists some <a href=#computable-function>computable function</a> \(f\) from \(\Sigma^{*} \to \Sigma^{*}\) which should take \(x \in A \Leftrightarrow f(x) \in B\)</p><h2 id=general-idea>General idea</h2><p>prove a language \(L\) is undecidable by proving that if \(L\) is decidable, so is \(A_{TM}\). In particular, we reduce \(A_{TM}\) to the language \(L\) (i.e. make a machine for \(A_{TM}\) from \(L\) &mdash; \(A_{TM} \leq_{M} L\)).</p><h2 id=computable-function>computable function</h2><p>a function \(f: \Sigma^{*} \to \Sigma^{ *}\) is a <a href=#computable-function>computable function</a> if there is a <a href=/posts/kbhturing_machinea/>turing machine</a> \(M\) which halts with just \(f(w)\) written on its tape, for every input \(w\). the function returns the tape after \(M\) halts.</p><h2 id=additional-info>additional info</h2><h3 id=polynomial-time-mapping-reduction>polynomial time mapping reduction</h3><p><a href=#polynomial-time-mapping-reduction>polynomial time mapping reduction</a> is a mapping reduction!</p><p>\begin{equation}
+f: \Sigma^{*} \to \Sigma^{*}
+\end{equation}</p><p>but we also say that \(f\) is both computable <strong>AND</strong> polynomial: that there exists a <a href=/posts/kbhcomputational_complexity_theory/#polynomial-time>Polynomial Time</a> <a href=/posts/kbhturing_machinea/>turing machine</a> \(M\) that, on every input, halts with \(f(w)\) on the tape within a polynomial number of steps on \(w\).</p><p>If \(w \in A \Leftrightarrow f(w) \in B\), we have that \(f\) is a polynomial time mapping reduction. Note that since \(M\) is bounded by a polynomial number of steps, we also have \(|f(w)| \leq |w|^{k}\) by some polynomial number of steps since the machine \(M\) can&rsquo;t take more steps than polynomial so it can&rsquo;t generate super long strings.</p><p>Note, that this is still a normal <a href=/posts/kbhmapping_reduction/>mapping reduction</a>, that is, we have reduced the problem of deciding \(w \in A\) to that of decidnig \(f(w) \in B\).</p><p>The usual rules of <a href=/posts/kbhmapping_reduction/>mapping reduction</a> still applies:</p><p>if \(A \leq_{p} B\), and \(B \leq_{p} C\), we have \(A \leq_{p} C\)</p><p>The important properties about this is that if some string \(n \in A\), after all the reduction we still have a polynomial time strings \(f(f(n))\) would be length \(n^{cd}\) which would be a polynomially bounded computation with also bounded output length.</p><h4 id=timing-properties-of-reduction>timing properties of reduction</h4><p>\begin{equation}
+A \leq_{p} B, B \in P \implies A \in P
+\end{equation}</p><p>because you can solve \(A\) by sending a string through \(f\), decide it with \(B\), then you have decided \(A\) since \(w \in A \Leftrightarrow f(w) \in B\); if \(B\) is decidable in \(P\) and \(f(w)\) is computable in \(P\), well then \(A\) have just been decided in \(P\)</p><p>same idea</p><p>\begin{equation}
+A \leq_{p} B, B \in NP \implies A \in NP
+\end{equation}</p><p>and of course the contrapositives:</p><p>\begin{equation}
+A \leq_{p} B, A \not\in NP \implies B \not\in NP
+\end{equation}</p><p>\begin{equation}
+A \leq_{p} B, A \not\in P \implies B \not\in P
+\end{equation}</p><h3 id=mapping-reductions-are-transitive>mapping reductions are transitive</h3><p>if \(A \leq_{m} B\), and \(B \leq_{m} C\), we have \(A \leq_{m} C\)</p><h3 id=examples>examples</h3><h4 id=halting-problem>halting problem</h4><p>\begin{equation}
+HALT_{TM} = \qty {(M,w) \mid M\text{ is a TM \hat{t} halts on the string } w}
+\end{equation}</p><p>This is undecidable!</p><p>Assume for contradiction that there is some \(H\) for which it decides \(HALT_{TM}\). Now: we can actually use this property to construct a TM that decides \(A_{TM}\), which we have already seen that <a href=/posts/kbhthere_are_non_recognizable_languages/>there are non-recognizable languages</a> so that&rsquo;s not possible.</p><p>In particular, we check if \(H(M, w)\); then, we run \(M\) on \(w\) until it halts&mdash;if accept, return accept; if reject, return reject; if \(H(M,w)\) says it won&rsquo;t halt, then reject.</p><p>Then, we just made a machine that decides \(A_{TM}\), yet <a href=/posts/kbhuniversal_turing_machine/#a-tm-is-recognizable-but-not-decidable>\(A_{TM}\) is recognizable but not decidable</a>.</p><p>With a reduction, we see that <a href=#halting-problem>halting problem</a> is undecidable.</p><h3 id=if-a-b-b-is-decidable-then-a-is-decidable>if A &lt;= B, B is decidable, then A is decidable</h3><p>To decide \(A\), we build a machine \(M&rsquo;\), where by we first:</p><ol><li>Compute \(f(w)\) on some given string \(w\)</li><li>Then, run \(M\) (which decides \(B\)) on \(f(w)\), return its results</li></ol><p>\(w \in A \Leftrightarrow f(w) \in B\), so if \(M\) accepts \(f(w)\) we know \(w \in A\)</p><p>\(w\not \in A\), then we will have \(f(w) \not \in B\), and so \(M&rsquo;\) will reject \(w\)</p><h3 id=if-a-b-b-is-recognizable-then-a-is-recognizable>if A &lt;= B, B is recognizable, then A is recognizable</h3><p>same as above&mdash;if you get the answer, let \(m&rsquo;\) return it. otherwise, we run forever.</p><h3 id=contrapositives-of-the-above>contrapositives of the above</h3><ul><li>if A &lt;= B, if A is undecidable, then B is undecidable</li><li>if A &lt;= B, if A is unrecognizable, then B is unrecognizable</li></ul><p>&ldquo;A gives a lower bound on the difficulty of B&rdquo;</p><h3 id=atm-halttm>Atm &lt;= HaltTM</h3><p><a href=#halting-problem>halting problem</a></p><h3 id=things-to-map-to>things to map to</h3><ul><li>Atm is recognizable but not decidable</li><li>not ATM is not recognizable because ATM is not decidable</li><li>HALT_TM is recognizable but not decidable</li><li>EmptyTM is not recognizable</li><li>EqualTM (if a pair of TM is equal) is not recognizable</li><li>if A &lt;= B, if A is undecidable, then B is undecidable</li><li>if A &lt;= B, if A is unrecognizable, then B is unrecognizable</li><li>if A &lt;= B, B is decidable, then A is decidable</li><li></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

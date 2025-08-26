@@ -1,0 +1,89 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Questions for Omer</title>
+<meta name=description content="Week 9
+
+isn&rsquo;t \(P^{\text{SAT}}\) just \(\text{SAT}\) with more steps? i.e., because an &ldquo;oracle&rdquo; for \(\text{SAT}\) is just a system that checks SAT, and we know that can be done in P no it isn&rsquo;t because checking requires a witness
+can we use CLIQUE in pset
+
+Week 8
+
+ask Omer to go over subset sum
+
+Week 7
+
+so in NP, &ldquo;nondeterministically guess&rdquo; happens in order-1 time for all possible choices?
+
+Week 6
+
+interpreter arguments: why is that changing \(K(x)\) up to a constant? i.e. for instance doesn&rsquo;t the choice of \(K_{p}(x)\) matter?
+Godel&rsquo;s consistency: why does the
+
+
+
+
+imply that \(\neg S_{G,\varepsilon}\) is true?"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Questions for Omer</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=week-9>Week 9</h2><ul><li>isn&rsquo;t \(P^{\text{SAT}}\) just \(\text{SAT}\) with more steps? i.e., because an &ldquo;oracle&rdquo; for \(\text{SAT}\) is just a system that checks SAT, and we know that can be done in P <strong>no it isn&rsquo;t because checking requires a witness</strong></li><li>can we use CLIQUE in pset</li></ul><h2 id=week-8>Week 8</h2><ul><li>ask Omer to go over subset sum</li></ul><h2 id=week-7>Week 7</h2><ul><li>so in NP, &ldquo;nondeterministically guess&rdquo; happens in order-1 time for all possible choices?</li></ul><h2 id=week-6>Week 6</h2><ul><li><a href=/posts/kbhkolomogorov_complexity/#interpreter>interpreter</a> arguments: why is that changing \(K(x)\) up to a constant? i.e. for instance doesn&rsquo;t the choice of \(K_{p}(x)\) matter?</li><li><a href=/posts/kbhmathematics/#godel-s-consistency>Godel&rsquo;s consistency</a>: why does the</li></ul><figure><img src=/ox-hugo/2024-10-28_21-56-46_screenshot.png></figure><p>imply that \(\neg S_{G,\varepsilon}\) is true?</p><h2 id=week-5>Week 5</h2><ul><li>from week 4: why can&rsquo;t streaming provide lower bound for communication? (i.e. I can see how communication can provide streaming lower bounds because we can reduce streaming to communication by sending the memory over)</li><li>do Turing machines know where they are? as in, why do we have to use a blank to mark the start? in particular, how do we figure out if we at the start if we have blanks not just in the beginning but elsewhere in the tape?</li><li>isn&rsquo;t there infinitely many strings in \({Q \cup \Gamma \cup \#}^{*}\)</li><li>how do you formalize/make a universal truing machine?</li></ul><h2 id=week-4>Week 4</h2><ul><li><strong>go over again</strong>: why is it that in the <a href=/posts/kbhstreaming_algorithms/#memory-complexity-of-ones-vs-zeros>memory complexity theorem</a> for streaming algorithms our set is bounded in size by \(\frac{n}{2}\)? i.e., why not for instance \(\frac{n}{3}\)?</li><li>Distinct subsets: There are \(2^{\Omega(kn)}\) such distinct subsets as long as where \(2^{k} > n^{2}\)&mldr; why?</li></ul><h2 id=week-3>Week 3</h2><ul><li>for the one to one/well-formed proofs, why are the outcomes copiable? like why is it that when I get accept on one end \(M&rsquo;\) I must get accept on teh other end? \(M_{\min}\)?</li><li>why does the algorthium run for at most q^2 times? wouldn&rsquo;t it be q^3 because for each round you have to run the update on the entire grid? (i.e. q^2 would just be one iteration over the grid, right?)</li></ul><h2 id=week-2>Week 2</h2><ul><li>is concatenation commutative? no, right? but the symbol used \(\cdot\) is typically communative</li><li>you seem to call <a href=/posts/kbhalphabet/>string</a>s &ldquo;words&rdquo;; are those terms equivalent?</li><li>for DFAs, do all possible strings have to be specified in \(\delta\)? can I have a \(\delta\) for which \(\delta(q_1, \sigma)\) is undefined? in the case of NFAs, when they are undefined, do we assume that they are defined its just the output maps to the empty set? if so, when we process that string, do we reject it immediately?<ul><li>in particular, for NFAs, suppose I have a NFA which ends in me arriving at an accept state with no outbound edges, but then I still have 3 more characters to process, what happens?</li></ul></li></ul><h3 id=clarification>clarification</h3><p>is \(n\) in the last line supposed to be \(k\) here?</p><figure><img src=/ox-hugo/2024-09-30_20-45-39_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

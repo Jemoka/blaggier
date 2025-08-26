@@ -1,0 +1,110 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>DiffEq: Challenge #1</title>
+<meta name=description content="We have a function:
+\begin{equation}
+|x|+|y|\frac{dy}{dx} = \sin \left(\frac{x}{n}\right)
+\end{equation}
+We are to attempt to express the solution analytically and also approximate them.
+To develop a basic approximate solution, we will leverage a recursive simulation approach.
+We first set a constant \(N\) which in the \(N\) value which we will eventually vary.
+N = 0.5
+We can get some values by stepping through \(x\) and \(y\) through which we can then figure \(\frac{dy}{dx}\), namely, how the function evolves."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>DiffEq: Challenge #1</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>We have a function:</p><p>\begin{equation}
+|x|+|y|\frac{dy}{dx} = \sin \left(\frac{x}{n}\right)
+\end{equation}</p><p>We are to attempt to express the solution analytically and also approximate them.</p><p>To develop a basic approximate solution, we will leverage a recursive simulation approach.</p><p>We first set a constant \(N\) which in the \(N\) value which we will eventually vary.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>N</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.5</span>
+</span></span></code></pre></div><p>We can get some values by stepping through \(x\) and \(y\) through which we can then figure \(\frac{dy}{dx}\), namely, how the function evolves.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#75715e># cache</span>
+</span></span><span style=display:flex><span><span style=color:#111>res</span> <span style=color:#f92672>=</span> <span style=color:#111>[]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># number of steps</span>
+</span></span><span style=display:flex><span><span style=color:#111>steps</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1000</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># seed values</span>
+</span></span><span style=display:flex><span><span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#f92672>-</span><span style=color:#ae81ff>5</span>
+</span></span><span style=display:flex><span><span style=color:#111>y</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>5</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># step size</span>
+</span></span><span style=display:flex><span><span style=color:#111>step</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span><span style=color:#f92672>/</span><span style=color:#ae81ff>100</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># for number of setps</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>for</span> <span style=color:#111>_</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#111>steps</span><span style=color:#111>):</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># get the current equation and slope solution</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>dydx</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#111>sin</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>/</span><span style=color:#111>N</span><span style=color:#111>)</span><span style=color:#f92672>-</span><span style=color:#111>abs</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>))</span><span style=color:#f92672>/</span><span style=color:#111>abs</span><span style=color:#111>(</span><span style=color:#111>y</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># append result</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>res</span><span style=color:#f92672>.</span><span style=color:#111>append</span><span style=color:#111>((</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#111>y</span><span style=color:#111>,</span><span style=color:#111>dydx</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># apply the slope solution to iterate next y</span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># step size is defined by `step`</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>x</span> <span style=color:#f92672>+=</span> <span style=color:#111>step</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>y</span> <span style=color:#f92672>+=</span> <span style=color:#111>dydx</span><span style=color:#f92672>*</span><span style=color:#111>step</span>
+</span></span></code></pre></div><p>We have now a set of analytic solutions \((x,y,\frac{dy}{dx})\). Let&rsquo;s plot them!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>scatter_plot</span><span style=color:#111>([</span><span style=color:#111>i</span><span style=color:#111>[</span><span style=color:#ae81ff>0</span><span style=color:#111>:</span><span style=color:#ae81ff>2</span><span style=color:#111>]</span> <span style=color:#00a8c8>for</span> <span style=color:#111>i</span> <span style=color:#f92672>in</span> <span style=color:#111>res</span><span style=color:#111>])</span>
+</span></span></code></pre></div><figure><img src=/ox-hugo/2022-08-30_23-22-52_screenshot.png></figure><p>Great, now we have a fairly non-specific but &ldquo;correct&rdquo; solution. We are now going to try to derive an analytic solution.</p><figure><img src=/ox-hugo/2022-09-01_22-01-44_screenshot.png></figure><p>Wait&mldr; That&rsquo;s not the solution we got! But&mldr; its <em>close</em>: the blue line simply need to be reflected across the \(x\) axis.</p><p>Its actually fairly apparent why we will need this negative. We just declared that \(y\) was negative for that portion of the solution; the output of a square root could never be negative, so of course to achieve \(y\) being negative we have to take into account that square roots have a possible negative output as well.</p><figure><img src=/ox-hugo/2022-09-01_22-21-24_screenshot.png></figure><p>Nice; now our analytical results agree with out numerical results.</p><p>\begin{equation}
+\begin{cases}
+y>0 & y=\sqrt{-2n\cos\left(\frac{x}{n}\right)-x\vert x\vert} +C \\
+y&lt;0 & y=-\sqrt{2n\cos\left(\frac{x}{n}\right)+x\vert x\vert}+C
+\end{cases}
+\end{equation}</p><p>Moving on to the result of the questions.</p><h2 id=solution-behavior>Solution behavior</h2><p>The solution are unbounded and mostly decreasing. As \(n\in [-1,1]\), the solution becomes unstable; a solution does not exist at \(n=0\).</p><p>At \(n=0.5\), a solution passes through \((0,-1)\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

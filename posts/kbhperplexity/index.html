@@ -1,0 +1,79 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>perplexity</title>
+<meta name=description content="perplexity is a measure of a language model&rsquo;s ability to predict words.
+Intuition
+A good language model should prefer &ldquo;real&rdquo; or otherwise &ldquo;frequently observed&rdquo; sentences. That is, it should assign lower probability to word salad.
+So a good language model should assign a higher probability to the next word that actually occurs given a sequence of words.
+Generally, we want the LM to assign high probability to the entire test set. However, big issue is that probability gets smaller by length of the text."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>perplexity</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhperplexity/>perplexity</a> is a measure of a language model&rsquo;s ability to predict words.</p><h2 id=intuition>Intuition</h2><p>A good language model should prefer &ldquo;real&rdquo; or otherwise &ldquo;frequently observed&rdquo; sentences. That is, it should assign lower probability to word salad.</p><p>So a good language model should assign a higher probability to the next word that actually occurs given a sequence of words.</p><p>Generally, we want the LM to assign high probability to the entire test set. However, big issue is that <strong>probability gets smaller by length of the text</strong>.</p><p>To address this, we normalize by number of words.</p><h2 id=expression>Expression</h2><p>\begin{equation}
+PP (W) = P(w_1 w_2 \dots w_{n})^{-\frac{1}{N}}
+\end{equation}</p><p>We can also express it in terms of log likelyhood</p><p>\begin{align}
+PP (W) &= \prod_{t=1}^{T} \qty(\frac{1}{P_{LM}(x^{(t+1)} | x^{(t), \dots, t^{(1)}})})^{\frac{1}{T}}\\
+&= \prod_{t=1}^{T} \qty( \frac{1}{\hat{\bold{y}}_{t+1}^{(t)}})^{\frac{1}{T}}\\
+&= \exp \qty( \frac{1}{T} \sum_{t=1}^{T} -\log \hat{\bold{y}}_{t+1}^{(t)}) \\
+&= \exp \qty(J(\theta)))
+\end{align}</p><p>Notably, perplexity is inverse of probability. We want the lowest entropy possible, i.e. the highest likelihood possible. Therefore, the range of perplexity is \([1, \infty]\). We therefore want to <strong>minimize perplexity</strong>.</p><h2 id=branching-factor>Branching Factor</h2><p><a href=/posts/kbhperplexity/>perplexity</a> could be also considered the &ldquo;weighted average <a href=#branching-factor>Branching Factor</a>&rdquo; of the language. That is, the average number of possible next words given each of the words.</p><p>The <a href=#branching-factor>Branching Factor</a> is the set of possible next words that can follow a given word.</p><h2 id=sampling>Sampling</h2><p>Conditioned upon previous words or current n-gram, sample from the next possible word in the distribution.</p><p>Meaning, we sample from the distribution of n-grams whose n-1 characters are known.</p><h3 id=sparsity>Sparsity</h3><p>Out-of-sample ngrams will never be counted, no matter how truly likely.</p><p>Also, it causes perplexity problems: because you can&rsquo;t divide by 0, perplexity assumes that any sequence of words should have non zero likeliness.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

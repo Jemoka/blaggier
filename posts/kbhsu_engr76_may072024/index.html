@@ -1,0 +1,102 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-ENGR76 MAY072024</title>
+<meta name=description content="Welcome to Unit 2.
+Fundamental Problem of Communication
+&ldquo;The fundamental task of communication is that of reproducing at one point either exactly or approximately a message selected at another point&rdquo;
+Now: all communication signals are subject to some noise, so we need to design systems to responds to them.
+Most designs center around changing transmitter and receiver, sometimes you can change the channel but often not.
+communication
+analog communication
+
+convert sound waves into continuous-time electrical signal \(s(t)\)
+apply \(s(t)\) directly to the voltage of my channel
+on the other end, decode \(s&rsquo;(t)\), a noisy version of the original signal
+speak \(s&rsquo;(t)\)
+
+digital communication
+
+convert sound waves into continuous-time electrical signal \(s(t)\)
+sample \(s(t)\) at a known sampling rate
+quantize the results to a fixed number of levels, turning them into discrete symbols
+use Huffman Coding to turn them into bits
+generate a continuous-time signal of voltage using the bits
+communicate this resulting signal over the cable
+get the noisy result signal and recovering from bits from it
+decode that by using interpolation + codebook
+speak data
+
+this format allows us to generalize all communication as taking on type (Bits => Bits), i.e. we only have to design Tx and Rx. This could be much more flexible than Analog Communication."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-ENGR76 MAY072024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Welcome to Unit 2.</p><h2 id=fundamental-problem-of-communication>Fundamental Problem of Communication</h2><p>&ldquo;The fundamental task of communication is that of reproducing at one point either exactly or approximately a message selected at another point&rdquo;</p><p>Now: all communication signals are subject to some noise, so we need to design systems to responds to them.</p><p>Most designs center around changing transmitter and receiver, sometimes you can change the channel but often not.</p><h2 id=communication>communication</h2><h3 id=analog-communication>analog communication</h3><ol><li>convert sound waves into continuous-time electrical signal \(s(t)\)</li><li>apply \(s(t)\) directly to the voltage of my channel</li><li>on the other end, decode \(s&rsquo;(t)\), a noisy version of the original signal</li><li>speak \(s&rsquo;(t)\)</li></ol><h3 id=digital-communication>digital communication</h3><ol><li>convert sound waves into continuous-time electrical signal \(s(t)\)</li><li>sample \(s(t)\) at a known sampling rate</li><li>quantize the results to a fixed number of levels, turning them into discrete symbols</li><li>use <a href=/posts/kbhhuffman_coding/>Huffman Coding</a> to turn them into bits</li><li>generate a continuous-time signal of voltage using the bits</li><li>communicate this resulting signal over the cable</li><li>get the noisy result signal and recovering from bits from it</li><li>decode that by using interpolation + codebook</li><li>speak data</li></ol><p>this format allows us to generalize all communication as taking on type (Bits => Bits), i.e. we only have to design Tx and Rx. This could be much more flexible than <a href=/posts/kbhanalog_vs_digital_signal/#analog-communication>Analog Communication</a>.</p><p>communicating bits, too, can allow for control of distortion because it bounds the codomain of the output signal into bits which one cloud filter out, unlike <a href=/posts/kbhanalog_vs_digital_signal/#analog-communication>Analog Communication</a>.</p><p>Tx and Rx maps <strong>boolean <a href=/posts/kbhsu_engr76_apr162024/#signal>signal</a></strong> and map it into something that can be transmitted across a channel, meaning it usually converts binary symbols into continuous time signal to be played back.</p><h2 id=digital-encoding>digital encoding</h2><p>&ldquo;how do we map a sequence of bits 0100100&mldr;. and map it to a continuous time signal \(X(t)\)?&rdquo;</p><h3 id=sinc-digital-encoding--kbhsu-engr76-may092024-dot-md><a href=/posts/kbhsu_engr76_may092024/#sinc-digital-encoding>sinc digital encoding</a></h3><p>see <a href=/posts/kbhsu_engr76_may092024/#sinc-digital-encoding>sinc digital encoding</a></p><h3 id=on-off-keying>on-off keying</h3><p>in brief: its like <a href=/posts/kbhsu_engr76_may092024/#sinc-digital-encoding>sinc digital encoding</a>, but we interpolate using the indicator function:</p><p>\begin{equation}
+X(t) = \sum_{m=1}^{\infty} X[m] F \qty( \frac{t-mT}{T})
+\end{equation}</p><p>where:</p><p>\begin{equation}
+F = \begin{cases}
+1, |x| &lt; \frac{1}{2} \\
+0
+\end{cases}
+\end{equation}</p><p>The spectrum of this type of signal would be:</p><p>\begin{equation}
+\left| \text{sinc} \left (\frac{1}{T} \pi x \right) \right|
+\end{equation}</p><p>We consider this signal &ldquo;approximately bandwidth limited&rdquo; to roughly \(\frac{1}{T}\), which is usually fine. The other concern with this is that, because unlike <a href>sinc function</a> where you can sample for twice the function bandwidth, you have to sample at the function bandwith meaning you communicate less info. of course, you can change the voltage for your signal at each \(X[m]\) (i.e. &ldquo;pulse-amplitude modulation&rdquo;) to encode your signal to speed up communication.</p><hr><p>choose some voltage \(V\). Assign 1-bit voltage \(V\), assign 0-bit voltage \(0\), and simply play a voltage for a set amount of time \(t\) and move on to the next symbol for encoding.</p><p>To decode, we sample midpoints, shifted forward by \(\frac{T}{2}\).</p><p>Two parameters:</p><ul><li>\(V\): the voltage for the active signal</li><li>\(T\): the time to communicate each symbol</li></ul><p>Each symbol \(T\), if held for a smaller amount of time, communicating would take a smaller amount of time.</p><p>However, if too small, the bandwidth of the communication will increase (it will spike faster)&mdash;this is bad because&mldr;</p><ol><li>channels can be frequency-selective (i.e. too high frequencies may not have the same propagation schemes, such as a speaker/microphones)</li><li>channels may have frequency restriction (FCC may give you a certain band, that is, you may only be licensed to communicate a band)</li><li>you may not be able to sample fast enough</li></ol><h4 id=high-passing>High-Passing</h4><p>because you are almost never allowed to just give <a href=/posts/kbhsu_engr76_may022024/#passband-signal>Baseband Signal</a>, we also need to be able to communicate these bits with a <a href=/posts/kbhsu_engr76_apr252024/#bandwidth>Bandwidth</a> limit both below and above.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

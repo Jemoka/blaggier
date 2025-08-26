@@ -1,0 +1,75 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>gear</title>
+<meta name=description content="Here&rsquo;s a list of gears that I like and stuff that I use.
+clothing
+t-shirt
+MUJI Washed Heavy Weight Crew Neck
+If you ever have the pleasure of buying these in China, you should. It&rsquo;s cheaper there. This is a white T-Shirt, its 100% cotton, its heavy, you can wipe your glasses with it, why not?
+shorts
+Amazon Essential Inseam Drawstring
+They are like very basic shorts; they are a nice quality, don&rsquo;t seem to break, and is drawstring instead of rubber band which makes them nice to adjust."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>gear</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Here&rsquo;s a list of gears that I like and stuff that I use.</p><h2 id=clothing>clothing</h2><h3 id=t-shirt>t-shirt</h3><p><a href="https://www.muji.us/products/mens-washed-heavy-weight-crew-neck-short-sleeve-t-shirt-ab1mf24a?_pos=1&_sid=d3f2eebd4&_ss=r&amp;variant=44342451011774">MUJI Washed Heavy Weight Crew Neck</a></p><p>If you ever have the pleasure of buying these in China, you should. It&rsquo;s cheaper there. This is a white T-Shirt, its 100% cotton, its heavy, you can wipe your glasses with it, why not?</p><h3 id=shorts>shorts</h3><p><a href=https://www.amazon.com/dp/B01JQTD1RO>Amazon Essential Inseam Drawstring</a></p><p>They are like very basic shorts; they are a nice quality, don&rsquo;t seem to break, and is drawstring instead of rubber band which makes them nice to adjust.</p><h3 id=outer-shell>outer shell</h3><p>Arc&rsquo;teryx Norvan LT / Arc&rsquo;teryx Norvan SL</p><p>They don&rsquo;t seem to exist anymore, but they are the absolute LIGHTEST jackets I&rsquo;ve found that&rsquo;s truly Gor-Tex certified (and Pittsburgh compatible). I will let you know</p><h3 id=warm-layer>warm layer</h3><p><a href=https://www.patagonia.com/product/mens-nano-air-light-hybrid-insulated-jacket/84346.html>Patagonia Men&rsquo;s Nano-Air Light Hybrid Jacket</a></p><p>The sick neon green color doesn&rsquo;t exist anymore, but this is the lightest (have you noticed a theme?) warm jacket I&rsquo;ve found. I love it to death.</p><h3 id=shoes>shoes</h3><p>I used to use a Moab Light from Merrell that had vents. I think the closest equivalent that&rsquo;s still around is&mldr;.</p><p><a href="https://www.merrell.com/US/en/mqm-3-gore-tex/52476M.html?dwvar_52476M_color=J500555#cgid=goretex&amp;start=1">Men&rsquo;s MQM 3 Gore-Tex</a></p><p>which are the nicest light waterproof shoes I use (yes, I also have a pair of MQMs and am very happy with them).</p><h3 id=running-shoes>running shoes</h3><p><a href=https://www.asics.com/us/en-us/gel-kayano/c/aa50101000/>asics Gel Kayano</a></p><p>Love them to death; I literally have gone through like 6 pairs playing tennis and running. Never felt a shoe so stable.</p><h3 id=sunglasses>sunglasses</h3><p><a href=https://www.oakley.com/en-us/product/W0OO9271>Flak 2.0 by Oakley</a></p><p>I think they make me look like a policemen wannabe, but they are super comfortable (and stays on my head), and does an amazing job for filtering.</p><h3 id=contacts>contacts</h3><p><a href=https://www.acuvue.com/en-us/products/acuvue-oasys-1-day/>Acuvue Oasis 1 Day</a></p><p>They disappear in my eyes; are totally wonderful. (granted, I&rsquo;ve tried only like 3 brands)</p><h2 id=pens>pens</h2><h3 id=ballpoint>ballpoint</h3><p><a href=https://www.amazon.com/dp/B009QYH644>Pilot FriXion Clicker</a></p><p>Erasable pens is cool again. The gel rollout is so very smooth, and it writes quite wet (unlike a lot of the standard ballpoint pens). And! Its heat erasable!! You can erase stuff with its built in eraser, and if you really want to, cook your notebook in the microwave and it all becomes gone.</p><h3 id=felt>felt</h3><p><a href=https://www.sakuraofamerica.com/product/pigma-micron/>Pigma Micron</a></p><p>An amazing felt pen with lots of ink that doesn&rsquo;t feel as dry or jumpy as the ones that Sharpie makes.</p><h3 id=fountain>fountain</h3><p><a href=https://www.lamy.com/en-us/p/lamy-2000-fountain-pen/50723084271950>Lamy 2000</a></p><p>A classic fountain pen, a generally wet writer, so smooth and amazing ink capacity.</p><h3 id=pencil>pencil</h3><p><a href=https://www.unibrands.co/collections/kuru-toga>Uni Kuru Toga</a></p><p>Its a nice and heavy mechanical pencil, and it rotates the lead for you.</p><h3 id=eraser>eraser</h3><p><a href=https://www.amazon.com/dp/B00T1P32LO>Bic Eraser with Grip</a></p><p>The grip is super nice when you need to erase a page of your <del>crap</del> writing in a middle of the test.</p><h2 id=backpack>Backpack</h2><p><a href="https://www.osprey.com/osprey-sportlite-25-sportlt25s22-192?srsltid=AfmBOoqvT7CFY3THcm2gkwD5sKthlX4WVPS-irw1ToC1ol3bsKyo9OuW&amp;size=M%2FL&amp;color=Blue+Sky">Osprey Sportlite 25</a></p><p>I spent forever looking for a backpack. This one has all of the things I need: hip belt with things in it, 2 water bottle holders, laptop pouch, three components, outer &ldquo;stuffable&rdquo; bag, backplate; it&rsquo;s amazing. The Osprey guarantee is also great.</p><h2 id=laptop>Laptop</h2><p><a href=https://www.apple.com/shop/buy-mac/macbook-air/13-inch-m3>M3 MacBook Air</a></p><p>Its a wonderful (and shockingly price efficient?) laptop; the battery lasts forever, the track pad is amazing, the engineering is great, runs the best operating system for mere mortals. What&rsquo;s not to like?</p><h2 id=tablet>Tablet</h2><p><a href=https://www.apple.com/ipad-mini/>iPad Mini</a></p><p>Its a very small iPad (almost phone size!) But, it gets the drawing/writing job done and mostly stays out of the way.</p><h2 id=accessories>Accessories</h2><h3 id=mouse>Mouse</h3><p><a href=https://www.logitech.com/en-us/products/mice/mx-master-3s.html>MX Master 3S</a></p><p>A silent mouse with big power; there&rsquo;s a tremendous amount of functionality you can add to this mouse; and also great for editing video.</p><h3 id=headphones>Headphones</h3><p><a href=https://www.bose.com/p/bose-quietcomfort-45-headphones/QC45-HEADPHONEARN.html>Bose QC 45</a></p><p>I heard the new one is better, but these are the most comfortable over-ears I found with state of the art noise canceling. Oh, and the battery lasts forever.</p><h3 id=keyboard>Keyboard</h3><p><a href=https://www.keychron.com/products/keychron-k7-pro-qmk-via-wireless-custom-mechanical-keyboard>Keychron K7 Pro</a></p><p>Its a QMK/VIA addressable mechanical keyboard, low profile (amazing!), and super small and performant. Its an extremely good time.</p><h3 id=portable-hard-drive>Portable Hard Drive</h3><p><a href="https://shop.sandisk.com/products/ssd/portable-ssd/portable-ssd-sandisk-extreme-pro-usb-3-2?sku=SDSSDE81-4T00-G25">SanDisk Extreme PRO SSD</a></p><p>Its an expensive SSD, but it literally never breaks and its my go-to going anywhere.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

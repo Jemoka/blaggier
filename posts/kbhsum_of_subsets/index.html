@@ -1,0 +1,96 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>sum of subsets</title>
+<meta name=description content="The sum of subsets is the definition of addition upon two subsets.
+Apparently, the unions of subsets are almost never subspaces (they don&rsquo;t produce linearity?) Therefore, we like to work with sum of subsets more.
+Remember this has arbitrarily many things!! as a part of the content. When defining, remember to open that possibility.
+constituents
+Sub-sets of \(V\) named \(U_1, U_2, \dots, U_{m}\)
+requirements
+The sum of subsets \(U_1, \dots, U_{m}\) is defined as:
+\begin{equation}
+U_1, \dots, U_{m} = \{u_1+\dots+u_{m}: u_1\in U_1, \dots, u_{m} \in U_{m}\}
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>sum of subsets</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>The <a href=/posts/kbhsum_of_subsets/>sum of subsets</a> is the definition of <a href=/posts/kbhadding/>addition</a> upon two subsets.</p><p>Apparently, the unions of subsets are almost never <a href=/posts/kbhsubspace/>subspace</a>s (they don&rsquo;t produce linearity?) Therefore, we like to work with <a href=/posts/kbhsum_of_subsets/>sum of subsets</a> more.</p><p>Remember this has <strong><strong>arbitrarily many things!!</strong></strong> as a part of the content. When defining, remember to open that possibility.</p><h2 id=constituents>constituents</h2><p>Sub-<strong><strong>sets</strong></strong> of \(V\) named \(U_1, U_2, \dots, U_{m}\)</p><h2 id=requirements>requirements</h2><p>The <a href=/posts/kbhsum_of_subsets/>sum of subsets</a> \(U_1, \dots, U_{m}\) is defined as:</p><p>\begin{equation}
+U_1, \dots, U_{m} = \{u_1+\dots+u_{m}: u_1\in U_1, \dots, u_{m} \in U_{m}\}
+\end{equation}</p><p>&ldquo;all elements formed by taking one element from each and add it.&rdquo;</p><h2 id=additional-information>additional information</h2><h3 id=sum-of-subspaces-is-the-smallest-subspace-with-both-subspaces>sum of subspaces is the smallest subspace with both subspaces</h3><p>Suppose \(U_1, \dots U_{m}\) are <a href=/posts/kbhsubspace/>subspace</a>s of \(V\), then \(U_1+\dots +U_{m}\) is the smallest subspace of \(V\) containing \(U_1, \dots, U_{m}\).</p><p>Proof:</p><p>Is a subspace&mdash;</p><ul><li>clearly \(0\) is in the sum. (taking \(0\) from each subspace and adding)</li><li><a href=/posts/kbhadding/>addition</a> and <a href=/posts/kbhscalar_multiplication/>scalar multiplication</a> inherits (closed in each subspace, then, reapplying definition of <a href=/posts/kbhsum_of_subsets/>sum of subsets</a>)</li></ul><p>Smallest containing subspace&mdash;</p><p>Because a subspace is <a href=/posts/kbhclosed/>closed</a> under <a href=/posts/kbhadding/>addition</a>, if a <a href=/posts/kbhsubspace/>subspace</a> contains \(U_{1}, \dots, U_{m}\) you can always add each of the constituent elements manually to form every \(U_1+\dots+U_{m}\).</p><p>Conversely, the <a href=/posts/kbhsubspace/>subspace</a> \(U_1+\dots +U_{m}\) should contain \(U_1, \dots, U_{m}\) by simply setting the coefficients except for the one you are interested in to \(0\).</p><p>Therefore, as both subsets contain each other; they are equivalent.</p><h3 id=dimension--kbhdimension-dot-md--of-sums><a href=/posts/kbhdimension/>dimension</a> of sums</h3><p>Let there be two <a href=/posts/kbhsubspace/#finite-dimensional-subspaces>finite-dimensional subspaces</a>: \(U_1\) and \(U_2\). Then:</p><p>\begin{equation}
+\dim(U_1+U_2)=\dim U_1+\dim U_{2} - \dim(U_1 \cap U_2)
+\end{equation}</p><p>Proof:</p><p>let us form an <a href=/posts/kbhbasis/>basis</a> of \(U_1 \cap U_{2}\): \(u_1, \dots u_{m}\); this indicates to us that \(\dim(U_1 \cap U_{2}) = m\). Being a <a href=/posts/kbhbasis/>basis</a> of \(U_1 \cap U_{2}\), it is <a href=/posts/kbhlinear_independence/>linearly independent</a> in \(U_1\) (which forms a part of the intersection.</p><p>As any <a href=/posts/kbhlinear_independence/>linearly independent</a> list (in this case, in \(U_1\)) can be <a href=/posts/kbhbasis/#a-id-45384b28-f1e3-4fb1-aeb2-21c875834744-linearly-independent-list-expends-to-a-id-f88170b1-08b5-48a7-a7b5-1ace768e7b28-basis>expanded into a basis</a> of \(U_1\). Let&rsquo;s say by some vectors \(v_1 \dots v_{j}\). Therefore, we have that:</p><p>The new basis is \(u_1, \dots u_{m}, v_1, \dots v_{m}\), and so:</p><p>\begin{equation}
+\dim U_1 = m+j
+\end{equation}</p><p>By the same token, let&rsquo;s just say some \(w_1, \dots w_{k}\) can be used to extend \(u_1, \dots u_{m}\) into a <a href=/posts/kbhbasis/>basis</a> of \(U_2\) (as \(u_1, \dots u_{m}\) is <em>also</em> an <a href=/posts/kbhlinear_independence/>linearly independent</a> list in \(U_2\)). So:</p><p>\begin{equation}
+\dim U_{2} = m+k
+\end{equation}</p><p>We desire that \(\dim(U_1+U_2)=\dim U_1+\dim U_{2} - \dim(U_1 \cap U_2)\). Having constructed all three of the elements, we desire to find a list that is length \((m+j)+(m+k)-m = m+j+k\) that forms a <a href=/posts/kbhbasis/>basis</a> of \(U_1+U_2\), which will complete the proof.</p><p>Conveniently, \(u_1, \dots u_{m}, v_1, \dots v_{j}, w_1, \dots w_{k}\) nicely is list of length \(m+j+k\). Therefore, we desire that that list forms a <a href=/posts/kbhbasis/>basis</a> of \(U_1+U_{2}\).</p><p>As pairwise in this list are the <a href=/posts/kbhbasis/>basis</a> of \(U_1\) and \(U_2\), this list can <a href=/posts/kbhspan/>span</a> both \(U_1\) and \(U_2\) (just <a href=/posts/kbhzero/>zero</a> out the &ldquo;other&rdquo; sublist&mdash;zero \(w\) if desiring a basis of \(U_1\), \(v\) if \(U_2\) &mdash;and you have a <a href=/posts/kbhbasis/>basis</a> of each space. As \(U_1+U_2\) requires plucking a member from each and adding, as this <a href=/posts/kbhlist/>list</a> <a href=/posts/kbhspan/#spans>spans</a> \(U_1\) and \(U_2\) separately (again, it forms the basis of the each space), we can just use this list to construct individually each component of \(U_1+U_2\) then adding it together. Hence, that long combo list <a href=/posts/kbhspan/#spans>spans</a> \(U_1+U_2\).</p><p>The only thing left is to show that the giant list there is <a href=/posts/kbhlinear_independence/>linearly independent</a>. Let&rsquo;s construct:</p><p>\begin{equation}
+a_1u_1+ \dots + a_{m}u_{m} + b_1v_1 + \dots + b_{j}v_{j} + c_1w_1 + \dots + c_{k}w_{k} = 0
+\end{equation}</p><p>to demonstrate <a href=/posts/kbhlinear_independence/>linearly independence</a>,</p><p>Moving the \(w\) to the right, we have that:</p><p>\begin{equation}
+a_1u_1+ \dots + a_{m}u_{m} + b_1v_1 + \dots + b_{j}v_{j} =-(c_1w_1 + \dots + c_{k}w_{k})
+\end{equation}</p><p>Recall that \(u_1 \dots v_{j}\) are all <a href=/posts/kbhvector/>vector</a>s in \(U_1\). Having written \(-(c_1w_1 + \dots + c_{k}w_{k})\) as a <a href=/posts/kbhlinear_combination/>linear combination</a> thereof, we say that \(-(c_1w_1 + \dots + c_{k}w_{k}) \in U_1\) due to closure. But also, \(w_1 \dots w_{k} \in U_2\) as they form a <a href=/posts/kbhbasis/>basis</a> of \(U_2\). Hence, \(-(c_1w_1 + \dots + c_{k}w_{k}) \in U_2\). So, \(-(c_1w_1 + \dots + c_{k}w_{k}) \in U_1 \cap U_2\).</p><p>And we said that \(u_1, \dots u_{m}\) are a <a href=/posts/kbhbasis/>basis</a> for \(U_1 \cap U_{2}\). Therefore, we can write the \(c_{i}\) sums as a <a href=/posts/kbhlinear_combination/>linear combination</a> of \(u\):</p><p>\begin{equation}
+d_1u_1 \dots + \dots + d_{m}u_{m} = (c_1w_1 + \dots + c_{k}w_{k})
+\end{equation}</p><p>Now, moving the right to the left again:</p><p>\begin{equation}
+d_1u_1 \dots + \dots + d_{m}u_{m} - (c_1w_1 + \dots + c_{k}w_{k}) = 0
+\end{equation}</p><p>We have established before that \(u_1 \dots w_{k}\) is a <a href=/posts/kbhlinear_independence/>linearly independent</a> list (it is the <a href=/posts/kbhbasis/>basis</a> of \(U_2\).) So, to write \(0\), \(d_1 = \dots = c_{k} = 0\).</p><p>Substituting back to the original:</p><p>\begin{align}
+a_1u_1+ \dots + a_{m}u_{m} + b_1v_1 + \dots + b_{j}v_{j} &=-(c_1w_1 + \dots + c_{k}w_{k}) \\
+&= 0
+\end{align}</p><p>recall \(u_1 \dots v_{j}\) is the <a href=/posts/kbhbasis/>basis</a> of \(U_1\), meaning they are <a href=/posts/kbhlinear_independence/>linearly independent</a>. The above expression makes \(a_1 = \dots b_{j} = 0\). Having shown that, to write \(0\) via \(u, v, \dots w\) requires all scalars \(a,b,c=0\), the list is <a href=/posts/kbhlinear_independence/>linearly independent</a>.</p><p>Having shown that the list of \(u_1, \dots v_1, \dots w_1 \dots w_{k}\) <a href=/posts/kbhspan/#spans>spans</a> \(U_1+U_2\) and is <a href=/posts/kbhlinear_independence/>linearly independent</a> within it, it is a basis.</p><p>It does indeed have length \(m+j+k\), completing the proof. \(\blacksquare\)</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,97 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Axler 3.E</title>
+<meta name=description content="No idea why this is so long!!!
+Key Sequence
+Firehose of a chapter.
+
+We first began an unrelated exploration in Product of Vector Spaces (&ldquo;tuples&rdquo;):
+
+we show that the Product of Vector Spaces is a vector space
+because you can build a list out of zeroing every element except each one on each basis of each element of the tuple sequentially, we learned that the dimension of the Product of Vector Spaces is the sum of the spaces&rsquo; dimension.
+we defined the product-to-sum map \(\Gamma\)
+
+\(U_1 + \dots + U_{m}\) is a direct sum IFF \(\Gamma\) is injective
+and, as a result, \(U_1 + \dots + U_{m}\) is a direct sum IFF \(\dim (U_1 + \dots + U_{m}) = \dim U_1 + \dots + \dim U_{m}\)
+
+
+
+
+We then tackled the fun part of this chapter, which is affine subsets, parallel structures, quotient spaces, quotient map (affine subsetification maps)
+
+we learned an important and useful result that two affine subsets parallel to \(U\) are either equal or disjoint (\(v-w \in U\) means \(v+U = w+U\) means \(v+U \cap w+U \neq \emptyset\), means the first thing)
+we defined the operations on quotient space, and showed that quotient space operations behave uniformly on equivalent affine subsets. This, and the usual closer proof, demonstrates that quotient spaces is a vector space
+with the help of the affine subsetification map (the quotient map \(\pi\)), we show that the dimension of a quotient space is the difference between dimensions of its constituents essentially by invoking rank-nullity theorem after knowing the fact that \(null\ \pi = U\) (because \(u+U\) is an affine subset that has not been shifted (think about a line moving along itself&mldr; it doesn&rsquo;t move))
+
+
+Then, and I&rsquo;m not quite sure why, we defined \(\widetilde{T}: V / null\ T \to W\), for some \(T: V\to W\), defined as \(\widetilde{T}(v+null\ T) = Tv\).
+
+We show that the map is Linear, injective, its range is \(range\ T\), and so it forms an isomorphism between \(V / null\ T\) and \(range\ T\).
+
+
+
+Here&rsquo;s something: products and quotients, the intuition"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Axler 3.E</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>No idea why this is so long!!!</p><h2 id=key-sequence>Key Sequence</h2><p>Firehose of a chapter.</p><ul><li>We first began an unrelated exploration in <a href=/posts/kbhproduct_of_vector_spaces/>Product of Vector Space</a>s (&ldquo;tuples&rdquo;):<ul><li>we show that the <a href=/posts/kbhproduct_of_vector_spaces/>Product of Vector Space</a>s is a <a href=/posts/kbhvector_space/>vector space</a></li><li>because you can build a list out of zeroing every element except each one on each <a href=/posts/kbhbasis/>basis</a> of each element of the tuple sequentially, we learned that the <a href=/posts/kbhproduct_of_vector_spaces/#dimension-of-the-id-a45b05c0-3e01-4c27-bc3b-543ff3606c66-product-of-vector-space-s-is-the-sum-of-the-spaces-dimension>dimension of the Product of Vector Spaces is the sum of the spaces&rsquo; dimension</a>.</li><li>we defined the product-to-sum map \(\Gamma\)<ul><li><a href=/posts/kbhproduct_summation_map/#u-1-plus-dots-plus-u-m-is-a-id-4e586014-c91f-4d52-98bb-a2fe11a75007-direct-sum-id-fddf0648-91ea-4c5b-8298-fa0a30637cb7-iff-gamma-is-id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injective>\(U_1 + \dots + U_{m}\) is a direct sum IFF \(\Gamma\) is injective</a></li><li>and, as a result, <a href=/posts/kbhproduct_summation_map/#u-1-plus-dots-plus-u-m-is-a-id-4e586014-c91f-4d52-98bb-a2fe11a75007-direct-sum-iff-dim--u-1-plus-dots-plus-u-m--dim-u-1-plus-dots-plus-dim-u-m>\(U_1 + \dots + U_{m}\) is a direct sum IFF \(\dim (U_1 + \dots + U_{m}) = \dim U_1 + \dots + \dim U_{m}\)</a></li></ul></li></ul></li><li>We then tackled the fun part of this chapter, which is <a href=/posts/kbhparallel_linear_algebra/>affine subset</a>s, <a href=/posts/kbhparallel_linear_algebra/>parallel</a> structures, <a href=/posts/kbhquotient_space/>quotient space</a>s, <a href=/posts/kbhquotient_map/>quotient map</a> (<a href=/posts/kbhparallel_linear_algebra/>affine subset</a>ification maps)<ul><li>we learned an important and useful result that <a href=/posts/kbhparallel_linear_algebra/#two-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-affine-subset-s-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-parallel-to-u-are-either-equal-or-disjoint>two affine subsets parallel to \(U\) are either equal or disjoint</a> (\(v-w \in U\) means \(v+U = w+U\) means \(v+U \cap w+U \neq \emptyset\), means the first thing)</li><li>we defined the <a href=/posts/kbhquotient_space/#operations-on-id-53548f85-b3c8-42ce-81e7-9016ed7bd280-quotient-space>operations on quotient space</a>, and showed that <a href=/posts/kbhquotient_space/#id-53548f85-b3c8-42ce-81e7-9016ed7bd280-quotient-space-operations-behave-uniformly-on-equivalent-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-affine-subset-s>quotient space operations behave uniformly on equivalent affine subsets</a>. This, and the usual closer proof, demonstrates that <a href=/posts/kbhquotient_space/>quotient space</a>s is a <a href=/posts/kbhvector_space/>vector space</a></li><li>with the help of the <a href=/posts/kbhparallel_linear_algebra/>affine subset</a>ification map (the <a href=/posts/kbhquotient_map/>quotient map</a> \(\pi\)), we show that the <a href=/posts/kbhquotient_space/#dimension-of-a-quotient-space-is-the-difference-between-dimensions-of-its-constituents>dimension of a quotient space is the difference between dimensions of its constituents</a> essentially by invoking <a href=/posts/kbhfundamental_theorem_of_linear_maps/>rank-nullity theorem</a> after knowing the fact that \(null\ \pi = U\) (because \(u+U\) is an <a href=/posts/kbhparallel_linear_algebra/>affine subset</a> that has not been shifted (think about a line moving along itself&mldr; it doesn&rsquo;t move))</li></ul></li><li>Then, and I&rsquo;m not quite sure why, we defined \(\widetilde{T}: V / null\ T \to W\), for some \(T: V\to W\), defined as \(\widetilde{T}(v+null\ T) = Tv\).<ul><li>We show that the map is <a href=/posts/kbhlinear_map/>Linear</a>, <a href=/posts/kbhinjectivity/>injective</a>, its range is \(range\ T\), and so it forms an <a href=/posts/kbhisomorphism/>isomorphism</a> between \(V / null\ T\) and \(range\ T\).</li></ul></li></ul><p>Here&rsquo;s something: <a href=/posts/kbhproducts_and_quotients_the_intuition/>products and quotients, the intuition</a></p><h2 id=new-definitions>New Definitions</h2><ul><li><a href=/posts/kbhproduct_of_vector_spaces/>Product of Vector Spaces</a><ul><li><a href=/posts/kbhproduct_of_vector_spaces/#id-9700ea39-282d-48ef-a959-a416eee0d3ec-operation-s-on-id-a45b05c0-3e01-4c27-bc3b-543ff3606c66-product-of-vector-space-s>operations on Product of Vector Spaces</a></li><li><a href=/posts/kbhproduct_summation_map/>product summation map</a> \(\Gamma\)</li></ul></li><li><a href=/posts/kbhsum_of_vector_and_subspace/>sum of vector and subspace</a></li><li><a href=/posts/kbhparallel_linear_algebra/>parallel</a> + <a href=/posts/kbhparallel_linear_algebra/>affine subset</a></li><li><a href=/posts/kbhquotient_space/>quotient space</a><ul><li><a href=/posts/kbhquotient_space/#operations-on-id-53548f85-b3c8-42ce-81e7-9016ed7bd280-quotient-space>operations on the quotient space</a></li></ul></li><li><a href=/posts/kbhquotient_map/>quotient map</a></li><li><a href=/posts/kbht_twiddle/>\(\widetilde{T}\)</a></li></ul><h2 id=results-and-their-proofs>Results and Their Proofs</h2><ul><li><a href=/posts/kbhproduct_of_vector_spaces/#id-a45b05c0-3e01-4c27-bc3b-543ff3606c66-product-of-vector-space-s-is-a-id-123d705f-7ede-44bf-882a-04c2f123f7fc-vector-space>Product of Vector Spaces is a vector space</a></li><li><a href=/posts/kbhproduct_of_vector_spaces/#dimension-of-the-id-a45b05c0-3e01-4c27-bc3b-543ff3606c66-product-of-vector-space-s-is-the-sum-of-the-spaces-dimension>dimension of the Product of Vector Spaces is the sum of the spaces&rsquo; dimension</a></li><li>Results relating to \(\Gamma\)<ul><li><a href=/posts/kbhproduct_summation_map/#u-1-plus-dots-plus-u-m-is-a-id-4e586014-c91f-4d52-98bb-a2fe11a75007-direct-sum-id-fddf0648-91ea-4c5b-8298-fa0a30637cb7-iff-gamma-is-id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injective>\(U_1 + \dots + U_{m}\) is a direct sum IFF \(\Gamma\) is injective</a></li><li><a href=/posts/kbhproduct_summation_map/#u-1-plus-dots-plus-u-m-is-a-id-4e586014-c91f-4d52-98bb-a2fe11a75007-direct-sum-iff-dim--u-1-plus-dots-plus-u-m--dim-u-1-plus-dots-plus-dim-u-m>\(U_1 + \dots + U_{m}\) is a direct sum IFF \(\dim (U_1 + \dots + U_{m}) = \dim U_1 + \dots + \dim U_{m}\)</a></li></ul></li><li>results relating to <a href=/posts/kbhparallel_linear_algebra/>affine subset</a>s and <a href=/posts/kbhquotient_space/>quotient space</a>s<ul><li><a href=/posts/kbhparallel_linear_algebra/#two-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-affine-subset-s-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-parallel-to-u-are-either-equal-or-disjoint>two affine subsets parallel to \(U\) are either equal or disjoint</a></li><li><a href=/posts/kbhquotient_space/#id-53548f85-b3c8-42ce-81e7-9016ed7bd280-quotient-space-operations-behave-uniformly-on-equivalent-id-4c9e8fea-cd23-4a41-b85e-bb5be3867c96-affine-subset-s>quotient space operations behave uniformly on equivalent affine subsets</a></li><li><a href=/posts/kbhquotient_space/>quotient space</a> is a <a href=/posts/kbhvector_space/>vector space</a>: bleh just prove it yourself. <a href=/posts/kbhadditive_identity/>additive identity</a> is \(0+U\) and <a href=/posts/kbhinverses/>additive inverse</a> is \(-v + U\).</li><li><a href=/posts/kbhquotient_space/#dimension-of-a-quotient-space-is-the-difference-between-dimensions-of-its-constituents>dimension of a quotient space is the difference between dimensions of its constituents</a></li></ul></li><li>results relating to \(\widetilde{T}\)<ul><li><a href=/posts/kbht_twiddle/#widetilde-t-is-well-defined>\(\widetilde{T}\) is well defined</a></li><li><a href=/posts/kbht_twiddle/#properties-of-widetilde-t>properties of \(\widetilde{T}\)</a><ul><li>it is linear</li><li>it is injective</li><li>its range is the range of \(range\ T\)</li><li>it is an <a href=/posts/kbhisomorphism/>isomorphism</a> between \(V / null\ T\) and \(range\ T\)</li></ul></li></ul></li></ul><h2 id=questions-for-jana>Questions for Jana</h2><ul><li>what&rsquo;s the point of learning about \(\widetilde{T}\)?</li><li>how are <a href=/posts/kbhproduct_of_vector_spaces/>Product of Vector Space</a>s and <a href=/posts/kbhquotient_space/>quotient space</a> opposites of each other?: <a href=/posts/kbhproducts_and_quotients_the_intuition/>products and quotients, the intuition</a></li></ul><h2 id=interesting-factoids>Interesting Factoids</h2><p>Happy Lunar New Year! Also, let&rsquo;s hope this is not a trend:</p><figure><img src=/ox-hugo/2023-01-21_00-33-13_screenshot.png></figure></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

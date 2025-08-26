@@ -1,0 +1,92 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>power series</title>
+<meta name=description content="a power series centered at \(a\) is defined with \(c_{n} \in \mathbb{R}\), whereby:
+\begin{equation}
+f(x) = \sum_{n=0}^{\infty} c_{n}(x-a)^{n}
+\end{equation}
+meaning it is written as \(c_0 + c_1(x-a) + c_2(x-a)^{2} + c_3 (x-a)^{3} + \cdots\)
+radius of convergence
+
+there is a radius of convergence \(R \geq 0\) for any power series, possibly infinite, by which the series is absolutely convergent where \(|x-a| < R\), and it does not converge when \(|x-a| > R\) , the case where \(|x-a| = R\) is uncertain
+ratio test: if all coefficients \(c_{n}\) are nonzero, and some \(\lim_{n \to \infty} \left| \frac{c_{n}}{c_{n+1}} \right|\) evaluates to some \(c\) &mdash; if \(c\) is positive or \(+\infty\), then that limit is equivalent to the radius of convergence
+Taylor&rsquo;s Formula: a power series \(f(x)\) can be differentiated, integrated on the bounds of \((a-R, a+R)\), the derivatives and integrals will have radius of convergence \(R\) and \(c_{n} = \frac{f^{(n)}(a)}{n!}\) to construct the series
+
+linear combinations of power series
+When \(\sum_{n=0}^{\infty} a_{n}\) and \(\sum_{n=0}^{\infty} b_{n}\) are both convergent, linear combinations of them can be described in the usual fashion:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>power series</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>a <a href=/posts/kbhpower_series_o/>power series</a> centered at \(a\) is defined with \(c_{n} \in \mathbb{R}\), whereby:</p><p>\begin{equation}
+f(x) = \sum_{n=0}^{\infty} c_{n}(x-a)^{n}
+\end{equation}</p><p>meaning it is written as \(c_0 + c_1(x-a) + c_2(x-a)^{2} + c_3 (x-a)^{3} + \cdots\)</p><h2 id=radius-of-convergence>radius of convergence</h2><ul><li>there is a <a href=#radius-of-convergence>radius of convergence</a> \(R \geq 0\) for any <a href=/posts/kbhpower_series_o/>power series</a>, possibly infinite, by which the series is absolutely convergent where \(|x-a| &lt; R\), and it does not converge when \(|x-a| > R\) , the case where \(|x-a| = R\) is uncertain</li><li><a href=#radius-of-convergence>ratio test</a>: if all coefficients \(c_{n}\) are nonzero, and some \(\lim_{n \to \infty} \left| \frac{c_{n}}{c_{n+1}} \right|\) evaluates to some \(c\) &mdash; if \(c\) is positive or \(+\infty\), then that limit is equivalent to the radius of convergence</li><li><a href=#radius-of-convergence>Taylor&rsquo;s Formula</a>: a power series \(f(x)\) can be differentiated, integrated on the bounds of \((a-R, a+R)\), the derivatives and integrals will have radius of convergence \(R\) and \(c_{n} = \frac{f^{(n)}(a)}{n!}\) to construct the series</li></ul><h2 id=linear-combination--kbhlinear-combination-dot-md--s-of-power-series--kbhpower-series-o-dot-md><a href=/posts/kbhlinear_combination/>linear combination</a>s of <a href=/posts/kbhpower_series_o/>power series</a></h2><p>When \(\sum_{n=0}^{\infty} a_{n}\) and \(\sum_{n=0}^{\infty} b_{n}\) are <strong>both convergent</strong>, linear combinations of them can be described in the usual fashion:</p><p>\begin{equation}
+c_1 \sum_{n=0}^{\infty} a_{n}+ c_2 \sum_{n=0}^{\infty} b_{n} = \sum_{n=0}^{\infty} c_1 a_{n} + c_2 b_{n}
+\end{equation}</p><h2 id=some-power-series--kbhpower-series-o-dot-md>some <a href=/posts/kbhpower_series_o/>power series</a></h2><h3 id=geometric-series>geometric series</h3><p>\begin{equation}
+1 + r + r^{2} + r^{3} + \dots = \sum_{n=0}^{\infty} r^{n} = \frac{1}{1-r}
+\end{equation}</p><p>which converges \(-1 &lt; r &lt; 1\), and diverges otherwise.</p><h3 id=exponential-series>exponential series</h3><p>\begin{equation}
+1 + x + \frac{x^{2}}{2!} + \frac{x^{3}}{3!} + \dots = \sum_{n=0}^{\infty} \frac{x^{n}}{n!} = e^{x}
+\end{equation}</p><p>which converges for all \(x \in \mathbb{R}\).</p><h2 id=absolutely-convergent>absolutely convergent</h2><p>If:</p><p>\begin{equation}
+\sum_{n=0}^{\infty} |a_{n}|
+\end{equation}</p><p>converges, then:</p><p>\begin{equation}
+\sum_{n=0}^{\infty} a_{n}
+\end{equation}</p><p>also converges.</p><p>This situation is called <a href=#absolutely-convergent>absolutely convergent</a>.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,250 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Language Information Index</title>
+<meta name=description content='What makes language modeling hard: resolving ambiguity is hard.
+&ldquo;the chef made her duck&rdquo;
+Contents
+Basic Text Processing
+
+regex
+ELIZA
+tokenization and corpus
+
+Herdan&rsquo;s Law
+
+
+text normalization
+
+tokenization + Subword Tokenization
+
+BPE
+
+
+Word Normalization
+
+lemmatization through morphological parsing
+only take stems from morphemes: porter stemmer
+
+
+sentence segmentation
+
+
+N-Grams
+
+Edit Distance
+DP costs \(O(nm)\), backtrace costs \(O(n+m)\).
+
+minimum edit distance
+
+weighted edit distance
+
+
+backtracing
+
+Ngrams
+
+N-Grams
+Markov Assumption
+
+Unigrams
+Backoff and Stupid Backoff
+Interpolation
+OOV Words
+
+
+Model Evaluation
+
+perplexity
+open vocabulary
+
+
+
+Text Classification
+
+Text Classification
+
+Bag of Words
+Naive Bayes
+Naive Bayes for Text Classification
+
+Binary Naive Bayes
+
+
+Lexicon
+
+
+Naive Bays Language Modeling
+Harmonic Mean
+
+Macroaverage and Microaverage
+
+
+
+Logistic Regression
+
+Generative Classifier vs Discriminate Classifier
+Logistic Regression Text Classification
+
+decision boundary
+
+
+cross entropy loss
+stochastic gradient descent
+
+Information Retrial
+
+Information Retrival
+
+Term-Document Matrix
+Inverted Index + postings list
+
+Boolean Retrieval
+positional index
+
+
+
+
+
+Ranked Information Retrial
+
+Ranked Information Retrieval
+
+feast or famine problem
+free text query
+
+
+score
+
+Jaccard Coefficient
+log-frequency weighting
+document frequency ("idf weight")
+TF-IDF
+
+SMART notation
+
+
+
+
+vector-space model
+
+Vector Semantics
+
+sense
+
+principle of contrast
+word relatedness
+
+semantic field
+
+
+synonymy and antonyms
+affective meaning
+
+
+vector semantics
+
+transposing a Term-Document Matrix
+term-term matrix
+word2vec
+
+skip-gram with negative sampling
+
+
+
+
+
+POS and NER
+
+POS Tagging
+NER Tagging
+
+Dialogue Systems
+
+Dialogue
+Chatbot
+
+PARRY
+
+
+
+Recommender Systems
+
+Recommender System
+
+Dora
+
+Dora
+
+Neural Nets
+
+Neural Networks
+
+The Web
+
+Web Graph
+Social Network
+'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Language Information Index</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>What makes language modeling hard: <strong>resolving ambiguity is hard</strong>.</p><p>&ldquo;the chef made her duck&rdquo;</p><h2 id=contents>Contents</h2><h3 id=basic-text-processing>Basic Text Processing</h3><ul><li><a href=/posts/kbhregex/>regex</a></li><li><a href=/posts/kbheliza/>ELIZA</a></li><li><a href=/posts/kbhtokenization/>tokenization</a> and <a href=/posts/kbhcorpus/>corpus</a><ul><li><a href=/posts/kbhcorpus/#herdan-s-law>Herdan&rsquo;s Law</a></li></ul></li><li><a href=/posts/kbhtext_normalization/>text normalization</a><ul><li><a href=/posts/kbhtokenization/>tokenization</a> + <a href=/posts/kbhtokenization/#subword-tokenization>Subword Tokenization</a><ul><li><a href=/posts/kbhbpe/>BPE</a></li></ul></li><li><a href=/posts/kbhword_normalization/>Word Normalization</a><ul><li><a href=/posts/kbhlemmatization/>lemmatization</a> through <a href=/posts/kbhmorphological_parsing/>morphological parsing</a></li><li>only take stems from morphemes: <a href=/posts/kbhmorphological_parsing/#porter-stemmer>porter stemmer</a></li></ul></li><li><a href=/posts/kbhsentence_segmentation/>sentence segmentation</a></li></ul></li><li><a href=/posts/kbhn_grams/>N-Grams</a></li></ul><h3 id=edit-distance>Edit Distance</h3><p>DP costs \(O(nm)\), backtrace costs \(O(n+m)\).</p><ul><li><a href=/posts/kbhminimum_edit_distance/>minimum edit distance</a><ul><li><a href=/posts/kbhweighted_edit_distance/>weighted edit distance</a></li></ul></li><li><a href=/posts/kbhbacktracing/>backtracing</a></li></ul><h3 id=ngrams>Ngrams</h3><ul><li><a href=/posts/kbhn_grams/>N-Grams</a></li><li><a href=/posts/kbhn_grams/#markov-assumption>Markov Assumption</a><ul><li><a href=/posts/kbhn_grams/#unigrams>Unigrams</a></li><li><a href=/posts/kbhn_grams/#backoff>Backoff</a> and <a href=/posts/kbhn_grams/#stupid-backoff>Stupid Backoff</a></li><li><a href=/posts/kbhn_grams/#interpolation>Interpolation</a></li><li><a href=/posts/kbhn_grams/#oov-words>OOV Words</a></li></ul></li><li><a href=/posts/kbhmodel_evaluation/>Model Evaluation</a><ul><li><a href=/posts/kbhperplexity/>perplexity</a></li><li><a href=/posts/kbhn_grams/#oov-words>open vocabulary</a></li></ul></li></ul><h3 id=text-classification>Text Classification</h3><ul><li><a href=/posts/kbhtext_classification/>Text Classification</a><ul><li><a href=/posts/kbhbag_of_words/>Bag of Words</a></li><li><a href=/posts/kbhnaive_bayes/>Naive Bayes</a></li><li><a href=/posts/kbhbag_of_words/#naive-bayes-for-text-classification>Naive Bayes for Text Classification</a><ul><li><a href=/posts/kbhbag_of_words/#binary-naive-bayes>Binary Naive Bayes</a></li></ul></li><li><a href=/posts/kbhlexicon/>Lexicon</a></li></ul></li><li><a href=/posts/kbhn_grams/#naive-bays-language-modeling>Naive Bays Language Modeling</a></li><li><a href=/posts/kbhharmonic_mean/>Harmonic Mean</a><ul><li><a href=/posts/kbhmacroaverage/>Macroaverage</a> and <a href=/posts/kbhmacroaverage/>Microaverage</a></li></ul></li></ul><h3 id=logistic-regression>Logistic Regression</h3><ul><li><a href=/posts/kbhgenerative_vs_discriminitive_classifier/#generative-classifier>Generative Classifier</a> vs <a href=/posts/kbhgenerative_vs_discriminitive_classifier/#discriminative-classifier>Discriminate Classifier</a></li><li><a href=/posts/kbhlogistic_regression/#logistic-regression-text-classification>Logistic Regression Text Classification</a><ul><li><a href=/posts/kbhlogistic_regression/#logistic-regression-text-classification>decision boundary</a></li></ul></li><li><a href=/posts/kbhcross_entropy_loss/>cross entropy loss</a></li><li><a href=/posts/kbhstochastic_gradient_descent/>stochastic gradient descent</a></li></ul><h3 id=information-retrial>Information Retrial</h3><ul><li><a href=/posts/kbhinformation_retrival/>Information Retrival</a><ul><li><a href=/posts/kbhterm_document_matrix/>Term-Document Matrix</a></li><li><a href=/posts/kbhinverted_index/>Inverted Index</a> + <a href=/posts/kbhinverted_index/#postings-list>postings list</a><ul><li><a href=/posts/kbhinverted_index/#boolean-retrieval>Boolean Retrieval</a></li><li><a href=/posts/kbhinverted_index/#positional-index>positional index</a></li></ul></li></ul></li></ul><h3 id=ranked-information-retrial>Ranked Information Retrial</h3><ul><li><a href=/posts/kbhranked_information_retrieval/>Ranked Information Retrieval</a><ul><li><a href=/posts/kbhranked_information_retrieval/#feast-or-famine-problem>feast or famine problem</a></li><li><a href=/posts/kbhranked_information_retrieval/#free-text-query>free text query</a></li></ul></li><li><a href=/posts/kbhranked_information_retrieval/#score>score</a><ul><li><a href=/posts/kbhranked_information_retrieval/#jaccard-coefficient>Jaccard Coefficient</a></li><li><a href=/posts/kbhranked_information_retrieval/#log-frequency-weighting>log-frequency weighting</a></li><li><a href=/posts/kbhranked_information_retrieval/#document-frequency>document frequency</a> ("<a href=/posts/kbhranked_information_retrieval/#document-frequency>idf weight</a>")</li><li><a href=/posts/kbhranked_information_retrieval/#tf-idf>TF-IDF</a><ul><li><a href=/posts/kbhranked_information_retrieval/#smart-notation>SMART notation</a></li></ul></li></ul></li><li><a href=/posts/kbhranked_information_retrieval/#vector-space-model>vector-space model</a></li></ul><h3 id=vector-semantics>Vector Semantics</h3><ul><li><a href=/posts/kbhsense/>sense</a><ul><li><a href=/posts/kbhsense/#principle-of-contrast>principle of contrast</a></li><li><a href=/posts/kbhsense/#word-relatedness>word relatedness</a><ul><li><a href=/posts/kbhsense/#semantic-field>semantic field</a></li></ul></li><li><a href=/posts/kbhsense/#synonymy>synonymy</a> and <a href=/posts/kbhsense/#antonyms>antonyms</a></li><li><a href=/posts/kbhsense/#affective-meaning>affective meaning</a></li></ul></li><li><a href=/posts/kbhvector_semantics/>vector semantics</a><ul><li><a href=/posts/kbhvector_semantics/#transposing-a-id-b5d7f908-0351-436d-9784-180ab5aa0562-term-document-matrix>transposing a Term-Document Matrix</a></li><li><a href=/posts/kbhvector_semantics/#term-term-matrix>term-term matrix</a></li><li><a href=/posts/kbhword2vec/>word2vec</a><ul><li><a href=/posts/kbhword2vec/#skip-gram-with-negative-sampling>skip-gram with negative sampling</a></li></ul></li></ul></li></ul><h3 id=pos-and-ner>POS and NER</h3><ul><li><a href=/posts/kbhpos_tagging/>POS Tagging</a></li><li><a href=/posts/kbhner_tagging/>NER Tagging</a></li></ul><h3 id=dialogue-systems>Dialogue Systems</h3><ul><li><a href=/posts/kbhdialogue/>Dialogue</a></li><li><a href=/posts/kbhchatbot/>Chatbot</a><ul><li><a href=/posts/kbhparry/>PARRY</a></li></ul></li></ul><h3 id=recommender-systems>Recommender Systems</h3><ul><li><a href=/posts/kbhrecommender_system/>Recommender System</a></li></ul><h3 id=dora>Dora</h3><ul><li><a href=/posts/kbhdora/>Dora</a></li></ul><h3 id=neural-nets>Neural Nets</h3><ul><li><a href=/posts/kbhneural_networks/>Neural Networks</a></li></ul><h3 id=the-web>The Web</h3><ul><li><a href=/posts/kbhweb_graph/>Web Graph</a></li><li><a href=/posts/kbhsocial_network/>Social Network</a></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

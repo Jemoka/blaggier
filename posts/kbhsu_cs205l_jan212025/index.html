@@ -1,0 +1,105 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS205L JAN212025</title>
+<meta name=description content="Insights to SVD: &ldquo;ever matrix is a diagonal matrix, when viewed in the right space&rdquo;
+We can solve a linear system by moving it around:
+\begin{align}
+Ac = b  \\
+\Rightarrow\ & U \Sigma V^{T} c = b  \\
+\Rightarrow\ & U \qty(\Sigma V^{T} c) = b  \\
+\Rightarrow\ & \Sigma V^{T} c = U^{T} b
+\end{align}
+(since \(U\) is orthonormal, we can just flip it to invert it)
+Call \(U^{T} b = \hat{b}\), call \(V^{T} c = \hat{c}\). We now have:"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS205L JAN212025</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Insights to SVD: &ldquo;ever matrix is a diagonal matrix, when viewed in the right space&rdquo;</p><p>We can solve a linear system by moving it around:</p><p>\begin{align}
+Ac = b \\
+\Rightarrow\ & U \Sigma V^{T} c = b \\
+\Rightarrow\ & U \qty(\Sigma V^{T} c) = b \\
+\Rightarrow\ & \Sigma V^{T} c = U^{T} b
+\end{align}</p><p>(since \(U\) is orthonormal, we can just flip it to invert it)</p><p>Call \(U^{T} b = \hat{b}\), call \(V^{T} c = \hat{c}\). We now have:</p><p>\begin{equation}
+\Sigma \hat{c} = \hat{b}
+\end{equation}</p><p>notice the very nice diagonal system we have here! Easy to solve. To get \(c\) back, we just write \(V \hat{c} = V \qty(V^{T} c) = c\).</p><p>Also, by noticing this, even during zero singular values, we can nicely identify where zero solutions/infinite solutions lie, etc. because</p><p>\begin{equation}
+\mqty(\sigma_{1} & 0 \\ 0 & \sigma_{2}) \mqty(c_1 \\ c_2) = \mqty(b_1 \\ b_2)
+\end{equation}</p><p>and we can like write \(b_1 = \sigma_{1} c_1\), \(b_2 = \sigma_{2} c_2\), and even if \(\sigma_{j}\) is \(0\), we can choose certain \(c\) that makes it work and claim the rest doesn&rsquo;t work.</p><h2 id=norms>norms</h2><p>Some norms:</p><p>\begin{equation}
+\Vert c \Vert_{1} = \sum_{k}^{}| c_{k}|
+\end{equation}</p><p>\begin{equation}
+\Vert c \Vert_{2} = \sqrt{\sum_{k}^{} c_{k}^{2}}
+\end{equation}</p><p>\begin{equation}
+\Vert c \Vert_{\infty} = \max_{k} | c_{k} |
+\end{equation}</p><p>Though they are theoretically sound, they are not all the same&mdash;not everything is &ldquo;ok&rdquo;. This is why the infinity norm is so important.</p><h3 id=matrix-norms>matrix norms</h3><ul><li>\(\Vert A \Vert_{1}\) is the maximum absolute value column sum</li><li>\(\Vert A \Vert_{\infty}\) is the maximum absolute value row sum</li><li>\(\Vert A \Vert_{2}\) is the maximum eigenvalue of \(A^{T} A\) (that is, the maximum singular value of \(A\))</li></ul><p>This means condition number&mldr;.</p><p>\begin{equation}
+\Vert A \Vert_{2} \Vert A^{-1} \Vert_{2}
+\end{equation}</p><h2 id=special-matrices-and-their-solvers>special matrices and their solvers</h2><h3 id=diagonal-dominance>diagonal dominance</h3><p>The magnitude of each diagonal element is&mldr;</p><ol><li>strictly larger than the sum of the magnitudens of all the other elements of eah row</li><li>strictly larger than the sum of the magnitudes of all other elements in its column</li></ol><p>If this is true, then, its:</p><ol><li>strictly diagonally dominant: matrix is non-singular</li><li>column diagonal dominance: pivoting is not required during LU factorization</li></ol><h3 id=symmetric-matrices>symmetric matrices</h3><p>Since:</p><p>\begin{equation}
+A^{T} A = A A^{T} = A^{2}
+\end{equation}</p><p>so \(U\) and \(V\) may have the same eigenvectors. That is:</p><p>\begin{equation}
+A v_{k} = \sigma_{k} u_{k} \implies A v_{k} = \pm \sigma_{k} v_{k}
+\end{equation}</p><p>&ldquo;if you are ok with your singular value to be flipped, you could use \(V\) for both \(U\) and \(V\)&rdquo;. This is what we could write down:</p><p>\begin{equation}
+A = V \Lambda V^{T}
+\end{equation}</p><p>Whereby we could write down the eigenspaces of \(A\) directly:</p><p>\begin{equation}
+AV = V \Delta
+\end{equation}</p><p>We can convert a normal matrix to being &ldquo;roughly symmetric&rdquo; by writing:</p><p>\begin{equation}
+\hat{A} = \frac{1}{2} \qty(A + A^{T})
+\end{equation}</p><h3 id=also-inner-product--kbhinner-product-dot-md>also, <a href=/posts/kbhinner_product/>inner product</a></h3><p>see <a href=/posts/kbhinner_product/>inner product</a>, and in particular <a href=/posts/kbhinner_product/#matrix-scaled-inner-product>Matrix-scaled inner product</a></p><h3 id=definiteness>definiteness</h3><ul><li><strong>positive definite</strong> IFF \(v^{T} av > 0, \forall v \neq 0\)</li><li><strong>positive semi-definite</strong> IFF \(\langle v,v \rangle_{A} = V^{T} A v \geq 0, \forall v \neq 0\)</li><li><strong>negative definite</strong> IFF \(v^{T} A v &lt; 0, \forall v \neq 0\)</li><li><strong>negative semi-definite</strong>: \(v^{T} A v \leq 0, \forall v \neq 0\)</li></ul><p>Symmetric PD matricies: all eignevalues > 0
+Symmetric PSD matricies: all EV >= 0</p><p>Positive definite: we can decompose the matrix into \(A = V\Sigma V^{T}\), if so, singular values are eigenvalues</p><p>SPSD has at least one \(\sigma_{k} = 0\) and a null space.</p><h3 id=cholesky-factorization>Cholesky Factorization</h3><p>Symmetric Positive Definite matrix can be solved by factorizing into \(A = LL^{T}\).</p><figure><img src=/ox-hugo/2025-01-21_13-09-25_screenshot.png></figure><h3 id=incomplete-cholesky-predictioner>Incomplete Cholesky PRedictioner</h3><p><a href=#cholesky-factorization>Cholesky Factorization</a> can be used to conduct a preconditioner for a roughly sparse matrix.</p><h2 id=iterative-solvers>Iterative Solvers</h2><ul><li>direct solver: closed form strategy&mdash;special forms, sgaussian eliminations with LU, etc. etc.&mdash;but are closed forms so are very domain specific</li><li>iterative solver: getting an initial guess, and then gradually improving the guess, terminate when the error is small</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

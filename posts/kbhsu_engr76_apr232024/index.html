@@ -1,0 +1,95 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-ENGR76 APR232024</title>
+<meta name=description content="Fourier Series components form a basis
+Recall the definition of a basis, and in particular what an orthonormal basis is. In particular, recall that writing a vector as a linear combination of orthonormal basis is a thing you can do very easily.
+Recall
+Importantly, the Fourier Series is defined as:
+\begin{equation}
+f(x) = a_0 + \sum_{k=1}^{\infty} \qty( a_{k} \cos(k \omega x) + b_{k} \sin(k \omega x))
+\end{equation}
+where  \(\omega = \frac{2\pi}{L}\), and
+\begin{equation}
+a_0 = \frac{\langle f, 1 \rangle}{ \langle 1,1 \rangle} = \frac{1}{L} \int_{0}^{L} f(x) \dd{x}
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-ENGR76 APR232024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=fourier-series--kbhfourier-series-dot-md--components-form-a-basis><a href=/posts/kbhfourier_series/>Fourier Series</a> components form a basis</h2><p>Recall the definition of a <a href=/posts/kbhbasis/>basis</a>, and in particular what an <a href=/posts/kbhorthonormal_basis/>orthonormal basis</a> is. In particular, recall that <a href=/posts/kbhorthonormal_basis/#writing-a-vector-as-a-linear-combination-of-orthonormal-basis>writing a vector as a linear combination of orthonormal basis</a> is a thing you can do very easily.</p><h3 id=recall>Recall</h3><p>Importantly, the <a href=/posts/kbhfourier_series/>Fourier Series</a> is defined as:</p><p>\begin{equation}
+f(x) = a_0 + \sum_{k=1}^{\infty} \qty( a_{k} \cos(k \omega x) + b_{k} \sin(k \omega x))
+\end{equation}</p><p>where \(\omega = \frac{2\pi}{L}\), and</p><p>\begin{equation}
+a_0 = \frac{\langle f, 1 \rangle}{ \langle 1,1 \rangle} = \frac{1}{L} \int_{0}^{L} f(x) \dd{x}
+\end{equation}</p><p>\begin{equation}
+a_{k} = \frac{\langle f, \cos (k\omega x) \rangle}{\langle \cos (k\omega x), \cos (k\omega x) \rangle} = \frac{2}{L} \int_{0}^{L} f(x) \cos (k\omega x) \dd{x}
+\end{equation}</p><p>\begin{equation}
+b_{k} = \frac{\langle f, \sin (k\omega x) \rangle}{\langle \sin (k\omega x), \sin (k\omega x) \rangle} = \frac{2}{L} \int_{0}^{L} f(x) \sin (k\omega x) \dd{x}
+\end{equation}</p><h3 id=check-sinusoids-forms-an-orthonormal-basis>Check: sinusoids forms an orthonormal basis</h3><p>The functions:</p><p>\begin{align}
+\sin \qty(\omega t), \cos \qty(\omega t), \sin \qty(\omega 2t), \cos \qty(\omega 2t), \dots
+\end{align}</p><p>can be viewed as forming an orthonormal basis by defining an inner product of two \(L\) periodic functions as:</p><p>\begin{align}
+\langle g,h \rangle = \frac{2}{L} \int_{0}^{L} g(x)h(x) \dd{x}
+\end{align}</p><p>this makes our basis above <a href=/posts/kbhorthonormal/>orthonormal</a>.</p><p>Verifying that:</p><p>\begin{align}
+\langle \sin \qty(2\pi k_{i} \omega t), \sin \qty(k_{j} \omega t) \rangle &= \frac{2}{L} \int_{0}^{L} \sin \qty(\omega k_{i} t) \sin \qty(\omega k_{j} t) \dd{t} \\
+&= \frac{2}{L} \int_{0}^{L} \frac{1}{2} \qty(\cos \qty(\omega t \qty(k_{i}-k_{j})) - \cos \qty(\omega t \qty(k_{i}+k_{j}))) \dd{t}
+\end{align}</p><p>if \(k_{i} \neq k_{j}\), then we will be integrating an at-least \(L\) periodic (i.e. because \(\omega = \frac{2\pi}{L}\)) function in each term of the integral above by \(L\) periods. This makes both terms \(0\).</p><p>if \(k_{i} = k_{j}\), then the first term would be \(\cos \qty(0) = 1\), and the second term would still be \(0\). This gives (after normalizing), \(1\).</p><p>This means that the sinusoids form an orthonormal basis. By substituting in the relevant double-angle formulas, we can obtain a similar results that checks for the orthonormality of this system. Key insight is that if \(g = \sin\qty(\dots), h= \cos \qty(\dots)\), the angle product formulas would give a difference in \(\sin\), whereby \(\sin(0) = 0\), so the whole thing evaluates to \(0\).</p><h3 id=observation>Observation</h3><p>and because we have checked this function as being orthonormal, and we take by faith that the <a href=/posts/kbhfourier_series/>Fourier Series</a> spans, then we can figure our coefficients as needed. This essentially allow us to compute each of the coefficients.</p><h3 id=overall-cosine-series-collapses-for-odd-even-functions>Overall cosine series collapses for odd/even functions</h3><p>this can be attributed to the fact that, say you had an even function that you are trying to take the cosine series of, we&rsquo;ll get intergrals of the shape:</p><p>\begin{equation}
+\int y(t) \sin \qty(k\omega t) \dd{t}
+\end{equation}</p><p>which is a multiplication of an even function to an odd function&mdash;making an <strong>odd function</strong> (\(g(-x) * f(-x) = -g(x) * f(x) = -(g(x) * f(x)\)). The integral of this, then would give \(0\).</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

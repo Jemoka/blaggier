@@ -1,0 +1,87 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Research Tips</title>
+<meta name=description content="Mykel&rsquo;s Research Tips!
+&ldquo;we are not trying to sell our ideas, we are trying to sell understanding&rdquo;
+Levels of Critique
+
+high level: &ldquo;is this problem important/can it scale?&rdquo;
+mid level: &ldquo;do the experiments show what is claimed&rdquo;
+low level: typography, grammar, style
+
+State contributions before and after.
+Good Presentations
+
+not too stuffy nor casual
+frequent use of graphics
+you don&rsquo;t want bullets with more than 2 lines
+clear, upfront objective of the paper
+everything was understanding during presentation: timing presentations such that its digestible as drinking down
+
+Time Management
+Randy Pausch&rsquo;s time management lecture."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Research Tips</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Mykel&rsquo;s Research Tips!</p><p>&ldquo;we are not trying to sell our ideas, we are trying to sell understanding&rdquo;</p><h2 id=levels-of-critique>Levels of Critique</h2><ul><li>high level: &ldquo;is this problem important/can it scale?&rdquo;</li><li>mid level: &ldquo;do the experiments show what is claimed&rdquo;</li><li>low level: typography, grammar, style</li></ul><p>State contributions before and after.</p><h2 id=good-presentations>Good Presentations</h2><ul><li>not too stuffy nor casual</li><li>frequent use of graphics</li><li>you don&rsquo;t want bullets with more than 2 lines</li><li>clear, upfront objective of the paper</li><li>everything was understanding <strong>during</strong> presentation: timing presentations such that its digestible as drinking down</li></ul><h2 id=time-management>Time Management</h2><p>Randy Pausch&rsquo;s time management lecture.</p><ul><li>optimize for fun</li><li>&ldquo;why am I doing this?&rdquo;</li><li>have &ldquo;you can always change your plan, but only if you have one&rdquo;</li></ul><p>SEPARATE: email, to-do list, calendar</p><h2 id=writing-a-paper>Writing a Paper</h2><p>Jennifer Widom: how to write a paper</p><h2 id=packages-to-use>Packages to Use</h2><h3 id=plots>Plots</h3><p>&ldquo;using matlab to screenshot a plot is&mldr; an automatic F. If you want to have A quality work, you can use pgfplot. Or you can use a pgfplots backend.&rdquo;</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#f92672>import</span> <span style=color:#111>tikzplotlib</span>
+</span></span></code></pre></div><h3 id=tables>Tables</h3><p>No vertical linens</p><p><a href=http://people.inf.ethz.ch/markusp/teaching/guides/guide-tables.pdf>http://people.inf.ethz.ch/markusp/teaching/guides/guide-tables.pdf</a></p><p>\toprule</p><p>Possibly: PGFPlotsTable. TikZ.</p><h3 id=algos>Algos</h3><p>algorithmicx</p><h3 id=captions>Captions</h3><p>subcaptions</p><h3 id=units>Units</h3><p>siunitx</p><h3 id=code>Code</h3><p>minted, or&mdash;code executation&mdash;pythontex</p><h3 id=references>References</h3><p>&ldquo;cleveref&rdquo;: tell you what it is, and give you back with the &ldquo;Fig. #N&rdquo; informatino.</p><h3 id=good-presentation>Good Presentation</h3><ul><li>powerpoint tedx talk</li><li>give strong technical presentations by Markus Puschel</li></ul><h3 id=general-tips>General Tips</h3><ul><li>separate the problem from the solution before presenting the solution</li><li>number slides! also include total number of slides</li><li>one slide per minute</li><li>one liners are best, two liners are ok, three + are bad</li></ul><p>Transitions are hard: don&rsquo;t tap on a slide and go &ldquo;woah&rdquo;; pre-cache first sentence of each slide.</p><p>Overview <strong>AFTER</strong> the motivation.</p><h2 id=reference-handling>Reference Handling</h2><ul><li>biblatex: bibtex with postprocessing the .tex</li><li>sislstrings.bib: mykel&rsquo;s conference list for .bib</li><li>JabRef</li></ul><h2 id=phd-thesis>PhD Thesis</h2><p><a href=http://www.feron.org/Eric/PhD_characterization_2.htm>http://www.feron.org/Eric/PhD_characterization_2.htm</a></p><ul><li>&ldquo;Cool Theorems and New Methods&rdquo;</li><li>&ldquo;Cool Methods and Predictions&rdquo;</li><li>&ldquo;Beautiful Demonstrations&rdquo;</li><li>&ldquo;Cool engineering ideas&rdquo;</li></ul><h2 id=how-to-write-a-paper>&ldquo;How to Write a Paper&rdquo;</h2><p><a href=https://cs.stanford.edu/people/widom/paper-writing.html>https://cs.stanford.edu/people/widom/paper-writing.html</a></p><ol><li>what&rsquo;s the problem</li><li>why is it interesting and important?</li><li>why is it hard?</li><li>why hasn&rsquo;t been solved before/what&rsquo;s wrong with previous solutions?</li><li>what are the key components of my approach and results?</li></ol><p>You want the intro to end near the end of the first page or near the end of the second page. <strong>Always lead with the problem.</strong></p><h2 id=mathematical-writing>Mathematical Writing</h2><p>&ldquo;CS209 mathematical writing&rdquo;</p><p>Don&rsquo;t start a sentence with a symbol.</p><p>Don&rsquo;t use &ldquo;utilize&rdquo;.</p><h2 id=authorship>Authorship</h2><ul><li>talk about it early</li><li>universities have authorship inclusion deadline</li></ul><h2 id=complexity>Complexity</h2><ul><li>complexity should be justified (why does simpler method&rsquo;s not work?)</li><li></li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

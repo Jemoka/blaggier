@@ -1,0 +1,85 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>NLP</title>
+<meta name=description content="Complex System
+Coherence
+Generative REVOLUTION
+Why probability maximization sucks
+Its expensive!
+Beam Search
+
+Take \(k\) candidates
+Expand \(k\) expansions for each of the \(k\) candidates
+Choose the highest probability \(k\) candidates
+
+\(k\) should be small: trying to maximizing
+Branch and Bound
+See Branch and Bound
+Challenges of Direct Sampling
+Direct Sampling sucks. Its sucks. It sucks. Just sampling from the distribution sucks. This has to do with the fact that assigning slightly lower scores &ldquo;being less confident&rdquo; is exponentially worse."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>NLP</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhcomplex_system/>Complex System</a></p><h2 id=coherence>Coherence</h2><p><strong>Generative REVOLUTION</strong></p><h3 id=why-probability-maximization-sucks>Why probability maximization sucks</h3><p>Its expensive!</p><h3 id=beam-search>Beam Search</h3><ol><li>Take \(k\) candidates</li><li>Expand \(k\) expansions for each of the \(k\) candidates</li><li>Choose the highest probability \(k\) candidates</li></ol><p>\(k\) should be small: trying to maximizing</p><h3 id=branch-and-bound--kbhbranch-and-bound-dot-md><a href=/posts/kbhbranch_and_bound/>Branch and Bound</a></h3><p>See <a href=/posts/kbhbranch_and_bound/>Branch and Bound</a></p><h3 id=challenges-of-direct-sampling>Challenges of Direct Sampling</h3><p><a href=/posts/kbhdirect_sampling/>Direct Sampling</a> sucks. Its sucks. It sucks. Just sampling from the distribution sucks. This has to do with the fact that assigning slightly lower scores &ldquo;being less confident&rdquo; is exponentially worse.</p><p>The model has to therefore be VERY conservative about giving low confidences; so, it is over confident about worst tokens.</p><h3 id=top-k>Top-K</h3><p>Top-k is too broad, and top</p><h3 id=nucleaus-sampling>Nucleaus Sampling</h3><p>Find the smallest set of tokens that make up to \(p\) probability.</p><h2 id=correctness>Correctness</h2><ul><li>The highest probability answer isn&rsquo;t always right</li><li>Generative models consider every answer, so we want another model to compute the correct answer</li></ul><h3 id=surface-form-competition>Surface Form Competition</h3><p>The <a href=#surface-form-competition>Surface Form Competition</a> problem results when top probabity token &ldquo;steals&rdquo; probability from the other tokens.</p><p>The predicted frequency of a possible string is a main comfounder. And so we can use models to decompose their own predictions:</p><p>Turns out:</p><p>\(P(answer|question) \approx P(answer\ is\ valid)P(answer|domain)\)</p><p>So&mldr;</p><p>\begin{equation}
+P(answer\ is\ valid) = \frac{P(answer|question)}{P(answer|domain)}
+\end{equation}</p><p>This is better :point_up:. Futher reading: (<a href=#citeproc_bib_item_1>Holtzman et al. 2021</a>)</p><h4 id=domain>Domain</h4><p><a href=#domain>Domain</a> is the context in which that the text may occur.</p><h2 id=coverage>Coverage</h2><p>Why aren&rsquo;t models controllable</p><h3 id=hallucination>Hallucination</h3><ul><li>Language models predict what&rsquo;s most likely</li><li>We hope to control them with natural-language semantics</li></ul><h3 id=in-context-learning>In-Context Learning</h3><p>If we show the model some context which has example input output pairs, it can output. (model are few shot learners)</p><h4 id=correct-scoring>Correct Scoring</h4><p>We can reverse the output to predict the input to prevent model from loosing information, and use that to rerank the info. Of course, if the model can&rsquo;t generate the desired input, the output is probably missing information.</p><p>Smaller models can be made better because of info reranking.</p><p>Th Degenerative Discriminative Gap.</p><h2 id=future-work>Future Work</h2><p>The fact that the single comma shift the input. What we need is a language to control language behavior.</p><p><strong><strong>The Ability to Control a Model are the Goal of Understand the Model</strong></strong></p><p>We should only claim to understand a model when we can make a theory map about it: &ldquo;when X is fed into the model, we get Y&rdquo;</p><h3 id=so>So:</h3><ul><li>we should look at what the model is biased about (<a href=#surface-form-competition>Surface Form Competition</a>, for instance)</li><li>we would be closer to prime behaviors such that they mimic the human behavior (in pieces, not just &ldquo;complete these tokens&rdquo;) in completion</li><li>We see success as the actual evaluation metrics; we can use machines vs. other machines as the the results</li></ul><h2 id=questions>Questions</h2><p><a href=mailto:ahai@uw.edu>ahai@uw.edu</a></p><p>Marcel Just</p><p>anthropic ai papers</p><p><strong>percy liang</strong></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

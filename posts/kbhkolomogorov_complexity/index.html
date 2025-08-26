@@ -1,0 +1,83 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Kolomogorov Complexity</title>
+<meta name=description content="Kolomogorov Complexity is a &ldquo;universal theory of information&rdquo;. &ldquo;how much information is contained in a string&rdquo;
+The Kolomogorov Complexity of a string \(x\) is the length of the shortest description, \(|d(x)|\)
+information as description
+Key idea: the more we can compress a string, the more information it contains. The amount of information in a string \(x\) is the length of the shortest description of \(x\).
+aside
+For some \((M,w)\), we are about to write short strings of it; how do we encode it?"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Kolomogorov Complexity</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhkolomogorov_complexity/>Kolomogorov Complexity</a> is a &ldquo;universal theory of information&rdquo;. &ldquo;how much information is contained in a <a href=/posts/kbhalphabet/>string</a>&rdquo;</p><p>The <a href=/posts/kbhkolomogorov_complexity/>Kolomogorov Complexity</a> of a string \(x\) is the length of the <a href=#shortest-description>shortest description</a>, \(|d(x)|\)</p><h2 id=information-as-description>information as description</h2><p><strong><strong>Key idea</strong></strong>: the more we can compress a <a href=/posts/kbhalphabet/>string</a>, the more <a href=/posts/kbhsu_engr76_apr042024/#information>information</a> it contains. The amount of information in a string \(x\) is the length of the shortest description of \(x\).</p><h3 id=aside>aside</h3><p>For some \((M,w)\), we are about to write short strings of it; how do we encode it?</p><p>Well, we need some encoding such that \(Z = (M,w)\) iff \(\pi_{1}(Z) = M\), \(\pi_{2}(Z) = w\).</p><p>Let us define:</p><p>\begin{equation}
+(M,w) := 0^{|M|} 1 M w
+\end{equation}</p><p>&ldquo;give the length of \(M\) and so then we can break \(Mw\)&rdquo;.</p><h3 id=description>description</h3><p>A <a href=#description>description</a> of \(x\) is a string \(M, w\) such that \(M\) on the input \(w\) halts with only \(x\) in its tape</p><h3 id=shortest-description>shortest description</h3><p>shortest <a href=#description>description</a> of \(x\), written as \(d(x)\), is the lexicographically shortest string \(M, w\) such that \(M(w)\) halts with only \(x\) on its tape.</p><h2 id=additional-information>additional information</h2><h3 id=unprovable-komogorov-complexity>unprovable komogorov complexity</h3><p>For every interesting consistent \(\mathcal{F}\), there is a \(t\) such that for all \(x\), \(K(x) > t\) is unprovable in \(\mathcal{F}\).</p><p>To do this, let&rsquo;s define an \(M\) that treats all of its input as a integer, whereby:</p><p>\(M(k)\) searches over all strings \(x\) and proofs \(P\) for a proof \(P\) in \(\mathcal{F}\) that \(K(x) >k\); output \(x\) if found. If \(M(k)\) halts, it must print \(x&rsquo;\); whereby \(K(x&rsquo;) \leq c + \log k\). However, \(k \leq c + \log k\) is only true for small \(k\); choose \(t\) for which this is <em>not</em> the case. Notice this makes \(K(x) > t c + \log k\), meaning \(M\) can&rsquo;t halt.</p><p>Therefore, \(K(x) > t\) has no proof in this language.</p><h4 id=random-unprovable-truths>random unprovable truths</h4><p>For every <a href=/posts/kbhmathematics/#interesting>interesting</a> <a href=/posts/kbhmathematics/#consistent>consistent</a> \(\mathcal{F}\), there is a \(t\) such that for all \(x\), we have \(K(x) > t\) is unprovable in \(\mathcal{F}\).</p><p>Yet, for randomly chosen \(x\) of length \(t + 100\), we have that \(K(x) > t\) is true with probability at least \(1 - \frac{1}{2^{100}}\). So, we have thees exceedingly likely to be true statements which are unprovable.</p><h3 id=determining-compressibility>determining compressibility</h3><p>for some</p><p>\begin{equation}
+COMPRESS = \qty {(x,c) | K(x) \leq c}
+\end{equation}</p><p>is actually undecidable.</p><p>Proof idea: if decidable, we could just print the first incompressible string of length \(n\); but then; that actually describes our supposedly &ldquo;incompressible&rdquo; string through our constant machine size and \(n\) in binary; and then we reach contradiction.</p><h4 id=atm-is-still-not-decidable>Atm is <strong><strong>STILL</strong></strong> not decidable</h4><p>because \(COMPRESS\) is reducible to ATM.</p><p>Define \(M_{x,c}\): on input \(w\), for all pairs \((M&rsquo;, w&rsquo;)\) with \(|(M&rsquo;, w&rsquo;) |\leq c\), simulate \(M&rsquo;\) on \(w&rsquo;\) in parallel; if some \(M&rsquo;\) halts and prints \(x\), accept. Meaning, \(K(x) \leq c \Leftrightarrow M_{x,c}\) accepts \(\varepsilon\).</p><p>Meaning this reduces to the set \(A_{TM}\).</p><h3 id=interpreter>interpreter</h3><p>an <strong>interpreter</strong> is a semi-computable function:</p><p>\begin{equation}
+p: \Sigma^{*} \to \Sigma^{*}
+\end{equation}</p><p>which takes programs as input, and <em>may</em> print their outputs. In particular let \(x \in \qty {0,1}^{*}\), the shortest description of \(x\) under \(p\), called \(d_{p}(x)\), is the lexicographically shortest string \(w\) for which \(p(w)=x\)</p><p>Let \(K_{p}\) complexity of \(x\) be \(K_{p}(x) := |d_{p}(x)|\)</p><p>Theorem: for interpreter \(p\), there is a fixed \(c\) so that for all \(x \in \qty {0,1}^{*}\), there is \(K(x) \leq K_{p}(x) + c\)</p><p>Proof:</p><p>let&rsquo;s define \(M(w)\) for which on \(w\), we simulate \(p(w)\) and write its outputs to the tape. Meaning, \((M, d_{p}(x))\) is a <a href=#description>description</a> of \(x\). Notice that the \(K(x) \leq 2|M|+ K_{p}(X) + 1 \leq c + K_{p}(x)\).</p><h3 id=incompressible-strings>incompressible strings</h3><p>For every \(n\), there is as string \(x \in \qty {0,1}^{n}\) such that \(K(x) \geq n\). &ldquo;there are incompressible strings of every length&rdquo;.</p><p>Number of binary strings of length \(n\) is \(2^{n}\), yet the number of descriptions that could result in \(K(x) &lt; n\) is the number of descriptions of length \(&lt; n\) which is bounded by the number of binary strings \(&lt; n\) meaning \(2^{n-1}\); there are therefore less &ldquo;sufficiently-short&rdquo; descriptions than strings we want to describe; so there&rsquo;s at least one \(n\) bit string on \(x\) that doesn&rsquo;t have a description \(&lt;n\)</p><h3 id=random-strings-is-incompressible>random strings is incompressible</h3><p>the probably of a random string having <a href=/posts/kbhkolomogorov_complexity/>Kolomogorov Complexity</a> is lower-bounded:</p><p>for all \(n\) and \(c > 1\), we have:</p><p>\begin{equation}
+P_{x \in \qty {0,1}^{n}} \qty[K(x) \geq n-c] \geq 1- \frac{1}{2^{c}}
+\end{equation}</p><p>proof uses the same thing as <a href=#incompressible-strings>incompressible strings</a>; the number of descriptions of length \(&lt;n-c\) is \(2^{n-c}-1\); so the probability that a random string satisfies this is at most \(\frac{(2^{n-c}-1)}{2^{n}} &lt; \frac{1}{2^{c}}\)</p><h3 id=simple-upper-bound>simple upper bound</h3><p>There&rsquo;s a fixed \(c\) so that all \(x\) in \(\qty {0,1}^{*}\), there exists:</p><p>\begin{equation}
+K(x) \leq |x|+c
+\end{equation}</p><p>&ldquo;the amount of information in \(x\) isn&rsquo;t much more than \(|x|\)&rdquo;. Because we can always define a <a href=/posts/kbhturing_machinea/>turing machine</a>, for which &ldquo;on input \(w\), halt&rdquo;. Meaning, for any string \(x\), \(M(x)\) halts with \(x\) on its tape (i.e. immediate).</p><p>So, \((M,x)\) is a <a href=#description>description</a> of \(x\), and by the paring given above, we have \(2|M| + |x| + 1 \leq |x|+c\) .</p><h3 id=repetitive-strings>repetitive strings</h3><p>there&rsquo;s a fixed constant \(c\) so that for all \(n\geq 2\), and all \(x \in \qty {0,1}^{*}\), we have \(K(x^{n}) \leq K(x) + c \log n\).</p><p>Because we can define the Turing machine \(N=(n, (M,w))\) for which we write \(x = M(w)\) and &ldquo;print \(x\) for \(n\) times&rdquo;</p><p>So, for \(K(x^{n}) \leq K((N, (n, (M,w))) \leq 2|N| + d \log n + K(x) \leq c \log n + K(x)\)</p><h3 id=recall-church-turing-thesis--kbhchurch-turing-thesis-dot-md>Recall <a href=/posts/kbhchurch_turing_thesis/>Church-Turing thesis</a></h3><p>see <a href=/posts/kbhchurch_turing_thesis/>Church-Turing thesis</a></p><p>hypothesis: &ldquo;Everyone&rsquo;s intuitive notion of algorithms is a Turing-machine&rdquo;</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

@@ -1,0 +1,125 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-ENGR76 MAY302024</title>
+<meta name=description content="Consider a mapping between \(X \in \{0,1\}\), and output \(Y \in \{0,1\}\), with a chance of error of probability \(p\). So we have four outcomes:
+
+  
+      
+          X
+          Y
+          p
+      
+  
+  
+      
+          0
+          0
+          1-p
+      
+      
+          1
+          1
+          1-p
+      
+      
+          0
+          1
+          p
+      
+      
+          1
+          0
+          p
+      
+  
+
+Writing this out:
+
+\(P(y=1|x=0) = p\)
+\(P(y=0|x=1) = p\)
+\(P(y=0|x=0) = 1-p\)
+\(P(y=1|x=1) = 1-p\)
+
+Recall chain rule:
+\begin{equation}
+P(X,Y|A) = P(X|Y,A) P(Y|A)
+\end{equation}
+
+Consider some input output pair:
+\begin{equation}
+p(y=10 | x = 00) = p(y_1=1 | x_1=0, x_2=0)p(y_2=0| y_1=1, x_1=0, x_2=0)
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-ENGR76 MAY302024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Consider a mapping between \(X \in \{0,1\}\), and output \(Y \in \{0,1\}\), with a chance of error of probability \(p\). So we have four outcomes:</p><table><thead><tr><th>X</th><th>Y</th><th>p</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>1-p</td></tr><tr><td>1</td><td>1</td><td>1-p</td></tr><tr><td>0</td><td>1</td><td>p</td></tr><tr><td>1</td><td>0</td><td>p</td></tr></tbody></table><p>Writing this out:</p><ul><li>\(P(y=1|x=0) = p\)</li><li>\(P(y=0|x=1) = p\)</li><li>\(P(y=0|x=0) = 1-p\)</li><li>\(P(y=1|x=1) = 1-p\)</li></ul><p>Recall chain rule:</p><p>\begin{equation}
+P(X,Y|A) = P(X|Y,A) P(Y|A)
+\end{equation}</p><hr><p>Consider some input output pair:</p><p>\begin{equation}
+p(y=10 | x = 00) = p(y_1=1 | x_1=0, x_2=0)p(y_2=0| y_1=1, x_1=0, x_2=0)
+\end{equation}</p><p>A memoryless channel becomes<sup id=fnref:1><a href=#fn:1 class=footnote-ref role=doc-noteref>1</a></sup></p><p>\begin{equation}
+p(y_1=1 | x_1=0, x_2=0)p(y_2=0| y_1=1, x_1=0, x_2=0) = p(y_1=1 | x_1=0)p(y_2=0|x_2=0)
+\end{equation}</p><p>This means<sup id=fnref:2><a href=#fn:2 class=footnote-ref role=doc-noteref>2</a></sup></p><p>\begin{equation}
+p(y=r_1 \dots r_{n} | x = t_1 \dots t_{k}) = p(r_1|t_1) p(r_2|t_2) \dots p(r_{n}|t_{n})
+\end{equation}</p><h2 id=shannon-s-channel-coding-theorem>Shannon&rsquo;s Channel-Coding Theorem</h2><p>For any communication channel (characterized by \(p(y|x)\), for a pair of input and output), there exists a way to construct an encoder/decoder pair that make it possible to send information over this channel at some rate \(R\) (bits/channel use) while making the probability of error arbitrarily small as long as \(R &lt; C\).</p><p>Conversely, trying to send information at rate \(R > C\) bits/channel use, errors are inevitable.</p><p>\begin{equation}
+C = \max_{\text{dist}(X)} I (x:y)
+\end{equation}</p><p>the capacity of a channel is the maximum mutual information that could be given any choice of input distribution. you should choose the input that induces the maximum mutual information between the input and output of a channel. where \(I\) is the <a href=/posts/kbhmutual_information/>mutual information</a>.</p><h2 id=law-of-large-numbers>Law of Large Numbers</h2><p>The average value of many, independent repeated trials is close to the true expectation.</p><p>Because the law of large numbers (<a href=#citeproc_bib_item_1>Wolf et al. 2020</a>), the we can transmit the number of bit flips over a binary substitution channel with probability \(Lp\).</p><p>So: design a code with very long codewords \(L \gg 0\) that can correct \(L(p+\epsilon)\) bitflips for some small choice of \(\epsilon > 0\).</p><div class=footnotes role=doc-endnotes><hr><ol><li id=fn:1><p>test foonote&#160;<a href=#fnref:1 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li><li id=fn:2><p>its true though it may not&#160;<a href=#fnref:2 class=footnote-backref role=doc-backlink>&#8617;&#xfe0e;</a></p></li></ol></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

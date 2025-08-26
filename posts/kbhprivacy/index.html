@@ -1,0 +1,104 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>privacy</title>
+<meta name=description content="&ldquo;privacy as an individual right&rdquo;
+
+privacy is a control of information: controlling our private information shared with others
+
+free choice with alternatives and informed understanding of what&rsquo;s offered
+control over personal data collection and aggregation
+
+
+privacy as autonomy: your agency to decide for what&rsquo;s valuable
+
+autonomy over our own lives, and our ability to lead them
+do you have agency?
+
+
+
+&ldquo;privacy as a social group&rdquo;
+
+privacy as social good: social life would be severely compromised without privacy
+
+privacy allows social
+
+
+privacy as a display of trust: privacy enables trusting relationships
+
+&ldquo;fiduciary&rdquo;: proxy between you and a company
+&ldquo;should anyone who has access to personal info have a fiduciary responsibility?&rdquo;
+
+
+
+key trust questions
+
+who/what do we trust?
+what do we do if trust isn&rsquo;t upheald?
+how to approach building trust
+
+trust
+trust: to stop questioning the responsibility of something"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>privacy</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>&ldquo;privacy as an individual right&rdquo;</p><ul><li><a href=/posts/kbhprivacy/>privacy</a> is a control of information: controlling our private information shared with others<ul><li>free choice with alternatives and informed understanding of what&rsquo;s offered</li><li>control over personal data collection and aggregation</li></ul></li><li><a href=/posts/kbhprivacy/>privacy</a> as autonomy: your agency to decide for what&rsquo;s valuable<ul><li>autonomy over our own lives, and our ability to lead them</li><li>do you have agency?</li></ul></li></ul><p>&ldquo;privacy as a social group&rdquo;</p><ul><li><a href=/posts/kbhprivacy/>privacy</a> as social good: social life would be severely compromised without privacy<ul><li>privacy allows social</li></ul></li><li><a href=/posts/kbhprivacy/>privacy</a> as a display of trust: privacy enables trusting relationships<ul><li>&ldquo;fiduciary&rdquo;: proxy between you and a company</li><li>&ldquo;should anyone who has access to personal info have a fiduciary responsibility?&rdquo;</li></ul></li></ul><h2 id=key-trust-questions>key trust questions</h2><ul><li>who/what do we trust?</li><li>what do we do if trust isn&rsquo;t upheald?</li><li>how to approach building trust</li></ul><h2 id=trust>trust</h2><p><strong>trust</strong>: to stop questioning the responsibility of something</p><ul><li>intentions</li><li>dependence</li><li>extensions of agency</li></ul><p>We mostly don&rsquo;t trust software; instead, we trust the people that developed the software.</p><h2 id=accountability>accountability</h2><p>a lot of people who are accountable in this chain:</p><ul><li>hardware designer (intel)</li><li>OS developer (iOS, ec.)</li><li>app developer</li><li>users</li></ul><h2 id=stakeholder>stakeholder</h2><ol><li><strong>direct stakeholders</strong> (people who are operating, technicians, etc.)</li><li><strong>indirect stakeholders</strong>: patients</li></ol><p>purchase = long-term support &mdash;- what do you do to get it fixed/repaired.</p><h2 id=time>time</h2><ul><li>support duration</li><li>obsolescence (how long is the end of support)<ul><li>products/services may not be garanteed forever</li><li>problems with halting use&mdash;requires deleting entire pentagram account</li></ul></li></ul><h2 id=meltdown-vulnerability>meltdown vulnerability</h2><p><strong>meltdown</strong>: hardware vulnerability that allows an user program to access kernel level pages of system memory.</p><p><strong>potential ways of fixing a vulnerability/violation of trust</strong>:</p><p><a href=https://www.cs.cmu.edu/~rdriley/487/papers/Thompson_1984_ReflectionsonTrustingTrust.pdf>https://www.cs.cmu.edu/~rdriley/487/papers/Thompson_1984_ReflectionsonTrustingTrust.pdf</a></p><h2 id=loss-of-privacy>loss of privacy</h2><h3 id=aggregation>aggregation</h3><p>Through the loss of privacy, information can be piecemeal built up to understand somebody&rsquo;s profile.</p><h3 id=exclusion>exclusion</h3><p>Not knowing or understanding or control how our information being used.</p><h3 id=secondary-use>secondary use</h3><p>Using information for purposes not intended without permission.</p><h2 id=trust>trust</h2><p><a href=#trust>trust</a> exposes people to the risk of being betrayed/let down. Differential privacy is used to anonomyze information. especially, for operation systems, each bug can have a massive impact because it impacts billions of users.</p><p>&ldquo;<a href=#trust>trust</a> means to stop questioning the dependability of something; you become vulnerable to it&rdquo;</p><p><a href=#trust>trust</a>ing software is the task of extending your own <strong>AGENCY</strong> to a piece of software: &ldquo;agential gullibility&rdquo;.</p><p>examples:</p><ol><li>ios bug: alams didn&rsquo;t go off</li><li>printnightmare: printing caused remote code execution</li><li>2017 admin access without password</li><li>eternalblue (caused wannacry)</li></ol><h3 id=key-points>key points</h3><ul><li>trust between different stakeholders are intertwined</li><li>trust is about extending agency</li><li>trust emerges through <a href=#pathways-to-trust>various pathways</a></li><li>we can design ways to partially substitute the need for trust</li></ul><h3 id=pathways-to-trust>pathways to trust</h3><h4 id=trust-by-assumption>trust by assumption</h4><ol><li>trust absent any clues to warrent it due to timing</li><li>trust because there is imminent danger</li></ol><h4 id=trust-by-inference>trust by inference</h4><ol><li>trust based on information you had before<ul><li>brands</li><li>affiliation</li><li>past performance</li></ul></li><li>trust in prior version of software</li></ol><h4 id=trust-by-substitution>trust by substitution</h4><ol><li>trust something, but having a fallback plan</li><li>trust a system because there would be a backup system protecting you</li></ol><h3 id=scales-of-trust>scales of trust</h3><h4 id=scale-of-impact>scale of impact</h4><ul><li>a bug in an OS can be tremendously bad</li><li>&ldquo;root access&rdquo; &mdash; privileged aces</li></ul><h4 id=scale-of-longevity>scale of longevity</h4><ul><li>people maybe on very very old OS</li><li>it requires keeping older OSes secure against modern technologies</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

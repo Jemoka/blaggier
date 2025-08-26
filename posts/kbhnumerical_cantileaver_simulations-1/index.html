@@ -1,0 +1,245 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>Numerical Cantilever Simulations</title>
+<meta name=description content='Here&rsquo;s the characteristic equation again:
+\begin{equation}
+\pdv[2] x \qty(EI \pdv[2]{w}{x}) = -\mu \pdv{w}{t}+q(x)
+\end{equation}
+After Fourier decomposition, we have that:
+\begin{equation}
+EI \dv[4]{\hat{w}}{x} - \mu f^{2}\hat{w} = 0
+\end{equation}
+Let&rsquo;s solve this!
+E,I,u,f = var("E I u f")
+x, L = var("x L")
+w = function(&#39;w&#39;)(x)
+_c0, _c1, _c2, _c3 = var("_C0 _C1 _C2 _C3")
+fourier_cantileaver = (E*I*diff(w, x, 2) - u*f^2*w == 0)
+fourier_cantileaver
+-f^2*u*w(x) + E*I*diff(w(x), x, x) == 0
+And now, we can go about solving this result.
+solution = desolve(fourier_cantileaver, w, ivar=x, algorithm="fricas").expand()
+w = solution
+\begin{equation}
+_{C_{1}} e^{\left(\sqrt{f} x \left(\frac{u}{E I}\right)^{\frac{1}{4}}\right)} + _{C_{0}} e^{\left(i \, \sqrt{f} x \left(\frac{u}{E I}\right)^{\frac{1}{4}}\right)} + _{C_{2}} e^{\left(-i \, \sqrt{f} x \left(\frac{u}{E I}\right)^{\frac{1}{4}}\right)} + _{C_{3}} e^{\left(-\sqrt{f} x \left(\frac{u}{E I}\right)^{\frac{1}{4}}\right)}
+\end{equation}'><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>Numerical Cantilever Simulations</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><main><article><div style=max-width:700px><p>Here&rsquo;s the characteristic equation again:</p><p>\begin{equation}
+\pdv[2] x \qty(EI \pdv[2]{w}{x}) = -\mu \pdv{w}{t}+q(x)
+\end{equation}</p><p>After Fourier decomposition, we have that:</p><p>\begin{equation}
+EI \dv[4]{\hat{w}}{x} - \mu f^{2}\hat{w} = 0
+\end{equation}</p><p>Let&rsquo;s solve this!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>E</span><span style=color:#111>,</span><span style=color:#111>I</span><span style=color:#111>,</span><span style=color:#111>u</span><span style=color:#111>,</span><span style=color:#111>f</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;E I u f&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>x</span><span style=color:#111>,</span> <span style=color:#111>L</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;x L&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>w</span> <span style=color:#f92672>=</span> <span style=color:#111>function</span><span style=color:#111>(</span><span style=color:#d88200>&#39;w&#39;</span><span style=color:#111>)(</span><span style=color:#111>x</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>_c0</span><span style=color:#111>,</span> <span style=color:#111>_c1</span><span style=color:#111>,</span> <span style=color:#111>_c2</span><span style=color:#111>,</span> <span style=color:#111>_c3</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;_C0 _C1 _C2 _C3&#34;</span><span style=color:#111>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>fourier_cantileaver</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#111>E</span><span style=color:#f92672>*</span><span style=color:#111>I</span><span style=color:#f92672>*</span><span style=color:#111>diff</span><span style=color:#111>(</span><span style=color:#111>w</span><span style=color:#111>,</span> <span style=color:#111>x</span><span style=color:#111>,</span> <span style=color:#ae81ff>2</span><span style=color:#111>)</span> <span style=color:#f92672>-</span> <span style=color:#111>u</span><span style=color:#f92672>*</span><span style=color:#111>f</span><span style=color:#f92672>^</span><span style=color:#ae81ff>2</span><span style=color:#f92672>*</span><span style=color:#111>w</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>fourier_cantileaver</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>-f^2*u*w(x) + E*I*diff(w(x), x, x) == 0
+</span></span></code></pre></div><p>And now, we can go about solving this result.</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>solution</span> <span style=color:#f92672>=</span> <span style=color:#111>desolve</span><span style=color:#111>(</span><span style=color:#111>fourier_cantileaver</span><span style=color:#111>,</span> <span style=color:#111>w</span><span style=color:#111>,</span> <span style=color:#111>ivar</span><span style=color:#f92672>=</span><span style=color:#111>x</span><span style=color:#111>,</span> <span style=color:#111>algorithm</span><span style=color:#f92672>=</span><span style=color:#d88200>&#34;fricas&#34;</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>expand</span><span style=color:#111>()</span>
+</span></span><span style=display:flex><span><span style=color:#111>w</span> <span style=color:#f92672>=</span> <span style=color:#111>solution</span>
+</span></span></code></pre></div><p>\begin{equation}
+_{C_{1}} e^{\left(\sqrt{f} x \left(\frac{u}{E I}\right)^{\frac{1}{4}}\right)} + _{C_{0}} e^{\left(i \, \sqrt{f} x \left(\frac{u}{E I}\right)^{\frac{1}{4}}\right)} + _{C_{2}} e^{\left(-i \, \sqrt{f} x \left(\frac{u}{E I}\right)^{\frac{1}{4}}\right)} + _{C_{3}} e^{\left(-\sqrt{f} x \left(\frac{u}{E I}\right)^{\frac{1}{4}}\right)}
+\end{equation}</p><p>We will simplify the repeated, constant top of this expression into a single variable \(b\):</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>b</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;b&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>top</span> <span style=color:#f92672>=</span> <span style=color:#111>sqrt</span><span style=color:#111>(</span><span style=color:#111>f</span><span style=color:#111>)</span><span style=color:#f92672>*</span><span style=color:#111>(</span><span style=color:#111>u</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>E</span><span style=color:#f92672>*</span><span style=color:#111>I</span><span style=color:#111>))</span><span style=color:#f92672>**</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>/</span><span style=color:#ae81ff>4</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>w</span> <span style=color:#f92672>=</span> <span style=color:#111>_c1</span><span style=color:#f92672>*</span><span style=color:#111>e</span><span style=color:#f92672>^</span><span style=color:#111>(</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#f92672>+</span> <span style=color:#111>_c0</span><span style=color:#f92672>*</span><span style=color:#111>e</span><span style=color:#f92672>^</span><span style=color:#111>(</span><span style=color:#111>i</span><span style=color:#f92672>*</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#f92672>+</span> <span style=color:#111>_c2</span><span style=color:#f92672>*</span><span style=color:#111>e</span><span style=color:#f92672>^</span><span style=color:#111>(</span><span style=color:#f92672>-</span><span style=color:#111>i</span><span style=color:#f92672>*</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#f92672>+</span> <span style=color:#111>_c3</span><span style=color:#f92672>*</span><span style=color:#111>e</span><span style=color:#f92672>^</span><span style=color:#111>(</span><span style=color:#f92672>-</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>x</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>w</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>_C1*e^(b*x) + _C0*e^(I*b*x) + _C2*e^(-I*b*x) + _C3*e^(-b*x)
+</span></span></code></pre></div><p>\begin{equation}
+_{C_{1}} e^{\left(b x\right)} + _{C_{0}} e^{\left(i \, b x\right)} + _{C_{2}} e^{\left(-i \, b x\right)} + _{C_{3}} e^{\left(-b x\right)}
+\end{equation}</p><p>We have one equation, four unknowns. However, we are not yet done. We will make one more simplifying assumption&mdash;try to get the \(e^{x}\) into sinusoidal form. We <em>know</em> this is supposed to oscillate, and it being in sinusoidal makes the process of solving for periodic solutions easier.</p><p>Recall that:</p><p>\begin{equation}
+\begin{cases}
+\cosh x = \frac{e^{x}+e^{-x}}{2} \\
+\cos x = \frac{e^{ix}+e^{-ix}}{2}\\
+\sinh x = \frac{e^{x}-e^{-x}}{2} \\
+\sin x = \frac{e^{ix}-e^{-ix}}{2i}\\
+\end{cases}
+\end{equation}</p><p>With a new set of scaling constants \(d_0\dots d_3\), and some rearranging, we can rewrite the above expressions into just a linear combination of those elements. That is, the same expression for \(w(x)\) at a specific frequency can be written as:</p><p>\begin{equation}
+d_0\cosh bx +d_1\sinh bx +d_2\cos bx +d_3\sin bx = w
+\end{equation}</p><p>No more imaginaries!!</p><p>So, let us redefine the expression:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>d0</span><span style=color:#111>,</span> <span style=color:#111>d1</span><span style=color:#111>,</span> <span style=color:#111>d2</span><span style=color:#111>,</span> <span style=color:#111>d3</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;d0 d1 d2 d3&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>w</span> <span style=color:#f92672>=</span> <span style=color:#111>d0</span><span style=color:#f92672>*</span><span style=color:#111>cosh</span><span style=color:#111>(</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>+</span><span style=color:#111>d1</span><span style=color:#f92672>*</span><span style=color:#111>sinh</span><span style=color:#111>(</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>+</span><span style=color:#111>d2</span><span style=color:#f92672>*</span><span style=color:#111>cos</span><span style=color:#111>(</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>+</span><span style=color:#111>d3</span><span style=color:#f92672>*</span><span style=color:#111>sin</span><span style=color:#111>(</span><span style=color:#111>b</span><span style=color:#f92672>*</span><span style=color:#111>x</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>w</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>d2*cos(b*x) + d0*cosh(b*x) + d3*sin(b*x) + d1*sinh(b*x)
+</span></span></code></pre></div><p>Now, we need to move onto solving when there will be valid solutions to this expression. However, we currently have four unknowns, and only one equation (at \(x=0\), \(w=0\), because the cantilever is fixed at base); so, to get a system in four elements, we will take some derivatives.</p><p>The way that we will go about this is by taking three derivatives and supplying the following initial conditions to get four equations:</p><figure><img src=/ox-hugo/2022-11-10_13-38-40_screenshot.png></figure><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>wp</span> <span style=color:#f92672>=</span> <span style=color:#111>diff</span><span style=color:#111>(</span><span style=color:#111>w</span><span style=color:#111>,</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#ae81ff>1</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>wpp</span> <span style=color:#f92672>=</span> <span style=color:#111>diff</span><span style=color:#111>(</span><span style=color:#111>w</span><span style=color:#111>,</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#ae81ff>2</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>wppp</span> <span style=color:#f92672>=</span> <span style=color:#111>diff</span><span style=color:#111>(</span><span style=color:#111>w</span><span style=color:#111>,</span><span style=color:#111>x</span><span style=color:#111>,</span><span style=color:#ae81ff>3</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>(</span><span style=color:#111>wp</span><span style=color:#111>,</span> <span style=color:#111>wpp</span><span style=color:#111>,</span> <span style=color:#111>wppp</span><span style=color:#111>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>(b*d3*cos(b*x) + b*d1*cosh(b*x) - b*d2*sin(b*x) + b*d0*sinh(b*x),
+</span></span><span style=display:flex><span> -b^2*d2*cos(b*x) + b^2*d0*cosh(b*x) - b^2*d3*sin(b*x) + b^2*d1*sinh(b*x),
+</span></span><span style=display:flex><span> -b^3*d3*cos(b*x) + b^3*d1*cosh(b*x) + b^3*d2*sin(b*x) + b^3*d0*sinh(b*x))
+</span></span></code></pre></div><p>And then, we have a system:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>cond_1</span> <span style=color:#f92672>=</span> <span style=color:#111>w</span><span style=color:#f92672>.</span><span style=color:#111>subs</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#111>cond_2</span> <span style=color:#f92672>=</span> <span style=color:#111>wp</span><span style=color:#f92672>.</span><span style=color:#111>subs</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>=</span><span style=color:#ae81ff>0</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#111>cond_3</span> <span style=color:#f92672>=</span> <span style=color:#111>wpp</span><span style=color:#f92672>.</span><span style=color:#111>subs</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>=</span><span style=color:#111>L</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#111>cond_4</span> <span style=color:#f92672>=</span> <span style=color:#111>wppp</span><span style=color:#f92672>.</span><span style=color:#111>subs</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#f92672>=</span><span style=color:#111>L</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>conds</span> <span style=color:#f92672>=</span> <span style=color:#111>(</span><span style=color:#111>cond_1</span><span style=color:#111>,</span> <span style=color:#111>cond_2</span><span style=color:#111>,</span> <span style=color:#111>cond_3</span><span style=color:#111>,</span> <span style=color:#111>cond_4</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>conds</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>(d0 + d2 == 0,
+</span></span><span style=display:flex><span> b*d1 + b*d3 == 0,
+</span></span><span style=display:flex><span> -b^2*d2*cos(L*b) + b^2*d0*cosh(L*b) - b^2*d3*sin(L*b) + b^2*d1*sinh(L*b) == 0,
+</span></span><span style=display:flex><span> -b^3*d3*cos(L*b) + b^3*d1*cosh(L*b) + b^3*d2*sin(L*b) + b^3*d0*sinh(L*b) == 0)
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>solve</span><span style=color:#111>(</span><span style=color:#111>conds</span><span style=color:#111>,</span> <span style=color:#111>d0</span><span style=color:#111>,</span> <span style=color:#111>d1</span><span style=color:#111>,</span> <span style=color:#111>d2</span><span style=color:#111>,</span> <span style=color:#111>d3</span><span style=color:#111>)</span><span style=color:#f92672>.</span><span style=color:#111>full_simplify</span><span style=color:#111>()</span>
+</span></span></code></pre></div><p>Ok so, we notice that out of all of these boundary expressions the \(b^{n}\) term drop out. Therefore, we have the system:</p><p>\begin{equation}
+\begin{cases}
+d_0 + d_2 = 0 \\
+d_1 + d_3 = 0 \\
+-d_2 \cos Lb + d_0 \cosh Lb - d_3 \sin Lb + d_1 \sinh Lb = 0 \\
+-d_3 \cos Lb + d_1 \cosh Lb + d_2 \sin Lb + d_0 \sinh Lb = 0 \\
+\end{cases}
+\end{equation}</p><p>Now, taking the top expressions, we gather that:</p><p>\begin{equation}
+\begin{cases}
+d_0 = -d_2 \\
+d_1 = -d_3
+\end{cases}
+\end{equation}</p><p>Performing these substitutions:</p><p>\begin{equation}
+\begin{cases}
+d_0 (\cos Lb + \cosh Lb) + d_1 (\sin Lb + \sinh Lb) = 0 \\
+d_1 (\cos Lb + \cosh Lb) + d_0 (\sinh Lb- \sin Lb ) = 0 \\
+\end{cases}
+\end{equation}</p><p>Now we are going to do some cursed algebra to get rid of all the rest of the \(d\). We want to do this because we don&rsquo;t really care much <em>what</em> the constants are; instead, we care about when a solution <em>exists</em> (hopefully, then, telling us what the \(f\) baked inside \(b\) is). So:</p><p>\begin{align}
+&amp;d_0 (\cos Lb + \cosh Lb) + d_1 (\sin Lb + \sinh Lb) = 0 \\
+\Rightarrow\ & \frac{-d_0}{d_1} = \frac{(\sin Lb + \sinh Lb)}{(\cos Lb + \cosh Lb)}
+\end{align}</p><p>and</p><p>\begin{align}
+&amp;d_1 (\cos Lb + \cosh Lb) + d_0 (\sinh Lb- \sin Lb ) = 0 \\
+\Rightarrow\ & \frac{-d_0}{d_1} = \frac{(\cos Lb + \cosh Lb)}{(\sinh Lb- \sin Lb )}
+\end{align}</p><p>therefore, we have:</p><p>\begin{equation}
+\frac{(\sin Lb + \sinh Lb)}{(\cos Lb + \cosh Lb)} = \frac{(\cos Lb + \cosh Lb)}{(\sinh Lb- \sin Lb )}
+\end{equation}</p><p>Multiplying each side by the other:</p><p>\begin{equation}
+(\sin Lb + \sinh Lb)(\sinh Lb- \sin Lb ) = (\cos Lb + \cosh Lb)^{2}
+\end{equation}</p><p>Expanding both sides now:</p><p>\begin{equation}
+(\sinh^{2} Lb-\sin^{2} Lb) = (\cos^{2} Lb + 2\cos Lb\ \cosh Lb + \cosh ^{2}Lb)
+\end{equation}</p><p>Moving everything finally to one side:</p><p>\begin{equation}
+\sinh^{2} Lb - \cosh^{2} Lb -\sin ^{2} Lb - \cos ^{2}Lb - 2\cos Lb \cosh Lb = 0
+\end{equation}</p><p>Ok, this is where the satisfying &ldquo;candy crush&rdquo; begins when things cancel out. Recall pythagoras:</p><p>\begin{equation}
+\begin{cases}
+\cosh^{2}x - \sinh^{2} x = 1 \\
+\sin^{2}x + \cos^{2} x = 1
+\end{cases}
+\end{equation}</p><p>To apply these effectively, multiply both sides by \(1\):</p><p>\begin{equation}
+-\sinh^{2} Lb + \cosh^{2} Lb +\sin ^{2} Lb + \cos ^{2}Lb + 2\cos Lb \cosh Lb = 0
+\end{equation}</p><p>Finally, we substitute!</p><p>\begin{align}
+& -\sinh^{2} Lb + \cosh^{2} Lb +\sin ^{2} Lb + \cos ^{2}Lb + 2\cos Lb \cosh Lb = 0 \\
+\Rightarrow\ & 1 + 1 + 2\cos Lb \cosh Lb = 0 \\
+\Rightarrow\ & 2 + 2\cos Lb \cosh Lb = 0 \\
+\Rightarrow\ & 1 + \cos Lb \cosh Lb = 0
+\end{align}</p><p>Of course, there is oscillating results here. We will numerically locate them. Why did we subject ourselves to tall of this algebra? No idea. As soon as we got rid of all the \(d\) we could have just stopped simplifying and just went to the numerical root solving. But here we are.</p><p>We will try to locate a root for \(Lb\) for every \(\pi\) for two rounds around the circle (until \(4 \pi\))&mdash;there is a solution for every \(\pi\), if you don&rsquo;t believe me, plot it or change the bottom to try to find it for every \(\frac{\pi}{2}\), sage will crash:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>intervals</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#111>jj</span><span style=color:#f92672>*</span><span style=color:#111>pi</span> <span style=color:#00a8c8>for</span> <span style=color:#111>jj</span> <span style=color:#f92672>in</span> <span style=color:#111>range</span><span style=color:#111>(</span><span style=color:#ae81ff>0</span><span style=color:#111>,</span> <span style=color:#ae81ff>5</span><span style=color:#111>)]</span>
+</span></span><span style=display:flex><span><span style=color:#111>intervals</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[0, pi, 2*pi, 3*pi, 4*pi]
+</span></span></code></pre></div><p>We will now declare \(x=Lb\), and create a nonlinear expression in it:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>var</span><span style=color:#111>(</span><span style=color:#d88200>&#34;x&#34;</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#111>characteristic_eqn</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span> <span style=color:#f92672>+</span> <span style=color:#111>cos</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span><span style=color:#f92672>*</span><span style=color:#111>cosh</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#f92672>==</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#111>characteristic_eqn</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>cos(x)*cosh(x) + 1 == 0
+</span></span></code></pre></div><p>Root finding time!</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>characteristic_solutions</span> <span style=color:#f92672>=</span> <span style=color:#111>[</span><span style=color:#111>characteristic_eqn</span><span style=color:#f92672>.</span><span style=color:#111>find_root</span><span style=color:#111>(</span><span style=color:#111>i</span><span style=color:#111>,</span><span style=color:#111>j</span><span style=color:#111>)</span> <span style=color:#00a8c8>for</span> <span style=color:#111>(</span><span style=color:#111>i</span><span style=color:#111>,</span><span style=color:#111>j</span><span style=color:#111>)</span> <span style=color:#f92672>in</span> <span style=color:#111>zip</span><span style=color:#111>(</span><span style=color:#111>intervals</span><span style=color:#111>,</span><span style=color:#111>intervals</span><span style=color:#111>[</span><span style=color:#ae81ff>1</span><span style=color:#111>:])]</span>
+</span></span><span style=display:flex><span><span style=color:#111>characteristic_solutions</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>[1.8751040687120917, 4.6940911329739246, 7.854757438237603, 10.995540734875457]
+</span></span></code></pre></div><p>These are possible \(Lb\) candidates.</p><p>The takeaway here is that:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>(</span><span style=color:#ae81ff>4.6940911329739246</span><span style=color:#f92672>/</span><span style=color:#ae81ff>1.8751040687120917</span><span style=color:#111>)</span><span style=color:#f92672>^</span><span style=color:#ae81ff>2</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>6.266893025769125
+</span></span></code></pre></div><p>(see below&rsquo;s derivation for why frequency changes by a <em>square</em> of this root)</p><p>the second overtone will be six and a quarter times (&ldquo;much&rdquo;) higher than the fundamental&mdash;so it will be able to dissipate much quicker.</p><p>Recall now that:</p><p>\begin{equation}
+b = \sqrt{f} \qty(\frac{\mu}{EI})^{\frac{1}{4}}
+\end{equation}</p><p>Simplifying some:</p><p>\begin{align}
+b &= f^{\frac{1}{2}} \qty(\frac{\mu}{EI})^{\frac{1}{4}} \\
+&= \qty(f^{2})^{\frac{1}{4}}\qty(\frac{\mu}{EI})^{\frac{1}{4}} \\
+&= \qty(\frac{\mu f^{2}}{EI})^{\frac{1}{4}}
+\end{align}</p><p>To solve for \(f\), give all other expressions and set one of the above characteristic solutions to \(Lb\). Then, solve for \(f\).</p><p>Solving for frequency to get things to be correct, substituting the fact that \(bh \rho = \mu\):</p><p>\begin{align}
+&amp;Lb = s \\
+\Rightarrow\ & L f^{\frac{1}{2}} \qty(\frac{\mu}{EI})^{\frac{1}{4}} = s \\
+\Rightarrow\ & f^{\frac{1}{2}} = \frac{s}{L} \qty(\frac{EI}{\mu})^{\frac{1}{4}} \\
+\Rightarrow\ & f = \frac{s^{2}}{L^{2}} \qty(\frac{EI}{\mu})^{\frac{1}{2}} \\
+\Rightarrow\ & f = \frac{s^{2}}{L^{2}} \qty(\frac{E(\frac{bh^{3}}{12})}{\mu})^{\frac{1}{2}} \\
+\Rightarrow\ & f = \frac{s^{2}}{L^{2}} \qty(\frac{E(\frac{bh^{3}}{12})}{\rho bh})^{\frac{1}{2}} \\
+\Rightarrow\ & f = \frac{s^{2}}{L^{2}} \qty(\frac{Eh^{2}}{12\rho })^{\frac{1}{2}}
+\end{align}</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#111>_E</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>70000000000</span> <span style=color:#75715e># pascals</span>
+</span></span><span style=display:flex><span><span style=color:#111>_p</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>2666</span> <span style=color:#75715e># kg/m^3</span>
+</span></span><span style=display:flex><span><span style=color:#111>_h</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.0064</span> <span style=color:#75715e># m</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># target</span>
+</span></span><span style=display:flex><span><span style=color:#111>LENGTH</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.095</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># mode to index</span>
+</span></span><span style=display:flex><span><span style=color:#111>nth_mode</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span><span style=color:#111>_s</span> <span style=color:#f92672>=</span> <span style=color:#111>characteristic_solutions</span><span style=color:#111>[</span><span style=color:#111>nth_mode</span><span style=color:#111>]</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#111>(</span><span style=color:#111>_s</span><span style=color:#f92672>^</span><span style=color:#ae81ff>2</span><span style=color:#f92672>/</span><span style=color:#111>LENGTH</span><span style=color:#f92672>^</span><span style=color:#ae81ff>2</span><span style=color:#111>)</span><span style=color:#f92672>*</span><span style=color:#111>((</span><span style=color:#111>_E</span><span style=color:#f92672>*</span><span style=color:#111>(</span><span style=color:#111>_h</span><span style=color:#f92672>^</span><span style=color:#ae81ff>2</span><span style=color:#111>))</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#ae81ff>12</span><span style=color:#f92672>*</span><span style=color:#111>_p</span><span style=color:#111>))</span><span style=color:#f92672>^</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>/</span><span style=color:#ae81ff>2</span><span style=color:#111>)</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>3688.17772197722
+</span></span></code></pre></div><p>Also, to get the constant for the elastic modulus from our force measurements, see <a href=/posts/kbhcalculating_shear_s_modulus/>calculating shear&rsquo;s modulus.</a></p><p>Let us create a code snippet to do that consistently:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-sage data-lang=sage><span style=display:flex><span><span style=color:#75715e># constants https://www.mit.edu/~6.777/matprops/aluminum.htm</span>
+</span></span><span style=display:flex><span><span style=color:#111>_E</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>44062894805</span> <span style=color:#75715e># modulus (pascals)</span>
+</span></span><span style=display:flex><span><span style=color:#111>_I</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.0000000001365333333</span> <span style=color:#75715e># second moment (m^4) https://amesweb.info/section/second-moment-of-area-calculator.aspx</span>
+</span></span><span style=display:flex><span><span style=color:#111>_u</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>3.521355063</span> <span style=color:#75715e># length mass density (kg/m)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># target</span>
+</span></span><span style=display:flex><span><span style=color:#111>LENGTH</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0.09573</span> <span style=color:#75715e># length of tine (meters)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># mode to index</span>
+</span></span><span style=display:flex><span><span style=color:#111>nth_mode</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>0</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># variable declaration</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># solution eqn</span>
+</span></span><span style=display:flex><span><span style=color:#111>solution_eqn</span> <span style=color:#f92672>=</span> <span style=color:#111>characteristic_solutions</span><span style=color:#111>[</span><span style=color:#111>nth_mode</span><span style=color:#111>]</span> <span style=color:#f92672>==</span> <span style=color:#111>(</span><span style=color:#111>LENGTH</span><span style=color:#f92672>*</span><span style=color:#111>(</span><span style=color:#111>sqrt</span><span style=color:#111>(</span><span style=color:#111>f</span><span style=color:#111>)</span><span style=color:#f92672>*</span><span style=color:#111>(</span><span style=color:#111>_u</span><span style=color:#f92672>/</span><span style=color:#111>(</span><span style=color:#111>_E</span><span style=color:#f92672>*</span><span style=color:#111>_I</span><span style=color:#111>))</span><span style=color:#f92672>^</span><span style=color:#111>(</span><span style=color:#ae81ff>1</span><span style=color:#f92672>/</span><span style=color:#ae81ff>4</span><span style=color:#111>)))</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span><span style=color:#75715e># as frequency is squared, we take the SECOND (the non-negative) result, and round it</span>
+</span></span><span style=display:flex><span><span style=color:#111>solve</span><span style=color:#111>(</span><span style=color:#111>solution_eqn</span><span style=color:#111>,</span> <span style=color:#111>f</span><span style=color:#111>)[</span><span style=color:#ae81ff>0</span><span style=color:#111>]</span><span style=color:#f92672>.</span><span style=color:#111>rhs</span><span style=color:#111>()</span><span style=color:#f92672>.</span><span style=color:#111>n</span><span style=color:#111>()</span>
+</span></span></code></pre></div><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-text data-lang=text><span style=display:flex><span>501.482272272831
+</span></span></code></pre></div></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

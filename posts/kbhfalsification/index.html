@@ -1,0 +1,139 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>falsification</title>
+<meta name=description content="falsification is the process of systematically finding failures of a particular system to inform future design decisions.
+Goals:
+
+enhance system sensors
+change the agent&rsquo;s policy
+revise the system requirements
+adapt the training of human operators
+recognize a system as having limitations
+&mldr;or abandon the project
+
+Here are some methods
+direct falsification
+
+rollout to a ceratin depth
+check if any trajectory is a failure and collect
+return them
+
+drawback: this doesn&rsquo;t work super well for rare events"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>falsification</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhfalsification/>falsification</a> is the process of systematically finding failures of a particular system to inform future design decisions.</p><p>Goals:</p><ul><li>enhance system sensors</li><li>change the agent&rsquo;s policy</li><li>revise the system requirements</li><li>adapt the training of human operators</li><li>recognize a system as having limitations</li><li>&mldr;or abandon the project</li></ul><p>Here are some methods</p><h2 id=direct-falsification>direct falsification</h2><ul><li>rollout to a ceratin depth</li><li>check if any trajectory is a failure and collect</li><li>return them</li></ul><p><strong>drawback</strong>: this doesn&rsquo;t work super well for rare events</p><h3 id=dot-dot-dot-how-bad-is-it>&mldr;how bad is it</h3><p>\begin{equation}
+p_{fail} = \text{probability of failure}
+\end{equation}</p><p>we typically don&rsquo;t know this! But suppose we did. Let&rsquo;s define:</p><p>\begin{equation}
+p\qty(k): \text{probability we sample a failure on the $k$ th rollout}
+\end{equation}</p><p>Meaning, the probability of \((1-p_{fail})^{k-1} p_{fail}\). This is our distribution over \(k\), and it is a geometric distribution! Meaning, it should require \(\frac{1}{p_{fail}}\) simulations on average before we find a singular failure event.</p><h2 id=falsification-through-optimization>falsification through optimization</h2><h3 id=disturbances>disturbances</h3><p>goal: systematically search for failures by <strong>taking control for the sources of randomness</strong>.</p><p>For instance, consider our observation model:</p><p>\begin{equation}
+o \sim O\qty(\cdot | s)
+\end{equation}</p><p>let&rsquo;s re-write:</p><p>\begin{equation}
+o = O(s, x_0), x_{o} \sim D_{o} \qty(\cdot | s)
+\end{equation}</p><p>we are factoring the original model into a deterministic part \(o = O\), and also the stochastic part \(x_{o} \sim D_{o}\). Aesthetically, we typically want \(D\) to be a simple distribution, and perform transformations to the target distribution into \(O\).</p><hr><p>we&rsquo;ll do this for everything</p><p>\begin{equation}
+s&rsquo; \sim T \qty(\cdot | s,a) \implies s&rsquo; = T(s,a,x_{s}), x_{s} \sim D_{s}\qty(\cdot | s,a)
+\end{equation}</p><p>&mldr;and more</p><p>We can package all of these \(x,D\) up together, into <strong>disturbance</strong> \(x\) and disturbance distribution \(D\).</p><h4 id=example>example</h4><p>Suppose our observation is \(o \sim \mathcal{N} \qty(\cdot | s, \Sigma)\). Let&rsquo;s factor it:</p><p>\begin{equation}
+o = s + x_0, x_0 \sim \mathcal{N} \qty(\cdot | 0, \Sigma)
+\end{equation}</p><p>that is, the disturbance is the &ldquo;observation noise&rdquo; added to the true state. We just have a disturbance distribution centered at zero which helps us add noise to the observation.</p><h4 id=rewriting-environment>rewriting environment</h4><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-julia data-lang=julia><span style=display:flex><span><span style=color:#00a8c8>function</span> <span style=color:#111>step</span><span style=color:#111>(</span><span style=color:#111>sys</span><span style=color:#f92672>::</span><span style=color:#00a8c8>System</span><span style=color:#111>,</span> <span style=color:#111>s</span><span style=color:#f92672>::</span><span style=color:#00a8c8>State</span><span style=color:#111>,</span> <span style=color:#111>D</span><span style=color:#f92672>::</span><span style=color:#00a8c8>DisturbanceDistributino</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>xo</span> <span style=color:#f92672>=</span> <span style=color:#111>rand</span><span style=color:#111>(</span><span style=color:#111>D</span><span style=color:#f92672>.</span><span style=color:#111>Do</span><span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>o</span> <span style=color:#f92672>=</span> <span style=color:#111>sys</span><span style=color:#f92672>.</span><span style=color:#111>sensor</span><span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>,</span> <span style=color:#111>xo</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>xa</span> <span style=color:#f92672>=</span> <span style=color:#111>rand</span><span style=color:#111>(</span><span style=color:#111>D</span><span style=color:#f92672>.</span><span style=color:#111>Da</span><span style=color:#111>(</span><span style=color:#111>o</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>a</span> <span style=color:#f92672>=</span> <span style=color:#111>sys</span><span style=color:#f92672>.</span><span style=color:#111>agent</span><span style=color:#111>(</span><span style=color:#111>o</span><span style=color:#111>,</span><span style=color:#111>xa</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>xs</span> <span style=color:#f92672>=</span> <span style=color:#111>rand</span><span style=color:#111>(</span><span style=color:#111>D</span><span style=color:#f92672>.</span><span style=color:#111>Ds</span><span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>s′</span> <span style=color:#f92672>=</span> <span style=color:#111>sys</span><span style=color:#f92672>.</span><span style=color:#111>env</span><span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>xs</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#75715e># storing for bookeeping</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>x</span> <span style=color:#f92672>=</span> <span style=color:#111>Disturbance</span><span style=color:#111>(</span><span style=color:#111>xa</span><span style=color:#111>,</span> <span style=color:#111>xs</span><span style=color:#111>,</span> <span style=color:#111>xo</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>return</span> <span style=color:#111>(;</span> <span style=color:#111>o</span><span style=color:#111>,</span> <span style=color:#111>a</span><span style=color:#111>,</span> <span style=color:#111>s′</span><span style=color:#111>,</span> <span style=color:#111>x</span><span style=color:#111>)</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>end</span>
+</span></span></code></pre></div><h4 id=trajectory-distribution>trajectory distribution</h4><p>Recall: sources of randomness for a rollout &mdash; 1) the initial state, and 2) the disturbance distribution applied at each step.</p><p>We can actually then specify this <a href=#trajectory-distribution>trajectory distribution</a> with the following properties:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-julia data-lang=julia><span style=display:flex><span><span style=color:#00a8c8>abstract type</span> <span style=color:#00a8c8>TrajectoryDistribution</span> <span style=color:#00a8c8>end</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>function</span> <span style=color:#111>initial_state_distribution</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#f92672>::</span><span style=color:#00a8c8>TrajectoryDistribution</span><span style=color:#111>)</span> <span style=color:#00a8c8>end</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>function</span> <span style=color:#111>distriburbance_distribution</span><span style=color:#111>,</span> <span style=color:#111>t</span><span style=color:#f92672>::</span><span style=color:#00a8c8>Timestamp</span><span style=color:#111>)</span> <span style=color:#00a8c8>end</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>function</span> <span style=color:#111>depth</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#f92672>::</span><span style=color:#00a8c8>TrajectoryDistribution</span><span style=color:#111>)</span> <span style=color:#00a8c8>end</span>
+</span></span></code></pre></div><p>we can then roll this system out:</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-julia data-lang=julia><span style=display:flex><span><span style=color:#00a8c8>function</span> <span style=color:#111>rollout</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#f92672>::</span><span style=color:#00a8c8>TrajectoryDistribution</span><span style=color:#111>;</span> <span style=color:#111>d</span><span style=color:#f92672>=</span><span style=color:#111>depth</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>s</span> <span style=color:#f92672>=</span> <span style=color:#111>rand</span><span style=color:#111>(</span><span style=color:#111>initial_state_distribution</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>    <span style=color:#111>τ</span> <span style=color:#f92672>=</span> <span style=color:#111>[]</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>for</span> <span style=color:#111>t</span> <span style=color:#f92672>=</span> <span style=color:#ae81ff>1</span><span style=color:#f92672>:</span><span style=color:#111>d</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>o</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>s′</span> <span style=color:#f92672>=</span> <span style=color:#111>step</span><span style=color:#111>(</span><span style=color:#111>s</span><span style=color:#111>,</span> <span style=color:#111>distriburbance_distribution</span><span style=color:#111>(</span><span style=color:#111>p</span><span style=color:#111>,</span><span style=color:#111>t</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>push!</span><span style=color:#111>(</span><span style=color:#111>τ</span><span style=color:#111>,</span> <span style=color:#111>(</span><span style=color:#111>s′</span><span style=color:#111>,</span><span style=color:#111>o</span><span style=color:#111>,</span><span style=color:#111>a</span><span style=color:#111>,</span><span style=color:#111>x</span><span style=color:#111>))</span>
+</span></span><span style=display:flex><span>        <span style=color:#111>s</span> <span style=color:#f92672>=</span> <span style=color:#111>s′</span>
+</span></span><span style=display:flex><span>    <span style=color:#00a8c8>end</span>
+</span></span><span style=display:flex><span><span style=color:#00a8c8>end</span>
+</span></span></code></pre></div><p>a normal rollout can be factored to this via a &ldquo;nominal trajectory distribution&rdquo; .</p><h3 id=fuzzing>fuzzing</h3><p>input a non-nominal <a href=#trajectory-distribution>trajectory distribution</a> to cause failure. Usually, we do this by increasing variance off the nominal distirbution.</p><h3 id=disturbance-optimization>disturbance optimization</h3><p>we want to systematically search over initial states and <em><strong>sequences</strong> of disturbances</em> of find failure trajectories.</p><p>\begin{align}
+\min_{s,x} &\ f\qty(\tau) \\
+s.t. &\ \tau = RO(s,x)
+\end{align}</p><p>where \(f(\tau)\) represents &ldquo;closeness to failure&rdquo;. Problem, though, using robustness alone isn&rsquo;t super duper likely as a failure case (it will give very unlikely trajectories).</p><h4 id=likelihood-of-a-trajectory>likelihood of a trajectory</h4><p>The likelihood of a trajectory is the likelihood of the <em>initial state</em> and <em>all disturbances</em> in the trajectory appearing.</p><p>\begin{equation}
+p\qty(\tau) = p\qty(s_{1}) D\qty(x_1 | s_1, a_1, a_1) \dots D\qty(x_d | s_d, a_d, a_d)
+\end{equation}</p><p>Our new objective function, then:</p><p>\begin{equation}
+f\qty(\tau) = \begin{cases}</p><ul><li>p\qty(\tau), \text{if $\tau \not \in \psi$},\\
+\rho \qty(\tau, \psi)
+\end{cases}
+\end{equation}</li></ul><p>if a trajectory is <strong>not</strong> a failure (\(\tau \in \psi\)), we want to maximize failure; if trajectory <strong>is</strong> a failure then we want to maximize its likelihood.</p><h4 id=properties-of-the-goal-plus-refactoring>properties of the goal + refactoring</h4><ul><li>failures should never have a higher objective value than successes</li><li>&mldr;but the log-likelihood of the objective above could cause non-failures to be negative error</li></ul><p>so, more stably:</p><p>\begin{equation}
+f\qty(\tau) = \rho \qty(\tau, \psi) - \lambda \log \qty(p \qty(\tau))
+\end{equation}</p><h4 id=how-do-you-optimize>how do you optimize?</h4><ul><li>local descrent methods: <a href=/posts/kbhgradient_descent/>gradient descent</a>, adam (these methods *require th gradient)..</li><li>direct methods: <a href=/posts/kbhsu_cs361_apr112024/#hooke-jeeves-search>Hooke-Jeeves Search</a>: <a href=/posts/kbhsu_cs361_apr112024/#nelder-mead-simplex-method>Nelder-Mead Simplex Method</a></li><li>population methods</li></ul><h2 id=falsification-through-planning>falsification through planning</h2><p>Recall our optimization objective from above:</p><p>\begin{align}
+\min_{s, \mathbb{X}} &\ f(\tau) \\
+s.t. &\ \tau = RO\qty(s,x)
+\end{align}</p><p>High level goal&mdash;we want to create iterative methods to find possible areas of errors (i.e. some tree search). This is useful when you have too many states to directly optimize over.</p><h3 id=tree-structure>Tree Structure</h3><ul><li>nodes: each stage</li><li>edges: tuples of observation, action, disturbance \(\qty(o,a,x)\)</li></ul><h3 id=building-the-tree>Building the Tree</h3><ol><li><strong>select</strong> a node which is the state</li><li><strong>extend</strong> the node by sampling an observation, action, disturbance \(\qty(o,a,x)\)</li></ol><h3 id=various-tree-types>Various Tree Types</h3><h4 id=heuristic-search>Heuristic Search</h4><p><a href=#heuristic-search>Heuristic Search</a>, or <a href=#heuristic-search>Rapidly Exploring Random Tree</a>s, we</p><ul><li><strong>select</strong>: sample a &ldquo;goal state&rdquo;, compute the objective for <strong>each node</strong> in the tree based on the goal state, select the node with the lowest objective</li><li><strong>extend</strong>: select disturbance, take a step using the selected disturbance, add result to the tree</li></ul><p>We want our goals to roughly lead us to failure/be around failure; and the objective should be something like &ldquo;distance&rdquo; which measures the quality of being at a particular point.</p><p>So, revised:</p><ul><li><strong>select</strong>: sampling a goal state from the failure region</li><li><strong>extend</strong>: select a disturbance that would move us closest to the goal state</li></ul><p>But, this will give us failures, but not really likely failures. So, how do we go about doing that? It&rsquo;s time for <strong>alternative objectives</strong>. To do this, let&rsquo;s define a cost function (which <strong>must be positive to ensure the search will terminate</strong>):</p><p>\begin{equation}
+c = \text{current cost} + \text{cost to go}
+\end{equation}</p><p>the former is just computed from our historical trajectory; the latter is estimated some heuristic \(h\). For instance,</p><ul><li>current cost: distance to the current node in the tree from start</li><li>cost to go: &ldquo;direct distance to the goal&rdquo;</li></ul><p>For instance, if we wanted to include our likelihood:</p><ul><li>current cost: rescaled negative log likelihood (to keep stuff positive)</li><li>cost to go: distance to the goal, as a proxy for NLL</li></ul><p><strong>NOTICE</strong>: if a heuristic is <a href=/posts/kbhadmissable/>admissable</a> and its guaranteed to never overestimate the cost of reaching the goal state, this is \(A^{*}\).</p><h4 id=monte-carlo-tree-search--kbhmonte-carlo-tree-search-dot-md--falsification><a href=/posts/kbhmonte_carlo_tree_search/>monte-carlo tree search</a> falsification</h4><p>Let&rsquo;s use <a href=/posts/kbhmonte_carlo_tree_search/>monte-carlo tree search</a> for falsification.</p><ul><li><strong>select</strong>: select a node based on a heuristic that balances <a href=/posts/kbhexploration_and_exploitation/>Exploration and Exploitation</a>. For a given node&mldr;<ul><li>is the number of children \(\leq k N^{\alpha}\)?<ul><li>yes! select it and extend</li><li>no! select a new node which <em>minimizes</em> \(Q_{\text{child}} - c \sqrt{ \frac{\log N}{N_{\text{child}}}}\), which is the <a href=/posts/kbhsu_cs361_may072024/#lower-confidence-bound-exploration>Lower Confidence Bound Exploration</a>; the reason why we are picking <strong>lowest</strong> is because we want to minimize \(Q\), instead of <a href=/posts/kbhdirected_exploration/#ucb-1>UCB 1</a> which is trying to maximize \(Q\)</li></ul></li></ul></li></ul><p>How do we estimate \(Q\)? We can do whatever we want; for instance, we can perform a bunch of roll-outs and estimate the robustness.</p><h4 id=reinforcement-learning-falsification>reinforcement learning falsification</h4><p>Technically, falsification is just RL:</p><ul><li>system => reward to adversary</li><li>adversary => action to system</li></ul><p>Most RL algorithms are designed to be very sample efficient, which means we can find failures rather quickly.</p><p>Using <a href=/posts/kbhmonte_carlo_tree_search/>MCTS</a> or <a href=/posts/kbhreinforcement_learning/>reinforcement learning</a> to search for the most likely failure is called <strong>adaptive stress testing</strong>.</p><h2 id=how-to-pick-a-falsification-method>how to pick a falsification method?</h2><ul><li>if failure is easy to come by, just do <a href=#direct-falsification>direct falsification</a></li><li>if you could compute the gradient, then do that</li><li>otherwise, do black box approaches / population approaches / etc.</li></ul></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

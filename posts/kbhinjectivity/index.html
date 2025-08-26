@@ -1,0 +1,80 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>injectivity</title>
+<meta name=description content="An injective function is one which is one-to-one: that it maps distinct inputs to distinct outputs.
+constituents
+
+A function \(T: V \to W\)
+
+requirements
+\(T\) is injective if \(Tu = Tv\) implies \(u=v\).
+additional information
+injectivity implies that null space is \(\{0\}\)
+Proof: let \(T \in \mathcal{L}(V,W)\); \(T\) is injective IFF \(null\ T = \{0\}\).
+given injectivity
+Suppose \(T\) is injective.
+Now, we know that \(0\), because it indeed gets mapped by \(T\) to \(0\), is in the null space of \(T\)."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>injectivity</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>An <a href=/posts/kbhinjectivity/>injective</a> <a href=/posts/kbhfunction/>function</a> is one which is one-to-one: that it maps distinct inputs to distinct outputs.</p><h2 id=constituents>constituents</h2><ul><li>A <a href=/posts/kbhfunction/>function</a> \(T: V \to W\)</li></ul><h2 id=requirements>requirements</h2><p>\(T\) is <a href=/posts/kbhinjectivity/>injective</a> if \(Tu = Tv\) implies \(u=v\).</p><h2 id=additional-information>additional information</h2><h3 id=injectivity-implies-that-null-space--kbhnull-space-dot-md--is-0>injectivity implies that <a href=/posts/kbhnull_space/>null space</a> is \(\{0\}\)</h3><p>Proof: let \(T \in \mathcal{L}(V,W)\); \(T\) is <a href=/posts/kbhinjectivity/>injective</a> IFF \(null\ T = \{0\}\).</p><h4 id=given-injectivity--kbhinjectivity-dot-md>given <a href=/posts/kbhinjectivity/>injectivity</a></h4><p>Suppose \(T\) is injective.</p><p>Now, we know that \(0\), because it indeed gets mapped by \(T\) to \(0\), is in the <a href=/posts/kbhnull_space/>null space</a> of \(T\).</p><p>Because <a href=/posts/kbhlinear_map/#linear-maps-take-0-to-0>linear maps take \(0\) to \(0\)</a>, \(T0=0\). Now, because \(T\) is <a href=/posts/kbhinjectivity/>injective</a>, for any \(v\) that \(Tv = 0 = T 0\) implies \(v=0\).</p><p>So \(0\) is the only thing that an injective \(T\) can map to \(0\), and it is indeed in the <a href=/posts/kbhnull_space/>null space</a>, so the <a href=/posts/kbhnull_space/>null space</a> is just \(\{0\}\).</p><h4 id=given-null-t-0>given \(null\ T=\{0\}\)</h4><p>Suppose we have some \(Tu = Tv\), we desire to proof that \(u=v\) to show that \(T\) is <a href=/posts/kbhinjectivity/>injective</a>.</p><p>Given \(Tu=Tv\), we have that \(Tu-Tv\). Given additivity, \(T(u-v) = 0\). This makes \((u-v) \in\ null\ T\).</p><p>Given only \(0\) is in the <a href=/posts/kbhnull_space/>null space</a> of \(T\), \(u-v = 0\), so \(u=v\), as desired. \(\blacksquare\).</p><h3 id=map-to-smaller-space-is-not-injective--kbhlinear-map-dot-md><a href=/posts/kbhlinear_map/#map-to-smaller-space-is-not-id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injective>map to smaller space is not injective</a></h3><p>See <a href=/posts/kbhlinear_map/#map-to-smaller-space-is-not-id-e3ff3c90-e719-4c5b-afc4-efcec3169fb2-injective>map to smaller space is not injective</a></p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

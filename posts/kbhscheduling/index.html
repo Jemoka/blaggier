@@ -1,0 +1,80 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>scheduling</title>
+<meta name=description content="scheduling is the tool to figure out which thread can run. Because threads exist in different thread states:
+
+running
+blockde - waiting for an event like disk, network, etc.
+ready - able to run, but not on CPU yet
+
+a scheduler needs to do the task of ordering ready threads to run, moving running threads to ready when it has ran for enough time. Possible pathways:
+
+ready => running
+blocked => running
+blocked => ready => running
+
+You can&rsquo;t go from ready to blocked because you have to do something to know you are blocked."><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>scheduling</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p><a href=/posts/kbhscheduling/>scheduling</a> is the tool to figure out which thread can run. Because <a href=/posts/kbhmultithreading/#thread>thread</a>s exist in different <a href=/posts/kbhprocess_control_block/#id-b4b86ccc-70f3-4d30-b437-2f5fff63b0e6-thread-state>thread state</a>s:</p><ol><li><strong>running</strong></li><li><strong>blockde</strong> - waiting for an event like disk, network, etc.</li><li><strong>ready</strong> - able to run, but not on CPU yet</li></ol><p>a scheduler needs to do the task of ordering ready threads to run, moving running threads to ready when it has ran for enough time. Possible pathways:</p><ol><li>ready => running</li><li>blocked => running</li><li>blocked => ready => running</li></ol><p>You can&rsquo;t go from <strong>ready</strong> to <strong>blocked</strong> because you have to <em>do something</em> to know you are blocked.</p><h2 id=scheduling--kbhscheduling-dot-md--ready-threads><a href=/posts/kbhscheduling/>scheduling</a> &ldquo;ready&rdquo; threads</h2><p>The following assumes one core.</p><p>Tradeoffs:</p><ol><li>minimize time to a useful result&mdash;(<strong>assumption</strong>: a &ldquo;useful result&rdquo; = a thread blocking or completes)</li><li>using resources efficiently (keeping cores/disks busy)</li><li>fairness (multiple users / many jobs for one users)</li></ol><p>Typically, we focus on (1); approaches that maximize useful results quickly is unfair beacuse you are prioritizing. We can measure this based on &ldquo;average completion time&rdquo;: tracking the average time elapsed for a particular queue based on the start of scheduling that queue to the time when each thread ends.</p><h3 id=first-come-first-serve>first-come first-serve</h3><ul><li>keep all threads in ready in a <strong>queue</strong></li><li>run the first thread on the front until it finishes/it blocks for however long</li><li>repeat</li></ul><p><strong>Problem</strong>: a thread can run away with the entire system, accidentally, through infinite loops</p><h3 id=round-robin>round robin</h3><ul><li>keep all threads in a <strong>round robin</strong></li><li>each thread can run for a set amount of time called a <a href=#round-robin>time slice</a> (10ms or so)</li><li>if a thread terminates before that time, great; if a thread does not, we swap it off and put it to the end of the round robin</li></ul><p><strong>Problem</strong>: what&rsquo;s a good <a href=#round-robin>time slice</a>?</p><ul><li>too small: the overhead of context switching is higher than the overhead of running the program</li><li>too large: threads can monopolize cores, can&rsquo;t handle user input, etc.</li></ul><p>Linux uses 4ms. Generally, you want 5-10ms range.</p><p>You can think about this as dividing each time slot by time slices, and add as fcfs</p><h3 id=shortest-remaining-processing-time>shortest remaining processing time</h3><p>Run first the thread in queue that will finish the <strong>most quickly</strong> and run it <strong>fully to competition</strong>.</p><p>It <strong>gives preference to those that need it the least</strong>: a good side effect is that it gives preference to <a href=/posts/kbhprocess_control_block/#io-vs-dot-cpu-bound>I/O Bound Thread</a> first, so we can wait on them during disk operations while <a href=/posts/kbhprocess_control_block/#io-vs-dot-cpu-bound>CPU Thread</a>s run after the <a href=/posts/kbhprocess_control_block/#io-vs-dot-cpu-bound>I/O Bound Thread</a> has ran.</p><p>THIS IS <strong>not implementable</strong>&mdash;-we can&rsquo;t build this beacuse we have to know which thread will finish the most quickly, which we can&rsquo;t because you have to solve the halting problem to know.</p><p>Our goal, then is to get as close as possible to the performance of <a href=#shortest-remaining-processing-time>SRPT</a>.</p><p><strong>Problem</strong>:</p><ol><li>we don&rsquo;t know which one will finish the most quickly</li><li>if we have many threads and one long-running thread, the long running thread won&rsquo;t be able to run ever</li></ol><h3 id=priority-based-scheduling>priority based scheduling</h3><p>Key idea: <strong>behavior tends to be consistent in a thread</strong>. We build multiple <strong>priority queues</strong> to address this.</p><p><a href=#priority-based-scheduling>priority based scheduling</a> is an approximation of <a href=#shortest-remaining-processing-time>SRPT</a>, using the past performance of the thread to estimate the running time of the thread. Over time, <a href=/posts/kbhmultithreading/#thread>thread</a>s will move between priority queues, and we <strong>run the topmost thread from the highest priority queue</strong></p><ol><li>threads that aren&rsquo;t using much CPU stay in higher priority queue</li><li>threads that are using much CPU gets bumped down to lower priority queues</li></ol><p>Similar to <a href=#shortest-remaining-processing-time>SRPT</a>, this also has the good property of <strong>giving preference to those that need it the least</strong>: a good side effect is that it gives preference to <a href=/posts/kbhprocess_control_block/#io-vs-dot-cpu-bound>I/O Bound Thread</a> first, so we can wait on them during disk operations while <a href=/posts/kbhprocess_control_block/#io-vs-dot-cpu-bound>CPU Thread</a>s run after the <a href=/posts/kbhprocess_control_block/#io-vs-dot-cpu-bound>I/O Bound Thread</a> has ran.</p><h4 id=implement-based-on-time-slice--org7470572--usage>implement based on <a href=#round-robin>time slice</a> usage</h4><p>a <a href=/posts/kbhmultithreading/#thread>thread</a> always enters in the <strong>highest</strong> priority queue</p><ol><li>if the <a href=/posts/kbhmultithreading/#thread>thread</a> uses all of its <a href=#round-robin>time slice</a> and didn&rsquo;t exit, bump them down a priority queue</li><li>if a <a href=/posts/kbhmultithreading/#thread>thread</a> blocked before it used all of its <a href=#round-robin>time slice</a>, bump them up a priority queue</li></ol><h4 id=implement-based-on-aggregate-time-used-fixing-neglect>implement based on aggregate time used: fixing neglect</h4><p>a <a href=/posts/kbhmultithreading/#thread>thread</a> has a number for &ldquo;how much time did you use on the CPU recently&rdquo;? The priories are sorted by that value, and the smallest time use will be ran.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

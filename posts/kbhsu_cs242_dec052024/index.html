@@ -1,0 +1,133 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 DEC052024</title>
+<meta name=description content="Building a programing language, step by step:
+Lambda Calculus
+\begin{equation}
+e \to x | \lambda x.e | e\ e
+\end{equation}
+and you can add types
+\begin{equation}
+e \to x | \lambda x: t.e | e\ e | i
+\end{equation}
+\begin{equation}
+t \to \alpha  | t \to  t | \text{int}
+\end{equation}
+Adding ADT
+Algebraic Data Type&mdash;
+\begin{equation}
+\lambda a_1 . \lambda a_2 \dots  \lambda a_{k}. \lambda f_1 . \lambda f_2 \dots  \lambda  f_{n} f_i a_1 a_2 \dots a_{k}
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 DEC052024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><p>Building a programing language, step by step:</p><h2 id=lambda-calculus>Lambda Calculus</h2><p>\begin{equation}
+e \to x | \lambda x.e | e\ e
+\end{equation}</p><p>and you can add types</p><p>\begin{equation}
+e \to x | \lambda x: t.e | e\ e | i
+\end{equation}</p><p>\begin{equation}
+t \to \alpha | t \to t | \text{int}
+\end{equation}</p><h2 id=adding-adt>Adding ADT</h2><p><a href=/posts/kbhsu_cs242_oct032024/#algebraic-data-type>Algebraic Data Type</a>&mdash;</p><p>\begin{equation}
+\lambda a_1 . \lambda a_2 \dots \lambda a_{k}. \lambda f_1 . \lambda f_2 \dots \lambda f_{n} f_i a_1 a_2 \dots a_{k}
+\end{equation}</p><h3 id=possible-encodings>possible encodings</h3><ul><li>Non-Negative Integers</li><li>Pair</li><li>Booleans</li><li>Binary Trees</li></ul><h2 id=constants>Constants</h2><p>You can add natively&mldr;.</p><ul><li>integers</li><li>+, *, -, etc.</li><li>strings</li><li>arrays</li><li>booleans</li><li>&mldr;</li></ul><p>We build these in to obtain good hardware support.</p><h2 id=controls>Controls</h2><p>\begin{equation}
+\text{if}: \text{Bool} \to t \to t \to t
+\end{equation}</p><p>where each \(t\) is an expression.</p><p>In a <strong>call by value</strong> language, this has to be a built-in construct because otherwise each of the arms will be evaluated first before if (which is disastrous because it kind of obviate the point of the if).</p><p>\begin{equation}
+\frac{A \vdash e_1 : \text{Bool}, A \vdash e_2: t, A \vdash e_3:t}{A \vdash \text{if } e_1 e_2 e_3 : t}
+\end{equation}</p><p>and to perform type inference</p><p>\begin{equation}
+\frac{A \vdash e_1: \text{Bool}, A \vdash e_2 :t_1, A \vdash e_3: t_2, t_1 = t_2}{A \vdash \text{if } e_1 e_2 e_3 : t_1}
+\end{equation}</p><h2 id=recursion>Recursion</h2><p>Let us define a recursive function definition:</p><p>\begin{equation}
+\text{letrec } f = \lambda x . e_1\ \text{in}\ e_2
+\end{equation}</p><p>this is different from normal let because we want recursive functions, meaning we want \(e_1\) to be able to use/call \(f\).</p><hr><p>We define this via:</p><p>\begin{equation}
+\qty(\lambda f . e_2) \qty(Y \lambda f. \lambda x . e_1)
+\end{equation}</p><p>where, recall <a href=/posts/kbhsu_cs242_oct032024/#y-combinator>y-combinator</a>:</p><p>\begin{equation}
+Y = \lambda f. \qty(\lambda x. f (x x)) (\lambda x. f (x x))
+\end{equation}</p><p>Type checking for recursion:</p><p>\begin{equation}
+\frac{\begin{align}
+&amp;A, f : t_1 \to t_2 \vdash \lambda x. e_1: t_1 \to t_2 \\
+&amp;A, f : t_1 \to t_2 \vdash e_2 : t
+\end{align}}{A \vdash \text{letrec } f = \lambda x.e_1 \text{ in } e_2: t}
+\end{equation}</p><p>notice this is different from a normal let because the first term also has available the type of \(f\), making this a recursive procedure.</p><p>Notice the type of \(f\) is underspecified; to make this happen, we use type inference:</p><p>\begin{equation}
+\frac{\begin{align}
+&amp;A, f : \alpha \to \beta \vdash \lambda x. e_1: t_1 \to t_2 \\
+&amp;A, f : \alpha \to \beta \vdash e_2 : t \\
+&\alpha = t_1\ \beta = t_2
+\end{align}}{A \vdash \text{letrec } f = \lambda x.e_1 \text{ in } e_2: t}
+\end{equation}</p><p>(you could quantify the bottom expressions; trying to make the top of the let&mdash;i.e. the recursion&mdash;polymorphic makes the result un<a href=/posts/kbhturing_machinea/#decidable>decidable</a>).</p><h2 id=parametric-polymorphism>Parametric Polymorphism</h2><p>\begin{equation}
+e \to x | \lambda x . e | e\ e | \text{let} f = \lambda x.e \text{ in } e | i
+\end{equation}</p><p>\begin{equation}
+t \to \alpha | t \to t | \text{int}
+\end{equation}</p><p>\begin{equation}
+o \to \forall a . o | t
+\end{equation}</p><p>to avoid code duplication (because functions could now be polymorphic)</p><h2 id=subtyping>Subtyping</h2><p>For instance, suppose you have an if statement that allowed different types</p><p>\begin{equation}
+\frac{\begin{align}
+&amp;A \vdash e_1 : \text{Bool} \\
+&amp;A \vdash e_2: t_1 \\
+&amp;t_3 = \text{lub}\qty(t_1, t_2)
+\end{align}}{A \vdash e_1 ? e_2 : e_3 : t_3}
+\end{equation}</p><p>where \(lub\) is the least-upper-bound: the <strong>one, smallest type</strong> which is the supertype of both \(t_1\) and \(t_2\)</p><p>Notice this only makes sense where your type hierarchy is a tree (meaning single inheritance).</p><h2 id=overloading>Overloading</h2><p>\begin{align}
+&+: \text{int} \to \text{int} \to \text{int} \\
+& +: \text{float}\to \text{float}\to \text{float}\\
+& +: \dots
+\end{align}</p><p>overloading with subtyping is, therefore, complicated.</p><h2 id=functional-languages>Functional Languages</h2><p>At this point we have succeeded in building functional languages&mdash;</p><ul><li>all: lambdas + primitives + ADTs</li><li>with polymorphism: ML, OCaml, Haskell</li></ul><h3 id=monads>Monads</h3><p>A consequence of this is to be able to pump a generalized &ldquo;state&rdquo; through computation. Many language features can be monads&mdash;state, continuations, exceptions, threads, etc.</p><p>Haskell&rsquo;s key idea: make your own monads, and scope them! Notice that since they carry state, they are really single-threaded in the sense that they are best done with coroutines.</p><h2 id=objects>Objects</h2><p>Objects are something fundamentally different. Typed OOP languages can&rsquo;t really be translate into typed functional languages because unrestricted method overrides is impossible to type (if there is runtime function swapping with new types).</p><h3 id=oop-vs-dot-functional-language>OOP vs. Functional Language</h3><h4 id=functional-language>Functional language</h4><ul><li>adding a new function is a local change</li><li>adding a new kind of data (i.e. a new constructor), it requires updating every function that takes that type</li></ul><h4 id=oop-language>OOP language</h4><ul><li>adding a new data is a local change</li><li>adding a new function (method) requires updating many classes with a definition of that method (perhaps mostly automatic through inheritance)</li></ul><h2 id=extending-oop-to-functional-languages>Extending OOP to Functional Languages</h2><p>Haskell typeclasses! In some sense this is closer to Java &ldquo;interfaces&rdquo; than objects&mdash;interfaces has a performance hit compared to inheritance, but do support systems better.</p><h3 id=some-typeclasses>some typeclasses</h3><p>&ldquo;supporting object equality&rdquo;</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#111>(</span><span style=color:#f92672>==</span><span style=color:#111>)</span> <span style=color:#f92672>::</span> <span style=color:#00a8c8>Eq</span> <span style=color:#111>a</span> <span style=color:#f92672>=&gt;</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>bool</span>
+</span></span></code></pre></div><p>&ldquo;supporting object ordering&rdquo;</p><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-haskell data-lang=haskell><span style=display:flex><span><span style=color:#111>(</span><span style=color:#f92672>&lt;</span><span style=color:#111>)</span> <span style=color:#f92672>::</span> <span style=color:#00a8c8>Ord</span> <span style=color:#111>a</span> <span style=color:#f92672>=&gt;</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>a</span> <span style=color:#f92672>-&gt;</span> <span style=color:#111>bool</span>
+</span></span></code></pre></div><p>code that require certain functionality can require a value of the appropriate type class without details to implementation (i.e. we only guarantee specific methods existing but not how they are implemented).</p><h2 id=extending-functional-languages-to-oop>Extending Functional Languages to OOP</h2><ul><li>C++ has lambdas since C++14</li><li>Java had lambdas since Java8</li><li>Polymorphic types: C++ has templates(ish, because C++ actually instantiates templates after type checking), Java ha generics</li></ul><h2 id=invariant-inference>Invariant Inference</h2><p>This is a bonus topic that just isn&rsquo;t caused anywhere.</p><figure><img src=/ox-hugo/2024-12-05_10-13-08_screenshot.png></figure><p>Suppose \(I\) is an inductive <a href=/posts/kbhloop_invariant/>loop invariant</a>. Notice in the <code>{code}</code> segment we don&rsquo;t assume that our invariant is true; the invariant could disappear and get reestablished.</p><p>We also only have to show this once through the loop, for all desired preconditions.</p><p>Inferring what invariants are there is still an active research topic.</p></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>

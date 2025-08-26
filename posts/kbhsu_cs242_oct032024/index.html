@@ -1,0 +1,114 @@
+<!doctype html><html lang=en-us><head><meta charset=UTF-8><meta name=viewport content="width=device-width,initial-scale=1"><meta http-equiv=X-UA-Compatible content="IE=edge"><link rel=stylesheet href=https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin=anonymous referrerpolicy=no-referrer><script src=https://code.jquery.com/jquery-3.6.0.min.js integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin=anonymous></script><meta name=viewport content="width=device-width,initial-scale=1"><script src=https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4></script><link rel=preconnect href=https://fonts.bunny.net><link href="https://fonts.bunny.net/css?family=ibm-plex-sans:300,400,400i,500,500i,600,700,700i" rel=stylesheet><script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script><script id=MathJax-script async src=https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js></script><script>window.MathJax={loader:{load:["[tex]/physics"]},tex:{packages:{"[+]":["physics"]}}}</script><title>SU-CS242 OCT032024</title>
+<meta name=description content="Lambda Calculus
+Like SKI Calculus, its a language of functions; unlike SKI Calculus, there are variables.
+\begin{equation}
+e\to x \mid \lambda x.e \mid  ee \mid  (e)
+\end{equation}
+meaning, we have:
+
+a variable \(x\)
+an abstraction \(\lambda x . e\) (a function definition)
+an application \(e_1 e_2\)
+
+we call \((\lambda x . e)e&rsquo;\) (a function and its argument, ready for reduction) a redex.
+abstraction
+def f(x) = e
+can be written as:
+\begin{equation}
+\lambda x.e
+\end{equation}"><meta name=author content="Houjun Liu"><link rel=stylesheet href=/css/all.css><link rel=stylesheet href=/css/page.css><link rel=stylesheet href=/css/syntax.css><link rel=stylesheet href=/css/typography.css><link rel=stylesheet href=/css/components.css></head><body><div class="center-clearfix p-10" style="max-width:1200px;margin:0 auto"><header class=pb-4><span class="w-full flex justify-between flex-wrap"><div style=font-weight:600;font-size:15px><a style=border:0;cursor:pointer href=/><img src=/images/Logo_Transparent.png style=width:17px;display:inline-block;margin-right:8px;transform:translateY(-2.7px)></a>SU-CS242 OCT032024</div><span style="float:right;display:flex;align-items:center;margin-top:5px;width:100%;max-width:400px;background:#fff;border-radius:2px;border:1px solid var(--gray-2);position:relative"><i class="fa-solid fa-magnifying-glass" style=font-size:12px;color:var(--yellow-fg);margin-right:7px;margin-left:10px></i><div style=width:100%><input id=search-query-inline name=s type=text autocomplete=off placeholder="Search Knowledgebase" enterkeyhint=search></div><div id=search-result-inline style=display:none></div><script id=search-result-template type=text/x-js-template data-template=searchresult>
+    <a href="${link}" class="search-link">
+    <div class="search-result-item" id="search-result-item-${key}">
+        <div class="search-result-title">${title}</div>
+        <div class="search-result-summary">${snippet}</div>
+    </div>
+    </a>
+</script><script src=https://code.jquery.com/jquery-3.3.1.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js></script><script src=https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js></script><script type=module>
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-result-inline").attr("tabindex", "-1");
+    $(document).on("click", function (e) {
+    if (!$(e.target).closest("#search-query-inline, #search-result-inline").length) {
+        $("#search-result-inline").hide();
+    }
+    });
+    
+    
+    
+    
+    
+    
+
+    $("#search-query-inline").on("focus keyup", function () {
+        let value = $(this).val();
+        if (value.trim() == "") {
+            $("#search-result-inline").html("");
+            $("#search-result-inline").hide();
+            return;
+        }
+        $("#search-result-inline").show();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(0, 52),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-result-inline").html(contents.join("\n"));
+        
+    });
+    if (/iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+        $('#search-query-inline').on('focus', function(){
+            
+            $(this).data('fontSize', $(this).css('font-size')).css('font-size', '16px');
+        }).on('blur', function(){
+            
+            $(this).css('font-size', $(this).data('fontSize'));
+        });
+    }
+
+</script></span></span><div class=w-full style="padding-bottom:4px;border-bottom:1px solid var(--gray-1);margin-top:1px"></div></header><aside id=tocbox><div id=heading style=padding-left:40px;font-weight:600;font-size:11px;color:var(--gray-3)>contents</div><div id=toc></div></aside><main><article><div style=max-width:700px><h2 id=lambda-calculus>Lambda Calculus</h2><p>Like <a href=/posts/kbhcombinator_calculus/>SKI Calculus</a>, its a language of functions; unlike <a href=/posts/kbhcombinator_calculus/>SKI Calculus</a>, there are variables.</p><p>\begin{equation}
+e\to x \mid \lambda x.e \mid ee \mid (e)
+\end{equation}</p><p>meaning, we have:</p><ul><li>a variable \(x\)</li><li>an <strong>abstraction</strong> \(\lambda x . e\) (a function definition)</li><li>an <strong>application</strong> \(e_1 e_2\)</li></ul><p>we call \((\lambda x . e)e&rsquo;\) (a function and its argument, ready for reduction) a <code>redex</code>.</p><h3 id=abstraction>abstraction</h3><div class=highlight><pre tabindex=0 style=color:#272822;background-color:#fafafa;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-python data-lang=python><span style=display:flex><span><span style=color:#00a8c8>def</span> <span style=color:#75af00>f</span><span style=color:#111>(</span><span style=color:#111>x</span><span style=color:#111>)</span> <span style=color:#f92672>=</span> <span style=color:#111>e</span>
+</span></span></code></pre></div><p>can be written as:</p><p>\begin{equation}
+\lambda x.e
+\end{equation}</p><p>this is just an anonymous function&mdash;it can be returned, etc.</p><h3 id=syntax>syntax</h3><p>Association to the left: \(f x y z = ((f(x))y)z\). An lambda abstraction extends as far right as possible:</p><p>\begin{equation}
+\lambda x.x \lambda y.y \to \lambda x.(x \lambda y . y)
+\end{equation}</p><h3 id=substitution>substitution</h3><p>variables requires us being able to substitute things.</p><ul><li>\(x [x:=e] = e\) &mdash; similar to \(I\)</li><li>\(y [x:=e] = y\) &mdash; similar to \(K\)</li><li>\((e_1 e_2) [x := e] = (e_1 [x:= e]) (e_2 [x:= e])\) &mdash; similar to \(S\)</li><li>\((\lambda x . e_1) [x := e] = \lambda x . e_1\) &mdash; shadowing; that is, during a function application if shadowing occurs, we don&rsquo;t use substitution</li><li>\((\lambda y . e_1) [x:= e] = \lambda y . (e_1 [x:= e])\), if \(x \neq y\) and \(y\not \in FV(e)\); that is, we can only substitute if the contents of our substitution is not going to be changed by new variable bindings<ul><li>if we got caught by this rule, use an <a href=#alpha-reduction>alpha reduction</a></li></ul></li></ul><h4 id=the-last-rule>the last rule?!</h4><p>\((\lambda y . e_1) [x:= e] = \lambda y . (e_1 [x:= e])\), if \(x \neq y\) and \(y\) doesn&rsquo;t appear free in \(e\)</p><p>Consider:</p><p>\begin{equation}
+(\lambda y . x) [x:= y]
+\end{equation}</p><p>it would not make sense to substitute \(x\) inside the function for \(y\).</p><ul><li><p>free variables</p><p>The free variables are variables not bound in an application:</p><ul><li>\(FV(x) = \{x\}\)</li><li>\(FV(e_1 e_2) = FV(e_1) \cup FV(e_2)\)</li><li>\(FV(\lambda x.e) = FV(e) - \qty {x}\)</li></ul></li></ul><h3 id=reductions>reductions</h3><p>we can mostly ignore <a href=#alpha-reduction>alpha reduction</a> and <a href=#eta-reduction>eta reduction</a> be rephrasing as &ldquo;rename variables to avoid collision whenever needed&rdquo;.</p><h4 id=beta-reduction>beta reduction</h4><p>\((\lambda x.e_1)e_2 \to e_1[x:=e_2]\), we replace every occurrence of \(x\) in \(e_1\) with \(e_2\); we call \(x\) the <strong>formal parameter</strong>, and \(e_2\) the <strong>actual argument</strong></p><h4 id=alpha-reduction>alpha reduction</h4><p>we can rename variables to avoid collision; \(\lambda x. e = \lambda z . e [x := z]\), with a fresh \(z\) (to avoid conflicting variables).</p><h4 id=eta-reduction>eta reduction</h4><p>\(e = \lambda x . e x\), \(x \not \in FV(e)\)</p><h3 id=evaluation-order>evaluation order</h3><ul><li><a href=/posts/kbhcombinator_calculus/#normal-order>call-by-name</a> (for correct termination): evaluate the arguments only when the function can be reduced</li><li><a href=/posts/kbhsu_cs242_oct082024/#call-by-value>call-by-value</a> (more efficient): it evaluates the arguments <em>one time</em> (even if the function makes copies of the arguments, we don&rsquo;t evaluate it again)</li></ul><h3 id=church-rosser-theorem>Church-Rosser Theorem</h3><p><a href=#lambda-calculus>Lambda Calculus</a></p><h3 id=programming-time>programming time</h3><h4 id=non-terminating-expression>non terminating expression</h4><p>\begin{equation}
+(\lambda x . x x) (\lambda x . x x) = (\lambda x . x x) (\lambda x . x x)
+\end{equation}</p><h4 id=y-combinator>y-combinator</h4><p>\begin{equation}
+Y = \lambda f . (\lambda x . f (x x)) (\lambda x . f ( x x))
+\end{equation}</p><p>let&rsquo;s do it a few times:</p><p>\begin{equation}
+Y g a \to (\lambda x . g (x x)) (\lambda x g ( x x)) a \to g ((\lambda x g ( x x)) (\lambda x g ( x x))) a
+\end{equation}</p><h4 id=booleans>booleans</h4><ul><li>\(True\ x\ y = x\)</li><li>\(False \ x\ y = y\)</li></ul><p>to abstract this to combinators, we just put \(\lambda\) in front of each argument and we are done:</p><ul><li>\(True= \lambda x . \lambda y. x\)</li><li>\(False = \lambda x. \lambda y .y\)</li></ul><p>we can recycle the combinator-based definitions for SKI to deal with the rest of the boolean logic: <a href=/posts/kbhcombinator_calculus/#conditionals>conditionals</a></p><h4 id=pairs>pairs</h4><ul><li>\(pair = \lambda a. \lambda b . \lambda f . f a b\)</li><li>\(fst = \lambda x. \lambda y. x\)</li><li>\(snd = \lambda x. \lambda y. y\)</li></ul><h4 id=numbers>numbers</h4><ul><li>\(0 f x = x\), so \(0 = \lambda f . \lambda x . x\)</li><li>\(succ\ n\ f\ x = f(nfx)\), so \(succ = \lambda n . \lambda f . \lambda x. f (n f x)\)</li></ul><h4 id=factorial>factorial</h4><p>p = λp. pair (mul (p fst) (p snd)) (succ (p snd))
+! = λn.(n p (pair one one) fst)</p><h4 id=algebraic-data-type>Algebraic Data Type</h4><pre tabindex=0><code class=language-nil data-lang=nil>Type T = constructor1 Type11 Type12 ... Type1n |
+         constructor2 Type21 Type22 ... Type 2m |
+         ...
+</code></pre><ul><li><strong>algebraic</strong>: because the constructor packages up the arguments</li><li>the constructor is a &ldquo;tad&rdquo; naming the case of the ADT being used</li><li><strong>deconstructors</strong> recovers the arguments of the constructor to use it</li></ul><pre tabindex=0><code class=language-nil data-lang=nil>Type List = nil |
+            cons Nat List
+</code></pre><ul><li><p>encoding ADTs in lambda calculus</p><p>Consider an <a href=#algebraic-data-type>ADT</a> \(T\) with \(n\) constructors; let each constructor have \(k\) arguments; so&mdash;here&rsquo;s an example constructor:</p><p>\begin{equation}
+\lambda a_1 . \lambda a_2 \dots \lambda a_{k}. \lambda f_1 . \lambda f_2 \dots \lambda f_{n} f_i a_1 a_2 \dots a_{k}
+\end{equation}</p><p>each constructor must have \(n\)</p></li></ul><ul><li><p>natural numbers</p><pre tabindex=0><code class=language-nil data-lang=nil>Type Nat = succ Nat |
+           0
+</code></pre><p>we have two constructors&mdash;</p><p>\begin{equation}
+succ = \lambda n . \lambda f. \lambda x. f(n f x)
+\end{equation}</p><p>\begin{equation}
+0 = \lambda f . \lambda x. x
+\end{equation}</p></li></ul><h3 id=examples>examples</h3><ul><li>identity \(I\): \(\lambda x . x\)</li><li>constant \(K\): \(\lambda z . \lambda y . z\)</li></ul><h3 id=numbers>numbers</h3></div></article></main><footer style=margin-top:20px><p id=footer style=font-size:8px;color:var(--gray-3)>&copy; 2019-2025 Houjun Liu. Licensed CC BY-NC-SA 4.0.</p></footer></div><script src=https://cdnjs.cloudflare.com/ajax/libs/tocbot/4.32.2/tocbot.min.js></script><script>tocbot.init({tocSelector:"#toc",contentSelector:".center-clearfix",headingSelector:"h1, h2, h3",hasInnerContainers:!0})</script></body></html>
