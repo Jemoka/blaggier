@@ -1,0 +1,51 @@
+{{ define "main" }}
+<header class="pb-4">
+    <span class="w-full flex justify-between flex-wrap">
+        <div style="font-weight:600; font-size:15px">
+            <a style="border: 0; cursor: pointer" href="/"><img src="/images/Logo_Transparent.png" style="width: 17px; display: inline-block; margin-right: 8px; transform: translateY(-2.7px)" /></a>{{.Title}}
+
+            {{ with .Params.tags }}
+  {{ if gt (len .) 2 }}
+            <span class="tagbox" style="margin-left: 10px">
+                {{ range .Params.tags }}
+                <span class="tag" onclick="window.location.href='/tags/{{.}}'" style="transform: translateY(-1.3px)">
+                    <span class="hash">#</span>
+                    <span class="tagname">{{.}}</span>
+                </span>
+                {{end}}
+            </span>
+            {{ end }}
+            {{ end }}
+
+        </div>
+
+
+        {{ partial "search" . }}
+    </span>
+    <div class="w-full" style="padding-bottom: 4px; border-bottom: 1px solid var(--gray-1); margin-top: 1px"></div>
+</header>
+
+{{if ne .TableOfContents "<nav id=\"TableOfContents\"></nav>"}}
+<aside id="tocbox">
+    <div id="heading" style="padding-left: 40px; font-weight: 600; font-size: 11px; color: var(--gray-3)">contents</div>
+    <div id="toc">
+    </div>
+</aside>
+{{end}}
+<!-- {{if ne .TableOfContents "<nav id=\"TableOfContents\"></nav>"}} -->
+<!-- <aside id="toc"> -->
+<!--   <h1 id="toc-title">table of contents</h1> -->
+<!--   {{.TableOfContents}} -->
+<!-- <\!-- <hr id="divider" /> -\-> -->
+<!-- </aside> -->
+<!-- {{end}} -->
+
+<main>
+  <article>
+    <div  style="max-width: 700px">
+      {{ .Content }}
+    </div>
+  </article>
+</main>
+{{ partial "footer" . }}
+{{ end }}

@@ -1,0 +1,27 @@
+baseURL = "https://www.jemoka.com/"
+languageCode = "en-us"
+title = "jemoka.com"
+refLinksErrorLevel = "WARNING"
+enableGitInfo = true
+[pagination]
+pagerSize = 5
+
+[outputs]
+home = [ "html", "json" ]
+section = [ "html" ]
+taxonomy = [ "html" ]
+term = [ "html" ]
+
+[markup.highlight]
+codeFences = true
+noClasses = true
+noHl = false
+style = "monokailight"
+tabWidth = 4
+
+[markup.goldmark.renderer]
+unsafe = true
+
+[params]
+author = "Houjun Liu"
+description = "The personal site of Houjun \"Jack\" Liu"

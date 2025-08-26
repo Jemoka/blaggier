@@ -1,0 +1,39 @@
+body {
+    --gray-3: #929292;
+    --gray-2: #D5D5D5;
+    --gray-1: #EBEBEB;
+
+    --bg: #F7F7F7;
+    --fg: #2F3338;
+    --accent: #434D5F;
+
+    --blue: #37A5BE;
+    --green: #26A671;
+    --yellow: #EAEDAD;
+    --yellow-accent: #DCE279;
+    --yellow-fg: #84876C;
+    --orange: #F27200;
+    --red: #FF3900;
+
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-weight: 400;
+    color: var(--fg);
+    background: var(--bg);
+    font-size: 14px;
+}
+
+a {
+    color: var(--yellow-fg);
+}
+
+a:hover {
+    border-bottom: 1px solid var(--yellow);
+}
+
+hr {
+    border: 1px dotted var(--gray-1);
+}
+
+img {
+    max-width: 60vw;
+}

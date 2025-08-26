@@ -1,0 +1,9 @@
+User-agent: *
+Disallow: /bontehu
+Disallow: /bontehu.html
+Disallow: /work_scheduling
+Disallow: /work_scheduling.html
+Disallow: /meet
+Disallow: /meet.html
+
+Sitemap: https://www.jemoka.com/sitemap.xml

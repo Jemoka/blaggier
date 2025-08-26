@@ -1,0 +1,35 @@
+{{ define "main" }}
+<header class="pb-4">
+    <span class="w-full flex justify-between flex-wrap">
+        <div style="font-weight:600; font-size:15px">
+<a style="border: 0; cursor: pointer" href="/"><img src="/images/Logo_Transparent.png" style="width: 17px; display: inline-block; margin-right: 8px; transform: translateY(-2.7px)" /></a>{{.Title}}
+
+        <!-- <span class="tagbox" style="margin-left: 10px"> -->
+        <!--     {{ range .Params.tags }} -->
+        <!--     <span class="tag" onclick="window.location.href='/tags/{{.}}'" style="transform: translateY(-1.3px)"> -->
+        <!--         <span class="hash">#</span> -->
+        <!--         <span class="tagname">{{.}}</span> -->
+        <!--     </span> -->
+        <!--     {{end}} -->
+        <!-- </span> -->
+
+        </div>
+    </span>
+    <div class="w-full" style="padding-bottom: 4px; border-bottom: 1px solid var(--gray-1); margin-top: 1px"></div>
+</header>
+<main>
+    <!-- Ranges through content/posts/*.md -->
+    {{ range (.Paginate (sort .Pages "Lastmod" "desc") ).Pages  }}
+<!-- "Lastmod" "desc" -->
+    <div class="pageview" onclick="window.location.href='{{.Permalink}}'">
+        <span class="top">
+        <h1><a class="noannot" style="cursor: pointer" href="{{.Permalink}}">{{.Title}}</a></h1>
+        <span class="modbox right">Last edited: <span class="moddate">{{.Lastmod.Format "January 1, 2006"}}</span></span>
+        </span>
+        <span class="summary">{{.Summary}}</span>
+    </div> 
+    {{ end }}
+    {{ partial "pagination" . }}
+</main>
+{{ partial "footer" . }}
+{{ end }}

@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+    <script>
+        function redirect() {
+            var url = "https://cs.stanford.edu/people/houjun/" + document.getElementById("mystery").value.trim();
+            window.location.replace(url);
+        }
+    </script>
+    <body>
+        this page literally just redirects you somewhere else. inspecting element won't do much. i just didn't want to type out the URL
+        <br />
+        <input type="text" id="mystery" placeholder="mystery" value="" />
+        <input onclick="redirect()" type="submit" value="leave kansas" />
+    </body>
+</html>

@@ -1,0 +1,48 @@
++++
+title = "SU-CS361 Multi-Objective Optimization, Sampling, Surrogates"
+author = ["Houjun Liu"]
+draft = false
++++
+
+-   [Multi-Objective Optimization]({{< relref "KBhsu_cs361_apr302024.md#multi-objective-optimization" >}})
+    -   [Pareto Optimality]({{< relref "KBhsu_cs361_apr302024.md#pareto-optimality" >}})
+        -   [Pareto Frontier]({{< relref "KBhsu_cs361_apr302024.md#pareto-frontier" >}})
+            -   Solving for it
+                -   [Constraint Method]({{< relref "KBhsu_cs361_apr302024.md#constraint-method" >}})
+                -   [Lexicographic Method]({{< relref "KBhsu_cs361_apr302024.md#lexicographic-method" >}})
+                -   [Weighted Method]({{< relref "KBhsu_cs361_apr302024.md#weight-method" >}})
+                -   [Goal Programming]({{< relref "KBhsu_cs361_apr302024.md#goal-programming" >}})
+        -   [Utopia Point]({{< relref "KBhsu_cs361_apr302024.md#utopia-point" >}})
+    -   [Multi-Objective Population Method]({{< relref "KBhsu_cs361_apr302024.md#multi-objective-population-method" >}})
+        -   [Classic method]({{< relref "KBhsu_cs361_apr302024.md#classic-population-method" >}})
+        -   [Non-Dominating Ranking]({{< relref "KBhsu_cs361_apr302024.md#non-dominating-ranking" >}})
+        -   [Pareto filter]({{< relref "KBhsu_cs361_apr302024.md#pareto-filter" >}})
+        -   [Niche Technique]({{< relref "KBhsu_cs361_apr302024.md#niche-technique" >}})
+-   [Preference Elicitation]({{< relref "KBhsu_cs361_may022024.md#preference-elicitation" >}})
+-   [Sampling Plans]({{< relref "KBhsu_cs361_may022024.md#sampling-plans" >}})
+    -   [Full Factorial]({{< relref "KBhsu_cs361_may022024.md#full-factorial" >}})
+    -   [Random Sampling]({{< relref "KBhsu_cs361_may022024.md#random-sampling" >}})
+    -   [Uniform Projection]({{< relref "KBhsu_cs361_may022024.md#uniform-projection" >}})
+    -   [Stratified Sampling]({{< relref "KBhsu_cs361_may022024.md#stratified-sampling" >}})
+-   [Space-Filling Metrics]({{< relref "KBhsu_cs361_may022024.md#space-filling-metrics" >}})
+    -   [Pairwise Distances]({{< relref "KBhsu_cs361_may022024.md#pairwise-distances" >}})
+    -   [Morris-Mitchell]({{< relref "KBhsu_cs361_may022024.md#morris-mitchell" >}})
+-   [Space-Filling Subset]({{< relref "KBhsu_cs361_may022024.md#space-filling-subset" >}})
+-   [Surrogate Models]({{< relref "KBhsu_cs361_may022024.md#surrogate-models" >}})
+    -   [Linear Model]({{< relref "KBhsu_cs361_may022024.md#linear-model" >}})
+    -   [Basis Functions]({{< relref "KBhsu_cs361_may022024.md#basis-functions" >}})
+    -   [Regularization]({{< relref "KBhsu_cs224n_apr162024.md#regularization" >}})
+-   [Probabilistic Surrogate Models]({{< relref "KBhsu_cs361_may072024.md#probabilistic-surrogate-models" >}})
+    -   [Gaussian Process]({{< relref "KBhsu_cs361_may072024.md#gaussian-process" >}})
+        -   [squared exponential kernel]({{< relref "KBhsu_cs361_may072024.md#squared-exponential-kernel" >}})
+-   [Surrogate Optimization]({{< relref "KBhsu_cs361_may072024.md#surrogate-optimization" >}})
+    -   [Prediction Based Exploration]({{< relref "KBhsu_cs361_may072024.md#prediction-based-exploration" >}})
+    -   [Error Based Exploration]({{< relref "KBhsu_cs361_may072024.md#error-based-exploration" >}})
+    -   [Lower Confidence Bound Exploration]({{< relref "KBhsu_cs361_may072024.md#lower-confidence-bound-exploration" >}})
+    -   [Probability of Improvement Exploration]({{< relref "KBhsu_cs361_may072024.md#probability-of-improvement-exploration" >}}) and [Expected Improvement Exploration]({{< relref "KBhsu_cs361_may072024.md#probability-of-improvement-exploration" >}})
+-   [optimization uncertainty]({{< relref "KBhsu_cs361_may092024.md#optimization-uncertainty" >}})
+    -   [set-based uncertainty]({{< relref "KBhsu_cs361_may092024.md#set-based-uncertainty" >}})
+    -   [probabilistic uncertainty]({{< relref "KBhsu_cs361_may092024.md#probabilistic-uncertainty" >}})
+        -   [uncertainty expected value optimization]({{< relref "KBhsu_cs361_may092024.md#uncertainty-expected-value-optimization" >}})
+        -   [uncertainty variance optimization]({{< relref "KBhsu_cs361_may092024.md#uncertainty-variance-optimization" >}})
+    -

@@ -1,0 +1,77 @@
+{{ define "main" }}
+<header class="pb-4">
+    <span class="w-full flex justify-between flex-wrap">
+        <div style="font-weight:600; font-size:15px">
+<a style="border: 0; cursor: pointer" href="/"><img src="/images/Logo_Transparent.png" style="width: 17px; display: inline-block; margin-right: 8px; transform: translateY(-2.7px)" /></a>Knowledgebase Search
+
+        <!-- <span class="tagbox" style="margin-left: 10px"> -->
+        <!--     {{ range .Params.tags }} -->
+        <!--     <span class="tag" onclick="window.location.href='/tags/{{.}}'" style="transform: translateY(-1.3px)"> -->
+        <!--         <span class="hash">#</span> -->
+        <!--         <span class="tagname">{{.}}</span> -->
+        <!--     </span> -->
+        <!--     {{end}} -->
+        <!-- </span> -->
+
+        </div>
+    </span>
+    <div class="w-full" style="padding-bottom: 4px; border-bottom: 1px solid var(--gray-1); margin-top: 1px"></div>
+</header>
+
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/3.2.0/fuse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/jquery.mark.min.js"></script>
+
+<script id="search-result-template" type="text/x-js-template" data-template="searchresult">
+    <div id="summary-${key}">
+      <h4><a href="${link}">${title}</a></h4>
+      <p>${snippet}</p>
+    </div>
+</script>
+
+
+<div id="searchutil" >
+    <input id="search-query" name="s" type="text" autocomplete="off" placeholder="Query" enterkeyhint="search"/>
+<div id="search-results">
+</div>
+</div>
+
+
+<script type="module">
+    import { create, insertMultiple, search } from 'https://cdn.jsdelivr.net/npm/@orama/orama@latest/+esm'
+    let template = $('script[data-template="searchresult"]').text().split(/\$\{(.+?)\}/g);
+
+    function render(props) {
+        return function(tok, i) { return (i % 2) ? props[tok] : tok; };
+    }
+
+    const db = create({
+        schema: {
+            title: 'string',
+            content: 'string',
+        },
+    });
+    $.get("https://www.jemoka.com/index.json", function(data, status){
+        insertMultiple(db, data.map(x =>
+            ({title: x.title, content: x.contents, link: x.permalink})));
+    });
+    $("#search-query").on("keyup", function () {
+        let value = $(this).val();
+        let results = search(db, {mode: "fulltext", term: value});
+        let contents = results.hits.map(x => template.map(render({
+            title: x.document.title,
+            snippet: x.document.content.slice(1, 356),
+            key: x.id,
+            link: x.document.link
+        })).join(''));
+        $("#search-results").html(contents.join("\n"));
+        $("#search-results").mark(value);
+        // results.map()
+    });
+</script>
+<!-- <script src="{{ "js/search.js" | relURL }}"></script> -->
+<!-- this template is sucked in by search.js and appended to the search-results div above. So editing here will adjust style -->
+
+{{ partial "footer" . }}
+{{ end }}

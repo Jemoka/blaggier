@@ -1,0 +1,7 @@
++++
+title = "Coveather Abstract"
+author = ["Houjun Liu"]
+draft = false
++++
+
+Digital Health Passes (DHP), systems of digitally validating quarantine and vaccination status such as the New York IBM Excelsior Pass, demonstrate a lawful means to approach some benefits offered by "true elimination" treatment strategies-which focus on the complete elimination of cases instead of investing more in controlling the progression of the disease-of COVID-19. Current implementations of DHPs require region-based control and central storage of Protected Health Information (PHI)-creating a challenge to widespread use across different jurisdictions with incompatible data management systems and a lack of standardized patient privacy controls. In this work, a mechanism for decentralized PHI storage and validation is proposed through a novel two-stage handshaking mechanism update to blockchain proof-of-stake consensus. The proposed mechanism, when used to support a DHP, allows individuals to validate their quarantine and testing universally with any jurisdiction while allowing their right of independent movement and the protection of their PHI. Implementational details on the protocol are given, and the protocol is shown to withstand a 1% disturbance attack at only 923 participants via a Monte-Carlo simulation: further validating its stability.

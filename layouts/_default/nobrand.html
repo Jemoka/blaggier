@@ -1,0 +1,21 @@
+{{ define "main" }}
+<div style="padding: 20px 0 30px 0">
+<div id="title">
+<h1>{{ .Title }}</h1>
+</div>
+{{if ne .TableOfContents "<nav id=\"TableOfContents\"></nav>"}}
+<aside id="toc">
+  <h1 id="toc-title">table of contents</h1>
+  {{.TableOfContents}}
+<!-- <hr id="divider" /> -->
+</aside>
+{{end}}
+<main>
+  <article>
+    <div>
+      {{ .Content }}
+    </div>
+  </article>
+</main>
+</div>
+{{ end }}
