@@ -4,6 +4,17 @@ author = ["Houjun Liu"]
 draft = false
 +++
 
+> Like a sound you hear
+> That lingers in your ear
+> But you can't forget
+> From sundown to sunset
+>
+> It's all in the air
+> You hear it everywhere
+> No matter what you do
+> It's gonna grab a hold on you
+> California soul
+
 \begin{equation}
 x\_1^{(j)} = x\_1^{(j-1)} + Attn\qty(x\_{k}^{(j-1)}, \forall k)
 \end{equation}
